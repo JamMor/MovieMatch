@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="https://ajax.aspnetcdn.com/ajax/jQuery/jquery-3.6.0.js"></script>
+    <script src="https://ajax.aspnetcdn.com/ajax/jquery.ui/1.10.4/jquery-ui.js"></script>
+    {% load static %}
+    <script src="{% static 'js/auto1.js'%}"></script>
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+    <style>
+        html {
+            background-color: aliceblue;
+        }
+        body {
+            padding: 10vmin;
+        }
+
+        div.ui-widget {
+            background-color: antiquewhite;
+            height:50px;
+        }
+
+        .ui-autocomplete {
+            position:relative;
+        }
+    </style>
+</head>
+<body>
+    <main>
+        <p>Hello!</p>
+        <div id="searchbox" class="ui-widget ui-front">
+            <input class="ui-autocomplete-input" type="search" name="searchbar" id="searchbar" placeholder="Search for a movie...">
+        </div>
+        <div id="movieinfo"></div>
+    </main>
+</body>
+</html>
