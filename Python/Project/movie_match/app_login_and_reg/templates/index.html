@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register and Login</title>
+    <style>
+        html {
+            font-family:cursive;
+            padding: 5%;
+        }
+
+        body {
+            display:grid;
+            grid-template-columns: 1fr 1fr;
+            align-items: start;
+        }
+
+        form {
+            display:grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            max-width:500px;
+            margin: 10px auto;
+        }
+
+        #registration_form {
+            grid-template-rows: repeat(8, auto);
+        }
+
+        #login_form {
+            grid-template-rows: repeat(4, auto);
+        }
+
+        h1 {
+            grid-column: span 2;
+            text-align: center;
+        }
+
+        input {
+            border: 3px solid black;
+            padding:5px;
+        }
+
+        button {
+            background-color: white;
+            border: 3px solid black;
+            box-shadow: 3px 3px black;
+            grid-column: span 2;
+            width:max-content;
+            margin:auto;
+        }
+        
+        .messages {
+            color:red;
+        }
+    </style>
+</head>
+<body>
+    <form id="registration_form" action="/register" method="post">
+        {% csrf_token %}
+        <h1>Registration</h1>
+        <label for="first_name">First Name</label>
+        <input type="text" name="first_name" id="first_name">
+        <label for="last_name">Last Name</label>
+        <input type="text" name="last_name" id="last_name">
+        <label for="email">Email</label>
+        <input type="email" name="email" id="email">
+        <label for="bday">Birthday</label>
+        <input type="date" name="bday" id="bday">
+        <label for="password">Password</label>
+        <input type="password" name="password" id="password">
+        <label for="confirmation">Confirm Password</label>
+        <input type="password" name="confirmation" id="confirmation">
+        <button>Register</button>
+    </form>
+
+    <form id="login_form" action="/login" method="post">
+        {% csrf_token %}
+        <h1>Login</h1>
+        <label for="email">Email</label>
+        <input type="text" name="email" id="email">
+        <label for="password">Password</label>
+        <input type="password" name="password" id="password">
+        <button>Log In</button>
+    </form>
+
+    {% if messages %}
+    <ul class="messages">    
+        {% for message in messages %}    
+            <li {% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>    
+        {% endfor %}
+    </ul>
+    {% endif %}
+</body>
+</html>
