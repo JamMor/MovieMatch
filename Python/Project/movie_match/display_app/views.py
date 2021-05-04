@@ -4,6 +4,7 @@ from .models import Movie, MovieList, SharedList
 from app_login_and_reg.models import User
 import json
 
+#Saves a new MovieList of movies, adding any movies that aren't already in database
 def save_list(post_data):
     print("We in ya save function")
     new_list = MovieList.objects.create()
@@ -27,9 +28,11 @@ def save_list(post_data):
     return new_list.id
 
 # Create your views here.
+# Displays main page
 def index(request):
     return render(request, 'index.html')
 
+# Creates new SharedList, or adds to already existing one.
 def new_list(request):
     data = json.loads(request.body)
     print (data)
@@ -85,36 +88,43 @@ def new_list(request):
     print("Shared movies listified: ", shared_movies)
     return JsonResponse({"sharecode":shared_list.id, "users":shared_list.users, "order":request.session["order"], "chosen":shared_list.chosen, "movies":shared_movies}, safe=False)
 
+#Pushes updated share list data to clients
 def update_shared(request):
     response = {}
     data = json.loads(request.body)
     print("Data from update POST: ", data)
     shared_list = SharedList.objects.get(id=data['sharecode'])
+    
+    #Updates to users of ShareList
     shared_users = shared_list.users.split(",")
     print(shared_users)
     if len(shared_users) > data['user_num']:
         print("New users!")
         response['new_users'] = shared_users[data['user_num']:]
     
+    #Updates to movies in ShareList
     shared_ids = list(shared_list.movies.values_list("movie_id", flat=True))
-    print("Current Shared List ID's: ",shared_ids)
     movie_ids = data['movie_ids']
-    print("Current Client ID's: ", movie_ids)
     added_ids = list((set(shared_ids).difference(movie_ids)))
     print("IDs that have been added: ", added_ids)
     added = list(Movie.objects.filter(movie_id__in=added_ids).values("movie_id", "title", "release_date", "poster"))
-    print("List of added movie values: ", added)
     deleted_ids = list((set(movie_ids).difference(shared_ids)))
     print("IDs that have been deleted: ", deleted_ids)
-    # deleted = list(Movie.objects.filter(id__in=deleted_ids).values("movie_id", "title", "release_date", "poster"))
-
     if len(added) > 0:
         response['added'] = added
+        
+        #updates to matching selections when new user adds movies AKA chosen
+        matched_ids = list(set(shared_ids).intersection(movie_ids))
+        print("Movies have been added. Here are the ones that already exist: ==================================================")
+        for each_id in matched_ids:
+            print(Movie.objects.get(movie_id=each_id))
+        if len(matched_ids) > 0:
+            response['chosen'] = matched_ids
+
     if len(deleted_ids) > 0:
         response['deleted'] = deleted_ids
 
-    print("We made it to the return at least!")
-    print(response)
+    # print("Update Data to client: ",response)
     return JsonResponse(response)
 
 def delete_shared(request):

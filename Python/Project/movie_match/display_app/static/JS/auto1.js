@@ -1,5 +1,6 @@
 $(document).ready(function() {
 
+    //Prepare csrf token to be used outside of template.
     function getCookie(name) {
         let cookieValue = null;
         if (document.cookie && document.cookie !== '') {
@@ -33,6 +34,30 @@ $(document).ready(function() {
     const image_link = "https://image.tmdb.org/t/p/";
     var movie_list = []
 
+    //First load of all shared list and user data returned from server
+    function intialize_shared_lists (data) {
+        console.log("Data from new list: ",data);
+        window.sharecode = data['sharecode']
+        users = data['users'].split(",");
+        var user_id = 1;
+        for (var each of users){
+            user = each.split('*')
+            $('#shared_users').append("<div id='user_"+user_id+"' class='"+user[0]+"'><p>"+user[1]+ "</p></div>");
+            user_id++;
+        }
+        for (var movie of data['movies']){
+            $('#shared_list').append("<div id='movie_"+movie.movie_id+"' class='list_item shared' style='background-image: url(" + image_link+"w154"+movie.poster + ")'><h5>"+movie.title+ " - " +movie.release_date.slice(0,4)+ "</h5></div>");
+        }
+        var chosen = data['chosen'].split(',')
+        for (var i = 1; i<chosen.length; i+=2){
+            if (chosen[i] > 1){
+                $('#movie_'+chosen[i-1]).addClass("matched");
+            }
+        }
+        startUpdating();
+    }
+
+    //Sends post request to delete clicked movie from shared list model
     function deleter(){
         var delete_me = $(this).attr("id");
         console.log(delete_me);
@@ -47,8 +72,10 @@ $(document).ready(function() {
                 })
     }
 
+    //Attach click event handler to parent of shared movies
     $('#shared_list').on('click', '.list_item', deleter)
 
+    //Syncs data from server. Add/remove movies. Add new users. Highlight shared movies.
     function update(){
         console.log("We updatin yall")
         var movie_ids = [];
@@ -88,11 +115,12 @@ $(document).ready(function() {
                 })
     }
 
+    //Starts a recurring update request to keep the shared list up to date
     function startUpdating(){
         setInterval(update,4000)
     }
 
-    // var cache = {};
+    //Autocomplete that pulls dynamic data from API. Also adds selected elements info to an object to send back to server on upload.
     $( "#searchbar" ).autocomplete({
         appendTo: "#searchbox",
         delay: 500,
@@ -128,31 +156,13 @@ $(document).ready(function() {
         .appendTo( ul );
     }
 
-    
-    $("#upload").click(function (){
+    // Shares list
+    $("#share").click(function (){
         sharecode = $("#sharecode").val();
         nickname = $("#nickname").val();
         // console.log("DATA for Django: ", {"sharecode": sharecode, "nickname": nickname, "results": movie_list});
-        $.post("new", JSON.stringify({"sharecode": sharecode, "nickname": nickname, "results": movie_list}), function( data ) {
-            console.log("Data from new list: ",data);
-            window.sharecode = data['sharecode']
-            users = data['users'].split(",");
-            var user_id = 1;
-            for (var each of users){
-                user = each.split('*')
-                $('#shared_users').append("<div id='user_"+user_id+"' class='"+user[0]+"'><p>"+user[1]+ "</p></div>");
-                user_id++;
-            }
-            for (var movie of data['movies']){
-                $('#shared_list').append("<div id='movie_"+movie.movie_id+"' class='list_item shared' style='background-image: url(" + image_link+"w154"+movie.poster + ")'><h5>"+movie.title+ " - " +movie.release_date.slice(0,4)+ "</h5></div>");
-            }
-            var chosen = data['chosen'].split(',')
-            for (var i = 1; i<chosen.length; i+=2){
-                if (chosen[i] > 1){
-                    $('#movie_'+chosen[i-1]).addClass("matched");
-                }
-            }
-            startUpdating();
+        $.post("new", JSON.stringify({"sharecode": sharecode, "nickname": nickname, "results": movie_list}), function(data){
+            intialize_shared_lists(data)
         }
             ,"json")
             .done(function() {
@@ -161,9 +171,9 @@ $(document).ready(function() {
             .fail(function() {
                 console.log( "Failed to send Ajax." );
                 })
-        movie_list = [];
     })
 
+    // Button to clear current user list
     $("#clear").click(function (){
         movie_list = [];
         $('#user_list').html("");
