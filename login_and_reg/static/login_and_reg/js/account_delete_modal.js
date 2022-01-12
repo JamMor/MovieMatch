@@ -29,11 +29,13 @@ $(document).ready(function() {
             }
             else {
                 console.log("Failed to delete.")
+                M.toast({html: `<span><strong class="orange-text text-darken-3">Failed</strong> to delete account. ${data.errors}</span>`})
             }
 
         })
         .fail(function() {
             console.log( "Failed to send delete request." );
+            M.toast({html: `<span><strong class="orange-text text-darken-3">Failed</strong> to send delete request.</span>`})
         })
         
     })
