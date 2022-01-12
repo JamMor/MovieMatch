@@ -31,15 +31,17 @@ $(document).ready(function() {
                 for (let i = 0; i < nicknameElements.length; i++) {
                     nicknameElements[i].innerText = newNickname;
                 }
+                M.toast({html: `<span>Changed nickname to <strong class="cyan-text text-accent-2">${newNickname}</strong>!</span>`})
             }
             else {
                 console.log("Failed to change.")
-                
-
+                M.toast({html: `<span><strong class="orange-text text-darken-3">Failed</strong> to change nickname. ${data.errors}</span>`})
             }
         })
         .fail(function() {
             console.log( "Failed to send change request." );
+            M.toast({html: `<span><strong class="orange-text text-darken-3">Failed</strong> to send change nickname request.</span>`})
         })
     })
+
 })
