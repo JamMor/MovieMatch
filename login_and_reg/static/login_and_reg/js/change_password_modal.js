@@ -29,18 +29,22 @@ $(document).ready(function() {
                 $('#change-password-modal').modal('close');
                 changePasswordForm.reset();
                 console.log("Password Change Success.")
+                M.toast({html: `<span><strong class="cyan-text text-accent-2">Successfully</strong> changed password!</span>`})
                 // window.location.replace(`/`); //Redirects to home page
             }
             else {
                 console.log("Failed to change password.")
                 formErrorHandler2("#change-password-form", data.errors)
                 changePasswordForm.reset();
+                M.toast({html: `<span><strong class="orange-text text-darken-3">Failed</strong> to change password. ${data.errors}</span>`})
             }
 
         })
         .fail(function() {
             console.log( "Failed to send change password request.");
+            M.toast({html: `<span><strong class="orange-text text-darken-3">Failed</strong> to send change password request.</span>`})
         })
         
     })
+
 })
