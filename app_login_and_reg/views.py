@@ -5,7 +5,7 @@ import bcrypt
 
 # Create your views here.
 def index(request):
-    return render(request, 'index.html')
+    return render(request, 'app_login_and_reg/index.html')
 
 def register(request):
     errors = User.objects.registration_validator(request.POST)

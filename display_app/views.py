@@ -30,7 +30,7 @@ def save_list(post_data):
 # Create your views here.
 # Displays main page
 def index(request):
-    return render(request, 'index.html')
+    return render(request, 'display_app/index.html')
 
 # Creates new SharedList, or adds to already existing one.
 def new_list(request):
