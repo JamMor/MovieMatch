@@ -1,104 +1,23 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
     <script src="https://ajax.aspnetcdn.com/ajax/jQuery/jquery-3.6.0.js"></script>
-    <script
-        src="https://code.jquery.com/ui/1.13.1/jquery-ui.js"
-        integrity="sha256-6XMVI0zB8cRzfZjqKcD01PBsAy3FlDASrlC8SxCpInY="
-        crossorigin="anonymous">
+    <script src="https://code.jquery.com/ui/1.13.1/jquery-ui.js"
+        integrity="sha256-6XMVI0zB8cRzfZjqKcD01PBsAy3FlDASrlC8SxCpInY=" crossorigin="anonymous">
     </script>
 
     {% load static %}
-    <script src="{% static 'js/auto1.js'%}"></script>
+    <script src="{% static 'display_app/js/auto1.js'%}"></script>
     <link rel="stylesheet" href="https://code.jquery.com/ui/1.13.1/themes/base/jquery-ui.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
-    
-    <style>
-        html {
-            background-color: #474747;
-        }
-        body {
-            padding: 10vmin;
-        }
-
-        header {
-            position:fixed;
-            top:0;
-            left:0;
-            width:100vw;
-            z-index: 1;
-            background-color: #868686;
-            border-bottom: 2px #aaaaaa solid;
-            display:flex;
-        }
-
-        div.ui-widget {
-            height:50px;
-        }
-
-        .ui-autocomplete {
-            position:relative;
-        }
-
-        #user_list, #shared_list {
-            display:grid;
-            width:100%;
-            grid-template-columns: repeat(auto-fill, 154px);
-            /* grid-template-rows: repeat(autofill, 231px); */
-            gap:10px;
-            margin:10px;
-        }
-
-        #user_list h5, #shared_list h5 {
-            text-align: center;
-            margin-top: 20%;
-            color:#000000;
-            text-shadow: 0 0 3px #868686, 0 0 3px #ffffff, 0 0 3px #ffffff, 0 0 3px #ffffff;
-        }
-
-        .list_item {
-            width:154px;
-            height:231px;
-        }
-
-        #shared_users {
-            display:flex;
-            width:100%;
-            justify-content: space-around;
-        }
-
-        #shared_users div {
-            background-color: #ffffff7e;
-            border-radius: 3px;
-            padding: 0px 10px;
-        }
-
-        .turn {
-            box-shadow: 0px 0px 6px #00ff00;
-            background-color: #00ff009f;
-        }
-
-        .matched {
-            box-shadow: 0px 0px 7px #ff0000;
-        }
-
-        #movie_info {
-            display:none;
-            width:80vw;
-            height:80vh;
-            margin:auto;
-            border: 2px solid #b4b4b4;
-            border-radius: 2px;
-            position:absolute;
-            z-index: 1;
-        }
-
-    </style>
+    <link rel="stylesheet" type="text/css" href="{% static 'display_app/css/style.css' %}">
 </head>
+
 <body>
     {% csrf_token %}
     <header>
@@ -110,7 +29,8 @@
     <main>
         <p>Hello!</p>
         <div id="searchbox" class="ui-widget ui-front">
-            <input class="ui-autocomplete-input" type="search" name="searchbar" id="searchbar" placeholder="Search for a movie...">
+            <input class="ui-autocomplete-input" type="search" name="searchbar" id="searchbar"
+                placeholder="Search for a movie...">
         </div>
         <div class="inline input-field">
             <input type="text" name="sharecode" id="sharecode" placeholder="Enter share code here...">
@@ -130,4 +50,5 @@
 
     </main>
 </body>
+
 </html>

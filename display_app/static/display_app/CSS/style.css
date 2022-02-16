@@ -1,0 +1,78 @@
+html {
+    background-color: #474747;
+}
+body {
+    padding: 10vmin;
+}
+
+header {
+    position:fixed;
+    top:0;
+    left:0;
+    width:100vw;
+    z-index: 1;
+    background-color: #868686;
+    border-bottom: 2px #aaaaaa solid;
+    display:flex;
+}
+
+div.ui-widget {
+    height:50px;
+}
+
+.ui-autocomplete {
+    position:relative;
+}
+
+#user_list, #shared_list {
+    display:grid;
+    width:100%;
+    grid-template-columns: repeat(auto-fill, 154px);
+    /* grid-template-rows: repeat(autofill, 231px); */
+    gap:10px;
+    margin:10px;
+}
+
+#user_list h5, #shared_list h5 {
+    text-align: center;
+    margin-top: 20%;
+    color:#000000;
+    text-shadow: 0 0 3px #868686, 0 0 3px #ffffff, 0 0 3px #ffffff, 0 0 3px #ffffff;
+}
+
+.list_item {
+    width:154px;
+    height:231px;
+}
+
+#shared_users {
+    display:flex;
+    width:100%;
+    justify-content: space-around;
+}
+
+#shared_users div {
+    background-color: #ffffff7e;
+    border-radius: 3px;
+    padding: 0px 10px;
+}
+
+.turn {
+    box-shadow: 0px 0px 6px #00ff00;
+    background-color: #00ff009f;
+}
+
+.matched {
+    box-shadow: 0px 0px 7px #ff0000;
+}
+
+#movie_info {
+    display:none;
+    width:80vw;
+    height:80vh;
+    margin:auto;
+    border: 2px solid #b4b4b4;
+    border-radius: 2px;
+    position:absolute;
+    z-index: 1;
+}
