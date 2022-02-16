@@ -31,6 +31,7 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
+    'channels',
     'display_app',
     'app_login_and_reg',
     'django.contrib.admin',
@@ -70,6 +71,9 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'movie_match.wsgi.application'
+
+# Channels
+ASGI_APPLICATION = "movie_match.asgi.application"
 
 
 # Database
