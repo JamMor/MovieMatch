@@ -8,7 +8,7 @@ class MatchConsumer(WebsocketConsumer):
         self.sharecode = self.scope['url_route']['kwargs']['sharecode']
         self.match_group_name = 'match_%s' % self.sharecode
 
-        # Join match group
+        # Join group
         async_to_sync(self.channel_layer.group_add)(
             self.match_group_name,
             self.channel_name
@@ -17,24 +17,19 @@ class MatchConsumer(WebsocketConsumer):
         self.accept()
 
     def disconnect(self, close_code):
-        # Leave match group
+        # Leave group
         async_to_sync(self.channel_layer.group_discard)(
             self.match_group_name,
             self.channel_name
         )
 
-    # Receive message from WebSocket
+    # Receive message from WebSocket Client
     def receive(self, text_data):
         text_data_json = json.loads(text_data)
         message = text_data_json['message']
         print(message)
 
-        # self.send(text_data=json.dumps({
-        #     'message': message,
-        #     'status' : "It worked, ya dumb dumb"
-        # }))
-
-        # Send message to match group
+        # Send message to ChannelLayer
         async_to_sync(self.channel_layer.group_send)(
             self.match_group_name,
             {
@@ -43,11 +38,11 @@ class MatchConsumer(WebsocketConsumer):
             }
         )
 
-    # Receive message from match group
+    # Receive message from ChannelLayer
     def match_message(self, event):
         message = event['message']
 
-        # Send message to WebSocket
+        # Send message to WebSocket Client
         self.send(text_data=json.dumps({
             'message': message
         }))
