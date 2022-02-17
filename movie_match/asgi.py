@@ -10,13 +10,20 @@ https://channels.readthedocs.io/en/stable/installation.html
 import os
 
 import django
+from channels.auth import AuthMiddlewareStack
 from channels.http import AsgiHandler
-from channels.routing import ProtocolTypeRouter
+from channels.routing import ProtocolTypeRouter, URLRouter
+
+import display_app.routing
 
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'movie_match.settings')
 django.setup()
 
 application = ProtocolTypeRouter({
   "http": AsgiHandler(),
-  # Just HTTP for now. (We can add other protocols later.)
+  "websocket": AuthMiddlewareStack(
+        URLRouter(
+            display_app.routing.websocket_urlpatterns
+        )
+    ),
 })
