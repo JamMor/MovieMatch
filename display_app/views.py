@@ -1,5 +1,7 @@
-from django.shortcuts import render
+from random import randint
+from django.shortcuts import redirect, render
 from django.http import JsonResponse
+from django.urls import reverse
 from .models import Movie, MovieList, SharedList
 from app_login_and_reg.models import User
 import json
@@ -31,6 +33,21 @@ def save_list(post_data):
 # Displays main page
 def index(request):
     return render(request, 'display_app/index.html')
+
+def new_match(request):
+    data = json.loads(request.body)
+    print ("New_match request.body data")
+    print (data)
+    sharecode = randint(1,100)
+    return JsonResponse({"sharecode": sharecode})
+
+def join_match(request, sharecode=0):
+    print("YOU IN THE JOIN MATCHA")
+    # data = json.loads(request.body)
+    # print ("Join_match request.body data")
+    # print (data)
+    context = {'sharecode' : sharecode}
+    return render(request, 'display_app/match.html', context)
 
 # Creates new SharedList, or adds to already existing one.
 def new_list(request):
