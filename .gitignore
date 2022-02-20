@@ -140,3 +140,4 @@ cython_debug/
 # Visual Studio Code # 
 .vscode/* 
 .history
+pyvenv.cfg
