@@ -30,6 +30,7 @@ $(document).ready(function() {
     });
 
     const csrftoken = getCookie('csrftoken');
+
     const api_key = "f4f5f258379baf10796e1d3aeb5add05";
     const image_link = "https://image.tmdb.org/t/p/";
     var movie_list = []
@@ -58,6 +59,7 @@ $(document).ready(function() {
             if (movie_list.some(each_movie => each_movie.id == movie.item.id)) {
                 console.log("It's already in here dumdum.")
             }
+            //Adds movie to DOM
             else {
                 movie_list.push(movie.item);
                 $('#user_list').append("<div class='list_item personal' style='background-image: url(" + image_link+"w154"+movie.item.poster_path + ")'><h5>"+movie.item.title+ " - " +movie.item.release_date.slice(0,4)+ "</h5></div>");
@@ -75,8 +77,23 @@ $(document).ready(function() {
     $("#share").click(function (){
         sharecode = $("#sharecode").val();
         nickname = $("#nickname").val();
-        // console.log("DATA for Django: ", {"sharecode": sharecode, "nickname": nickname, "results": movie_list});
-        $.post("match", JSON.stringify({"sharecode": sharecode, "nickname": nickname, "results": movie_list}),"json")
+
+        //=================TESTING===================
+        //Size of POST of object
+        const size = new TextEncoder()
+            .encode(JSON
+                .stringify({
+                    "sharecode": sharecode, 
+                    "nickname": nickname, 
+                    "movie_list": movie_list}))
+            .length;
+        const kiloBytes = size / 1024;
+        const megaBytes = kiloBytes / 1024;
+        console.log(`POST data is ${megaBytes} MBs (${kiloBytes} kBs)`);
+        //===========================================
+
+        // console.log("DATA for Django: ", {"sharecode": sharecode, "nickname": nickname, "movie_list": movie_list});
+        $.post("match", JSON.stringify({"sharecode": sharecode, "nickname": nickname, "movie_list": movie_list}),"json")
             .done(function(data) {
                 console.log( "Movie list successfully sent!" );
                 window.location.href = `/match/${data.sharecode}`;
