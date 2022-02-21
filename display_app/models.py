@@ -1,4 +1,3 @@
-from enum import unique
 import json
 import shortuuid
 from django.db import models
@@ -31,7 +30,7 @@ class TempMovieList(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
 
 class SharedMovieList(models.Model):
-    sharecode = models.CharField(max_length=255, unique=True, default=shortuuid.uuid()[:8])
+    sharecode = models.CharField(max_length=255, unique=True, default=shortuuid.uuid()[:9])
     # users will have a list of base 57 encoded uuid
     users = models.TextField(default='[]')
     created_at = models.DateTimeField(auto_now_add=True)
