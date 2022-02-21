@@ -1,20 +1,16 @@
 from random import randint
-from urllib import request
 from django.db import IntegrityError
 from django.shortcuts import redirect, render
 from django.http import JsonResponse
 from django.urls import reverse
-from .models import Movie, SavedMovieList, TempMovieList, SharedMovieList, SharedMovie
+from .models import UserUUID, Movie, SavedMovieList, TempMovieList, SharedMovieList, SharedMovie
 from app_login_and_reg.models import User
 import json
-import shortuuid
-from django.db.models import F
-from django.core.exceptions import ObjectDoesNotExist
 
 # Creates a Temporary list and returns the list
 def create_temp_list(movie_list, uuid):
     print("Building new temp list")
-    temp_list = TempMovieList.objects.create(created_by = uuid)
+    temp_list = TempMovieList.objects.create()
     print("New Temp List created! ID: ", temp_list.id)
     # Updates or stores movie in database if it exists
     for movie_item in movie_list:
@@ -50,17 +46,15 @@ def create_shared_list():
 # Adds Shared movie objects to a shared list or updates the users who chose it.
 def add_to_shared_list(shared_list, temp_list):
     user_uuid = temp_list.created_by
-    shared_list.users = json.dumps(json.loads(F('users')).append(user_uuid))
+    #Use transactions here
+    shared_list.users.add(user_uuid)
     for each_movie in temp_list.movies:
         shared_movie, created = SharedMovie.objects.get_or_create(
             shared_list = shared_list, 
             movie = each_movie)
-        if created:
-            shared_movie.submitted_by = user_uuid
-        elif not created:
-            shared_movie.submitted_by = json.dumps(json.loads(F('submitted_by')).append(user_uuid))
+        shared_movie.submitted_by.add(user_uuid)
         shared_movie.save()
-    return True
+    shared_list.save()
 
 
 # Create your views here.
@@ -70,7 +64,8 @@ def index(request):
 
 def new_match(request):
     if 'uuid' not in request.session:
-        request.session['uuid'] = shortuuid.uuid()
+        new_uuid = UserUUID.objects.create()
+        request.session['uuid'] = new_uuid.uuid
     data = json.loads(request.body)
     
     temp_list = create_temp_list(data['movie_list'], request.session['uuid'])
@@ -79,15 +74,16 @@ def new_match(request):
     if sharecode:
         print("sharecode is True")
 
+    # Try a get_or_create here and see if the empty string throws an error
     if len(sharecode) == 0:
         try:
-            shared_list = create_shared_list()
+            shared_list = SharedMovieList.objects.create()
         except IntegrityError:
             return JsonResponse({"status": "Could not create SharedList.", "sharecode": ''})
     else:
         try:
             shared_list = SharedMovieList.objects.get(sharecode = sharecode)
-        except ObjectDoesNotExist:
+        except SharedMovieList.DoesNotExist:
             return JsonResponse({"status": "SharedList not found.", "sharecode": ''})
     
     add_to_shared_list(shared_list, temp_list)
