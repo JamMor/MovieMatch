@@ -30,7 +30,7 @@ class TempMovieList(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
 
 class SharedMovieList(models.Model):
-    sharecode = models.CharField(max_length=255, unique=True, default=shortuuid.uuid()[:9])
+    sharecode = models.CharField(max_length=255, unique=True)
     # users will have a list of base 57 encoded uuid
     users = models.TextField(default='[]')
     created_at = models.DateTimeField(auto_now_add=True)
@@ -40,6 +40,21 @@ class SharedMovieList(models.Model):
         self.users = json.dumps(x)
     def get_users(self):
         return json.loads(self.users)
+
+    def save(self, *args, **kwargs):
+        su = shortuuid.ShortUUID(alphabet='23456789ABCDEFGHJKLMNPQRSTUVWXYZ')
+        self.sharecode = su.uuid()[:8]
+
+        for attempt in range(10):
+            try:
+                with transaction.atomic():
+                    super(SharedMovieList, self).save(*args, **kwargs)
+                    break
+            except IntegrityError:
+                print(f'Attempt {attempt}: A shared list with this sharecode already exists.')
+                continue
+        else:
+            raise IntegrityError
 
 class SharedMovie(models.Model):
     # submitted_by will be a list of base 57 encoded uuids
@@ -75,7 +90,7 @@ class UserUUID(models.Model):
                     super(UserUUID, self).save(*args, **kwargs)
                     break
             except IntegrityError:
-                print(f'Attempt {attempt}: This uuid already exists.')
+                print(f'Attempt {attempt}: This uuid already exists in the database.')
                 continue
         else:
             raise IntegrityError
