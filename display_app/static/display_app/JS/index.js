@@ -93,10 +93,14 @@ $(document).ready(function() {
         //===========================================
 
         // console.log("DATA for Django: ", {"sharecode": sharecode, "nickname": nickname, "movie_list": movie_list});
-        $.post("match", JSON.stringify({"sharecode": sharecode, "nickname": nickname, "movie_list": movie_list}),"json")
+        $.post("match/", JSON.stringify({"sharecode": sharecode, "nickname": nickname, "movie_list": movie_list}),"json")
             .done(function(data) {
                 console.log( "Movie list successfully sent!" );
-                window.location.href = `/match/${data.sharecode}`;
+                if(data['status'] == "success")
+                {window.location.href = `/match/${data.sharecode}`;}
+                else
+                {console.log(data['status'])}
+
                 })
             .fail(function() {
                 console.log( "Failed to send movie list." );
