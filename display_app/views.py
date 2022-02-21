@@ -36,7 +36,7 @@ def add_to_shared_list(shared_list, temp_list):
     user_uuid = temp_list.created_by
     #Use transactions here
     shared_list.users.add(user_uuid)
-    for each_movie in temp_list.movies:
+    for each_movie in temp_list.movies.all():
         shared_movie, created = SharedMovie.objects.get_or_create(
             shared_list = shared_list, 
             movie = each_movie)
@@ -76,7 +76,7 @@ def new_match(request):
     
     add_to_shared_list(shared_list, temp_list)
     
-    return JsonResponse({"status": "success", "sharecode": sharecode})
+    return JsonResponse({"status": "success", "sharecode": shared_list.sharecode})
 
 def join_match(request, sharecode):
     print("YOU IN THE JOIN MATCHA")
