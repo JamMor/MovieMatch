@@ -1,6 +1,6 @@
 import json
 import shortuuid
-from django.db import models
+from django.db import IntegrityError, models, transaction
 
 # Create your models here.
 class Movie(models.Model):
@@ -54,6 +54,31 @@ class SharedMovie(models.Model):
 
     def __str__(self):
         return self.movie.title
+
+class UserUUID(models.Model):
+    uuid = models.CharField(max_length=255, unique=True)
+    is_Registered = models.BooleanField(default = False)
+    user_account = models.ForeignKey('app_login_and_reg.User', related_name="UUID", on_delete = models.CASCADE, null=True)
+    
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+    
+    def __str__(self):
+        return self.uuid
+
+    def save(self, *args, **kwargs):
+        self.uuid = shortuuid.uuid()
+
+        for attempt in range(10):
+            try:
+                with transaction.atomic():
+                    super(UserUUID, self).save(*args, **kwargs)
+                    break
+            except IntegrityError:
+                print(f'Attempt {attempt}: This uuid already exists.')
+                continue
+        else:
+            raise IntegrityError
 
 # class Friends(models.Model):
 #     user = models.OneToOneField(User, on_delete=models.CASCADE)
