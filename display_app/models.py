@@ -59,11 +59,6 @@ class SharedMovieList(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     
-    def set_users(self, x):
-        self.users = json.dumps(x)
-    def get_users(self):
-        return json.loads(self.users)
-
     def save(self, *args, **kwargs):
         su = shortuuid.ShortUUID(alphabet='23456789ABCDEFGHJKLMNPQRSTUVWXYZ')
         self.sharecode = su.uuid()[:8]
@@ -83,11 +78,6 @@ class SharedMovie(models.Model):
     submitted_by = models.ManyToManyField(UserUUID, related_name="submitted_movies")
     shared_list = models.ForeignKey(SharedMovieList, related_name="shared_movies", on_delete = models.CASCADE, null=True)
     movie = models.ForeignKey(Movie, related_name="shared_movies", on_delete = models.CASCADE, null=True)
-
-    def set_submitted_by(self, x):
-        self.submitted_by = json.dumps(x)
-    def get_submitted_by(self):
-        return json.loads(self.submitted_by)
 
     def __str__(self):
         return self.movie.title
