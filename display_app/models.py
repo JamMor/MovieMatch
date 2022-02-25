@@ -15,18 +15,22 @@ class UserUUID(models.Model):
         return self.uuid
 
     def save(self, *args, **kwargs):
-        self.uuid = shortuuid.uuid()
+        if self.uuid is None:
+            print("No uuid. Creating one.")
 
-        for attempt in range(10):
-            try:
-                with transaction.atomic():
-                    super(UserUUID, self).save(*args, **kwargs)
-                    break
-            except IntegrityError:
-                print(f'Attempt {attempt}: This uuid already exists in the database.')
-                continue
+            for attempt in range(10):
+                self.uuid = shortuuid.uuid()
+                try:
+                    with transaction.atomic():
+                        super(UserUUID, self).save(*args, **kwargs)
+                        break
+                except IntegrityError:
+                    print(f'Attempt {attempt}: This uuid already exists in the database.')
+                    continue
+            else:
+                raise IntegrityError
         else:
-            raise IntegrityError
+            print("UUID exists. Not renewing.")
 
 class Movie(models.Model):
     movie_id = models.CharField(max_length=255)
@@ -60,19 +64,23 @@ class SharedMovieList(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
     
     def save(self, *args, **kwargs):
-        su = shortuuid.ShortUUID(alphabet='23456789ABCDEFGHJKLMNPQRSTUVWXYZ')
-        self.sharecode = su.uuid()[:8]
+        if self.sharecode is None:
+            print("No sharecode. Creating one.")
+            su = shortuuid.ShortUUID(alphabet='23456789ABCDEFGHJKLMNPQRSTUVWXYZ')
 
-        for attempt in range(10):
-            try:
-                with transaction.atomic():
-                    super(SharedMovieList, self).save(*args, **kwargs)
-                    break
-            except IntegrityError:
-                print(f'Attempt {attempt}: A shared list with this sharecode already exists.')
-                continue
+            for attempt in range(10):
+                self.sharecode = su.uuid()[:8]
+                try:
+                    with transaction.atomic():
+                        super(SharedMovieList, self).save(*args, **kwargs)
+                        break
+                except IntegrityError:
+                    print(f'Attempt {attempt}: A shared list with this sharecode already exists.')
+                    continue
+            else:
+                raise IntegrityError
         else:
-            raise IntegrityError
+            print("Sharecode exists. Not renewing.")
 
 class SharedMovie(models.Model):
     submitted_by = models.ManyToManyField(UserUUID, related_name="submitted_movies")
