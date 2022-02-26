@@ -44,18 +44,22 @@ def add_to_shared_list(shared_list, temp_list):
         shared_movie.save()
     shared_list.save()
 
-
-# Create your views here.
-# Displays main page
-def index(request):
-    return render(request, 'display_app/index.html')
-
-def new_match(request):
+def get_or_set_uuid(request):
     if 'uuid' not in request.session:
         user_uuid = UserUUID.objects.create()
         request.session['uuid'] = user_uuid.uuid
     else:
         user_uuid = UserUUID.objects.get(uuid = request.session['uuid'])
+    return user_uuid
+
+# Create your views here.
+# Displays main page
+def index(request):
+    user_uuid = get_or_set_uuid(request)
+    return render(request, 'display_app/index.html')
+
+def new_match(request):
+    user_uuid = get_or_set_uuid(request)
     data = json.loads(request.body)
     
     temp_list = create_temp_list(data['movie_list'], user_uuid)
@@ -79,9 +83,6 @@ def new_match(request):
     return JsonResponse({"status": "success", "sharecode": shared_list.sharecode})
 
 def join_match(request, sharecode):
-    print("YOU IN THE JOIN MATCHA")
-    # data = json.loads(request.body)
-    # print ("Join_match request.body data")
-    # print (data)
+    user_uuid = get_or_set_uuid(request)
     context = {'sharecode' : sharecode}
     return render(request, 'display_app/match.html', context)
