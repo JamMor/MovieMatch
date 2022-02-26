@@ -48,16 +48,20 @@ $(document).ready(function() {
     
     matchSocket.onopen = function(e) {
         console.log("Match socket opened");
-        //Populate current share list.
         //Send user info
+        //Populate current share list.
+        matchSocket.send(JSON.stringify({
+            'command' : 'initialize',
+            'message': 'Test intialize send.'
+        }))
     };
 
     //delete movie from html when told
     matchSocket.onmessage = function(e) {
         console.log("Message received");
         console.log(e);
-
-
+        responseData = JSON.parse(e.data);
+        console.log(responseData);
     };
 
     matchSocket.onclose = function(e) {
@@ -65,9 +69,11 @@ $(document).ready(function() {
     };
 
     //Send which movie to delete on click
-    $('#testButton').click(function() {
+    $('#deleteButton').click(function() {
         matchSocket.send(JSON.stringify({
-            'message': 'Test send.'
+            'command' : 'eliminate',
+            'movie_id' : 'FakeId',
+            'message': 'Test delete send.'
         })
     )});
 })
