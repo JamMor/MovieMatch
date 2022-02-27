@@ -12,7 +12,6 @@
     </script>
 
     {% load static %}
-    <script src="{% static 'display_app/js/sockets.js'%}"></script>
     <link rel="stylesheet" href="https://code.jquery.com/ui/1.13.1/themes/base/jquery-ui.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
     <link rel="stylesheet" type="text/css" href="{% static 'display_app/css/style.css' %}">
@@ -27,7 +26,7 @@
         <a href="">Logout</a>
     </header>
     <main>
-        <h1>Match Room ID = <span id="share-code">{{sharecode}}</span></h1>
+        <h4>Match Room ID = <span id="share-code">{{sharecode}}</span></h4>
         <div class="inline input-field">
             <input type="text" name="savelist" id="savelist" placeholder="Enter list name...">
             <button id="save">Save</button>
@@ -35,12 +34,16 @@
         <h5>Users:</h5>
         <div id="shared_users"></div>
         <h4>Shared List:</h4>
-        <div id="shared_list"></div>
+        <div id="movie_list"></div>
         <hr>
         <h4>Your List:</h4>
         <div id="user_list"></div>
         <button id="deleteButton">Test the socket.</button>
     </main>
+    <script type='text/javascript' > 
+        var movie_list = []; 
+    </script>
+    <script src="{% static 'display_app/js/match_builder.js'%}"></script>
+    <script src="{% static 'display_app/js/sockets.js'%}"></script>
 </body>
-
 </html>
