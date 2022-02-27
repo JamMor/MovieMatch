@@ -43,13 +43,8 @@ $(document).ready(function() {
         minLength:2,
         source: function(request, response) {
             var search_str = request.term;
-            // if (search_str in cache) {
-            //     response (cache[search_str]);
-            //     return
-            // }
             $.get("https://api.themoviedb.org/3/search/movie?api_key="+api_key+"&query="+search_str,
                 function(data){
-                    // cache[search_str] = data;
                     response( data.results );
                     return
                 }, "json")
@@ -62,7 +57,7 @@ $(document).ready(function() {
             //Adds movie to DOM
             else {
                 movie_list.push(movie.item);
-                $('#user_list').append("<div class='list_item personal' style='background-image: url(" + image_link+"w154"+movie.item.poster_path + ")'><h5>"+movie.item.title+ " - " +movie.item.release_date.slice(0,4)+ "</h5></div>");
+                $('#movie_list').append("<div class='list_item personal' style='background-image: url(" + image_link+"w154"+movie.item.poster_path + ")'><h5>"+movie.item.title+ " - " +movie.item.release_date.slice(0,4)+ "</h5></div>");
             }
             
         },
@@ -110,6 +105,6 @@ $(document).ready(function() {
     // Button to clear current user list
     $("#clear").click(function (){
         movie_list = [];
-        $('#user_list').html("");
+        $('#movie_list').html("");
     })
 })
