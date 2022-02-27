@@ -24,7 +24,7 @@ div.ui-widget {
     position:relative;
 }
 
-#user_list, #shared_list {
+#movie_list {
     display:grid;
     width:100%;
     grid-template-columns: repeat(auto-fill, 154px);
@@ -33,7 +33,7 @@ div.ui-widget {
     margin:10px;
 }
 
-#user_list h5, #shared_list h5 {
+#movie_list h5 {
     text-align: center;
     margin-top: 20%;
     color:#000000;
@@ -43,27 +43,6 @@ div.ui-widget {
 .list_item {
     width:154px;
     height:231px;
-}
-
-#shared_users {
-    display:flex;
-    width:100%;
-    justify-content: space-around;
-}
-
-#shared_users div {
-    background-color: #ffffff7e;
-    border-radius: 3px;
-    padding: 0px 10px;
-}
-
-.turn {
-    box-shadow: 0px 0px 6px #00ff00;
-    background-color: #00ff009f;
-}
-
-.matched {
-    box-shadow: 0px 0px 7px #ff0000;
 }
 
 #movie_info {
