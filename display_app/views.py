@@ -19,7 +19,7 @@ def create_temp_list(movie_list, user_uuid):
             movie_id = movie_item["id"],
             title = movie_item["original_title"],
             release_date = movie_item["release_date"],
-            defaults = {'description' : movie_item["overview"], 'poster' : movie_item["poster_path"]}
+            defaults = {'description' : movie_item["overview"], 'poster_path' : movie_item["poster_path"]}
         )
         if created:
             print ("Added new movie to database.")

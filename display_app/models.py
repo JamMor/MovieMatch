@@ -36,7 +36,7 @@ class Movie(models.Model):
     movie_id = models.CharField(max_length=255)
     title = models.CharField(max_length=255)
     description = models.TextField()
-    poster = models.CharField(max_length=255)
+    poster_path = models.CharField(max_length=255)
     release_date = models.DateField()
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
