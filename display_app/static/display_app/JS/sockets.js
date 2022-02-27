@@ -32,7 +32,6 @@ $(document).ready(function() {
     const csrftoken = getCookie('csrftoken');
     const api_key = "f4f5f258379baf10796e1d3aeb5add05";
     const image_link = "https://image.tmdb.org/t/p/";
-    var movie_list = []
 
     const shareCode = $('#share-code').text();
 
@@ -56,12 +55,18 @@ $(document).ready(function() {
         }))
     };
 
-    //delete movie from html when told
+    //Receive messages
     matchSocket.onmessage = function(e) {
-        console.log("Message received");
         console.log(e);
         responseData = JSON.parse(e.data);
         console.log(responseData);
+        //Initialize list of movies
+        if(responseData.command == "initialized"){
+            init_list = responseData.share_list.movie_list
+            movieAdder(movie_list, init_list)
+            movie_list = init_list
+            console.log("Initialized.")
+        }
     };
 
     matchSocket.onclose = function(e) {
