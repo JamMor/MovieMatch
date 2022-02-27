@@ -43,7 +43,7 @@ $(document).ready(function() {
         minLength:2,
         source: function(request, response) {
             var search_str = request.term;
-            $.get("https://api.themoviedb.org/3/search/movie?api_key="+api_key+"&query="+search_str,
+            $.get(`https://api.themoviedb.org/3/search/movie?api_key=${api_key}&query=${search_str}`,
                 function(data){
                     response( data.results );
                     return
@@ -57,14 +57,14 @@ $(document).ready(function() {
             //Adds movie to DOM
             else {
                 movie_list.push(movie.item);
-                $('#movie_list').append("<div class='list_item personal' style='background-image: url(" + image_link+"w154"+movie.item.poster_path + ")'><h5>"+movie.item.title+ " - " +movie.item.release_date.slice(0,4)+ "</h5></div>");
+                $('#movie_list').append(`<div class='list_item personal' style='background-image: url(${image_link}w154${movie.item.poster_path})'><h5>${movie.item.title} - ${movie.item.release_date.slice(0, 4)}</h5></div>`);
             }
             
         },
     }).data('ui-autocomplete')._renderItem = function(ul, movie) {
         return $( "<li>" )
         .attr( "item.autocomplete", movie )
-        .append( "<a>" +movie.title+ " - " +movie.release_date+ "<img src='"+image_link+"w92"+movie.poster_path+"'></a>" )
+        .append( `<a>${movie.title} - ${movie.release_date}<img src='${image_link}w92${movie.poster_path}'></a>` )
         .appendTo( ul );
     }
 
