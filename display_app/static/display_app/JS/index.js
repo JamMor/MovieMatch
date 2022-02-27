@@ -49,15 +49,24 @@ $(document).ready(function() {
                     return
                 }, "json")
         },
-        select: function (event, movie){
+        select: function (event, movie_item){
+            let movie = movie_item.item;
             console.log(movie);
-            if (movie_list.some(each_movie => each_movie.id == movie.item.id)) {
+            if (movie_list.some(each_movie => each_movie.id == movie.id)) {
                 console.log("It's already in here dumdum.")
             }
             //Adds movie to DOM
             else {
-                movie_list.push(movie.item);
-                $('#movie_list').append(`<div class='list_item personal' style='background-image: url(${image_link}w154${movie.item.poster_path})'><h5>${movie.item.title} - ${movie.item.release_date.slice(0, 4)}</h5></div>`);
+                movie_list.push(movie);
+                background_img = (movie.poster_path == null) 
+                    ? "style='background-color:red'"
+                    : `style='background-image: url(${image_link}w154${movie.poster_path})'`
+        
+                $('#movie_list')
+                    .append(
+                        `<div class='list_item personal' ${background_img}>\
+                        <h5>${movie.title} - ${movie.release_date.slice(0, 4)}</h5>\
+                        </div>`);
             }
             
         },

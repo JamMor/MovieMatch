@@ -14,7 +14,7 @@ function movieAdder(old_list, updated_list){
     
     new_movie_list.forEach((movie) => {
         background_img = (movie.poster_path == null) 
-            ? "style='background-color: red"
+            ? "style='background-color: red'"
             : `style='background-image: url(${image_link}w154${movie.poster_path})'`
         
         $('#movie_list')
