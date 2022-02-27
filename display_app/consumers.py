@@ -42,7 +42,7 @@ class MatchConsumer(JsonWebsocketConsumer):
 
             #Confirm Removal for Group
             send_content = {
-            'command': 'eliminate',
+            'command': 'eliminated',
             'status' : "success",
             'message': f'Movie ID {movie_id} eliminated by {user_uuid}.'
             }
@@ -60,7 +60,7 @@ class MatchConsumer(JsonWebsocketConsumer):
             model_dict = SharedListEncoder(self.sharecode)
 
             self.send_json({
-                'command': 'initialize',
+                'command': 'initialized',
                 'status' : 'success',
                 'share_list': model_dict
             })
