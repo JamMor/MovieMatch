@@ -60,12 +60,12 @@ $(document).ready(function() {
         console.log(e);
         responseData = JSON.parse(e.data);
         console.log(responseData);
-        //Initialize list of movies
-        if(responseData.command == "initialized"){
-            init_list = responseData.share_list.movie_list
-            movieAdder(movie_list, init_list)
-            movie_list = init_list
-            console.log("Initialized.")
+        //Initialize/Update list of movies
+        if(responseData.command == "initialized" || responseData.command == "updated"){
+            received_list = responseData.share_list.movie_list
+            movieAdder(movie_list, received_list)
+            movie_list = received_list
+            console.log("Updated List.")
         }
     };
 

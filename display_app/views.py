@@ -4,6 +4,7 @@ from django.shortcuts import redirect, render
 from django.http import JsonResponse
 from django.urls import reverse
 from .models import UserUUID, Movie, SavedMovieList, TempMovieList, SharedMovieList, SharedMovie
+from .signals import update_shared_list_channels
 from app_login_and_reg.models import User
 import json
 
@@ -43,6 +44,7 @@ def add_to_shared_list(shared_list, temp_list):
         shared_movie.submitted_by.add(user_uuid)
         shared_movie.save()
     shared_list.save()
+    update_shared_list_channels(shared_list.sharecode)
 
 def get_or_set_uuid(request):
     #Checks to see if uuid key exists and is set in session

@@ -78,6 +78,17 @@ class MatchConsumer(JsonWebsocketConsumer):
 
         # Send message to WebSocket Client
         self.send_json(content)
+    
+    # Receive message from ChannelLayer
+    def update_message(self, event):
+        model_dict = SharedListEncoder(self.sharecode)
+
+        # Send message to WebSocket Client
+        self.send_json({
+            'command': 'updated',
+            'status' : 'success',
+            'share_list': model_dict
+        })
 
     #Custom JSON coders (for dates)
     @classmethod
