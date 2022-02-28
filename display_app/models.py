@@ -15,7 +15,7 @@ class UserUUID(models.Model):
         return self.uuid
 
     def save(self, *args, **kwargs):
-        if self.uuid is None:
+        if not self.uuid:
             print("No uuid. Creating one.")
 
             for attempt in range(10):
@@ -64,7 +64,7 @@ class SharedMovieList(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
     
     def save(self, *args, **kwargs):
-        if self.sharecode is None:
+        if not self.sharecode:
             print("No sharecode. Creating one.")
             su = shortuuid.ShortUUID(alphabet='23456789ABCDEFGHJKLMNPQRSTUVWXYZ')
 
