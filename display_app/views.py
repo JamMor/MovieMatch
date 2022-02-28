@@ -45,11 +45,12 @@ def add_to_shared_list(shared_list, temp_list):
     shared_list.save()
 
 def get_or_set_uuid(request):
-    if 'uuid' not in request.session:
+    #Checks to see if uuid key exists and is set in session
+    if 'uuid' in request.session and request.session['uuid']:
+        user_uuid = UserUUID.objects.get(uuid = request.session['uuid'])
+    else:
         user_uuid = UserUUID.objects.create()
         request.session['uuid'] = user_uuid.uuid
-    else:
-        user_uuid = UserUUID.objects.get(uuid = request.session['uuid'])
     return user_uuid
 
 # Create your views here.
