@@ -55,3 +55,7 @@ div.ui-widget {
     position:absolute;
     z-index: 1;
 }
+
+.eliminated {
+    box-shadow: 0px 0px 7px #ff0000;
+}

@@ -5,7 +5,7 @@ from channels.generic.websocket import JsonWebsocketConsumer
 from django.core import serializers
 from django.core.serializers.json import DjangoJSONEncoder
 
-from display_app.models import SharedMovieList
+from display_app.models import SharedMovieList, SharedMovie
 from .serializer import SharedListEncoder
 
 class MatchConsumer(JsonWebsocketConsumer):
@@ -36,15 +36,19 @@ class MatchConsumer(JsonWebsocketConsumer):
         user_uuid = self.scope["session"]["uuid"]
 
         if command == 'eliminate':
-            movie_id = content['movie_id']
+            shared_movie_id = content['shared_movie_id']
+            
             #Eliminate movie
-            #----logic----
+            shared_movie = SharedMovie.objects.get(id=shared_movie_id)
+            shared_movie.is_eliminated = True
+            shared_movie.save()
 
             #Confirm Removal for Group
             send_content = {
             'command': 'eliminated',
             'status' : "success",
-            'message': f'Movie ID {movie_id} eliminated by {user_uuid}.'
+            'shared_movie_id' : shared_movie_id,
+            'message': f'Movie ID {shared_movie_id} eliminated by {user_uuid}.'
             }
 
             async_to_sync(self.channel_layer.group_send)(
@@ -69,7 +73,7 @@ class MatchConsumer(JsonWebsocketConsumer):
             self.send_json({
                 'command': command,
                 'status' : 'failed',
-                'error_message' : "Command not found."
+                'error_message' : f'Command failure: {command}.'
             })
 
     # Receive message from ChannelLayer

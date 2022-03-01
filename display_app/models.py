@@ -86,6 +86,7 @@ class SharedMovie(models.Model):
     submitted_by = models.ManyToManyField(UserUUID, related_name="submitted_movies")
     shared_list = models.ForeignKey(SharedMovieList, related_name="shared_movies", on_delete = models.CASCADE, null=True)
     movie = models.ForeignKey(Movie, related_name="shared_movies", on_delete = models.CASCADE, null=True)
+    is_eliminated = models.BooleanField(default=False)
 
     def __str__(self):
         return self.movie.title

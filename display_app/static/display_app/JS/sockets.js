@@ -60,8 +60,15 @@ $(document).ready(function() {
         console.log(e);
         responseData = JSON.parse(e.data);
         console.log(responseData);
+        //Eliminate movie
+        if(responseData.command == "eliminated"){
+            let shared_movie_id = responseData.shared_movie_id
+            $(`#movie_${shared_movie_id}`).addClass('eliminated')
+            console.log("Eliminated movie")
+        }
+        
         //Initialize/Update list of movies
-        if(responseData.command == "initialized" || responseData.command == "updated"){
+        else if(responseData.command == "initialized" || responseData.command == "updated"){
             received_list = responseData.share_list.movie_list
             movieAdder(movie_list, received_list)
             movie_list = received_list
@@ -74,11 +81,11 @@ $(document).ready(function() {
     };
 
     //Send which movie to delete on click
-    $('#deleteButton').click(function() {
+    $('#movie_list').on('click', 'div.list_item' , function() {
+        let shared_movie_id = $(this).attr('id').slice(6)
         matchSocket.send(JSON.stringify({
             'command' : 'eliminate',
-            'movie_id' : 'FakeId',
-            'message': 'Test delete send.'
-        })
-    )});
+            'shared_movie_id' : shared_movie_id
+        }))
+    });
 })

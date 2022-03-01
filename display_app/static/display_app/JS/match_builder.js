@@ -9,17 +9,19 @@ function movieAdder(old_list, updated_list){
                 .some(old_movie => (old_movie.movie_id == new_movie.movie_id)))
     }
     else {new_movie_list = updated_list}
-    console.log("New Movies to Add!");
-    console.log(new_movie_list.map(movie => movie.title));
     
     new_movie_list.forEach((movie) => {
         background_img = (movie.poster_path == null) 
             ? "style='background-color: red'"
             : `style='background-image: url(${image_link}w154${movie.poster_path})'`
         
+            is_eliminated = movie.is_eliminated 
+            ? "eliminated"
+            : ""
+        
         $('#movie_list')
             .append(
-                `<div id='movie_${movie.movie_id}' class='list_item personal' ${background_img}>\
+                `<div id='movie_${movie.shared_movie_id}' class='list_item personal ${is_eliminated}' ${background_img}>\
                 <h5>${movie.title} - ${movie.release_date.slice(0,4)}</h5>\
                 </div>`
                 );
