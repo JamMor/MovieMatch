@@ -46,7 +46,7 @@ $(document).ready(function() {
             user_id++;
         }
         for (var movie of data['movies']){
-            $('#shared_list').append("<div id='movie_"+movie.movie_id+"' class='list_item shared' style='background-image: url(" + image_link+"w154"+movie.poster + ")'><h5>"+movie.title+ " - " +movie.release_date.slice(0,4)+ "</h5></div>");
+            $('#shared_list').append("<div id='movie_"+movie.movie_id+"' class='list_item shared' style='background-image: url(" + image_link+"w154"+movie.poster_path + ")'><h5>"+movie.title+ " - " +movie.release_date.slice(0,4)+ "</h5></div>");
         }
         var chosen = data['chosen'].split(',')
         for (var i = 1; i<chosen.length; i+=2){
@@ -96,7 +96,7 @@ $(document).ready(function() {
             if (data['added']) {
                 console.log("Movies have been added!")
                 for (new_movie of data['added']) {
-                    $('#shared_list').append("<div id='movie_"+new_movie.movie_id+"' class='list_item shared' style='background-image: url("+image_link+"w154"+new_movie.poster+"'><h5>"+new_movie.title+ " - " +new_movie.release_date.slice(0,4)+ "</h5></div>");
+                    $('#shared_list').append("<div id='movie_"+new_movie.movie_id+"' class='list_item shared' style='background-image: url("+image_link+"w154"+new_movie.poster_path+"'><h5>"+new_movie.title+ " - " +new_movie.release_date.slice(0,4)+ "</h5></div>");
                 }
             }
             if (data['deleted']) {

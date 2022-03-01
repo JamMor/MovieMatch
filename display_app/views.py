@@ -1,136 +1,91 @@
-from django.shortcuts import render
+from random import randint
+from django.db import IntegrityError
+from django.shortcuts import redirect, render
 from django.http import JsonResponse
-from .models import Movie, MovieList, SharedList
+from django.urls import reverse
+from .models import UserUUID, Movie, SavedMovieList, TempMovieList, SharedMovieList, SharedMovie
+from .signals import update_shared_list_channels
 from app_login_and_reg.models import User
 import json
 
-#Saves a new MovieList of movies, adding any movies that aren't already in database
-def save_list(post_data):
-    print("We in ya save function")
-    new_list = MovieList.objects.create()
-    print("New List created! ID: ", new_list.id)
-    for this_movie in post_data:
-        print("about to create: ", this_movie["title"])
-        new_movie, created = Movie.objects.get_or_create(
-            movie_id = this_movie["id"],
-            title = this_movie["original_title"],
-            description = this_movie["overview"],
-            poster = this_movie["poster_path"],
-            release_date = this_movie["release_date"]
+# Creates a Temporary list and returns the list
+def create_temp_list(movie_list, user_uuid):
+    print("Building new temp list")
+    temp_list = TempMovieList.objects.create(created_by = user_uuid)
+    print("New Temp List created! ID: ", temp_list.id)
+    # Updates or stores movie in database if it exists
+    for movie_item in movie_list:
+        print("Assessing: ", movie_item["title"])
+        movie_object, created = Movie.objects.update_or_create(
+            movie_id = movie_item["id"],
+            title = movie_item["original_title"],
+            release_date = movie_item["release_date"],
+            defaults = {'description' : movie_item["overview"], 'poster_path' : movie_item["poster_path"]}
         )
         if created:
-            print ("New Movie: ", this_movie["title"])
+            print ("Added new movie to database.")
         elif not created:
-            print ("Already Exists: ", this_movie["title"])
-        print("About to add movie to list...")
-        new_list.movies.add(new_movie)
-        print(this_movie["title"], " added to list!")
-    return new_list.id
+            print ("Already exists in database")
+        temp_list.movies.add(movie_object)
+        print(movie_item["title"], " added to temp list!")
+    temp_list.save()
+    
+    return temp_list
+
+# Adds Shared movie objects to a shared list or updates the users who chose it.
+def add_to_shared_list(shared_list, temp_list):
+    user_uuid = temp_list.created_by
+    #Use transactions here
+    shared_list.users.add(user_uuid)
+    for each_movie in temp_list.movies.all():
+        shared_movie, created = SharedMovie.objects.get_or_create(
+            shared_list = shared_list, 
+            movie = each_movie)
+        shared_movie.submitted_by.add(user_uuid)
+        shared_movie.save()
+    shared_list.save()
+    update_shared_list_channels(shared_list.sharecode)
+
+def get_or_set_uuid(request):
+    #Checks to see if uuid key exists and is set in session
+    if 'uuid' in request.session and request.session['uuid']:
+        user_uuid = UserUUID.objects.get(uuid = request.session['uuid'])
+    else:
+        user_uuid = UserUUID.objects.create()
+        request.session['uuid'] = user_uuid.uuid
+    return user_uuid
 
 # Create your views here.
 # Displays main page
 def index(request):
+    user_uuid = get_or_set_uuid(request)
     return render(request, 'display_app/index.html')
 
-# Creates new SharedList, or adds to already existing one.
-def new_list(request):
+def new_match(request):
+    user_uuid = get_or_set_uuid(request)
     data = json.loads(request.body)
-    print (data)
-    list_id = save_list(data['results'])
-    print("We made it out of the save function. Hooray!")
+    
+    temp_list = create_temp_list(data['movie_list'], user_uuid)
+    
+    sharecode = data['sharecode']
+    print("Sharecode: " + sharecode)
 
-    if len(data['sharecode']) == 0:
-        print("No share code")
-        request.session["order"] = 1
-        if len(data['nickname']) > 0:
-            nickname = data['nickname']
-        else:
-            nickname = "User 1"
-        shared_list = SharedList.objects.create(users = "turn*"+nickname)
-
-        chosen =[]
-        for movie in MovieList.objects.get(id=list_id).movies.all():
-            shared_list.movies.add(movie)
-            chosen.append(movie.movie_id + ",1")
-        shared_list.chosen = ",".join(chosen)
-        print("Chosen List: ", shared_list.chosen)
-        print("Shared movies: ", shared_list.movies.all())
-
+    if sharecode:
+        try:
+            shared_list = SharedMovieList.objects.get(sharecode = sharecode)
+        except SharedMovieList.DoesNotExist:
+            return JsonResponse({"status": "SharedList not found.", "sharecode": ''})
     else:
-        print("Has share code")
-        shared_list = SharedList.objects.get(id=data['sharecode'])
-        user_num = len(shared_list.users.split(',')) + 1
-        request.session["order"]= user_num
-        if len(data['nickname']) > 0:
-            nickname = data['nickname']
-        else:
-            nickname = "User "+str(user_num)
-        shared_list.users = shared_list.users + ",wait*"+nickname
-
-        chosen = shared_list.chosen.split(",")
-        for movie in MovieList.objects.get(id=list_id).movies.all():
-            if movie in shared_list.movies.all():
-                for i in range(0,len(chosen),2):
-                    if chosen[i] == movie.movie_id:
-                        chosen[i+1] = str(int(chosen[i+1])+1)
-                        break
-            else:
-                shared_list.movies.add(movie)
-                chosen.extend([movie.movie_id,"1"])
-
-        shared_list.chosen = ",".join(chosen)
-        print("Chosen List: ", shared_list.chosen)
-        print("Shared movies: ", shared_list.movies.all())
-
-    shared_list.save()
-
-    shared_movies = list(shared_list.movies.values("movie_id", "title", "release_date", "poster"))
-    print("Shared movies listified: ", shared_movies)
-    return JsonResponse({"sharecode":shared_list.id, "users":shared_list.users, "order":request.session["order"], "chosen":shared_list.chosen, "movies":shared_movies}, safe=False)
-
-#Pushes updated share list data to clients
-def update_shared(request):
-    response = {}
-    data = json.loads(request.body)
-    print("Data from update POST: ", data)
-    shared_list = SharedList.objects.get(id=data['sharecode'])
+        try:
+            shared_list = SharedMovieList.objects.create()
+        except IntegrityError:
+            return JsonResponse({"status": "Could not create SharedList.", "sharecode": ''})
     
-    #Updates to users of ShareList
-    shared_users = shared_list.users.split(",")
-    print(shared_users)
-    if len(shared_users) > data['user_num']:
-        print("New users!")
-        response['new_users'] = shared_users[data['user_num']:]
+    add_to_shared_list(shared_list, temp_list)
     
-    #Updates to movies in ShareList
-    shared_ids = list(shared_list.movies.values_list("movie_id", flat=True))
-    movie_ids = data['movie_ids']
-    added_ids = list((set(shared_ids).difference(movie_ids)))
-    print("IDs that have been added: ", added_ids)
-    added = list(Movie.objects.filter(movie_id__in=added_ids).values("movie_id", "title", "release_date", "poster"))
-    deleted_ids = list((set(movie_ids).difference(shared_ids)))
-    print("IDs that have been deleted: ", deleted_ids)
-    if len(added) > 0:
-        response['added'] = added
-        
-        #updates to matching selections when new user adds movies AKA chosen
-        matched_ids = list(set(shared_ids).intersection(movie_ids))
-        print("Movies have been added. Here are the ones that already exist: ==================================================")
-        for each_id in matched_ids:
-            print(Movie.objects.get(movie_id=each_id))
-        if len(matched_ids) > 0:
-            response['chosen'] = matched_ids
+    return JsonResponse({"status": "success", "sharecode": shared_list.sharecode})
 
-    if len(deleted_ids) > 0:
-        response['deleted'] = deleted_ids
-
-    # print("Update Data to client: ",response)
-    return JsonResponse(response)
-
-def delete_shared(request):
-    data = json.loads(request.body)
-    print("I DARE YOU TO DELETE ME: ",data["to_delete"])
-    delete_movie = Movie.objects.get(movie_id=data["to_delete"][6:])
-    share_list = SharedList.objects.get(id=data["sharecode"])
-    share_list.movies.remove(delete_movie)
-    return JsonResponse({"status":"deleted"})
+def join_match(request, sharecode):
+    user_uuid = get_or_set_uuid(request)
+    context = {'sharecode' : sharecode}
+    return render(request, 'display_app/match.html', context)

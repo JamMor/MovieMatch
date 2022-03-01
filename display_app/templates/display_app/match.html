@@ -12,7 +12,6 @@
     </script>
 
     {% load static %}
-    <script src="{% static 'display_app/js/index.js'%}"></script>
     <link rel="stylesheet" href="https://code.jquery.com/ui/1.13.1/themes/base/jquery-ui.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
     <link rel="stylesheet" type="text/css" href="{% static 'display_app/css/style.css' %}">
@@ -27,25 +26,24 @@
         <a href="">Logout</a>
     </header>
     <main>
-        <div id="searchbox" class="ui-widget ui-front">
-            <input class="ui-autocomplete-input" type="search" name="searchbar" id="searchbar"
-                placeholder="Search for a movie...">
-        </div>
-        <div class="inline input-field">
-            <input type="text" name="sharecode" id="sharecode" placeholder="Enter share code here...">
-            <input type="text" name="nickname" id="nickname" placeholder="Nickname">
-        </div>
-        <button id="share">Share/Add</button>
-        <button id="clear">Clear</button>
+        <h4>Match Room ID = <span id="share-code">{{sharecode}}</span></h4>
         <div class="inline input-field">
             <input type="text" name="savelist" id="savelist" placeholder="Enter list name...">
             <button id="save">Save</button>
         </div>
-        <hr>
+        <h5>Users:</h5>
+        <div id="shared_users"></div>
+        <h4>Shared List:</h4>
         <div id="movie_list"></div>
-        <div id="movie_info"></div>
-
+        <hr>
+        <h4>Your List:</h4>
+        <div id="user_list"></div>
+        <button id="deleteButton">Test the socket.</button>
     </main>
+    <script type='text/javascript' > 
+        var movie_list = []; 
+    </script>
+    <script src="{% static 'display_app/js/match_builder.js'%}"></script>
+    <script src="{% static 'display_app/js/sockets.js'%}"></script>
 </body>
-
 </html>
