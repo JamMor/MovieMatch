@@ -4,9 +4,10 @@ from django.shortcuts import redirect, render
 from django.http import JsonResponse
 from django.urls import reverse
 from .models import UserUUID, Movie, SavedMovieList, TempMovieList, SharedMovieList, SharedMovie
-from .signals import update_shared_list_channels
 from app_login_and_reg.models import User
 import json
+from channels.layers import get_channel_layer
+from asgiref.sync import async_to_sync
 
 # Creates a Temporary list and returns the list
 def create_temp_list(movie_list, user_uuid):
@@ -46,6 +47,19 @@ def add_to_shared_list(shared_list, temp_list):
     shared_list.save()
     update_shared_list_channels(shared_list.sharecode)
 
+# When Shared List is updated, sends updated list to appropriate channel
+def update_shared_list_channels(sharecode):
+    channel_layer = get_channel_layer()
+    if channel_layer is None:
+        print("No channel layer.")
+        return
+
+    group_name = 'match_%s' % sharecode
+    async_to_sync(channel_layer.group_send)(
+        group_name, 
+        {"type": "update_message"})
+    print("New ShareList information sent.")
+
 def get_or_set_uuid(request):
     #Checks to see if uuid key exists and is set in session
     if 'uuid' in request.session and request.session['uuid']:
@@ -55,7 +69,6 @@ def get_or_set_uuid(request):
         request.session['uuid'] = user_uuid.uuid
     return user_uuid
 
-# Create your views here.
 # Displays main page
 def index(request):
     user_uuid = get_or_set_uuid(request)
