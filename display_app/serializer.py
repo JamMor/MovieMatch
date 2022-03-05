@@ -9,7 +9,7 @@ def SharedListEncoder(sharecode):
                 Prefetch('shared_movies', to_attr='pre_shared_movies'), 
                 Prefetch('pre_shared_movies__submitted_by', to_attr='pre_submitted_by')).get(sharecode = sharecode)
     
-    user_list = list(user.uuid for user in shared_list.pre_users)
+    user_list = list({'uuid' : user.uuid, 'nickname' : user.nickname} for user in shared_list.pre_users)
     
     movie_list = []
     for shared_movie in shared_list.pre_shared_movies:
