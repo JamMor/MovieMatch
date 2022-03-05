@@ -93,8 +93,8 @@ class SharedMovie(models.Model):
         return self.movie.title
 
 class MatchRoom(models.Model):
-    joined = models.ManyToManyField(UserUUID, related_name="joined_room", null=True)
-    room = models.OneToOneField(SharedMovieList, related_name="match_room", on_delete = models.CASCADE)
+    joined = models.ManyToManyField(UserUUID, related_name="joined_room")
+    list = models.OneToOneField(SharedMovieList, related_name="match_room", on_delete = models.CASCADE)
 
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
