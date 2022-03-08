@@ -5,7 +5,7 @@ from channels.generic.websocket import JsonWebsocketConsumer
 from django.core import serializers
 from django.core.serializers.json import DjangoJSONEncoder
 
-from display_app.models import SharedMovieList, SharedMovie
+from display_app.models import SharedMovieList, SharedMovie, UserUUID, ShareRoomUser
 from .serializer import SharedListEncoder
 
 class MatchConsumer(JsonWebsocketConsumer):
@@ -20,9 +20,66 @@ class MatchConsumer(JsonWebsocketConsumer):
             self.channel_name
         )
 
+        # Tell group of connection
+        user_uuid = self.scope["session"]["uuid"]
+        
+        # Get user and share room to link
+        user = UserUUID.objects.get(uuid = user_uuid)
+        share_list = SharedMovieList.objects.get(sharecode = self.sharecode)
+        
+        #====================================
+        room_user, created = ShareRoomUser.objects.get_or_create(
+            user_uuid = user, 
+            list = share_list
+            )
+        
+        nickname = user.nickname
+        print(f'User nickname in consumer is: {nickname}')
+
+        if not nickname:
+            print("User has no nick.")
+            if not room_user.nickname:
+                print("Set a generic roomuser name.")
+                user_no = ShareRoomUser.objects.filter(list__sharecode = self.sharecode).count()
+                print(f"Number of room users: {user_no}")
+                nickname = f"User {user_no}"
+            else:
+                nickname = room_user.nickname
+                print(f'Roomuser already has generic name: {nickname}')
+        
+        print(f'RoomUser nickname in consumer is: {nickname}')
+        room_user.nickname = nickname
+        room_user.save()
+        
+        #====================================
+        print("Connecting User - Consumers")
+        print({user_uuid : {'nickname' : room_user.nickname, 'is_ready' : room_user.is_ready}})
+        async_to_sync(self.channel_layer.group_send)(
+                self.match_group_name,
+                {
+                    'type': 'connect_message',
+                    'connected_user': {user_uuid : {'nickname' : room_user.nickname, 'is_ready' : room_user.is_ready}}
+                }
+        )
+
         self.accept()
 
     def disconnect(self, close_code):
+        print("Disconnecting User - Consumers")
+        # Tell group of disconnect
+        user_uuid = self.scope["session"]["uuid"]
+        async_to_sync(self.channel_layer.group_send)(
+                self.match_group_name,
+                {
+                    'type': 'disconnect_message',
+                    'disconnected_uuid': user_uuid
+                }
+        )
+
+        # Get and delete user from room
+        room_user = ShareRoomUser.objects.get(user_uuid__uuid = user_uuid, list__sharecode = self.sharecode)
+        room_user.delete()
+
         # Leave group
         async_to_sync(self.channel_layer.group_discard)(
             self.match_group_name,
@@ -92,6 +149,27 @@ class MatchConsumer(JsonWebsocketConsumer):
             'command': 'updated',
             'status' : 'success',
             'share_list': model_dict
+        })
+    
+    # Receive message from ChannelLayer
+    def connect_message(self, event):
+        connected_user = event['connected_user']
+
+        # Send message to WebSocket Client
+        self.send_json({
+            'command': 'connected',
+            'status' : 'success',
+            'user': connected_user
+        })
+    # Receive message from ChannelLayer
+    def disconnect_message(self, event):
+        disconnected_uuid = event['disconnected_uuid']
+
+        # Send message to WebSocket Client
+        self.send_json({
+            'command': 'disconnected',
+            'status' : 'success',
+            'uuid': disconnected_uuid
         })
 
     #Custom JSON coders (for dates)
