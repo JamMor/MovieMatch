@@ -27,4 +27,24 @@ function movieListBuilder(old_list, updated_list){
                 </div>`
                 );
     })
+    
+    console.log("Updated Movie List.")
+
+    //Confirming DOM and movie list are in sync
+    let dom_movie_ids = $('#movie_list div').map(function() {
+        return this.id.slice(6);
+        })
+        .get()
+    let new_movie_ids = new Set(updated_list.map(x => x.shared_movie_id))
+    let list_verified = false;
+    if(dom_movie_ids.length == updated_list.length){
+        for(let id of dom_movie_ids){
+            if(!new_movie_ids.has(id)){
+                break;
+            }
+        }
+        list_verified = true;
+    }
+    console.log(`DOM and movie_list are${list_verified ? "" : " NOT"} in sync.`)
+
 };

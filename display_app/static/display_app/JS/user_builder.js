@@ -63,3 +63,20 @@ function userListBuilder(old_list, updated_list){
     }
     
     console.log("Updated User List.")
+
+    //Confirming DOM and user list are in sync
+    let dom_uuids = $('#user_list div').map(function() {
+        return this.id.slice(5);
+        })
+        .get()
+    let list_verified = false;
+    if(dom_uuids.length == updated_uuids.size){
+        for(let uuid of dom_uuids){
+            if(!updated_uuids.has(uuid)){
+                break;
+            }
+        }
+        list_verified = true;
+    }
+    console.log(`DOM and user_list are${list_verified ? "" : " NOT"} in sync.`)
+};
