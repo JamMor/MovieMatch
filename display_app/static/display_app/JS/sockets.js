@@ -67,6 +67,28 @@ $(document).ready(function() {
             console.log("Eliminated movie")
         }
         
+        //User connected
+        else if(responseData.command == "connected"){
+            let connected_user = responseData.user
+            console.log("Connected User: ");
+            console.log(connected_user);
+            let connected_uuid = Object.keys(connected_user)[0]
+            if(connected_uuid == user_uuid){
+                console.log("Connected user signal is for this user. Ignoring.")
+            }
+            else{
+                Object.assign(user_list, connected_user);
+                addUserToDom(connected_uuid, connected_user[connected_uuid]);
+                console.log(`${connected_user[connected_uuid]['nickname']} has joined the room. UUID: ${Object.keys(connected_user)[0]}`)
+            }
+        }
+        //User disconnected
+        else if(responseData.command == "disconnected"){
+            let disconnected_uuid = responseData.uuid;
+            console.log('Disconnected UUID: ' + disconnected_uuid)
+            removeUserFromDom(disconnected_uuid);
+            delete user_list[disconnected_uuid]
+        }
         //Initialize/Update list of movies
         else if(responseData.command == "initialized" || responseData.command == "updated"){
             let {movie_list:received_movie_list, active_user_dict:received_user_list} = responseData.share_list
