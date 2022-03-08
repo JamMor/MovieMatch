@@ -64,9 +64,11 @@ def get_or_set_uuid(request):
     #Checks to see if uuid key exists and is set in session
     if 'uuid' in request.session and request.session['uuid']:
         user_uuid = UserUUID.objects.get(uuid = request.session['uuid'])
+        print(f'GET uuid: {request.session["uuid"]} =================================')
     else:
         user_uuid = UserUUID.objects.create()
         request.session['uuid'] = user_uuid.uuid
+        print(f'CREATE uuid: {user_uuid.uuid} =================================')
     return user_uuid
 
 # Displays main page
@@ -79,14 +81,19 @@ def new_match(request):
     data = json.loads(request.body)
     
     nickname = data['nickname']
+    print(f'Submitted Nickname is: {nickname}')
     user_uuid.nickname = data['nickname']
 
     user_uuid.save(update_fields=['nickname'])
+    print("Nickname set: ")
+    print(user_uuid.nickname)
+
     temp_list = create_temp_list(data['movie_list'], user_uuid)
     
     sharecode = data['sharecode']
     print("Sharecode: " + sharecode)
 
+    #Gets SharedList if sharecode, or creates new one
     if sharecode:
         try:
             shared_list = SharedMovieList.objects.get(sharecode = sharecode)
@@ -104,5 +111,8 @@ def new_match(request):
 
 def join_match(request, sharecode):
     user_uuid = get_or_set_uuid(request)
-    context = {'sharecode' : sharecode}
+    context = {
+        'sharecode' : sharecode,
+        'uuid' : user_uuid.uuid
+        }
     return render(request, 'display_app/match.html', context)
