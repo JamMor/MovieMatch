@@ -41,7 +41,9 @@
         <button id="deleteButton">Test the socket.</button>
     </main>
     <script type='text/javascript' > 
-        var movie_list = []; 
+        var user_uuid = "{{uuid}}"
+        var user_list = {};
+        var movie_list = [];
     </script>
     <script src="{% static 'display_app/js/match_builder.js'%}"></script>
     <script src="{% static 'display_app/js/sockets.js'%}"></script>
