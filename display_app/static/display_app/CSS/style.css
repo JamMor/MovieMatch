@@ -24,6 +24,16 @@ div.ui-widget {
     position:relative;
 }
 
+#user_list {
+    display: flex;
+}
+
+#user_list div {
+    border-radius: 5px;
+    margin: 5px;
+    background-color: darkred;
+}
+
 #movie_list {
     display:grid;
     width:100%;
