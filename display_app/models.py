@@ -32,6 +32,7 @@ class UserUUID(models.Model):
                 raise IntegrityError
         else:
             print("UUID exists. Not renewing.")
+            super(UserUUID, self).save(*args, **kwargs)
 
 class Movie(models.Model):
     movie_id = models.CharField(max_length=255)
@@ -83,6 +84,7 @@ class SharedMovieList(models.Model):
                 raise IntegrityError
         else:
             print("Sharecode exists. Not renewing.")
+            super(SharedMovieList, self).save(*args, **kwargs)
 
 class SharedMovie(models.Model):
     submitted_by = models.ManyToManyField(UserUUID, related_name="submitted_movies")
