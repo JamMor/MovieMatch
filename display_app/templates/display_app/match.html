@@ -32,13 +32,12 @@
             <button id="save">Save</button>
         </div>
         <h5>Users:</h5>
-        <div id="shared_users"></div>
+        <div id="user_list"></div>
+        <button id="begin-eliminating">Start eliminating!</button>
+        <!-- The List of Shared movies -->
         <h4>Shared List:</h4>
         <div id="movie_list"></div>
         <hr>
-        <h4>Your List:</h4>
-        <div id="user_list"></div>
-        <button id="deleteButton">Test the socket.</button>
     </main>
     <script type='text/javascript' > 
         var user_uuid = "{{uuid}}"
@@ -46,6 +45,7 @@
         var movie_list = [];
     </script>
     <script src="{% static 'display_app/js/match_builder.js'%}"></script>
+    <script src="{% static 'display_app/js/user_builder.js'%}"></script>
     <script src="{% static 'display_app/js/sockets.js'%}"></script>
 </body>
 </html>
