@@ -50,7 +50,7 @@ def update_shared_list_channels(sharecode):
 def add_to_shared_list(shared_list, temp_list):
     user_uuid = temp_list.created_by
     #Use transactions here
-    shared_list.users.add(user_uuid)
+    shared_list.contributors.add(user_uuid)
     for each_movie in temp_list.movies.all():
         shared_movie, created = SharedMovie.objects.get_or_create(
             shared_list = shared_list, 
