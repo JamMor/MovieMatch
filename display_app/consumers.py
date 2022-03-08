@@ -91,7 +91,8 @@ class MatchConsumer(JsonWebsocketConsumer):
         print(content)
         command = content['command']
         user_uuid = self.scope["session"]["uuid"]
-
+        print(f'COMMAND RECEIVED - Consumers: {command}')
+        #ELIMINATE
         if command == 'eliminate':
             shared_movie_id = content['shared_movie_id']
             
@@ -109,6 +110,7 @@ class MatchConsumer(JsonWebsocketConsumer):
                 }
             )
 
+        #INITIALIZE
         elif command == 'initialize':
             print("Sharecode from Receive: " + self.sharecode)
             model_dict = SharedListEncoder(self.sharecode)
