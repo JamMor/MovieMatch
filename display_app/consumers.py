@@ -101,18 +101,11 @@ class MatchConsumer(JsonWebsocketConsumer):
             shared_movie.save()
 
             #Confirm Removal for Group
-            send_content = {
-            'command': 'eliminated',
-            'status' : "success",
-            'shared_movie_id' : shared_movie_id,
-            'message': f'Movie ID {shared_movie_id} eliminated by {user_uuid}.'
-            }
-
             async_to_sync(self.channel_layer.group_send)(
                 self.match_group_name,
                 {
                     'type': 'eliminate_message',
-                    'content': send_content
+                    'shared_movie_id' : shared_movie_id
                 }
             )
 
@@ -135,10 +128,14 @@ class MatchConsumer(JsonWebsocketConsumer):
 
     # Receive message from ChannelLayer
     def eliminate_message(self, event):
-        content = event['content']
+        shared_movie_id = event['shared_movie_id']
 
         # Send message to WebSocket Client
-        self.send_json(content)
+        self.send_json({
+            'command': 'eliminated',
+            'status' : "success",
+            'shared_movie_id' : shared_movie_id
+        })
     
     # Receive message from ChannelLayer
     def update_message(self, event):
