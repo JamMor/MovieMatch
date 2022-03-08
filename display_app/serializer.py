@@ -5,11 +5,26 @@ from django.db.models import Prefetch
 
 def SharedListEncoder(sharecode):
     shared_list = SharedMovieList.objects.prefetch_related(
-                Prefetch('users', to_attr='pre_users'), 
+                Prefetch('contributors', to_attr='pre_contributors'), 
+                Prefetch('active_users', to_attr='pre_active_users'), 
+                Prefetch('pre_active_users__user_uuid', to_attr='pre_uuid'), 
                 Prefetch('shared_movies', to_attr='pre_shared_movies'), 
                 Prefetch('pre_shared_movies__submitted_by', to_attr='pre_submitted_by')).get(sharecode = sharecode)
     
-    user_list = list({'uuid' : user.uuid, 'nickname' : user.nickname} for user in shared_list.pre_users)
+    contributor_list = list({'uuid' : user.uuid, 'nickname' : user.nickname} for user in shared_list.pre_contributors)
+    # active_user_list = list(
+    #     {
+    #         'uuid' : user.pre_uuid.uuid, 
+    #         'nickname' : user.pre_uuid.nickname, 
+    #         'is_ready' : user.is_ready
+    #     } 
+    #     for user in shared_list.pre_active_users)
+    active_user_dict = {
+        user.pre_uuid.uuid : { 
+            'nickname' : user.nickname, 
+            'is_ready' : user.is_ready
+            }
+        for user in shared_list.pre_active_users}
     
     movie_list = []
     for shared_movie in shared_list.pre_shared_movies:
@@ -22,7 +37,8 @@ def SharedListEncoder(sharecode):
         movie_list.append(movie_info)
         
     json_dict = {
-        'user_list' : user_list, 
+        'contributor_list' : contributor_list,
+        'active_user_dict' : active_user_dict,
         'movie_list' : movie_list
         }
 
