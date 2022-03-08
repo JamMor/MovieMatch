@@ -60,7 +60,8 @@ class TempMovieList(models.Model):
 
 class SharedMovieList(models.Model):
     sharecode = models.CharField(max_length=255, unique=True)
-    users = models.ManyToManyField(UserUUID, related_name="shared_lists")
+    #Is this field ever needed?
+    contributors = models.ManyToManyField(UserUUID, related_name="shared_lists")
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     
@@ -89,15 +90,19 @@ class SharedMovie(models.Model):
     movie = models.ForeignKey(Movie, related_name="shared_movies", on_delete = models.CASCADE, null=True)
     is_eliminated = models.BooleanField(default=False)
 
-    def __str__(self):
-        return self.movie.title
-
-class MatchRoom(models.Model):
-    joined = models.ManyToManyField(UserUUID, related_name="joined_room")
-    list = models.OneToOneField(SharedMovieList, related_name="match_room", on_delete = models.CASCADE)
+class ShareRoomUser(models.Model):
+    user_uuid = models.ForeignKey(UserUUID, related_name="in_room", on_delete = models.CASCADE)
+    list = models.ForeignKey(SharedMovieList, related_name="active_users", on_delete = models.CASCADE)
+    is_ready = models.BooleanField(default=False)
+    nickname = models.CharField(max_length=255, null=True)
 
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(fields=['user_uuid', 'list'], name='one_user_per_room')
+        ]
 
 # class Friends(models.Model):
 #     user = models.OneToOneField(User, on_delete=models.CASCADE)
