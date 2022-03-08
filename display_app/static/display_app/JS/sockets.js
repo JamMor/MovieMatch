@@ -47,8 +47,7 @@ $(document).ready(function() {
     
     matchSocket.onopen = function(e) {
         console.log("Match socket opened");
-        //Send user info
-        //Populate current share list.
+        //Populate current share and user list.
         matchSocket.send(JSON.stringify({
             'command' : 'initialize',
             'message': 'Test intialize send.'
@@ -58,8 +57,15 @@ $(document).ready(function() {
     //Receive messages
     matchSocket.onmessage = function(e) {
         console.log(e);
-        responseData = JSON.parse(e.data);
+        let responseData = JSON.parse(e.data);
         console.log(responseData);
+
+        // Failed command
+        if(responseData.status != 'success'){
+            console.log("Command failed.")
+            console.log(responseData)
+            return
+        }
         //Eliminate movie
         if(responseData.command == "eliminated"){
             let shared_movie_id = responseData.shared_movie_id
