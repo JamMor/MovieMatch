@@ -78,6 +78,10 @@ def new_match(request):
     user_uuid = get_or_set_uuid(request)
     data = json.loads(request.body)
     
+    nickname = data['nickname']
+    user_uuid.nickname = data['nickname']
+
+    user_uuid.save(update_fields=['nickname'])
     temp_list = create_temp_list(data['movie_list'], user_uuid)
     
     sharecode = data['sharecode']
