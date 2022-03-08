@@ -69,10 +69,27 @@ $(document).ready(function() {
         
         //Initialize/Update list of movies
         else if(responseData.command == "initialized" || responseData.command == "updated"){
-            received_list = responseData.share_list.movie_list
-            movieAdder(movie_list, received_list)
-            movie_list = received_list
-            console.log("Updated List.")
+            let {movie_list:received_movie_list, active_user_dict:received_user_list} = responseData.share_list
+            console.log("Movie List: ")
+            console.log(movie_list)
+            console.log("Received Movie List: ")
+            console.log(received_movie_list)
+            // received_movie_list = responseData.share_list.movie_list
+            movieListBuilder(movie_list, received_movie_list)
+            movie_list = received_movie_list
+            
+            // received_user_list = responseData.share_list.active_user_list
+            console.log("User List: ")
+            console.log(user_list)
+            console.log("Received User List: ")
+            console.log(received_user_list)
+            userListBuilder(user_list, received_user_list)
+            user_list = received_user_list
+            
+        }
+        else {
+            console.log("Command Unknown")
+            console.log(responseData)
         }
     };
 
