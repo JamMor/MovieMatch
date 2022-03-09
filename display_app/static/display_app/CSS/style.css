@@ -1,5 +1,5 @@
 html {
-    background-color: #474747;
+    background-color: #1d1d1d;
 }
 body {
     padding: 10vmin;
@@ -22,6 +22,25 @@ div.ui-widget {
 
 .ui-autocomplete {
     position:relative;
+}
+
+.search-item {
+    max-width: 200px;
+    max-height: 336px;
+}
+
+.carousel-item{
+    min-height:336px !important;
+}
+
+.card-btn {
+    flex-grow: 1;
+}
+
+.card-action {
+    display:flex;
+    justify-content: stretch;
+    padding: 0px !important;
 }
 
 #user_list {

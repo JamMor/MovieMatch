@@ -1,5 +1,4 @@
 $(document).ready(function() {
-
     //Prepare csrf token to be used outside of template.
     function getCookie(name) {
         let cookieValue = null;
@@ -34,6 +33,63 @@ $(document).ready(function() {
     const api_key = "f4f5f258379baf10796e1d3aeb5add05";
     const image_link = "https://image.tmdb.org/t/p/";
     var movie_list = []
+
+    function delay(fn, ms) {
+        let timer = 0
+        return function (...args) {
+            clearTimeout(timer)
+            timer = setTimeout(fn.bind(this, ...args), ms || 0)
+        }
+    }
+    let search_results = [];
+
+    //Custom autocomplete jquery ajax to materialize carousel feature
+    $('#moviesearch-input').on("input", delay(function () {
+        var searchQuery = this.value;
+        if (searchQuery.length >= 2) {
+            console.log(searchQuery)
+            $.get(`https://api.themoviedb.org/3/search/movie?api_key=${api_key}&query=${searchQuery}`,
+                function () {
+                    console.log("AJAX sent to TMDB");
+                    return
+                }, "json")
+                .done(function (data) {
+                    console.log(data);
+                    search_results = data.results;
+                    $("div.carousel").html("");
+                    search_results.forEach(movie => {
+                        $("div.carousel").append(
+                            `<div class="card sticky-action grey darken-4 carousel-item search-item">\
+                                <div class="card-image">\
+                                    <img src='${image_link}w342${movie.poster_path}'>\
+                                    <span class="card-title">${movie.title}</span>\
+                                    <span class="card-title">${movie.release_date.slice(0, 4)}</span>\
+                                </div>\
+                                <div class="card-action">\
+                                    <a id="search-movie_${movie.id}" class="btn card-btn waves-effect waves-light red accent-4"><i class="material-icons">add</i></a>\
+                                    <a class="btn card-btn waves-effect waves-light red accent-4 activator"><i class="material-icons">info_outline</i></a>\
+                                </div>\
+                                <div class="card-reveal">\
+                                    <span class="card-title grey-text text-darken-4">${movie.title}<i class="material-icons right">close</i></span>\
+                                    <span class="card-title grey-text text-darken-4">${movie.release_date.slice(0, 4)}</span>\
+                                    <p>${movie.overview}</p>\
+                                </div>\
+                            </div>`
+                        );
+                    })
+                    $('.carousel').carousel({
+                        dist: -50,
+                        noWrap: true,
+                        numVisible: 20
+                        });
+                })
+        }
+        else if (searchQuery.length == 0) {
+            $("div.carousel").html("")
+        }
+    }, 1000));
+
+    //Handler to add movie to list and dom
 
     //Autocomplete that pulls dynamic data from API. Also adds selected elements 
     //info to an object to send back to server on upload.
