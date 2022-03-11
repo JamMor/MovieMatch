@@ -31,9 +31,7 @@ $(document).ready(function() {
     const csrftoken = getCookie('csrftoken');
 
     const api_key = "f4f5f258379baf10796e1d3aeb5add05";
-    const image_link = "https://image.tmdb.org/t/p/";
-    var movie_list = []
-
+    const placeholder_link = DJ_STATIC_FILES.placeholder_path;
     function delay(fn, ms) {
         let timer = 0
         return function (...args) {
