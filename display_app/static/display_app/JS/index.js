@@ -89,7 +89,7 @@ $(document).ready(function() {
                 .done(function (data) {
                     console.log(data);
                     search_results = data.results;
-                    $("div.carousel").html(search_results
+                    $("div.carousel").height("400px").html(search_results
                         .map(movie => MovieCard("search-movie", movie))
                         .join('')
                     );
@@ -101,7 +101,7 @@ $(document).ready(function() {
                 })
         }
         else if (searchQuery.length == 0) {
-            $("div.carousel").html("")
+            $("div.carousel").html("").height("0px")
         }
     }, 1000));
 
