@@ -13,35 +13,32 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
 <!--  -->
     {% load static %}
-    <script src="{% static 'display_app/js/index.js'%}"></script>
     <link rel="stylesheet" href="https://code.jquery.com/ui/1.13.1/themes/base/jquery-ui.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
-    <link rel="stylesheet" type="text/css" href="{% static 'display_app/css/style.css' %}">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="{% static 'display_app/css/style.css' %}">
 </head>
 
 <body>
     {% csrf_token %}
-    <main class="container">
-        <div class="row">
-            <div id="moviesearch" class="input-field col s12 m8 offset-m2 l6 offset-l3 center-align">
-                <i class="material-icons prefix">local_movies</i>
-                <input type="text" id="moviesearch-input">
-                <label for="moviesearch-input">Movie Search</label>
-            </div>
+    <main>
+        <div class="container">
+            <nav id="search-bar" class="grey darken-4">
+                <div class="nav-wrapper">
+                    <form id="search-form">
+                        <div id="moviesearch" class="input-field">
+                            <input type="search" id="moviesearch-input" placeholder="Movie Search" required>
+                            <label class="label-icon" for="moviesearch-input"><i class="material-icons">local_movies</i></label>
+                            <i id="search-close" class="material-icons">close</i>
+                        </div>
+                    </form>
+                </div>
+            </nav>
+            <div id="search-results" class="carousel carousel-slider"></div>
+            <hr>
+            <div id="movie_list"></div>
         </div>
-        <div class="carousel carousel-slider">
-        </div>
-        <!-- <div class="inline input-field">
-            <input type="text" name="sharecode" id="sharecode" placeholder="Enter share code here...">
-            <input type="text" name="nickname" id="nickname" placeholder="Nickname">
-        </div>
-        <button id="share">Share/Add</button>
-        <button id="clear">Clear</button>
-        <hr>
-        <div id="movie_list"></div>
-        <div id="movie_info"></div>
-        <div>Spanning Share button</div> -->
+        <!-- <div>Spanning Share button</div> -->
     </main>
     <script type="text/javascript">
         var DJ_STATIC_FILES = {
