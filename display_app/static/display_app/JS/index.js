@@ -31,7 +31,43 @@ $(document).ready(function() {
     const csrftoken = getCookie('csrftoken');
 
     const api_key = "f4f5f258379baf10796e1d3aeb5add05";
+    const image_prefix = "https://image.tmdb.org/t/p/";
     const placeholder_link = DJ_STATIC_FILES.placeholder_path;
+    
+    var movie_list = [];
+    let search_results = [];
+
+    const MovieCard = (id_prefix, {id, title, release_date, overview, poster_path}) => {
+        image_link = (poster_path == null) 
+                ? `<img src='${placeholder_link}'>`
+                : `<img src='${image_prefix}w342${poster_path}'>`
+
+        return    `
+            <div class="card sticky-action grey darken-4 carousel-item">
+                <div class="card-image">
+                    ${image_link}
+                    <span class="card-title">${title}</span>
+                    <span class="card-title">${release_date.slice(0, 4)}</span>
+                </div>
+                <div class="card-action">
+                    <a id="${id_prefix}_${id}" class="btn card-btn add-btn waves-effect waves-light red accent-4"><i class="material-icons">add</i></a>
+                    <a class="btn card-btn waves-effect waves-light red accent-4 activator"><i class="material-icons">info_outline</i></a>
+                </div>
+                <div class="card-reveal">
+                    <span class="card-title grey-text text-darken-4">${title}<i class="material-icons right">close</i></span>
+                    <span class="card-title grey-text text-darken-4">${release_date.slice(0, 4)}</span>
+                    <p>${overview}</p>
+                </div>
+            </div>
+        `
+    };
+
+    //Prevent normal form behavior for search
+    $('#search-form').submit(function(e){
+        e.preventDefault();
+    })
+
+    //Delay wrapper function (to limit ajax queries when typing)
     function delay(fn, ms) {
         let timer = 0
         return function (...args) {
@@ -39,7 +75,6 @@ $(document).ready(function() {
             timer = setTimeout(fn.bind(this, ...args), ms || 0)
         }
     }
-    let search_results = [];
 
     //Custom autocomplete jquery ajax to materialize carousel feature
     $('#moviesearch-input').on("input", delay(function () {
@@ -54,27 +89,10 @@ $(document).ready(function() {
                 .done(function (data) {
                     console.log(data);
                     search_results = data.results;
-                    $("div.carousel").html("");
-                    search_results.forEach(movie => {
-                        $("div.carousel").append(
-                            `<div class="card sticky-action grey darken-4 carousel-item search-item">\
-                                <div class="card-image">\
-                                    <img src='${image_link}w342${movie.poster_path}'>\
-                                    <span class="card-title">${movie.title}</span>\
-                                    <span class="card-title">${movie.release_date.slice(0, 4)}</span>\
-                                </div>\
-                                <div class="card-action">\
-                                    <a id="search-movie_${movie.id}" class="btn card-btn waves-effect waves-light red accent-4"><i class="material-icons">add</i></a>\
-                                    <a class="btn card-btn waves-effect waves-light red accent-4 activator"><i class="material-icons">info_outline</i></a>\
-                                </div>\
-                                <div class="card-reveal">\
-                                    <span class="card-title grey-text text-darken-4">${movie.title}<i class="material-icons right">close</i></span>\
-                                    <span class="card-title grey-text text-darken-4">${movie.release_date.slice(0, 4)}</span>\
-                                    <p>${movie.overview}</p>\
-                                </div>\
-                            </div>`
-                        );
-                    })
+                    $("div.carousel").html(search_results
+                        .map(movie => MovieCard("search-movie", movie))
+                        .join('')
+                    );
                     $('.carousel').carousel({
                         dist: -50,
                         noWrap: true,
