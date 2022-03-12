@@ -150,21 +150,19 @@ $(document).ready(function() {
         let nickname = $("#nickname").val();
         console.log("Submitting!")
         //=================TESTING===================
-        //Size of POST of object
-        const size = new TextEncoder()
-            .encode(JSON
-                .stringify({
-                    "sharecode": sharecode, 
-                    "nickname": nickname, 
-                    "movie_list": movie_list}))
-            .length;
-        const kiloBytes = size / 1024;
-        const megaBytes = kiloBytes / 1024;
-        console.log(`POST data is ${megaBytes} MBs (${kiloBytes} kBs)`);
+        const JSONSizeData = (encodedString) => {
+            const size = new TextEncoder()
+                .encode(encodedString)
+                .length;
+            const kiloBytes = size / 1024;
+            const megaBytes = kiloBytes / 1024;
+            console.log(`POST data is ${megaBytes} MBs or (${kiloBytes} kBs)`);
+            return encodedString
+        }
         //===========================================
 
         // console.log("DATA for Django: ", {"sharecode": sharecode, "nickname": nickname, "movie_list": movie_list});
-        $.post("match/", JSON.stringify({"sharecode": sharecode, "nickname": nickname, "movie_list": movie_list}),"json")
+        $.post("match/", JSONSizeData(JSON.stringify({"sharecode": sharecode, "nickname": nickname, "movie_list": movie_list})),"json")
             .done(function(data) {
                 console.log( "Movie list successfully sent!" );
                 if(data['status'] == "success")
