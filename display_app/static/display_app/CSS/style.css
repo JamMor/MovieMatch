@@ -20,15 +20,17 @@ body {
     padding-top: 2vmin;
 }
 
+/* ===============Index and Search================= */
+
+#search-bar, #search-bar input {
+    border-radius: 15px;
+}
+
 nav#search-bar {
     box-shadow: 
         inset 0 0 15px 0 #1976d2,
         inset 0 0 5px 0 #1a237e,
-        0 0 5px 0 #1a237e;
-}
-
-#search-bar, #search-bar input {
-    border-radius: 15px;
+        0 0 5px 0 #1976d2;
 }
 #search-bar input:focus {
     box-shadow: 
@@ -40,7 +42,7 @@ nav#search-bar {
 }
 
 div#search-results {
-    height: 100%;
+    height: 0px;
     max-height: 400px;
 }
 
@@ -152,8 +154,7 @@ div.card-action {
 #movie_list {
     display:grid;
     width:100%;
-    grid-template-columns: repeat(auto-fill, 154px);
-    /* grid-template-rows: repeat(autofill, 231px); */
+    grid-template-columns: repeat(auto-fill, 200px);
     gap:10px;
     margin:10px;
 }
@@ -170,22 +171,19 @@ div.card-action {
     height:231px;
 }
 
-#movie_info {
-    display:none;
-    width:80vw;
-    height:80vh;
-    margin:auto;
-    border: 2px solid #b4b4b4;
-    border-radius: 2px;
-    position:absolute;
-    z-index: 1;
-}
-
 .eliminated {
     box-shadow: 0px 0px 7px #ff0000;
 }
 
-/* .exampleClass:hover div {
+/* 
+
+.exampleClass {
+	position: relative;
+	padding: 1px;
+	borderRadius: 8px;
+}
+
+.exampleClass:hover div {
 	transitionDuration: 0.25s;
 	opacity: 1;
 }
@@ -212,4 +210,6 @@ div.card-action {
 	borderRadius: 8px;
 	cursor: pointer;
 	transition: transform 250ms cubic-bezier(.2,.8,.4,1);
+}
+
 } */
