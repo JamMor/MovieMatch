@@ -54,16 +54,14 @@ $(document).ready(function() {
             <div class="card sticky-action grey darken-4 carousel-item">
                 <div class="card-image">
                     ${image_link}
-                    <span class="card-title">${title}</span>
-                    <span class="card-title">${release_date.slice(0, 4)}</span>
+                    <span class="card-title">${title}<br />${release_date?.slice(0, 4) ?? ""}</span>
                 </div>
                 <div class="card-action">
                     <a id="${id_prefix}_${id}" class="btn card-btn add-btn waves-effect waves-light red accent-4"><i class="material-icons">add</i></a>
                     <a class="btn card-btn waves-effect waves-light red accent-4 activator"><i class="material-icons">info_outline</i></a>
                 </div>
                 <div class="card-reveal">
-                    <span class="card-title grey-text text-darken-4">${title}<i class="material-icons right">close</i></span>
-                    <span class="card-title grey-text text-darken-4">${release_date.slice(0, 4)}</span>
+                    <span class="grey-text text-darken-4">${release_date?.slice(0, 4) ?? ""}</span>
                     <p>${overview}</p>
                 </div>
             </div>
