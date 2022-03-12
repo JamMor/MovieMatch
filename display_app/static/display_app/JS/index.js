@@ -57,10 +57,12 @@ $(document).ready(function() {
                     <span class="card-title">${title}<br />${release_date?.slice(0, 4) ?? ""}</span>
                 </div>
                 <div class="card-action">
-                    <a id="${id_prefix}_${id}" class="btn card-btn add-btn waves-effect waves-light red accent-4"><i class="material-icons">add</i></a>
-                    <a class="btn card-btn waves-effect waves-light red accent-4 activator"><i class="material-icons">info_outline</i></a>
+                    <a id="${id_prefix}_${id}" class="btn card-btn add-btn waves-effect waves-light blue darken-2"><i class="material-icons">add</i></a>
+                    <a class="btn card-btn waves-effect waves-light purple accent-2 activator"><i class="material-icons">info_outline</i></a>
                 </div>
                 <div class="card-reveal">
+                    <span class="card-title grey-text text-darken-4"><i class="material-icons right">close</i></span>
+                    <span class="card-title grey-text text-darken-4">${title}</span>
                     <span class="grey-text text-darken-4">${release_date?.slice(0, 4) ?? ""}</span>
                     <p>${overview}</p>
                 </div>
@@ -102,7 +104,7 @@ $(document).ready(function() {
                     $('.carousel').carousel({
                         dist: -50,
                         noWrap: true,
-                        numVisible: 20
+                        numVisible: 10
                         });
                 })
         }
