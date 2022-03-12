@@ -1,36 +1,11 @@
-<!DOCTYPE html>
-<html lang="en">
+{% extends "./base.html" %}
+{% load static %}
 
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-    <script src="https://ajax.aspnetcdn.com/ajax/jQuery/jquery-3.6.0.js"></script>
-    <script src="https://code.jquery.com/ui/1.13.1/jquery-ui.js"
-        integrity="sha256-6XMVI0zB8cRzfZjqKcD01PBsAy3FlDASrlC8SxCpInY=" crossorigin="anonymous">
-    </script>
+{% block subtitle %} - Room {{sharecode}}{% endblock %}
 
-    {% load static %}
-    <link rel="stylesheet" href="https://code.jquery.com/ui/1.13.1/themes/base/jquery-ui.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
-    <link rel="stylesheet" type="text/css" href="{% static 'display_app/css/style.css' %}">
-</head>
-
-<body>
-    {% csrf_token %}
-    <header>
-        <h3>Welcome, Possible User!</h3>
-        <a href="">Login</a>
-        <a href="">Register</a>
-        <a href="">Logout</a>
-    </header>
+{% block content_block %}
     <main>
         <h4>Match Room ID = <span id="share-code">{{sharecode}}</span></h4>
-        <div class="inline input-field">
-            <input type="text" name="savelist" id="savelist" placeholder="Enter list name...">
-            <button id="save">Save</button>
-        </div>
         <h5>Users:</h5>
         <div id="user_list"></div>
         <button id="begin-eliminating">Start eliminating!</button>
@@ -39,6 +14,10 @@
         <div id="movie_list"></div>
         <hr>
     </main>
+{% endblock %}
+
+{% block script_block %}
+    {{ block.super }}
     <script type='text/javascript' > 
         var user_uuid = "{{uuid}}"
         var user_list = {};
@@ -47,5 +26,4 @@
     <script src="{% static 'display_app/js/match_builder.js'%}"></script>
     <script src="{% static 'display_app/js/user_builder.js'%}"></script>
     <script src="{% static 'display_app/js/sockets.js'%}"></script>
-</body>
-</html>
+{% endblock %}\
