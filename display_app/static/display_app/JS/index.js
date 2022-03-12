@@ -138,6 +138,12 @@ $(document).ready(function() {
         }
     })
 
+    // Clear search results
+    $("#search-close").click(function() {
+        $("#moviesearch-input").val('');
+        $("div.carousel").html("").height("0px");
+    });
+
     // POSTs name, movie list, and sharecode(if any)
     $("#share-btn").click(function (){
         let sharecode = $("#sharecode").val();
