@@ -30,6 +30,14 @@ $(document).ready(function() {
 
     const csrftoken = getCookie('csrftoken');
 
+    // Materialize FAB button initialize
+    $('.fixed-action-btn').floatingActionButton({
+        toolbarEnabled: true
+    });
+    
+    // Materialize Modal initialize
+    $('.modal').modal();
+
     const api_key = "f4f5f258379baf10796e1d3aeb5add05";
     const image_prefix = "https://image.tmdb.org/t/p/";
     const placeholder_link = DJ_STATIC_FILES.placeholder_path;
@@ -131,10 +139,10 @@ $(document).ready(function() {
     })
 
     // POSTs name, movie list, and sharecode(if any)
-    $("#share").click(function (){
-        sharecode = $("#sharecode").val();
-        nickname = $("#nickname").val();
-
+    $("#share-btn").click(function (){
+        let sharecode = $("#sharecode").val();
+        let nickname = $("#nickname").val();
+        console.log("Submitting!")
         //=================TESTING===================
         //Size of POST of object
         const size = new TextEncoder()
