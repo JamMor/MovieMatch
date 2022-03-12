@@ -71,7 +71,7 @@ $(document).ready(function() {
     };
 
     //Prevent normal form behavior for search
-    $('#search-form').submit(function(e){
+    $('.ajax-form').submit(function(e){
         e.preventDefault();
     })
 
