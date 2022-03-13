@@ -2,8 +2,8 @@
 function addUserToDom(uuid, user){
     let nickname = user['nickname']
     let is_ready = user['is_ready'] 
-        ? "class='user_ready'"
-        : ""
+        ? "blue darken-2"
+        : "orange darken-3"
     
     if(uuid == user_uuid){
         $('#user_list')
@@ -16,11 +16,10 @@ function addUserToDom(uuid, user){
     else {
         $('#user_list')
             .append(
-                `<div id='user_${uuid}' ${is_ready}>\
-                <h5>${nickname}</h5>\
-                </div>`
-                );
-    }
+            `<div id='user_${uuid}' class="chip ${is_ready}">
+            ${nickname}
+            </div>`
+            );
 }
 
 //Removes user from DOM
