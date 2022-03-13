@@ -143,12 +143,7 @@ div.card-action {
 
 #user_list {
     display: flex;
-}
-
-#user_list div {
-    border-radius: 5px;
-    margin: 5px;
-    background-color: darkred;
+    padding: 5px 0px;
 }
 
 #movie_list {

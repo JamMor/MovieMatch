@@ -39,36 +39,9 @@ $(document).ready(function() {
     $('.modal').modal();
 
     const api_key = "f4f5f258379baf10796e1d3aeb5add05";
-    const image_prefix = "https://image.tmdb.org/t/p/";
-    const placeholder_link = DJ_STATIC_FILES.placeholder_path;
     
     var movie_list = [];
     let search_results = [];
-
-    const MovieCard = (id_prefix, {id, title, release_date, overview, poster_path}) => {
-        image_link = (poster_path == null) 
-                ? `<img src='${placeholder_link}'>`
-                : `<img src='${image_prefix}w342${poster_path}'>`
-
-        return    `
-            <div class="card sticky-action grey darken-4 carousel-item">
-                <div class="card-image">
-                    ${image_link}
-                    <span class="card-title">${title}<br />${release_date?.slice(0, 4) ?? ""}</span>
-                </div>
-                <div class="card-action">
-                    <a id="${id_prefix}_${id}" class="btn card-btn add-btn waves-effect waves-light blue darken-2"><i class="material-icons">add</i></a>
-                    <a class="btn card-btn waves-effect waves-light purple accent-2 activator"><i class="material-icons">info_outline</i></a>
-                </div>
-                <div class="card-reveal">
-                    <span class="card-title grey-text text-darken-4"><i class="material-icons right">close</i></span>
-                    <span class="card-title grey-text text-darken-4">${title}</span>
-                    <span class="grey-text text-darken-4">${release_date?.slice(0, 4) ?? ""}</span>
-                    <p>${overview}</p>
-                </div>
-            </div>
-        `
-    };
 
     //Prevent normal form behavior for search
     $('.ajax-form').submit(function(e){
@@ -98,7 +71,7 @@ $(document).ready(function() {
                     console.log(data);
                     search_results = data.results;
                     $("div.carousel").height("400px").html(search_results
-                        .map(movie => MovieCard("search-movie", movie))
+                        .map(movie => MovieCard("query", movie))
                         .join('')
                     );
                     $('.carousel').carousel({
@@ -115,8 +88,8 @@ $(document).ready(function() {
 
     //Handler to add movie to list and dom
     $('.carousel').on("click", "a.add-btn", function () {
-        // Get Movie ID from btn ID ("search-movie_XXXXXXX")
-        let thisId = this.id.slice(13);
+        // Get Movie ID from btn ID ("query_XXXXXXX")
+        let thisId = this.id.split("_")[1];
         console.log(`Adding movie id ${thisId}`);
         let thisMovie;
         //If movie not already in list, get info from search results and push to list

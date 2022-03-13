@@ -1,6 +1,6 @@
 const image_link = "https://image.tmdb.org/t/p/";
     
-//Adds new movies into DOM
+//Adds new movies into DOM when a shared list is updated.
 function movieListBuilder(old_list, updated_list){
     let added_movie_list;
     if (old_list.length > 0){
@@ -9,24 +9,34 @@ function movieListBuilder(old_list, updated_list){
             .filter(new_movie => !old_list
                 .some(old_movie => (old_movie.movie_id == new_movie.movie_id)))
     }
+    //If no movies in list yet, all are to be added
     else {added_movie_list = updated_list}
     
     added_movie_list.forEach((movie) => {
-        let background_img = (movie.poster_path == null) 
-            ? "style='background-color: red'"
-            : `style='background-image: url(${image_link}w154${movie.poster_path})'`
+        //ORIGINAL ADD
+        // let background_img = (movie.poster_path == null) 
+        //     ? "style='background-color: red'"
+        //     : `style='background-image: url(${image_link}w154${movie.poster_path})'`
         
-        let is_eliminated = movie.is_eliminated 
-            ? "eliminated"
-            : ""
+        // let is_eliminated = movie.is_eliminated 
+        //     ? "eliminated"
+        //     : ""
         
-        $('#movie_list')
+        // $('#movie_list')
+        //     .append(
+        //         `<div id='movie_${movie.shared_movie_id}' class='list_item personal ${is_eliminated}' ${background_img}>\
+        //         <h5>${movie.title} - ${movie.release_date.slice(0,4)}</h5>\
+        //         </div>`
+        //         );
+        
+        //SECONDARY ADD
+        //Rename attributes for MovieCard
+        $("#movie_list")
             .append(
-                `<div id='movie_${movie.shared_movie_id}' class='list_item personal ${is_eliminated}' ${background_img}>\
-                <h5>${movie.title} - ${movie.release_date.slice(0,4)}</h5>\
-                </div>`
-                );
+                MovieCard("shared", {description:overview, shared_movie_id:id, ...rest} = movie)
+            );
     })
+
     
     console.log("Updated Movie List.")
 

@@ -29,6 +29,10 @@
     {% block header_block %}{% endblock %}
     {% block content_block %}{% endblock %}
     {% block script_block %}
+    <script type="text/javascript">
+        var DJ_STATIC_FILES = {
+        "placeholder_path": "{% static 'display_app/images/movie_placeholder.png' %}"
+        };
     <script src="{% static 'display_app/js/base.js'%}"></script>
     {% endblock %}
 </body>
