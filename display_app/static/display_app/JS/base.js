@@ -58,18 +58,22 @@ $(document).ready(function() {
     }
 
     //MovieCard HTML Constructor
-    
     const image_prefix = "https://image.tmdb.org/t/p/";
     const placeholder_link = DJ_STATIC_FILES.placeholder_path;
 
     MovieCard = (id_prefix, {id, title, release_date, overview, poster_path, is_eliminated}, buttonarray) => {
         let image_link = (poster_path == null) 
-                ? `<img src='${placeholder_link}'>`
-                : `<img src='${image_prefix}w342${poster_path}'>`
+            ? `<img src='${placeholder_link}'>`
+            : `<img src='${image_prefix}w342${poster_path}'>`
         let release_year = release_date?.slice(0, 4) ?? ""
-        
+
         //Button options
         let button_elem = buttonarray.map(button => CardButton(button, id_prefix, id)).join('');
+
+        //Context specific class options
+        let card_class;
+        if(id_prefix == "query"){card_class = "carousel-item";}
+        else if(id_prefix == "shared"){card_class = is_eliminated = is_eliminated ? "eliminated" : "";}
 
         return    `
             <div class="card sticky-action grey darken-4 ${card_class}">
