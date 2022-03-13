@@ -31,9 +31,10 @@ function movieListBuilder(old_list, updated_list){
         
         //SECONDARY ADD
         //Rename attributes for MovieCard
+        let {description:overview, shared_movie_id:id, ...rest} = movie
         $("#movie_list")
             .append(
-                MovieCard("shared", {description:overview, shared_movie_id:id, ...rest} = movie)
+                MovieCard("shared", {overview, id, ...rest})
             );
     })
 
