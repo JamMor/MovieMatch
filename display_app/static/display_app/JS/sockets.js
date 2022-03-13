@@ -97,7 +97,7 @@ $(document).ready(function() {
 
     //Send which movie to delete on click
     $('#movie_list').on('click', 'div.list_item' , function() {
-        let shared_movie_id = $(this).attr('id').slice(6)
+        let shared_movie_id = $(this).attr('id').split("_")[1]
         matchSocket.send(JSON.stringify({
             'command' : 'eliminate',
             'shared_movie_id' : shared_movie_id

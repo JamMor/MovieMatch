@@ -66,7 +66,7 @@ function userListBuilder(old_list, updated_list){
 
     //Confirming DOM and user list are in sync
     let dom_uuids = $('#user_list div').map(function() {
-        return this.id.slice(5);
+        return this.id.split("_")[1];
         })
         .get()
     let list_verified = false;

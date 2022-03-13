@@ -42,7 +42,7 @@ function movieListBuilder(old_list, updated_list){
 
     //Confirming DOM and movie list are in sync
     let dom_movie_ids = $('#movie_list div').map(function() {
-        return this.id.slice(6);
+        return this.id.split("_")[1];
         })
         .get()
     let new_movie_ids = new Set(updated_list.map(x => x.shared_movie_id))
