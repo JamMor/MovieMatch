@@ -5,17 +5,8 @@ function addUserToDom(uuid, user){
         ? "blue darken-2"
         : "orange darken-3"
     
-    if(uuid == user_uuid){
-        $('#user_list')
-            .prepend(
-                `<div id='user_${uuid}' ${is_ready}>\
-                <h5>${nickname}</h5>\
-                </div>`
-                );
-    }
-    else {
-        $('#user_list')
-            .append(
+    $('#user_list')
+        .append(
             `<div id='user_${uuid}' class="chip ${is_ready}">
             ${nickname}
             </div>`
@@ -29,7 +20,7 @@ function removeUserFromDom(uuid){
 }
 
 
-//Updates user list and renders in DOM
+//Updates user list and renders in DOM when intialized or share list updated.
 function userListBuilder(old_list, updated_list){
     let old_uuids = new Set(Object.keys(old_list))
     let added_uuid_list = new Set();
