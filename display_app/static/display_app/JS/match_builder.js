@@ -34,7 +34,7 @@ function movieListBuilder(old_list, updated_list){
         let {description:overview, shared_movie_id:id, ...rest} = movie
         $("#movie_list")
             .append(
-                MovieCard("shared", {overview, id, ...rest})
+                MovieCard("shared", {overview, id, ...rest}, ["remove", "info"])
             );
     })
 

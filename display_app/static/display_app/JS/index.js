@@ -41,7 +41,7 @@ $(document).ready(function() {
                     console.log(data);
                     search_results = data.results;
                     $("div.carousel").height("400px").html(search_results
-                        .map(movie => MovieCard("query", movie))
+                        .map(movie => MovieCard("query", movie, ["add", "info"]))
                         .join('')
                     );
                     $('.carousel').carousel({
@@ -74,7 +74,7 @@ $(document).ready(function() {
             movie_list.push(thisMovie);
 
             //Add movie to DOM
-            $("#movie_list").append(MovieCard("movie", thisMovie));
+            $("#movie_list").append(MovieCard("movie", thisMovie, ["remove", "info"]));
         }
         else{
             console.log("Already added.")
