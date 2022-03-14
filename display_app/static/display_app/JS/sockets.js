@@ -49,8 +49,8 @@ $(document).ready(function() {
             console.log("Connected User: ");
             console.log(connected_user);
             let connected_uuid = Object.keys(connected_user)[0]
-            if(connected_uuid == user_uuid){
-                console.log("Connected user signal is for this user. Ignoring.")
+            if(user_list.hasOwnProperty(connected_uuid)){
+                console.log(`User ${connected_uuid} is already in list.`)
             }
             else{
                 Object.assign(user_list, connected_user);
