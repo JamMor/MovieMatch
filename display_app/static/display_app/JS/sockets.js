@@ -39,7 +39,7 @@ $(document).ready(function() {
         //Eliminate movie
         if(responseData.command == "eliminated"){
             let shared_movie_id = responseData.shared_movie_id
-            $(`#movie_${shared_movie_id}`).addClass('eliminated')
+            $(`#shared_${shared_movie_id}`).addClass('eliminated')
             console.log("Eliminated movie")
         }
         
@@ -96,8 +96,10 @@ $(document).ready(function() {
     };
 
     //Send which movie to delete on click
-    $('#movie_list').on('click', 'div.list_item' , function() {
-        let shared_movie_id = $(this).attr('id').split("_")[1]
+    $('#movie_list').on('click', 'a.remove-btn' , function() {
+        //Get shared movie ID from parent Card ID
+        let shared_movie_id = $(this).closest('div.card').attr('id')
+            .split("_")[1];
         matchSocket.send(JSON.stringify({
             'command' : 'eliminate',
             'shared_movie_id' : shared_movie_id

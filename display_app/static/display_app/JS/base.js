@@ -31,17 +31,15 @@ $(document).ready(function() {
     csrftoken = getCookie('csrftoken');
 
     //Button Constructor
-    const CardButton = (type, id_prefix, id) => {
-        let elemId = ''; let color = ''; let customClass = ''; let icon = '';
+    const CardButton = (type) => {
+        let color = ''; let customClass = ''; let icon = '';
         switch(type){
             case 'add':
-                elemId = `id='${id_prefix}_${id}'`
                 color = "blue darken-2"
                 customClass = "add-btn"
                 icon = "add"
                 break;
             case 'remove':
-                elemId = `id='${id_prefix}_${id}'`
                 color = "orange darken-3"
                 customClass = "remove-btn"
                 icon = "remove"
@@ -54,7 +52,7 @@ $(document).ready(function() {
             default:
                 console.log("Error: Button type unrecognized.");
         }
-        return `<a ${elemId} class="btn card-btn waves-effect waves-light ${color} ${customClass}"><i class="material-icons">${icon}</i></a>`
+        return `<a class="btn card-btn waves-effect waves-light ${color} ${customClass}"><i class="material-icons">${icon}</i></a>`
     }
 
     //MovieCard HTML Constructor
@@ -68,7 +66,7 @@ $(document).ready(function() {
         let release_year = release_date?.slice(0, 4) ?? ""
 
         //Button options
-        let button_elem = buttonarray.map(button => CardButton(button, id_prefix, id)).join('');
+        let button_elem = buttonarray.map(button => CardButton(button)).join('');
 
         //Context specific class options
         let card_class;
@@ -76,7 +74,7 @@ $(document).ready(function() {
         else if(id_prefix == "shared"){card_class = is_eliminated = is_eliminated ? "eliminated" : "";}
 
         return    `
-            <div class="card sticky-action grey darken-4 ${card_class}">
+            <div id='${id_prefix}_${id}' class="card sticky-action grey darken-4 ${card_class}">
                 <div class="card-image">
                     ${image_link}
                     <span class="card-title">${title}<br />${release_year}</span>

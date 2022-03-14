@@ -58,8 +58,9 @@ $(document).ready(function() {
 
     //Handler to add movie to list and dom
     $('.carousel').on("click", "a.add-btn", function () {
-        // Get Movie ID from btn ID ("query_XXXXXXX")
-        let thisId = this.id.split("_")[1];
+        //Get movie ID from parent Card ID
+        let thisId = $(this).closest('div.card').attr('id')
+            .split("_")[1];
         console.log(`Adding movie id ${thisId}`);
         let thisMovie;
         //If movie not already in list, get info from search results and push to list
