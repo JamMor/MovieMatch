@@ -85,6 +85,12 @@ $(document).ready(function() {
             user_list = received_user_list
             
         }
+        //Final movie left
+        else if(responseData.command == "finalized"){
+            let finalId = responseData.shared_movie_id
+            let movieIndex = movie_list.findIndex(movie => movie.shared_movie_id == finalId);
+            console.log(`${movie_list[movieIndex].title} is the final choice!`)
+        }
         else {
             console.log("Command Unknown")
             console.log(responseData)

@@ -95,20 +95,35 @@ class MatchConsumer(JsonWebsocketConsumer):
         #ELIMINATE
         if command == 'eliminate':
             shared_movie_id = content['shared_movie_id']
+            movies_in_list = SharedMovie.objects.filter(shared_list__sharecode = self.sharecode, is_eliminated = False).count()
+            print(f"There are {movies_in_list} in shared list {self.sharecode}.")
             
-            #Eliminate movie
-            shared_movie = SharedMovie.objects.get(id=shared_movie_id)
-            shared_movie.is_eliminated = True
-            shared_movie.save()
-
-            #Confirm Removal for Group
-            async_to_sync(self.channel_layer.group_send)(
-                self.match_group_name,
-                {
-                    'type': 'eliminate_message',
-                    'shared_movie_id' : shared_movie_id
-                }
-            )
+            if movies_in_list > 1:
+                #Eliminate movie
+                shared_movie = SharedMovie.objects.get(id=shared_movie_id)
+                shared_movie.is_eliminated = True
+                shared_movie.save()
+                movies_in_list -= 1
+                
+                #Confirm Removal for Group
+                async_to_sync(self.channel_layer.group_send)(
+                    self.match_group_name,
+                    {
+                        'type': 'eliminate_message',
+                        'shared_movie_id' : shared_movie_id
+                    }
+                )
+            if movies_in_list == 1:
+                final_movie = SharedMovie.objects.filter(shared_list__sharecode = self.sharecode, is_eliminated = False).first()
+                async_to_sync(self.channel_layer.group_send)(
+                    self.match_group_name,
+                    {
+                        'type': 'final_message',
+                        'shared_movie_id' : final_movie.id
+                    }
+                )
+            else:
+                print(f"Movie List Error. {movies_in_list} in list.")
 
         #INITIALIZE
         elif command == 'initialize':
@@ -135,6 +150,16 @@ class MatchConsumer(JsonWebsocketConsumer):
         # Send message to WebSocket Client
         self.send_json({
             'command': 'eliminated',
+            'status' : "success",
+            'shared_movie_id' : shared_movie_id
+        })
+    
+    def final_message(self, event):
+        shared_movie_id = event['shared_movie_id']
+
+        # Send message to WebSocket Client
+        self.send_json({
+            'command': 'finalized',
             'status' : "success",
             'shared_movie_id' : shared_movie_id
         })
