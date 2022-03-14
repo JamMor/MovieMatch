@@ -81,6 +81,24 @@ $(document).ready(function() {
             console.log("Already added.")
         }
     })
+    
+    //Handler to remove movie from list and dom
+    $('#movie_list').on("click", "a.remove-btn", function () {
+        //Get movie ID from parent Card ID
+        let thisId = $(this).closest('div.card').attr('id')
+            .split("_")[1];
+        console.log(`Removing movie id ${thisId}`);
+
+        let movieIndex = movie_list.findIndex(movie => movie.id == thisId);
+        if (movieIndex == -1){
+            console.log("Movie not found in list.")
+        }
+        else{
+            $(`#movie_${thisId}`).remove();
+            let removedMovie = movie_list.splice(movieIndex, 1)[0];
+            console.log(`Removed ${removedMovie.title}.`);
+        }
+    })
 
     // Clear search results
     $("#search-close").click(function() {
