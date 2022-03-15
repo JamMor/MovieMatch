@@ -87,9 +87,54 @@ $(document).ready(function() {
         }
         //Final movie left
         else if(responseData.command == "finalized"){
-            let finalId = responseData.shared_movie_id
-            let movieIndex = movie_list.findIndex(movie => movie.shared_movie_id == finalId);
-            console.log(`${movie_list[movieIndex].title} is the final choice!`)
+            let finalSharedId = responseData.shared_movie_id;
+            let movieIndex = movie_list.findIndex(movie => movie.shared_movie_id == finalSharedId);
+            let finalMovie = movie_list[movieIndex];
+            console.log(`${finalMovie.title} is the final choice!`)
+            
+            let finalMovieInfo;
+            //Ajax for more movie detail
+            const api_key = "f4f5f258379baf10796e1d3aeb5add05";
+            $.get(`https://api.themoviedb.org/3/movie/${finalMovie.movie_id}?api_key=${api_key}&language=en-US`,
+                function () {
+                    console.log("AJAX sent to TMDB");
+                    return
+                }, "json")
+                .done(function (data) {
+                    finalMovieInfo = data;
+                    $.get(`https://api.themoviedb.org/3/movie/${finalMovie.movie_id}/watch/providers?api_key=${api_key}`,
+                        function(){
+                            console.log("AJAX sent to TMDB");
+                            return
+                        }, "json")
+                        .done(function(data){
+                            console.log("Watch provider data:");
+                            finalMovieInfo['watch_providers'] = data.results.US;
+                            $("#final_modal div.modal-content")
+                                .html(MovieInfoModal(finalMovieInfo))
+                            
+                            $('.modal').modal({
+                                inDuration: 1500,
+                                dismissible: false,
+                                endingTop: "2%"
+                            });
+                            $('.collapsible').collapsible();
+                            $('.tooltipped').tooltip();
+                            console.log(finalMovieInfo);
+                            $('#final_modal').modal('open');
+                        })
+                })
+                .fail(function(){
+                    $("#final_modal div.modal-content")
+                        .html(MovieInfoModal(finalMovie))
+                    $('.modal').modal({
+                        inDuration: 1500,
+                        dismissible: false,
+                        endingTop: "2%"
+                    });
+                    $('.collapsible').collapsible();
+                    $('.tooltipped').tooltip();
+                })
         }
         else {
             console.log("Command Unknown")
