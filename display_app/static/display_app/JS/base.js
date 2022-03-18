@@ -60,7 +60,7 @@ $(document).ready(function() {
     const placeholder_link = DJ_STATIC_FILES.placeholder_path;
 
     MovieCard = (id_prefix, {id, title, release_date, overview, poster_path, is_eliminated}, buttonarray) => {
-        let image_link = (poster_path == null) 
+        let image_tag = (poster_path == null) 
             ? `<img src='${placeholder_link}'>`
             : `<img src='${image_prefix}w342${poster_path}'>`
         let release_year = release_date?.slice(0, 4) ?? ""
@@ -76,7 +76,7 @@ $(document).ready(function() {
         return    `
             <div id='${id_prefix}_${id}' class="card sticky-action grey darken-4 ${card_class}">
                 <div class="card-image">
-                    ${image_link}
+                    ${image_tag}
                     <span class="card-title">${title}<br />${release_year}</span>
                 </div>
                 <div class="card-action">
