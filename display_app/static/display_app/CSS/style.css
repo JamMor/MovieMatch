@@ -145,6 +145,7 @@ div.card-action {
 
 #user_list {
     display: flex;
+    justify-content: space-evenly;
     padding: 5px 0px;
 }
 
@@ -168,6 +169,12 @@ div.card-action {
     width:154px;
     height:231px;
 } */
+
+.eliminated {
+    box-shadow: 0px 0px 7px #ef6c00;
+    opacity: 0.2;
+}
+
 /* =========Final Modal========== */
 #final_modal {
     max-height:95vh;
