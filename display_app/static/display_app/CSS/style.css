@@ -88,25 +88,26 @@ div.card-action {
         #01f1fb 950%); 
 }
 
-  /* label color */
-  #share_modal .input-field label {
+/*===== Share Modal Form ====== */
+/* label color */
+#share_modal .input-field label {
     color: #616161;
-  }
-  /* label focus color */
-  #share_modal .input-field input[type=text]:focus + label {
+}
+/* label focus color */
+#share_modal .input-field input[type=text]:focus + label {
     color: #8e2ba7;
-  }
-  /* label underline focus color */
-  #share_modal .input-field input[type=text] {
+}
+/* label underline focus color */
+#share_modal .input-field input[type=text] {
     border-bottom: 1px solid #616161;
     box-shadow: 0 1px 0 0 #000;
-  }
+}
 
-  /* label underline focus color */
-  #share_modal .input-field input[type=text]:focus {
+/* label underline focus color */
+#share_modal .input-field input[type=text]:focus {
     border-bottom: 1px solid #8e2ba7;
     box-shadow: 0 1px 0 0 #000;
-  }
+}
 
 #share_modal .modal-footer {
     background-color: transparent;
@@ -206,8 +207,11 @@ div.card-action {
     text-align: center;
 }
 
-/* 
+/* Animista */
+  
+/*  */
 
+/*
 .exampleClass {
 	position: relative;
 	padding: 1px;
@@ -242,5 +246,4 @@ div.card-action {
 	cursor: pointer;
 	transition: transform 250ms cubic-bezier(.2,.8,.4,1);
 }
-
-} */
+*/
