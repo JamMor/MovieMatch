@@ -156,12 +156,13 @@ div.card-action {
     margin:10px;
 }
 
-#movie_list h5 {
+/* #movie_list h5 {
     text-align: center;
     margin-top: 20%;
     color:#000000;
     text-shadow: 0 0 3px #868686, 0 0 3px #ffffff, 0 0 3px #ffffff, 0 0 3px #ffffff;
-}
+} */
+
 /* 
 .list_item {
     width:154px;
