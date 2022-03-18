@@ -12,8 +12,6 @@ $(document).ready(function() {
         + shareCode
         + '/'
     );
-
-    console.log(matchSocket);
     
     matchSocket.onopen = function(e) {
         console.log("Match socket opened");
@@ -28,7 +26,6 @@ $(document).ready(function() {
     matchSocket.onmessage = function(e) {
         console.log(e);
         let responseData = JSON.parse(e.data);
-        console.log(responseData);
 
         // Failed command
         if(responseData.status != 'success'){
@@ -37,7 +34,7 @@ $(document).ready(function() {
             return
         }
         //Eliminate movie
-        if(responseData.command == "eliminated"){
+        else if(responseData.command == "eliminated"){
             let shared_movie_id = responseData.shared_movie_id
             $(`#shared_${shared_movie_id}`).addClass('eliminated')
             console.log("Eliminated movie")
