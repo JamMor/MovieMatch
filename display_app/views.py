@@ -9,7 +9,7 @@ import json
 from channels.layers import get_channel_layer
 from asgiref.sync import async_to_sync
 
-# Creates a Temporary list and returns the list
+# Creates a Temporary list and returns the list, Adds new movies to DB
 def create_temp_list(movie_list, user_uuid):
     print("Building new temp list")
     temp_list = TempMovieList.objects.create(created_by = user_uuid)
@@ -101,7 +101,7 @@ def new_match(request):
             return JsonResponse({"status": "SharedList not found.", "sharecode": ''})
     else:
         try:
-            shared_list = SharedMovieList.objects.create()
+            shared_list = SharedMovieList.objects.create(created_by = user_uuid)
         except IntegrityError:
             return JsonResponse({"status": "Could not create SharedList.", "sharecode": ''})
     

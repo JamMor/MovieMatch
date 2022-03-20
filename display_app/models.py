@@ -61,6 +61,8 @@ class TempMovieList(models.Model):
 
 class SharedMovieList(models.Model):
     sharecode = models.CharField(max_length=255, unique=True)
+    created_by = models.ForeignKey(UserUUID, related_name="created_shared_lists", on_delete = models.CASCADE, null=True)
+    started_eliminating = models.BooleanField(default=False)
     #Is this field ever needed?
     contributors = models.ManyToManyField(UserUUID, related_name="shared_lists")
     created_at = models.DateTimeField(auto_now_add=True)
