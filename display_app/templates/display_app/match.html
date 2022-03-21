@@ -5,14 +5,11 @@
 
 {% block content_block %}
     <main>
-        <h4>Match Room ID = <span id="share-code">{{sharecode}}</span></h4>
-        <h5>Users:</h5>
-        <div id="user_list"></div>
-        <button id="begin-eliminating">Start eliminating!</button>
-        <!-- The List of Shared movies -->
-        <h4>Shared List:</h4>
-        <div id="movie_list"></div>
-        <hr>
+        <div class="container">
+            <h4>Match Room ID = <span id="share-code">{{sharecode}}</span></h4>
+            <div id="user_list"></div>
+            <div id="movie_list"></div>
+        </div>
     </main>
 {% endblock %}
 
