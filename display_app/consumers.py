@@ -157,6 +157,21 @@ class MatchConsumer(JsonWebsocketConsumer):
                     }
                 )
         
+        #REFRESH LIST
+        elif command == 'refresh':
+            shared_list = SharedMovieList.objects.get(sharecode = self.sharecode)
+            shared_list.started_eliminating = False
+            shared_list.save()
+            
+            SharedMovie.objects.filter(shared_list__sharecode = self.sharecode).update(is_eliminated = False)
+
+            async_to_sync(self.channel_layer.group_send)(
+                    self.match_group_name,
+                    {
+                        'type': 'refresh_message'
+                    }
+                )
+        
         #FAILED COMMAND
         else:
             print(f'Command failure: {command}.')
@@ -202,6 +217,17 @@ class MatchConsumer(JsonWebsocketConsumer):
         # Send message to WebSocket Client
         self.send_json({
             'command': 'updated',
+            'status' : 'success',
+            'share_list': model_dict
+        })
+    
+    # Receive message from ChannelLayer
+    def refresh_message(self, event):
+        model_dict = SharedListEncoder(self.sharecode)
+
+        # Send message to WebSocket Client
+        self.send_json({
+            'command': 'refreshed',
             'status' : 'success',
             'share_list': model_dict
         })

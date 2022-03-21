@@ -88,6 +88,28 @@ $(document).ready(function() {
             user_list = received_user_list
             
         }
+        //Refresh list of movies
+        else if(responseData.command == "refreshed"){
+            let {
+                movie_list:received_movie_list, 
+                active_user_dict:received_user_list,
+                has_started_elimination:received_status
+            } = responseData.share_list
+            has_started_elimination = received_status;
+
+            user_list = {};
+            movie_list= [];
+            $('#user_list').html("");
+            $('#movie_list').html("");
+
+            movieListBuilder(movie_list, received_movie_list)
+            movie_list = received_movie_list
+            
+            userListBuilder({user_list}, received_user_list)
+            user_list = received_user_list   
+
+            $('#final_modal').modal('close');
+        }
         //Start Elimination
         else if(responseData.command == "elimination_started"){
             has_started_elimination = true;            
@@ -171,10 +193,17 @@ $(document).ready(function() {
     
     //Break into JS only loaded for creator
     //Send start signal
-    $('#status_bar').on('click', 'a.start-btn' , function() {
+    $('#status_bar').on('click', '#start-btn' , function() {
         console.log("Send start matching signal.")
         matchSocket.send(JSON.stringify({
             'command' : 'elimination_start'
+        }))
+    });
+    
+    $('#final_modal').on('click', '#refresh-btn' , function() {
+        console.log("Refreshing list.")
+        matchSocket.send(JSON.stringify({
+            'command' : 'refresh'
         }))
     });
 })
