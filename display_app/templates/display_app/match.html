@@ -8,6 +8,20 @@
         <div class="container">
             <h4>Match Room ID = <span id="share-code">{{sharecode}}</span></h4>
             <div id="user_list"></div>
+            <div id="status_bar">
+                <div class="center-align">
+                    <a class="start-btn waves-effect waves-light neon-blue-hover btn-large">
+                        <i class="material-icons left">cast_connected</i>
+                            Start Matching
+                        <i class="material-icons right">cast_connected</i>
+                    </a>
+                    <div class="neon-blue-hover hover btn-large">
+                        <i class="material-icons left">cast</i>
+                            Waiting for Host to Start...
+                        <i class="material-icons right">cast</i>
+                    </div>
+                </div>
+            </div>
             <div id="movie_list"></div>
         </div>
     </main>
@@ -35,6 +49,7 @@
         var user_uuid = "{{uuid}}"
         var user_list = {};
         var movie_list = [];
+        var has_started_elimination = false;
     </script>
     <script src="{% static 'display_app/js/match_builder.js'%}"></script>
     <script src="{% static 'display_app/js/user_builder.js'%}"></script>

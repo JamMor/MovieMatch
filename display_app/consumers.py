@@ -94,36 +94,44 @@ class MatchConsumer(JsonWebsocketConsumer):
         print(f'COMMAND RECEIVED - Consumers: {command}')
         #ELIMINATE
         if command == 'eliminate':
-            shared_movie_id = content['shared_movie_id']
-            movies_in_list = SharedMovie.objects.filter(shared_list__sharecode = self.sharecode, is_eliminated = False).count()
-            print(f"There are {movies_in_list} in shared list {self.sharecode}.")
-            
-            if movies_in_list > 1:
-                #Eliminate movie
-                shared_movie = SharedMovie.objects.get(id=shared_movie_id)
-                shared_movie.is_eliminated = True
-                shared_movie.save()
-                movies_in_list -= 1
-                
-                #Confirm Removal for Group
-                async_to_sync(self.channel_layer.group_send)(
-                    self.match_group_name,
-                    {
+            shared_list = SharedMovieList.objects.get(sharecode = self.sharecode)
+            if shared_list.started_eliminating == False:
+                self.send_json({
                         'type': 'eliminate_message',
-                        'shared_movie_id' : shared_movie_id
-                    }
-                )
-            if movies_in_list == 1:
-                final_movie = SharedMovie.objects.filter(shared_list__sharecode = self.sharecode, is_eliminated = False).first()
-                async_to_sync(self.channel_layer.group_send)(
-                    self.match_group_name,
-                    {
-                        'type': 'final_message',
-                        'shared_movie_id' : final_movie.id
-                    }
-                )
+                        'status' : 'failed',
+                        'error_message' : "List not set to allow elimination."
+                })
             else:
-                print(f"Movie List Error. {movies_in_list} in list.")
+                shared_movie_id = content['shared_movie_id']
+                movies_in_list = SharedMovie.objects.filter(shared_list__sharecode = self.sharecode, is_eliminated = False).count()
+                print(f"There are {movies_in_list} in shared list {self.sharecode}.")
+                
+                if movies_in_list > 1:
+                    #Eliminate movie
+                    shared_movie = SharedMovie.objects.get(id=shared_movie_id)
+                    shared_movie.is_eliminated = True
+                    shared_movie.save()
+                    movies_in_list -= 1
+                    
+                    #Confirm Removal for Group
+                    async_to_sync(self.channel_layer.group_send)(
+                        self.match_group_name,
+                        {
+                            'type': 'eliminate_message',
+                            'shared_movie_id' : shared_movie_id
+                        }
+                    )
+                if movies_in_list == 1:
+                    final_movie = SharedMovie.objects.filter(shared_list__sharecode = self.sharecode, is_eliminated = False).first()
+                    async_to_sync(self.channel_layer.group_send)(
+                        self.match_group_name,
+                        {
+                            'type': 'final_message',
+                            'shared_movie_id' : final_movie.id
+                        }
+                    )
+                else:
+                    print(f"Movie List Error. {movies_in_list} in list.")
 
         #INITIALIZE
         elif command == 'initialize':
@@ -136,7 +144,22 @@ class MatchConsumer(JsonWebsocketConsumer):
                 'share_list': model_dict
             })
         
+        #START ELIMINATING
+        elif command == 'elimination_start':
+            shared_list = SharedMovieList.objects.get(sharecode = self.sharecode)
+            shared_list.started_eliminating = True
+            shared_list.save()
+
+            async_to_sync(self.channel_layer.group_send)(
+                    self.match_group_name,
+                    {
+                        'type': 'elimination_start'
+                    }
+                )
+        
+        #FAILED COMMAND
         else:
+            print(f'Command failure: {command}.')
             self.send_json({
                 'command': command,
                 'status' : 'failed',
@@ -163,6 +186,14 @@ class MatchConsumer(JsonWebsocketConsumer):
             'status' : "success",
             'shared_movie_id' : shared_movie_id
         })
+    
+    def elimination_start(self, event):
+
+        # Send message to WebSocket Client
+        self.send_json({
+                'command': 'elimination_started',
+                'status' : 'success'
+            })
     
     # Receive message from ChannelLayer
     def update_message(self, event):

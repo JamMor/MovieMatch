@@ -64,7 +64,13 @@ $(document).ready(function() {
         }
         //Initialize/Update list of movies
         else if(responseData.command == "initialized" || responseData.command == "updated"){
-            let {movie_list:received_movie_list, active_user_dict:received_user_list} = responseData.share_list
+            let {
+                movie_list:received_movie_list, 
+                active_user_dict:received_user_list,
+                has_started_elimination:received_status
+            } = responseData.share_list
+            has_started_elimination = received_status;
+
             console.log("Movie List: ")
             console.log(movie_list)
             console.log("Received Movie List: ")
@@ -81,6 +87,10 @@ $(document).ready(function() {
             userListBuilder(user_list, received_user_list)
             user_list = received_user_list
             
+        }
+        //Start Elimination
+        else if(responseData.command == "elimination_started"){
+            has_started_elimination = true;            
         }
         //Final movie left
         else if(responseData.command == "finalized"){
@@ -145,12 +155,26 @@ $(document).ready(function() {
 
     //Send which movie to delete on click
     $('#movie_list').on('click', 'a.remove-btn' , function() {
+        if(!has_started_elimination){
+            console.log("Host has not started elimination.")
+            return
+        }
+
         //Get shared movie ID from parent Card ID
         let shared_movie_id = $(this).closest('div.card').attr('id')
             .split("_")[1];
         matchSocket.send(JSON.stringify({
             'command' : 'eliminate',
             'shared_movie_id' : shared_movie_id
+        }))
+    });
+    
+    //Break into JS only loaded for creator
+    //Send start signal
+    $('#status_bar').on('click', 'a.start-btn' , function() {
+        console.log("Send start matching signal.")
+        matchSocket.send(JSON.stringify({
+            'command' : 'elimination_start'
         }))
     });
 })
