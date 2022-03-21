@@ -74,18 +74,19 @@ div.card-action {
 /* ===============Share Modal================= */
 #share_modal {
     max-width: 400px;
-    border-radius: 10px;
+}
+.cyber-grade {
+    background: #212121f1;
     box-shadow: 
         0 0 10px 0 #c51162,
         0 0 50px 0 #880e4f;
-}
-.cyber-grade {
-    background: #8e2ba7;
-    background: linear-gradient(
-        0deg, 
+    border-width: 4px;
+    border-style:solid;
+    border-image: linear-gradient(
+        300deg, 
         #8e2ba7 0%, 
         #8a6ff5 35%, 
-        #01f1fb 950%); 
+        #01f1fb 95%) 10; 
 }
 
 /*===== Share Modal Form ====== */
@@ -113,7 +114,12 @@ div.card-action {
     background-color: transparent;
     display: flex;
     flex-direction: column;
+    align-items: center;
     height:100%;
+}
+
+#share_modal .modal-footer a{
+    width: 200px;
 }
 
 #share_modal .btn-flat {
