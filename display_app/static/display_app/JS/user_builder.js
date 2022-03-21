@@ -8,14 +8,14 @@ function addUserToDom(uuid, user){
     $('#user_list')
         .append(
             `<div id='user_${uuid}' class="chip ${is_ready}">
-            ${nickname}
+                ${nickname}
             </div>`
             );
 }
 
 //Removes user from DOM
 function removeUserFromDom(uuid){
-    console.log(`Trying to remove #user_${uuid}`)
+    console.log(`Trying to remove User ${uuid}`)
     $(`#user_${uuid}`).remove()
 }
 
