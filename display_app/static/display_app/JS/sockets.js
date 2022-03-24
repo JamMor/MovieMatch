@@ -191,10 +191,14 @@ $(document).ready(function() {
         console.error('Match socket closed unexpectedly');
     };
 
-    //Send which movie to delete on click
+    //Send which movie to eliminate on click
     $('#movie_list').on('click', 'a.remove-btn' , function() {
         if(!has_started_elimination){
             console.log("Host has not started elimination.")
+            return
+        }
+        if(!user_list[user_uuid]['is_users_turn']){
+            console.log("Not this users turn.")
             return
         }
 
@@ -203,7 +207,8 @@ $(document).ready(function() {
             .split("_")[1];
         matchSocket.send(JSON.stringify({
             'command' : 'eliminate',
-            'shared_movie_id' : shared_movie_id
+            'shared_movie_id' : shared_movie_id,
+            'uuid' : user_uuid
         }))
     });
     
