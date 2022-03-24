@@ -112,13 +112,28 @@ class MatchConsumer(JsonWebsocketConsumer):
                     shared_movie.is_eliminated = True
                     shared_movie.save()
                     movies_in_list -= 1
+
+                    #Get next eliminating user
+                    share_users = list(ShareRoomUser.objects.filter(list = shared_list).order_by('created_at'))
+                    user_count = len(share_users)
+                    for i in range(-user_count, 0):
+                        if share_users[i].user_uuid.uuid == content['uuid']:
+                            print(f'User {content["uuid"]} is at index {i}')
+                            next_index = i + 1
+                            break
+                    next_eliminating_uuid = share_users[next_index].user_uuid.uuid
+                    
+                    #Test if sent uuid = json uuid from socket message (Sould be true)
+                    print(f'UUIDS are {self.scope["session"]["uuid"] == content["uuid"]}')
                     
                     #Confirm Removal for Group
                     async_to_sync(self.channel_layer.group_send)(
                         self.match_group_name,
                         {
                             'type': 'eliminate_message',
-                            'shared_movie_id' : shared_movie_id
+                            'shared_movie_id' : shared_movie_id,
+                            'eliminating_uuid' : content['uuid'],
+                            'next_eliminating_uuid' : next_eliminating_uuid
                         }
                     )
                 if movies_in_list == 1:
@@ -184,12 +199,16 @@ class MatchConsumer(JsonWebsocketConsumer):
     # Receive message from ChannelLayer
     def eliminate_message(self, event):
         shared_movie_id = event['shared_movie_id']
+        eliminating_uuid = event['eliminating_uuid']
+        next_eliminating_uuid = event['next_eliminating_uuid']
 
         # Send message to WebSocket Client
         self.send_json({
             'command': 'eliminated',
             'status' : "success",
-            'shared_movie_id' : shared_movie_id
+            'shared_movie_id' : shared_movie_id,
+            'eliminating_uuid' : eliminating_uuid,
+            'next_eliminating_uuid' : next_eliminating_uuid
         })
     
     def final_message(self, event):
