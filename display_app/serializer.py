@@ -11,7 +11,7 @@ def SharedListEncoder(sharecode):
                 Prefetch('shared_movies', to_attr='pre_shared_movies'), 
                 Prefetch('pre_shared_movies__submitted_by', to_attr='pre_submitted_by')).get(sharecode = sharecode)
     
-    contributor_list = list({'uuid' : user.uuid, 'nickname' : user.nickname} for user in shared_list.pre_contributors)
+    # contributor_list = list({'uuid' : user.uuid, 'nickname' : user.nickname} for user in shared_list.pre_contributors)
     # active_user_list = list(
     #     {
     #         'uuid' : user.pre_uuid.uuid, 
@@ -22,7 +22,7 @@ def SharedListEncoder(sharecode):
     active_user_dict = {
         user.pre_uuid.uuid : { 
             'nickname' : user.nickname, 
-            'is_ready' : user.is_ready
+            'is_users_turn' : user.is_users_turn
             }
         for user in shared_list.pre_active_users}
     
@@ -37,7 +37,6 @@ def SharedListEncoder(sharecode):
         movie_list.append(movie_info)
         
     json_dict = {
-        'contributor_list' : contributor_list,
         'active_user_dict' : active_user_dict,
         'movie_list' : movie_list,
         'has_started_elimination' : shared_list.started_eliminating
