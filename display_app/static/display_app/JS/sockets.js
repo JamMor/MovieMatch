@@ -15,10 +15,9 @@ $(document).ready(function() {
     
     matchSocket.onopen = function(e) {
         console.log("Match socket opened");
-        //Populate current share and user list.
+        //Request to initialize current share and user list.
         matchSocket.send(JSON.stringify({
-            'command' : 'initialize',
-            'message': 'Test intialize send.'
+            'command' : 'initialize'
         }))
     };
 
@@ -221,6 +220,7 @@ $(document).ready(function() {
         }))
     });
     
+    //Refresh Share List
     $('#final_modal').on('click', '#refresh-btn' , function() {
         console.log("Refreshing list.")
         matchSocket.send(JSON.stringify({
