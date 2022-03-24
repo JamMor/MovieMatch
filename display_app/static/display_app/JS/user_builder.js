@@ -1,13 +1,13 @@
 //Adds user to DOM
 function addUserToDom(uuid, user){
     let nickname = user['nickname']
-    let is_ready = user['is_ready'] 
-        ? "blue darken-2"
+    let is_users_turn = user['is_users_turn'] 
+        ? "blue darken-3"
         : "orange darken-3"
     
     $('#user_list')
         .append(
-            `<div id='user_${uuid}' class="chip ${is_ready}">
+            `<div id='user_${uuid}' class="chip ${is_users_turn}">
                 ${nickname}
             </div>`
             );
