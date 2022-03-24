@@ -36,8 +36,20 @@ $(document).ready(function() {
         //Eliminate movie
         else if(responseData.command == "eliminated"){
             let shared_movie_id = responseData.shared_movie_id
+            let eliminating_uuid = responseData.eliminating_uuid
+            let next_uuid = responseData.next_eliminating_uuid
             $(`#shared_${shared_movie_id}`).addClass('eliminated')
             console.log("Eliminated movie")
+
+            //Remove class for last eliminating user
+            user_list[eliminating_uuid]['is_users_turn'] = false;
+            $(`#user_list div.blue`).addClass('orange');
+            $(`#user_list div.blue`).removeClass('blue');
+            
+            //Add class for new eliminating user
+            user_list[next_uuid]['is_users_turn'] = true;
+            $(`#user_${next_uuid}`).addClass('blue');
+            $(`#user_${next_uuid}`).removeClass('orange');
         }
         
         //User connected
