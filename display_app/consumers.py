@@ -1,5 +1,6 @@
 # chat/consumers.py
 import json
+from random import randint
 from asgiref.sync import async_to_sync
 from channels.generic.websocket import JsonWebsocketConsumer
 from django.core import serializers
@@ -162,13 +163,27 @@ class MatchConsumer(JsonWebsocketConsumer):
         #START ELIMINATING
         elif command == 'elimination_start':
             shared_list = SharedMovieList.objects.get(sharecode = self.sharecode)
+            if shared_list.started_eliminating:
+                print("Elimination already started.")
+                return
             shared_list.started_eliminating = True
             shared_list.save()
 
+            share_users = list(ShareRoomUser.objects.filter(list = shared_list).order_by('created_at'))
+            
+            #Randomly pick user to start
+            user_count = len(share_users)
+            eliminating_user = share_users[randint(0,user_count-1)]
+            eliminating_user.is_users_turn = True
+            #Consider making start eliminating only able to be pressed when false in JS
+            #and python
+            #Reset movies option before final movie??
+            
             async_to_sync(self.channel_layer.group_send)(
                     self.match_group_name,
                     {
-                        'type': 'elimination_start'
+                        'type': 'elimination_start',
+                        'eliminating_uuid': eliminating_user.user_uuid.uuid
                     }
                 )
         
@@ -222,11 +237,13 @@ class MatchConsumer(JsonWebsocketConsumer):
         })
     
     def elimination_start(self, event):
+        eliminating_uuid = event['eliminating_uuid']
 
         # Send message to WebSocket Client
         self.send_json({
                 'command': 'elimination_started',
-                'status' : 'success'
+                'status' : 'success',
+                'eliminating_uuid' : eliminating_uuid
             })
     
     # Receive message from ChannelLayer
