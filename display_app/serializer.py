@@ -1,12 +1,13 @@
 import json
 from django.core.serializers.json import DjangoJSONEncoder
-from .models import SharedMovieList, SharedMovie, UserUUID, Movie
+from .models import SharedMovieList, SharedMovie, ShareRoomUser, UserUUID, Movie
 from django.db.models import Prefetch
 
 def SharedListEncoder(sharecode):
+    active_queryset = ShareRoomUser.objects.filter(is_active = True)
     shared_list = SharedMovieList.objects.prefetch_related(
-                Prefetch('contributors', to_attr='pre_contributors'), 
-                Prefetch('active_users', to_attr='pre_active_users'), 
+                # Prefetch('contributors', to_attr='pre_contributors'), 
+                Prefetch('room_users', queryset=active_queryset, to_attr='pre_active_users'), 
                 Prefetch('pre_active_users__user_uuid', to_attr='pre_uuid'), 
                 Prefetch('shared_movies', to_attr='pre_shared_movies'), 
                 Prefetch('pre_shared_movies__submitted_by', to_attr='pre_submitted_by')).get(sharecode = sharecode)
