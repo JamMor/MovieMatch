@@ -96,6 +96,7 @@ class SharedMovie(models.Model):
 
 class ShareRoomUser(models.Model):
     user_uuid = models.ForeignKey(UserUUID, related_name="in_room", on_delete = models.CASCADE)
+    list = models.ForeignKey(SharedMovieList, related_name="room_users", on_delete = models.CASCADE)
     is_active = models.BooleanField(default=True)
     is_users_turn = models.BooleanField(default=False)
     nickname = models.CharField(max_length=255, null=True)
