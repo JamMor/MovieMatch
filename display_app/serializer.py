@@ -39,8 +39,7 @@ def SharedListEncoder(sharecode):
         
     json_dict = {
         'active_user_dict' : active_user_dict,
-        'movie_list' : movie_list,
-        'has_started_elimination' : shared_list.started_eliminating
+        'movie_list' : movie_list
         }
 
     return json_dict
