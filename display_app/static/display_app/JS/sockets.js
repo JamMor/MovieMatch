@@ -181,10 +181,10 @@ $(document).ready(function() {
         //Get shared movie ID from parent Card ID
         let shared_movie_id = $(this).closest('div.card').attr('id')
             .split("_")[1];
+
         matchSocket.send(JSON.stringify({
             'command' : 'eliminate',
-            'shared_movie_id' : shared_movie_id,
-            'uuid' : user_uuid
+            'shared_movie_id' : shared_movie_id
         }))
     });
     
