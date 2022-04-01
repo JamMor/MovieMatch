@@ -168,15 +168,19 @@ class MatchConsumer(JsonWebsocketConsumer):
                     }
                 )
 
-                    async_to_sync(self.channel_layer.group_send)(
+            #If last possible elimination
+            if movies_left == 1:
+                final_movie = SharedMovie.objects.filter(shared_list__sharecode = self.sharecode, is_eliminated = False).first()
+                #Send final movie signal
+                async_to_sync(self.channel_layer.group_send)(
                         self.match_group_name,
                         {
                             'type': 'final_message',
                             'shared_movie_id' : final_movie.id
                         }
                     )
-                else:
-                    print(f"Movie List Error. {movies_in_list} in list.")
+                #Set all to no one's turn
+                share_users_qs.filter(is_users_turn = True).update(is_users_turn = False)
 
         #INITIALIZE
         elif command == 'initialize':
