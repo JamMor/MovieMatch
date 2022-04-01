@@ -125,14 +125,18 @@ class MatchConsumer(JsonWebsocketConsumer):
                         'error_message' : "Not this users turn."
                 })
                 return
-                movies_in_list = SharedMovie.objects.filter(shared_list__sharecode = self.sharecode, is_eliminated = False).count()
-                print(f"There are {movies_in_list} in shared list {self.sharecode}.")
-                
-                if movies_in_list > 1:
-                    #Eliminate movie
-                    shared_movie = SharedMovie.objects.get(id=shared_movie_id)
-                    shared_movie.is_eliminated = True
-                    shared_movie.save()
+            #If elimination has started:
+            shared_movie_id = content['shared_movie_id']
+            uneliminated_movies_qs = SharedMovie.objects.filter(shared_list__sharecode = self.sharecode, is_eliminated = False)
+            movies_left = uneliminated_movies_qs.count()
+
+            #If available movies > 1
+            if movies_left > 1:
+                #Eliminate movie
+                shared_movie = uneliminated_movies_qs.get(id=shared_movie_id)
+                shared_movie.is_eliminated = True
+                shared_movie.save()
+                movies_left -= 1
                 
                 #Pick next user
                 current_user = share_users_qs.get(user_uuid__uuid = self.user_uuid)
@@ -141,12 +145,17 @@ class MatchConsumer(JsonWebsocketConsumer):
                 next_user = share_users_qs[next_index]
                 next_user.is_users_turn = True
                 next_user.save()
-                            'eliminating_uuid' : content['uuid'],
-                            'next_eliminating_uuid' : next_eliminating_uuid
-                        }
-                    )
-                if movies_in_list == 1:
-                    final_movie = SharedMovie.objects.filter(shared_list__sharecode = self.sharecode, is_eliminated = False).first()
+
+                #Confirm Removal for Group
+                async_to_sync(self.channel_layer.group_send)(
+                    self.match_group_name,
+                    {
+                        'type': 'eliminate_message',
+                        'shared_movie_id' : shared_movie_id,
+                        'eliminating_uuid' : self.user_uuid,
+                    }
+                )
+
                     async_to_sync(self.channel_layer.group_send)(
                         self.match_group_name,
                         {
