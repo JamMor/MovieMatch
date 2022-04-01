@@ -103,10 +103,8 @@ $(document).ready(function() {
         else if(responseData.command == "refreshed"){
             let {
                 movie_list:received_movie_list, 
-                active_user_dict:received_user_list,
-                has_started_elimination:received_status
+                active_user_dict:received_user_list
             } = responseData.share_list
-            has_started_elimination = received_status;
 
             user_list = {};
             movie_list= [];

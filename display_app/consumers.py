@@ -189,9 +189,6 @@ class MatchConsumer(JsonWebsocketConsumer):
         
         #REFRESH LIST
         elif command == 'refresh':
-            shared_list = SharedMovieList.objects.get(sharecode = self.sharecode)
-            shared_list.started_eliminating = False
-            shared_list.save()
             
             SharedMovie.objects.filter(shared_list__sharecode = self.sharecode).update(is_eliminated = False)
 
