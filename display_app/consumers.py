@@ -8,6 +8,7 @@ from django.core.serializers.json import DjangoJSONEncoder
 
 from display_app.models import SharedMovieList, SharedMovie, UserUUID, ShareRoomUser
 from .serializer import SharedListEncoder
+from .consumer_utils import find_next_index
 
 class MatchConsumer(JsonWebsocketConsumer):
     def connect(self):
@@ -67,6 +68,16 @@ class MatchConsumer(JsonWebsocketConsumer):
 
     def disconnect(self, close_code):
         print("Disconnecting User - Consumers")
+
+        #If it is users turn, assign next user to turn
+        if current_user.is_users_turn:
+            current_user.is_users_turn = False
+            next_index = find_next_index(self.user_uuid, list(share_users_qs.values_list('user_uuid__uuid', flat=True)))
+            next_user = share_users_qs[next_index]
+            next_user.is_users_turn = True
+            next_user.save()
+            #SEND MESSAGE to channels update turn for all clients
+            channel_msg['next_eliminating_uuid'] = next_user.user_uuid.uuid
         # Tell group of disconnect
         user_uuid = self.scope["session"]["uuid"]
         async_to_sync(self.channel_layer.group_send)(
@@ -112,27 +123,14 @@ class MatchConsumer(JsonWebsocketConsumer):
                     shared_movie = SharedMovie.objects.get(id=shared_movie_id)
                     shared_movie.is_eliminated = True
                     shared_movie.save()
-                    movies_in_list -= 1
-
-                    #Get next eliminating user
-                    share_users = list(ShareRoomUser.objects.filter(list = shared_list).order_by('created_at'))
-                    user_count = len(share_users)
-                    for i in range(-user_count, 0):
-                        if share_users[i].user_uuid.uuid == content['uuid']:
-                            print(f'User {content["uuid"]} is at index {i}')
-                            next_index = i + 1
-                            break
-                    next_eliminating_uuid = share_users[next_index].user_uuid.uuid
-                    
-                    #Test if sent uuid = json uuid from socket message (Sould be true)
-                    print(f'UUIDS are {self.scope["session"]["uuid"] == content["uuid"]}')
-                    
-                    #Confirm Removal for Group
-                    async_to_sync(self.channel_layer.group_send)(
-                        self.match_group_name,
-                        {
-                            'type': 'eliminate_message',
-                            'shared_movie_id' : shared_movie_id,
+                
+                #Pick next user
+                current_user = share_users_qs.get(user_uuid__uuid = self.user_uuid)
+                current_user.is_users_turn = False
+                next_index = find_next_index(self.user_uuid, list(share_users_qs.values_list('user_uuid__uuid', flat=True)))
+                next_user = share_users_qs[next_index]
+                next_user.is_users_turn = True
+                next_user.save()
                             'eliminating_uuid' : content['uuid'],
                             'next_eliminating_uuid' : next_eliminating_uuid
                         }
