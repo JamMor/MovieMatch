@@ -60,12 +60,12 @@ class MatchConsumer(JsonWebsocketConsumer):
                 
         #====================================
         print("Connecting User - Consumers")
-        print({user_uuid : {'nickname' : room_user.nickname, 'is_ready' : room_user.is_ready}})
+        print({user_uuid : {'nickname' : room_user.nickname, 'is_users_turn' : room_user.is_users_turn}})
         async_to_sync(self.channel_layer.group_send)(
                 self.match_group_name,
                 {
                     'type': 'connect_message',
-                    'connected_user': {user_uuid : {'nickname' : room_user.nickname, 'is_ready' : room_user.is_ready}}
+                    'connected_user': {user_uuid : {'nickname' : room_user.nickname, 'is_users_turn' : room_user.is_users_turn}}
                 }
         )
 
