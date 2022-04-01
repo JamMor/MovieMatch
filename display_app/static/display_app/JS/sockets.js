@@ -72,27 +72,14 @@ $(document).ready(function() {
         else if(responseData.command == "initialized" || responseData.command == "updated"){
             let {
                 movie_list:received_movie_list, 
-                active_user_dict:received_user_list,
-                has_started_elimination:received_status
+                active_user_dict:received_user_list
             } = responseData.share_list
-            has_started_elimination = received_status;
 
-            console.log("Movie List: ")
-            console.log(movie_list)
-            console.log("Received Movie List: ")
-            console.log(received_movie_list)
-            // received_movie_list = responseData.share_list.movie_list
             movieListBuilder(movie_list, received_movie_list)
             movie_list = received_movie_list
             
-            // received_user_list = responseData.share_list.active_user_list
-            console.log("User List: ")
-            console.log(user_list)
-            console.log("Received User List: ")
-            console.log(received_user_list)
             userListBuilder(user_list, received_user_list)
             user_list = received_user_list
-            
         }
         //Refresh list of movies
         else if(responseData.command == "refreshed"){
@@ -182,7 +169,7 @@ $(document).ready(function() {
 
     //Send which movie to eliminate on click
     $('#movie_list').on('click', 'a.remove-btn' , function() {
-        if(!has_started_elimination){
+        if(!isEliminationActive(user_list)){
             console.log("Host has not started elimination.")
             return
         }
@@ -229,5 +216,10 @@ $(document).ready(function() {
         //Set current user turn to true and add active class
         user_list[turnUUID]['is_users_turn'] = true;
         $(`#user_${turnUUID}`).addClass('active').removeClass('inactive');
+    }
+
+    //Check if elimination is active (if it is a users turn)
+    function isEliminationActive(userList){
+        return Object.keys(userList).some(user => userList[user].is_users_turn == true)
     }
 })
