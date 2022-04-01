@@ -39,16 +39,7 @@ $(document).ready(function() {
             let next_uuid = responseData.next_eliminating_uuid
             $(`#shared_${shared_movie_id}`).addClass('eliminated')
             console.log("Eliminated movie")
-
-            //Remove class for last eliminating user
-            user_list[eliminating_uuid]['is_users_turn'] = false;
-            $(`#user_list div.blue`).addClass('orange');
-            $(`#user_list div.blue`).removeClass('blue');
-            
-            //Add class for new eliminating user
-            user_list[next_uuid]['is_users_turn'] = true;
-            $(`#user_${next_uuid}`).addClass('blue');
-            $(`#user_${next_uuid}`).removeClass('orange');
+            setUserTurn(next_uuid);
         }
         
         //User connected
@@ -122,9 +113,7 @@ $(document).ready(function() {
         //Start Elimination
         else if(responseData.command == "elimination_started"){
             let uuid_turn = responseData.eliminating_uuid
-            user_list[uuid_turn]['is_users_turn'] = true;
-            $(`#user_${uuid_turn}`).addClass('blue');
-            $(`#user_${uuid_turn}`).removeClass('orange');
+            setUserTurn(uuid_turn);
         }
         //Final movie left
         else if(responseData.command == "finalized"){
@@ -224,4 +213,17 @@ $(document).ready(function() {
             'command' : 'refresh'
         }))
     });
+
+    //Set active user turn
+    function setUserTurn(turnUUID){
+        //Set all user turn to false and remove any active classes
+        Object.keys(user_list).forEach(user => {
+            user_list[user].is_users_turn = false;
+        })
+        $(`#user_list div.active`).removeClass('active').addClass('inactive');
+        
+        //Set current user turn to true and add active class
+        user_list[turnUUID]['is_users_turn'] = true;
+        $(`#user_${turnUUID}`).addClass('active').removeClass('inactive');
+    }
 })
