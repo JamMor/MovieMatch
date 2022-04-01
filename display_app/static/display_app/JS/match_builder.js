@@ -13,23 +13,6 @@ function movieListBuilder(old_list, updated_list){
     else {added_movie_list = updated_list}
     
     added_movie_list.forEach((movie) => {
-        //ORIGINAL ADD
-        // let background_img = (movie.poster_path == null) 
-        //     ? "style='background-color: red'"
-        //     : `style='background-image: url(${image_link}w154${movie.poster_path})'`
-        
-        // let is_eliminated = movie.is_eliminated 
-        //     ? "eliminated"
-        //     : ""
-        
-        // $('#movie_list')
-        //     .append(
-        //         `<div id='movie_${movie.shared_movie_id}' class='list_item personal ${is_eliminated}' ${background_img}>\
-        //         <h5>${movie.title} - ${movie.release_date.slice(0,4)}</h5>\
-        //         </div>`
-        //         );
-        
-        //SECONDARY ADD
         //Rename attributes for MovieCard
         let {description:overview, shared_movie_id:id, ...rest} = movie
         $("#movie_list")
