@@ -37,6 +37,13 @@ class MatchConsumer(JsonWebsocketConsumer):
             defaults={'is_active' : True}
         )
         
+        #If an inactive room user becomes active again within enough time, 
+        #keeps position (created_at time) in user list. If too much time 
+        # has passed, treated as new connection and moved to end of queue.
+        if not created and (not room_user.last_active or timezone.now()-timedelta(minutes=1) < room_user.last_active):
+            room_user.created_at = timezone.now()
+            room_user.is_users_turn = False
+            
         #====================================
         #If roomuser has no name, set usernick as nick. Else make anonymous
         if created:
