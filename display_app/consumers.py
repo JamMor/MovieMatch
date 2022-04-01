@@ -165,6 +165,7 @@ class MatchConsumer(JsonWebsocketConsumer):
                         'type': 'eliminate_message',
                         'shared_movie_id' : shared_movie_id,
                         'eliminating_uuid' : self.user_uuid,
+                        'next_eliminating_uuid' : next_user.user_uuid.uuid
                     }
                 )
 

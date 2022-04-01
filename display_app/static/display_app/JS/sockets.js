@@ -59,6 +59,10 @@ $(document).ready(function() {
         }
         //User disconnected
         else if(responseData.command == "disconnected"){
+            if (responseData.hasOwnProperty("next_eliminating_uuid")){
+                setUserTurn(responseData.next_eliminating_uuid)
+            }
+
             let disconnected_uuid = responseData.uuid;
             console.log('Disconnected UUID: ' + disconnected_uuid)
             removeUserFromDom(disconnected_uuid);
