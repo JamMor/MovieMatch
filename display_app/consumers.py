@@ -106,15 +106,25 @@ class MatchConsumer(JsonWebsocketConsumer):
         print(f'COMMAND RECEIVED - Consumers: {command}')
         #ELIMINATE
         if command == 'eliminate':
-            shared_list = SharedMovieList.objects.get(sharecode = self.sharecode)
-            if shared_list.started_eliminating == False:
+            
+            share_users_qs = ShareRoomUser.objects.filter(list__sharecode = self.sharecode, is_active = True).order_by('created_at')
+            #If it isn't any user's turn, elimination hasn't started. Return failed msg
+            if share_users_qs.filter(is_users_turn = True).count() == 0:
                 self.send_json({
                         'type': 'eliminate_message',
                         'status' : 'failed',
                         'error_message' : "List not set to allow elimination."
                 })
-            else:
-                shared_movie_id = content['shared_movie_id']
+                return
+            #If it isn't THIS user's turn. Return failed msg
+            this_user = share_users_qs.get(user_uuid__uuid = self.user_uuid)
+            if not this_user.is_users_turn:
+                self.send_json({
+                        'type': 'eliminate_message',
+                        'status' : 'failed',
+                        'error_message' : "Not this users turn."
+                })
+                return
                 movies_in_list = SharedMovie.objects.filter(shared_list__sharecode = self.sharecode, is_eliminated = False).count()
                 print(f"There are {movies_in_list} in shared list {self.sharecode}.")
                 
