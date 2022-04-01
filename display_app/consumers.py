@@ -78,6 +78,10 @@ class MatchConsumer(JsonWebsocketConsumer):
         share_users_qs = ShareRoomUser.objects.filter(list__sharecode = self.sharecode, is_active = True).order_by('created_at')
         current_user = share_users_qs.get(user_uuid__uuid = self.user_uuid)
         
+        channel_msg = {
+            'type': 'disconnect_message',
+            'disconnected_uuid': self.user_uuid
+        }
 
         #If it is users turn, assign next user to turn
         if current_user.is_users_turn:
@@ -98,10 +102,7 @@ class MatchConsumer(JsonWebsocketConsumer):
         # Tell group of disconnect
         async_to_sync(self.channel_layer.group_send)(
                 self.match_group_name,
-                {
-                    'type': 'disconnect_message',
-                    'disconnected_uuid': user_uuid
-                }
+                channel_msg
         )
 
         # Leave group
