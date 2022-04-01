@@ -15,6 +15,7 @@ class MatchConsumer(JsonWebsocketConsumer):
         
         self.sharecode = self.scope['url_route']['kwargs']['sharecode']
         self.match_group_name = 'match_%s' % self.sharecode
+        self.user_uuid = self.scope["session"]["uuid"]
 
         # Join group
         async_to_sync(self.channel_layer.group_add)(
@@ -26,7 +27,7 @@ class MatchConsumer(JsonWebsocketConsumer):
         user_uuid = self.scope["session"]["uuid"]
         
         # Get user and share room to link
-        user = UserUUID.objects.get(uuid = user_uuid)
+        user = UserUUID.objects.get(uuid = self.user_uuid)
         share_list = SharedMovieList.objects.get(sharecode = self.sharecode)
         
         #====================================
@@ -79,7 +80,6 @@ class MatchConsumer(JsonWebsocketConsumer):
             #SEND MESSAGE to channels update turn for all clients
             channel_msg['next_eliminating_uuid'] = next_user.user_uuid.uuid
         # Tell group of disconnect
-        user_uuid = self.scope["session"]["uuid"]
         async_to_sync(self.channel_layer.group_send)(
                 self.match_group_name,
                 {
@@ -102,7 +102,6 @@ class MatchConsumer(JsonWebsocketConsumer):
     def receive_json(self, content):
         print(content)
         command = content['command']
-        user_uuid = self.scope["session"]["uuid"]
         print(f'COMMAND RECEIVED - Consumers: {command}')
         #ELIMINATE
         if command == 'eliminate':
