@@ -30,11 +30,12 @@ class MatchConsumer(JsonWebsocketConsumer):
         user = UserUUID.objects.get(uuid = self.user_uuid)
         share_list = SharedMovieList.objects.get(sharecode = self.sharecode)
         
-        #====================================
-        room_user, created = ShareRoomUser.objects.get_or_create(
+        #Activate inactive user, or create new active user if hasn't joined yet
+        room_user, created = ShareRoomUser.objects.update_or_create(
             user_uuid = user, 
-            list = share_list
-            )
+            list = share_list,
+            defaults={'is_active' : True}
+        )
         
         nickname = user.nickname
         print(f'User nickname in consumer is: {nickname}')
@@ -69,6 +70,11 @@ class MatchConsumer(JsonWebsocketConsumer):
 
     def disconnect(self, close_code):
         print("Disconnecting User - Consumers")
+        #FLAG - Add prefetch, select_related
+        #Query all active users in share list
+        share_users_qs = ShareRoomUser.objects.filter(list__sharecode = self.sharecode, is_active = True).order_by('created_at')
+        current_user = share_users_qs.get(user_uuid__uuid = self.user_uuid)
+        
 
         #If it is users turn, assign next user to turn
         if current_user.is_users_turn:
@@ -79,6 +85,13 @@ class MatchConsumer(JsonWebsocketConsumer):
             next_user.save()
             #SEND MESSAGE to channels update turn for all clients
             channel_msg['next_eliminating_uuid'] = next_user.user_uuid.uuid
+
+        #Set current user inactive
+        current_user.is_active = False
+        current_user.last_active = timezone.now()
+        current_user.save()
+
+
         # Tell group of disconnect
         async_to_sync(self.channel_layer.group_send)(
                 self.match_group_name,
@@ -87,10 +100,6 @@ class MatchConsumer(JsonWebsocketConsumer):
                     'disconnected_uuid': user_uuid
                 }
         )
-
-        # Get and delete user from room
-        room_user = ShareRoomUser.objects.get(user_uuid__uuid = user_uuid, list__sharecode = self.sharecode)
-        room_user.delete()
 
         # Leave group
         async_to_sync(self.channel_layer.group_discard)(
