@@ -167,13 +167,9 @@ class MatchConsumer(JsonWebsocketConsumer):
                 return
                 
             #Randomly pick user to start
-            user_count = len(share_users)
-            eliminating_user = share_users[randint(0,user_count-1)]
+            eliminating_user = random.choice(share_users_qs)
             eliminating_user.is_users_turn = True
-            #Consider making start eliminating only able to be pressed when false in JS
-            #and python
-            #Reset movies option before final movie??
-            
+            eliminating_user.save()
                         
             async_to_sync(self.channel_layer.group_send)(
                     self.match_group_name,
