@@ -37,24 +37,20 @@ class MatchConsumer(JsonWebsocketConsumer):
             defaults={'is_active' : True}
         )
         
-        nickname = user.nickname
-        print(f'User nickname in consumer is: {nickname}')
-
-        if not nickname:
-            print("User has no nick.")
-            if not room_user.nickname:
-                print("Set a generic roomuser name.")
-                user_no = ShareRoomUser.objects.filter(list__sharecode = self.sharecode).count()
-                print(f"Number of room users: {user_no}")
-                nickname = f"User {user_no}"
+        #====================================
+        #If roomuser has no name, set usernick as nick. Else make anonymous
+        if created:
+            if user.nickname:
+                nickname = user.nickname
             else:
-                nickname = room_user.nickname
-                print(f'Roomuser already has generic name: {nickname}')
-        
-        print(f'RoomUser nickname in consumer is: {nickname}')
-        room_user.nickname = nickname
+                room_user_count = ShareRoomUser.objects.filter(list__sharecode = self.sharecode).count()
+                print(f"Number of room users: {room_user_count}")
+                nickname = f"User {room_user_count}"
+            
+            room_user.nickname = nickname
+
         room_user.save()
-        
+                
         #====================================
         print("Connecting User - Consumers")
         print({user_uuid : {'nickname' : room_user.nickname, 'is_ready' : room_user.is_ready}})
