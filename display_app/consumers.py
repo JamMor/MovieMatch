@@ -162,15 +162,12 @@ class MatchConsumer(JsonWebsocketConsumer):
         
         #START ELIMINATING
         elif command == 'elimination_start':
-            shared_list = SharedMovieList.objects.get(sharecode = self.sharecode)
-            if shared_list.started_eliminating:
-                print("Elimination already started.")
+            share_users_qs = ShareRoomUser.objects.filter(list__sharecode = self.sharecode, is_active = True)
+            users_eliminating = share_users_qs.filter(is_users_turn = True).count()
+            if users_eliminating > 0:
+                print("Elimination already in progress.")
                 return
-            shared_list.started_eliminating = True
-            shared_list.save()
-
-            share_users = list(ShareRoomUser.objects.filter(list = shared_list).order_by('created_at'))
-            
+                
             #Randomly pick user to start
             user_count = len(share_users)
             eliminating_user = share_users[randint(0,user_count-1)]
@@ -179,6 +176,7 @@ class MatchConsumer(JsonWebsocketConsumer):
             #and python
             #Reset movies option before final movie??
             
+                        
             async_to_sync(self.channel_layer.group_send)(
                     self.match_group_name,
                     {

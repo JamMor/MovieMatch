@@ -121,7 +121,6 @@ $(document).ready(function() {
         }
         //Start Elimination
         else if(responseData.command == "elimination_started"){
-            has_started_elimination = true;
             let uuid_turn = responseData.eliminating_uuid
             user_list[uuid_turn]['is_users_turn'] = true;
             $(`#user_${uuid_turn}`).addClass('blue');
