@@ -84,8 +84,6 @@ $(document).ready(function() {
             else if(responseData.command == "initialized" || responseData.command == "updated"){
                 let {
                     movie_list:received_movie_list, 
-                movie_list:received_movie_list, 
-                    movie_list:received_movie_list, 
                     active_user_dict:received_user_list
                 } = responseData.share_list
 
@@ -99,8 +97,6 @@ $(document).ready(function() {
             else if(responseData.command == "refreshed"){
                 let {
                     movie_list:received_movie_list, 
-                movie_list:received_movie_list, 
-                    movie_list:received_movie_list, 
                     active_user_dict:received_user_list
                 } = responseData.share_list
 
@@ -113,8 +109,6 @@ $(document).ready(function() {
                 movie_list = received_movie_list
                 
                 userListBuilder({user_list}, received_user_list)
-                user_list = received_user_list   
-            user_list = received_user_list   
                 user_list = received_user_list   
 
                 $('#final_modal').modal('close');
