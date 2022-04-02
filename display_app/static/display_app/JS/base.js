@@ -69,7 +69,7 @@ $(document).ready(function() {
         let button_elem = buttonarray.map(button => CardButton(button)).join('');
 
         //Context specific class options
-        let card_class;
+        let card_class = "";
         if(id_prefix == "query"){card_class = "carousel-item";}
         else if(id_prefix == "shared"){card_class = is_eliminated = is_eliminated ? "eliminated" : "";}
 
