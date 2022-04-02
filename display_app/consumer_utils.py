@@ -1,7 +1,9 @@
 def find_next_index(current_uuid, uuid_list):
     user_count = len(uuid_list)
-    if user_count <= 1:
+    if user_count < 1:
         return None
+    if user_count == 1:
+        return 0
     current_index = uuid_list.index(current_uuid)
     next_index = current_index + 1
     #Ensures that next index wraps around if outside of range
