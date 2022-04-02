@@ -1,6 +1,9 @@
 # chat/consumers.py
 import json
 from random import randint
+import random
+from datetime import timedelta
+from django.utils import timezone
 from asgiref.sync import async_to_sync
 from channels.generic.websocket import JsonWebsocketConsumer
 from django.core import serializers
