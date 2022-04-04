@@ -10,18 +10,19 @@ from channels.layers import get_channel_layer
 from asgiref.sync import async_to_sync
 
 def get_or_set_uuid(request):
+    session_uuid = request.session.get("uuid")
     #Checks to see if uuid key exists and is set in session
-    if 'uuid' in request.session and request.session['uuid']:
+    if session_uuid:
         print("UUID in session.")
-        print(f'GET uuid: {request.session["uuid"]} =================================')
+        print(f'GET uuid: {session_uuid}')
         try:
-            user_uuid = UserUUID.objects.get(uuid = request.session['uuid'])
+            user_uuid = UserUUID.objects.get(uuid = session_uuid)
             return user_uuid
         except UserUUID.DoesNotExist:
             print("Can't find UserUUID stored in session.")
     # If no uuid in session, or UserUUID doesn't exist
     user_uuid = UserUUID.objects.create()
-    print(f'CREATED uuid: {user_uuid.uuid} =================================')
+    print(f'CREATED uuid: {user_uuid.uuid}')
     request.session['uuid'] = user_uuid.uuid
     return user_uuid
 
