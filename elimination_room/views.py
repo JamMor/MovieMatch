@@ -63,12 +63,17 @@ def add_to_shared_list(shared_list, temp_list):
 def get_or_set_uuid(request):
     #Checks to see if uuid key exists and is set in session
     if 'uuid' in request.session and request.session['uuid']:
-        user_uuid = UserUUID.objects.get(uuid = request.session['uuid'])
+        print("UUID in session.")
         print(f'GET uuid: {request.session["uuid"]} =================================')
-    else:
-        user_uuid = UserUUID.objects.create()
-        request.session['uuid'] = user_uuid.uuid
-        print(f'CREATE uuid: {user_uuid.uuid} =================================')
+        try:
+            user_uuid = UserUUID.objects.get(uuid = request.session['uuid'])
+            return user_uuid
+        except UserUUID.DoesNotExist:
+            print("Can't find UserUUID stored in session.")
+    # If no uuid in session, or UserUUID doesn't exist
+    user_uuid = UserUUID.objects.create()
+    print(f'CREATED uuid: {user_uuid.uuid} =================================')
+    request.session['uuid'] = user_uuid.uuid
     return user_uuid
 
 #Views
