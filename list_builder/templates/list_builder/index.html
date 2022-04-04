@@ -1,0 +1,58 @@
+    {% extends "base.html" %}
+    {% load static %}
+
+    {% block content_block %}
+        <main>
+            <div class="container">
+                <nav id="search-bar" class="grey darken-4">
+                    <div class="nav-wrapper">
+                        <form class="ajax-form">
+                            <div id="moviesearch" class="input-field">
+                                <input type="search" id="moviesearch-input" placeholder="Movie Search" required>
+                                <label class="label-icon" for="moviesearch-input"><i class="material-icons">theaters</i></label>
+                                <i id="search-close" class="material-icons">close</i>
+                            </div>
+                        </form>
+                    </div>
+                </nav>
+                <div id="search-results" class="carousel carousel-slider"></div>
+                <hr>
+                <div id="movie_list"></div>
+            </div>
+        </main>
+        <div class="fixed-action-btn toolbar">
+            <a class="btn-floating btn-large cyan accent-2">
+                <i class="large material-icons indigo-text text-darken-4">arrow_back</i>
+            </a>
+            <ul>
+                <li class="waves-effect waves-light"><a class="modal-trigger" href="#share_modal"><i class="material-icons indigo-text text-darken-4">present_to_all</i></a></li>
+                <li class="disabled"><a href="#!"><i class="material-icons indigo-text text-darken-4">save</i></a></li>
+                <li class="waves-effect waves-light"><a href="#!"><i class="material-icons indigo-text text-darken-4">close</i></a></li>
+            </ul>
+        </div>
+        <div id="share_modal" class="modal cyber-grade">
+            <div class="modal-content pink-text text-darken-2">
+                <h4>Ready to share?</h4>
+                <form action="#" class="ajax-form">
+                    <div class="input-field">
+                        <input id="nickname" class="center-align" type="text">
+                        <label for="nickname">Nickname</label>
+                    </div>
+                    <p class="flow-text">Enter sharecode if you have one.</p>
+                    <div class="input-field">
+                        <input id="sharecode" class="center-align" type="text" style="text-transform:uppercase" data-length="8">
+                        <label for="sharecode">Sharecode</label>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <a id="share-btn" href="#" class="neon-blue-hover waves-effect waves-light btn-large">Share</a>
+                <a href="#!" class="modal-close orange-text text-darken-3 waves-effect waves-dark btn-flat">Cancel</a>
+            </div>
+        </div>
+    {% endblock %}
+
+    {% block script_block %}
+        {{ block.super }}
+        <script src="{% static 'list_builder/js/index.js'%}"></script>
+    {% endblock %}
