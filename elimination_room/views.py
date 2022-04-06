@@ -107,8 +107,10 @@ def new_match(request):
         except IntegrityError:
             return JsonResponse({"status": "Could not create SharedList.", "sharecode": ''})
     
-    add_to_shared_list(shared_list, temp_list)
-    
+    # add_to_shared_list(shared_list, temp_list)
+    shared_list.add_list_to_shared_list(temp_list)
+    update_shared_list_channels(shared_list.sharecode)
+
     return JsonResponse({"status": "success", "sharecode": shared_list.sharecode})
 
 def join_match(request, sharecode):
