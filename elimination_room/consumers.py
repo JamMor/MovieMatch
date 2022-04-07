@@ -166,6 +166,7 @@ class MatchConsumer(JsonWebsocketConsumer):
                 #Pick next user
                 current_user = share_users_qs.get(user_uuid__uuid = self.user_uuid)
                 current_user.is_users_turn = False
+                current_user.save()
                 next_index = find_next_index(self.user_uuid, list(share_users_qs.values_list('user_uuid__uuid', flat=True)))
                 if not next_index:
                     print("No available user for turn.")
