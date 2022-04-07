@@ -149,7 +149,16 @@ class MatchConsumer(JsonWebsocketConsumer):
             #If available movies > 1
             if movies_left > 1:
                 #Eliminate movie
-                shared_movie = uneliminated_movies_qs.get(id=shared_movie_id)
+                try:
+                    shared_movie = uneliminated_movies_qs.get(id=shared_movie_id)
+                except SharedMovie.DoesNotExist:
+                    print("Can't find selected movie (probably already eliminated).")
+                    self.send_json({
+                        'type': 'eliminate_message',
+                        'status' : 'failed',
+                        'error_message' : 'Shared movie not found in uneliminated movies.'
+                    })
+                    return
                 shared_movie.is_eliminated = True
                 shared_movie.save()
                 movies_left -= 1
