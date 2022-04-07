@@ -14,7 +14,7 @@ from channels.auth import AuthMiddlewareStack
 from channels.http import AsgiHandler
 from channels.routing import ProtocolTypeRouter, URLRouter
 
-import display_app.routing
+import elimination_room.routing
 
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'movie_match.settings')
 django.setup()
@@ -23,7 +23,7 @@ application = ProtocolTypeRouter({
   "http": AsgiHandler(),
   "websocket": AuthMiddlewareStack(
         URLRouter(
-            display_app.routing.websocket_urlpatterns
+            elimination_room.routing.websocket_urlpatterns
         )
     ),
 })
