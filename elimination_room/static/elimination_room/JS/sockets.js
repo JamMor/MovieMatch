@@ -228,6 +228,7 @@ $(document).ready(function() {
         }))
     });
     
+    //Send start eliminating command
     $('#status_bar').on('click', '.status-start' , function() {
         console.log("Send start matching signal.")
         matchSocket.send(JSON.stringify({
@@ -235,7 +236,7 @@ $(document).ready(function() {
         }))
     });
     
-    //Refresh Share List
+    //Send Refresh Share List command
     $('#final_modal').on('click', '#refresh-btn' , function() {
         console.log("Refreshing list.")
         matchSocket.send(JSON.stringify({
