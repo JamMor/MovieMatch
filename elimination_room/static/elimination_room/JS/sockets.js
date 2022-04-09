@@ -328,7 +328,7 @@ $(document).ready(function() {
             [statusProperties.styleClass, statusProperties.icons, statusProperties.statusText] = [
                 "status-final waves-effect waves-light neon-fuschia active btn-large rounded-btn",
                 "movie",
-                "Start Matching"
+                "Open final movie info"
             ]
         }
         else{
