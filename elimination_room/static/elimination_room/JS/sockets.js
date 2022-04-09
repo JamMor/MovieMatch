@@ -300,28 +300,28 @@ $(document).ready(function() {
         // [styleClass, icons, statusText]
         if(status == "start"){
             [statusProperties.styleClass, statusProperties.icons, statusProperties.statusText] = [
-                "status-start waves-effect waves-light neon-blue-hover btn-large",
+                "status-start waves-effect waves-light neon-blue-hover btn-large rounded-btn",
                 "cast",
                 "Start Matching"
             ]
         }
         else if(status == "waiting"){
             [statusProperties.styleClass, statusProperties.icons, statusProperties.statusText] = [
-                "status-waiting neon-blue inactive btn-large",
+                "status-waiting neon-blue inactive btn-large rounded-btn",
                 "cast",
                 "Waiting for matching to begin..."
             ]
         }
         else if(status == "eliminating"){
             [statusProperties.styleClass, statusProperties.icons, statusProperties.statusText] = [
-                "status-eliminating neon-blue active btn-large",
+                "status-eliminating neon-blue active btn-large rounded-btn",
                 "cast_connected",
                 getEliminatingStatusString(user_list)
             ]
         }
         else if(status == "final"){
             [statusProperties.styleClass, statusProperties.icons, statusProperties.statusText] = [
-                "status-final waves-effect waves-light neon-fuschia active btn-large",
+                "status-final waves-effect waves-light neon-fuschia active btn-large rounded-btn",
                 "movie",
                 "Start Matching"
             ]
