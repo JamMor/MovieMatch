@@ -127,6 +127,11 @@ $(document).ready(function() {
                 user_list = received_user_list   
 
                 $('#final_modal').modal('close');
+
+                let {styleClass, icons, statusText} = getStatusBarProperties("start");
+                $('#status-btn').removeClass().addClass(styleClass);
+                $('#status-btn i').html(icons);
+                $('#status-btn span').html(statusText);
             }
             //Start Elimination
             else if(responseData.command == "elimination_started"){
