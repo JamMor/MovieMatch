@@ -82,8 +82,8 @@ class MatchConsumer(JsonWebsocketConsumer):
         share_users_qs = ShareRoomUser.objects.filter(list__sharecode = self.sharecode, is_active = True).order_by('created_at')
         current_user = share_users_qs.get(user_uuid__uuid = self.user_uuid)
         
-        channel_msg = {
-            'type': 'disconnect_message',
+        msg_data = {
+            'status': 'success',
             'disconnected_uuid': self.user_uuid
         }
 
@@ -95,7 +95,7 @@ class MatchConsumer(JsonWebsocketConsumer):
             next_user.is_users_turn = True
             next_user.save()
             #SEND MESSAGE to channels update turn for all clients
-            channel_msg['next_eliminating_uuid'] = next_user.user_uuid.uuid
+            msg_data['next_eliminating_uuid'] = next_user.user_uuid.uuid
 
         #Set current user inactive
         current_user.is_active = False
@@ -106,7 +106,10 @@ class MatchConsumer(JsonWebsocketConsumer):
         # Tell group of disconnect
         async_to_sync(self.channel_layer.group_send)(
                 self.match_group_name,
-                channel_msg
+                {
+                    'type': 'disconnect_message',
+                    'msg_data' : msg_data
+                }
         )
 
         # Leave group
@@ -322,14 +325,14 @@ class MatchConsumer(JsonWebsocketConsumer):
         })
     # Receive message from ChannelLayer
     def disconnect_message(self, event):
-        disconnected_uuid = event['disconnected_uuid']
+        print("Disconnect Channel Event")
+        print(event)
+        channel_msg = {'command': 'disconnected'}
+        msg_data = event.get("msg_data")
+        channel_msg.update(msg_data)
 
         # Send message to WebSocket Client
-        self.send_json({
-            'command': 'disconnected',
-            'status' : 'success',
-            'uuid': disconnected_uuid
-        })
+        self.send_json(channel_msg)
 
     #Custom JSON coders (for dates)
     @classmethod
