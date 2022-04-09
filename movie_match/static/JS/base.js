@@ -105,7 +105,9 @@ $(document).ready(function() {
 
     MovieInfoModal = ( 
         {id, title, release_date="", overview, poster_path,
-        genres=[], imdb_id="", runtime="", vote_average="", watch_providers:{flatrate:stream=[], rent=[]}}) => {
+        genres=[], imdb_id="", runtime="", vote_average="", 
+        "watch/providers":{results:{US:{flatrate:stream=[], rent=[]}}}
+        }) => {
         let image_tag = (poster_path == null) 
             ? `<img class="poster" src='${placeholder_link}'>`
             : `<img class="poster" src='${image_prefix}w342${poster_path}'>`

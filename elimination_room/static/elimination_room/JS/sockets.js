@@ -95,7 +95,19 @@ $(document).ready(function() {
 
                 let statusType;
                 if(isFinalSelected(movie_list)){
-                    statusType = "final"
+                    statusType = "final";
+                    let finalMovie = movie_list.find(movie => movie.is_eliminated == false);
+                    console.log(`${finalMovie.title} is the final choice!`)
+                    
+                    getMoreMovieInfo(finalMovie.movie_id)
+                        .done(returnInfo => {
+                            console.log(returnInfo)
+                            let finalMovieInfo = returnInfo ?? finalMovie
+                            openMoreInfoModal(finalMovieInfo, "final_modal")
+                        })
+                        .fail(function(){
+                            console.log("AJAX error")
+                        })
                 }
                 else if(isEliminationActive(user_list) ){
                     statusType = "eliminating"
@@ -143,54 +155,22 @@ $(document).ready(function() {
             }
             //Final movie left
             else if(responseData.command == "finalized"){
+
                 let finalSharedId = responseData.shared_movie_id;
-                let movieIndex = movie_list.findIndex(movie => movie.shared_movie_id == finalSharedId);
-                let finalMovie = movie_list[movieIndex];
+                let finalMovie = movie_list.find(movie => movie.shared_movie_id == finalSharedId);
                 console.log(`${finalMovie.title} is the final choice!`)
                 
-                let finalMovieInfo;
-                //Ajax for more movie detail
-                const api_key = "f4f5f258379baf10796e1d3aeb5add05";
-                $.get(`https://api.themoviedb.org/3/movie/${finalMovie.movie_id}?api_key=${api_key}&language=en-US`,
-                    function () {
-                        console.log("AJAX sent to TMDB");
-                        return
-                    }, "json")
-                    .done(function (data) {
-                        finalMovieInfo = data;
-                        $.get(`https://api.themoviedb.org/3/movie/${finalMovie.movie_id}/watch/providers?api_key=${api_key}`,
-                            function(){
-                                console.log("AJAX sent to TMDB");
-                                return
-                            }, "json")
-                            .done(function(data){
-                                console.log("Watch provider data:");
-                                finalMovieInfo['watch_providers'] = data.results.US;
-                                $("#final_modal div.modal-content")
-                                    .html(MovieInfoModal(finalMovieInfo))
-                                
-                                $('.modal').modal({
-                                    inDuration: 1500,
-                                    dismissible: false,
-                                    endingTop: "2%"
-                                });
-                                $('.collapsible').collapsible();
-                                $('.tooltipped').tooltip();
-                                console.log(finalMovieInfo);
-                                $('#final_modal').modal('open');
-                            })
+                getMoreMovieInfo(finalMovie.movie_id)
+                    .done(returnInfo => {
+                        console.log(returnInfo)
+                        let finalMovieInfo = returnInfo ?? finalMovie
+                        openMoreInfoModal(finalMovieInfo, "final_modal")
                     })
                     .fail(function(){
-                        $("#final_modal div.modal-content")
-                            .html(MovieInfoModal(finalMovie))
-                        $('.modal').modal({
-                            inDuration: 1500,
-                            dismissible: false,
-                            endingTop: "2%"
-                        });
-                        $('.collapsible').collapsible();
-                        $('.tooltipped').tooltip();
+                        console.log("AJAX error")
                     })
+
+
                 let {styleClass, icons, statusText} = getStatusBarProperties("final");
                 $('#status-btn').removeClass().addClass(styleClass);
                 $('#status-btn i').html(icons);
@@ -335,6 +315,29 @@ $(document).ready(function() {
             console.log(`Status Bar Error for status ${status}`)
         }
         return statusProperties
+    }
+
+    function getMoreMovieInfo(movieId){
+        //Ajax for more movie detail w/ watch provider data
+        const api_key = "f4f5f258379baf10796e1d3aeb5add05";
+        return $.get(`https://api.themoviedb.org/3/movie/${movieId}?api_key=${api_key}&language=en-US&append_to_response=watch/providers`,
+            "json")
+    }
+    
+    //Sets a movie-info modal content, initializes, and opens
+    //Movie Info object from getMoreMovieInfo, and the ID name of the modal element
+    function openMoreInfoModal(movieInfo, targetModalId){
+        $(`#${targetModalId} div.modal-content`)
+            .html(MovieInfoModal(movieInfo))
+        
+        $(`#${targetModalId}`).modal({
+            inDuration: 1500,
+            dismissible: false,
+            endingTop: "2%"
+        });
+        $(`#${targetModalId} .collapsible`).collapsible();
+        $(`#${targetModalId} .tooltipped`).tooltip();
+        $(`#${targetModalId}`).modal('open');
     }
 
     createMatchSocket();
