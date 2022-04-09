@@ -221,7 +221,11 @@ class MatchConsumer(JsonWebsocketConsumer):
             if users_eliminating > 0:
                 print("Elimination already in progress.")
                 return
-                
+
+            if SharedMovie.objects.filter(list__sharecode = self.sharecode).count() < 2:
+                print("Must be at least 2 movies in list to begin eliminating.")
+                return
+
             #Randomly pick user to start
             eliminating_user = random.choice(share_users_qs)
             eliminating_user.is_users_turn = True

@@ -215,6 +215,10 @@ $(document).ready(function() {
     
     //Send start eliminating command
     $('#status_bar').on('click', '.status-start' , function() {
+        if(movie_list.length < 2){
+            console.log("Must have at least 2 movies to begin elimination.")
+            return
+        }
         console.log("Send start matching signal.")
         matchSocket.send(JSON.stringify({
             'command' : 'elimination_start'
