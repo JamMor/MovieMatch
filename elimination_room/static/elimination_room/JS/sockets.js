@@ -137,7 +137,7 @@ $(document).ready(function() {
             else if(responseData.command == "elimination_started"){
                 let uuid_turn = responseData.eliminating_uuid
                 setUserTurn(uuid_turn);
-                let {styleClass, icons} = getStatusBarProperties("start");
+                let {styleClass, icons} = getStatusBarProperties("eliminating");
                 $('#status-btn').removeClass().addClass(styleClass);
                 $('#status-btn i').html(icons);
             }
