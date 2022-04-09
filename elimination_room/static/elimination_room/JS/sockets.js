@@ -92,6 +92,21 @@ $(document).ready(function() {
                 
                 userListBuilder(user_list, received_user_list)
                 user_list = received_user_list
+
+                let statusType;
+                if(isFinalSelected(movie_list)){
+                    statusType = "final"
+                }
+                else if(isEliminationActive(user_list) ){
+                    statusType = "eliminating"
+                }
+                else{
+                    statusType = "start"
+                }
+                let {styleClass, icons, statusText} = getStatusBarProperties(statusType);
+                $('#status-btn').removeClass().addClass(styleClass);
+                $('#status-btn i').html(icons);
+                $('#status-btn span').html(statusText);
             }
             //Refresh list of movies
             else if(responseData.command == "refreshed"){
@@ -117,6 +132,9 @@ $(document).ready(function() {
             else if(responseData.command == "elimination_started"){
                 let uuid_turn = responseData.eliminating_uuid
                 setUserTurn(uuid_turn);
+                let {styleClass, icons} = getStatusBarProperties("start");
+                $('#status-btn').removeClass().addClass(styleClass);
+                $('#status-btn i').html(icons);
             }
             //Final movie left
             else if(responseData.command == "finalized"){
@@ -168,6 +186,10 @@ $(document).ready(function() {
                         $('.collapsible').collapsible();
                         $('.tooltipped').tooltip();
                     })
+                let {styleClass, icons, statusText} = getStatusBarProperties("final");
+                $('#status-btn').removeClass().addClass(styleClass);
+                $('#status-btn i').html(icons);
+                $('#status-btn span').html(statusText);
             }
             else {
                 console.log("Command Unknown")
@@ -206,9 +228,7 @@ $(document).ready(function() {
         }))
     });
     
-    //Break into JS only loaded for creator FLAG
-    //Send start signal
-    $('#status_bar').on('click', '#start-btn' , function() {
+    $('#status_bar').on('click', '.status-start' , function() {
         console.log("Send start matching signal.")
         matchSocket.send(JSON.stringify({
             'command' : 'elimination_start'
@@ -234,6 +254,10 @@ $(document).ready(function() {
         //Set current user turn to true and add active class
         user_list[turnUUID]['is_users_turn'] = true;
         $(`#user_${turnUUID}`).addClass('active').removeClass('inactive');
+
+        //Put username in status bar
+        let statusText = getEliminatingStatusString(user_list);
+        $('#status-btn span').html(statusText);
     }
 
     //Check if elimination is active (if it is a users turn)
@@ -241,11 +265,71 @@ $(document).ready(function() {
         return Object.keys(userList).some(user => userList[user].is_users_turn == true)
     }
 
+    //Check if final movie
+    function isFinalSelected(movieList){
+        let eliminatedCount = movieList
+            .reduce((prev, curr) => prev + curr.is_eliminated, 0)
+        return movieList.length - eliminatedCount == 1
+    }
+
     //Opens final modal for now
-    $('#status_bar').on('click', '#modal-btn' , function() {
+    $('#status_bar').on('click', '.status-final' , function() {
         console.log("Opening Modal")
         $('#final_modal').modal('open');
     });
+
+    //Returns current user whose turn it is
+    function getEliminatingStatusString(userList){
+        let eliminating_uuid = Object.keys(userList)
+            .find(uuid => userList[uuid].is_users_turn == true)
+        if(eliminating_uuid){
+            return (eliminating_uuid == user_uuid)
+                ? "Waiting on YOUR turn..." 
+                : `Waiting on ${userList[eliminating_uuid].nickname}'s turn...`
+        }
+        else{
+            console.log("Couldn't get uuid of eliminating user.")
+            return ""
+        }
+    }
+
+    //Sets status bar
+    function getStatusBarProperties(status){
+        let statusProperties = {}
+        // [styleClass, icons, statusText]
+        if(status == "start"){
+            [statusProperties.styleClass, statusProperties.icons, statusProperties.statusText] = [
+                "status-start waves-effect waves-light neon-blue-hover btn-large",
+                "cast",
+                "Start Matching"
+            ]
+        }
+        else if(status == "waiting"){
+            [statusProperties.styleClass, statusProperties.icons, statusProperties.statusText] = [
+                "status-waiting neon-blue inactive btn-large",
+                "cast",
+                "Waiting for matching to begin..."
+            ]
+        }
+        else if(status == "eliminating"){
+            [statusProperties.styleClass, statusProperties.icons, statusProperties.statusText] = [
+                "status-eliminating neon-blue active btn-large",
+                "cast_connected",
+                getEliminatingStatusString(user_list)
+            ]
+        }
+        else if(status == "final"){
+            [statusProperties.styleClass, statusProperties.icons, statusProperties.statusText] = [
+                "status-final waves-effect waves-light neon-fuschia active btn-large",
+                "movie",
+                "Start Matching"
+            ]
+        }
+        else{
+            console.log(`Status Bar Error for status ${status}`)
+        }
+        return statusProperties
+    }
 
     createMatchSocket();
 })

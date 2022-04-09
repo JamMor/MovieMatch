@@ -8,24 +8,12 @@
         <div class="container">
             <h4>Match Room ID = <span id="share-code">{{sharecode}}</span></h4>
             <div id="user_list"></div>
-            <div id="status_bar">
-                <div class="center-align">
-                    <a id="start-btn" class="waves-effect waves-light neon-blue-hover btn-large">
-                        <i class="material-icons left">cast_connected</i>
-                            Start Matching
-                        <i class="material-icons right">cast_connected</i>
-                    </a>
-                    <div class="neon-blue-hover hover btn-large">
-                        <i class="material-icons left">cast</i>
-                        Waiting for Host to Start...
-                        <i class="material-icons right">cast</i>
-                    </div>
-                    <a id="modal-btn" class="waves-effect waves-light neon-blue-hover btn-large">
-                        <i class="material-icons left">cast_connected</i>
-                            Open Final Modal
-                        <i class="material-icons right">cast_connected</i>
-                    </a>
-                </div>
+            <div id="status_bar" class="center-align">
+                <a id="status-btn" class="neon-blue inactive btn-large status-waiting">
+                    <i class="material-icons left">cast</i>
+                        <span>Waiting for matching to begin...</span>
+                    <i class="material-icons right">cast</i>
+                </a>
             </div>
             <div id="movie_list"></div>
         </div>
