@@ -45,6 +45,10 @@ header nav {
     color: #000000;
 }
 
+header nav a {
+    color: #000000;
+}
+
 .logo1 {
     color: #ffffff;
     text-shadow: 
@@ -58,11 +62,10 @@ header nav {
         0 0 4px #e040fb,
         0 0 6px #7b1fa2,
         0 0 8px #311b92;
-    left: -5px;
 }
 
-header nav a {
-    color: #000000;
+header nav a.brand-logo {
+    margin: 0 20px;
 }
 
 /* ===============Index and Search================= */
