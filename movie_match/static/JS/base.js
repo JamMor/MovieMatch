@@ -30,6 +30,8 @@ $(document).ready(function() {
 
     csrftoken = getCookie('csrftoken');
 
+    //Initialize Mobile Nav Menu item.
+    $('.sidenav').sidenav();
     //Button Constructor
     const CardButton = (type) => {
         let color = ''; let customClass = ''; let icon = '';

@@ -27,7 +27,29 @@
 
 <body>
     {% csrf_token %}
-    {% block header_block %}{% endblock %}
+    {% block header_block %}
+    <header>
+        <nav>
+            <div class="nav-wrapper">
+                <a href="#!" class="brand-logo logo1">
+                    Movie Match
+                </a>
+                <a href="#" data-target="side-menu" class="sidenav-trigger"><i class="material-icons">menu</i></a>
+                <ul class="right hide-on-med-and-down">
+                    <li><a href="#">List Manager</a></li>
+                    <li><a href="#">Recent Lists</a></li>
+                    <li><a href="#">Login</a></li>
+                </ul>
+            </div>
+        </nav>
+    </header>
+    
+    <ul class="sidenav" id="side-menu">
+        <li><a href="#">Login</a></li>
+        <li><a href="#">List Manager</a></li>
+        <li><a href="#">Recent Lists</a></li>
+    </ul>
+    {% endblock %}
     {% block content_block %}{% endblock %}
     {% block script_block %}
     <script type="text/javascript">
