@@ -222,7 +222,7 @@ class MatchConsumer(JsonWebsocketConsumer):
                 print("Elimination already in progress.")
                 return
 
-            if SharedMovie.objects.filter(list__sharecode = self.sharecode).count() < 2:
+            if SharedMovie.objects.filter(shared_list__sharecode = self.sharecode).count() < 2:
                 print("Must be at least 2 movies in list to begin eliminating.")
                 return
 
