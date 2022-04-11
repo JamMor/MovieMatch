@@ -40,19 +40,24 @@ $(document).ready(function() {
                 .done(function (data) {
                     console.log(data);
                     search_results = data.results;
-                    $("div.carousel").height("400px").html(search_results
-                        .map(movie => MovieCard("query", movie, ["add", "info"]))
-                        .join('')
-                    );
-                    $('.carousel').carousel({
-                        dist: -50,
-                        noWrap: true,
-                        numVisible: 10
-                        });
+                    $("div.carousel")
+                        .animate({height: "400px"}, 200)
+                        .promise().done(function (){
+                            $(this)
+                                .html(search_results.map(movie => 
+                                    MovieCard("query", movie, ["add", "info"]))
+                                    .join('')
+                                )
+                                .carousel({
+                                dist: -50,
+                                noWrap: true,
+                                numVisible: 10
+                                })
+                        })
                 })
         }
         else if (searchQuery.length == 0) {
-            $("div.carousel").html("").height("0px")
+            $("div.carousel").animate({height: "0px"}, 150).html("")
         }
     }, 1000));
 
@@ -103,7 +108,7 @@ $(document).ready(function() {
     // Clear search results
     $("#search-close").click(function() {
         $("#moviesearch-input").val('');
-        $("div.carousel").html("").height("0px");
+        $("div.carousel").animate({height: "0px"}, 150).html("");
     });
 
     // POSTs name, movie list, and sharecode(if any)
