@@ -87,7 +87,7 @@ $(document).ready(function() {
                     setUserTurn(responseData.next_eliminating_uuid)
                 }
 
-                let disconnected_uuid = responseData.uuid;
+                let disconnected_uuid = responseData.disconnected_uuid;
                 console.log('Disconnected UUID: ' + disconnected_uuid)
                 removeUserFromDom(disconnected_uuid);
                 delete user_list[disconnected_uuid]
