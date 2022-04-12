@@ -40,6 +40,14 @@ $(document).ready(function() {
                 .done(function (data) {
                     console.log(data);
                     search_results = data.results;
+                    if(search_results.length == 0){
+                        $("div.carousel")
+                            .animate({height: $('div.carousel').get(0).scrollHeight}, 200, function(){
+                                $(this).height('auto');
+                            })
+                            .html('<h6 class="center-align grey-text text-lighten-2">No results</h6>')
+                        return
+                    }
                     $("div.carousel")
                         .animate({height: "400px"}, 200)
                         .promise().done(function (){
@@ -49,9 +57,9 @@ $(document).ready(function() {
                                     .join('')
                                 )
                                 .carousel({
-                                dist: -50,
-                                noWrap: true,
-                                numVisible: 10
+                                    dist: -50,
+                                    numVisible: 10,
+                                    noWrap: true
                                 })
                         })
                 })
