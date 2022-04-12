@@ -49,8 +49,20 @@ $(document).ready(function() {
                 let shared_movie_id = responseData.shared_movie_id
                 let eliminating_uuid = responseData.eliminating_uuid
                 let next_uuid = responseData.next_eliminating_uuid
+                let eliminated_movie = movie_list.find(movie => movie.shared_movie_id == shared_movie_id)
+                let eliminating_user = user_list[eliminating_uuid]
+
+                eliminated_movie.is_eliminated == true;
                 $(`#shared_${shared_movie_id}`).addClass('eliminated')
                 console.log("Eliminated movie")
+
+                let toastClass = "purple-text text-accent-2"
+                if(eliminating_uuid == user_uuid){
+                    toastClass = "cyan-text text-accent-2"
+                }
+                let toastHtml = `<span><strong class=${toastClass}>${eliminating_user.nickname} </strong>&nbsp;eliminated&nbsp;<strong class="orange-text text-darken-3"> ${eliminated_movie.title}</strong></span>`
+                M.toast({html: toastHtml})
+                
                 setUserTurn(next_uuid);
             }
             
