@@ -44,9 +44,9 @@ class MatchConsumer(JsonWebsocketConsumer):
         #If an inactive room user becomes active again within enough time, 
         #keeps position (created_at time) in user list. If too much time 
         # has passed, treated as new connection and moved to end of queue.
-        if not created and (not room_user.last_active or timezone.now()-timedelta(minutes=1) < room_user.last_active):
-            room_user.created_at = timezone.now()
-            room_user.is_users_turn = False
+        # if not created and (not room_user.last_active or timezone.now()-timedelta(minutes=1) < room_user.last_active):
+        #     room_user.created_at = timezone.now()
+        #     room_user.is_users_turn = False
             
         #====================================
         #If roomuser has no name, set usernick as nick. Else make anonymous
@@ -222,7 +222,7 @@ class MatchConsumer(JsonWebsocketConsumer):
                 print("Elimination already in progress.")
                 return
 
-            if SharedMovie.objects.filter(list__sharecode = self.sharecode).count() < 2:
+            if SharedMovie.objects.filter(shared_list__sharecode = self.sharecode).count() < 2:
                 print("Must be at least 2 movies in list to begin eliminating.")
                 return
 

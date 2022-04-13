@@ -49,8 +49,20 @@ $(document).ready(function() {
                 let shared_movie_id = responseData.shared_movie_id
                 let eliminating_uuid = responseData.eliminating_uuid
                 let next_uuid = responseData.next_eliminating_uuid
+                let eliminated_movie = movie_list.find(movie => movie.shared_movie_id == shared_movie_id)
+                let eliminating_user = user_list[eliminating_uuid]
+
+                eliminated_movie.is_eliminated == true;
                 $(`#shared_${shared_movie_id}`).addClass('eliminated')
                 console.log("Eliminated movie")
+
+                let toastClass = "purple-text text-accent-2"
+                if(eliminating_uuid == user_uuid){
+                    toastClass = "cyan-text text-accent-2"
+                }
+                let toastHtml = `<span><strong class=${toastClass}>${eliminating_user.nickname} </strong>&nbsp;eliminated&nbsp;<strong class="orange-text text-darken-3"> ${eliminated_movie.title}</strong></span>`
+                M.toast({html: toastHtml})
+                
                 setUserTurn(next_uuid);
             }
             
@@ -67,6 +79,10 @@ $(document).ready(function() {
                     Object.assign(user_list, connected_user);
                     addUserToDom(connected_uuid, connected_user[connected_uuid]);
                     console.log(`${connected_user[connected_uuid]['nickname']} has joined the room. UUID: ${Object.keys(connected_user)[0]}`)
+                    if(connected_uuid != user_uuid){
+                        let toastHtml = `<span><strong class="purple-text text-accent-2">${connected_user[connected_uuid]['nickname']} </strong>&nbsp;has connected.</span>`
+                        M.toast({html: toastHtml})
+                    }
                 }
             }
             //User disconnected
@@ -75,10 +91,14 @@ $(document).ready(function() {
                     setUserTurn(responseData.next_eliminating_uuid)
                 }
 
-                let disconnected_uuid = responseData.uuid;
+                let disconnected_uuid = responseData.disconnected_uuid;
                 console.log('Disconnected UUID: ' + disconnected_uuid)
                 removeUserFromDom(disconnected_uuid);
-                delete user_list[disconnected_uuid]
+                if(disconnected_uuid != user_uuid){
+                    let toastHtml = `<span><strong class="purple-text text-accent-2">${user_list[disconnected_uuid]['nickname']} </strong>&nbsp;has disconnected.</span>`
+                    M.toast({html: toastHtml})
+                }
+                delete user_list[disconnected_uuid];
             }
             //Initialize/Update list of movies
             else if(responseData.command == "initialized" || responseData.command == "updated"){
@@ -244,6 +264,13 @@ $(document).ready(function() {
         //Set current user turn to true and add active class
         user_list[turnUUID]['is_users_turn'] = true;
         $(`#user_${turnUUID}`).addClass('active').removeClass('inactive');
+
+        //Toast new user turn
+        let toastName = (turnUUID != user_uuid) 
+            ? `<strong class="purple-text text-accent-2">${user_list[disconnected_uuid]['nickname']}</strong>'s` 
+            : '<strong class="cyan-text text-accent-2">YOUR</strong>'
+        let toastHtml = `<span>${toastName}&nbsp;turn.</span>`
+        M.toast({html: toastHtml})
 
         //Put username in status bar
         let statusText = getEliminatingStatusString(user_list);

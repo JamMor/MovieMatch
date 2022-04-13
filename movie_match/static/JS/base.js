@@ -30,6 +30,12 @@ $(document).ready(function() {
 
     csrftoken = getCookie('csrftoken');
 
+    //Initialize Mobile Nav Menu item.
+    $('.sidenav').sidenav();
+
+    //CONSTRUCTOR ELEMENTS
+    //==========================================================================
+
     //Button Constructor
     const CardButton = (type) => {
         let color = ''; let customClass = ''; let icon = '';
@@ -59,8 +65,12 @@ $(document).ready(function() {
     const image_prefix = "https://image.tmdb.org/t/p/";
     const placeholder_link = DJ_STATIC_FILES.placeholder_path;
 
-    MovieCard = (id_prefix, {id, title, release_date, overview, poster_path, is_eliminated}, buttonarray) => {
-        let image_tag = (poster_path == null) 
+    MovieCard = (
+        id_prefix,
+        { id, title, release_date, overview, poster_path, is_eliminated },
+        buttonarray
+    ) => {
+        let image_tag = (poster_path == null)
             ? `<img src='${placeholder_link}'>`
             : `<img src='${image_prefix}w342${poster_path}'>`
         let release_year = release_date?.slice(0, 4) ?? ""
@@ -70,10 +80,10 @@ $(document).ready(function() {
 
         //Context specific class options
         let card_class = "";
-        if(id_prefix == "query"){card_class = "carousel-item";}
-        else if(id_prefix == "shared"){card_class = is_eliminated = is_eliminated ? "eliminated" : "";}
+        if (id_prefix == "query") { card_class = "carousel-item"; }
+        else if (id_prefix == "shared") { card_class = is_eliminated = is_eliminated ? "eliminated" : ""; }
 
-        return    `
+        return `
             <div id='${id_prefix}_${id}' class="card sticky-action grey darken-4 ${card_class}">
                 <div class="card-image">
                     ${image_tag}
