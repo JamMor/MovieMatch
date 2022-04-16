@@ -1,10 +1,52 @@
-from django.shortcuts import render
+from sys import prefix
+from django.http import JsonResponse
+from django.shortcuts import redirect, render, HttpResponse
+from django.contrib.auth.models import User
+from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
+from django.contrib.auth.decorators import login_required
 
-# Create your views here.
+#Make class based
+def register_view(request):
+    if request.method == 'POST':
+        user_form = UserCreationForm(request.POST, prefix='user')
+        print(user_form)
+        if user_form.is_valid():
+            # user = User.objects.create_user(username='john', password='password4', email='lennon@thebeatles.com')
+            user = user_form.save()
+            login(request, user)
+            print("USER created from form")
+            return redirect('default_redirect')
+    elif request.method== "GET":
+        user_form = UserCreationForm(prefix='user')
+    return render(request, '/register.html', {'user_form': user_form})
 
-#login
+def login_view(request):
+    if request.method == 'POST':
+        login_form = AuthenticationForm(request.POST)
+        print(login_form)
+        if login_form.is_valid():
+            print("USER form valid")
+            username = login_form.cleaned_data["username"]
+            password = login_form.cleaned_data["password"]
+            user = authenticate(username = username, password = password)
+            if user is not None:
+                # A backend authenticated the credentials
+                login(request, user)
+                print("Login SUCCESS")
+                success = True
+            else:
+                # No backend authenticated the credentials
+                print("Login FAILED")
+                success = False
+    print(f'Success: {success}')
+    return JsonResponse({'success': success})
 
-#register
-#take to a page
+def logout_view(request):
+    logout(request)
+    print("Logout SUCCESS")
+    return redirect('default_redirect')
 
-#
+@login_required(redirect_field_name='default_redirect', login_url='login')
+def test_auth_view(request):
+    return HttpResponse("You are authorized!")
