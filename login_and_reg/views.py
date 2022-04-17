@@ -19,7 +19,7 @@ def register_view(request):
             return redirect('list_builder:default_redirect')
     elif request.method== "GET":
         user_form = UserCreationForm(prefix='user')
-    return render(request, '/register.html', {'user_form': user_form})
+    return render(request, 'login_and_reg/register.html', {'user_form': user_form})
 
 def login_view(request):
     if request.method == 'POST':
