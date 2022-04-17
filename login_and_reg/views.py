@@ -47,6 +47,4 @@ def logout_view(request):
     print("Logout SUCCESS")
     return redirect('default_redirect')
 
-@login_required(redirect_field_name='default_redirect', login_url='login')
-def test_auth_view(request):
-    return HttpResponse("You are authorized!")
+# @login_required(redirect_field_name='default_redirect', login_url='list_builder:default_redirect')
