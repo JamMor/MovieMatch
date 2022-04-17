@@ -16,7 +16,7 @@ def register_view(request):
             user = user_form.save()
             login(request, user)
             print("USER created from form")
-            return redirect('default_redirect')
+            return redirect('list_builder:default_redirect')
     elif request.method== "GET":
         user_form = UserCreationForm(prefix='user')
     return render(request, '/register.html', {'user_form': user_form})
@@ -45,6 +45,6 @@ def login_view(request):
 def logout_view(request):
     logout(request)
     print("Logout SUCCESS")
-    return redirect('default_redirect')
+    return redirect('list_builder:default_redirect')
 
 # @login_required(redirect_field_name='default_redirect', login_url='list_builder:default_redirect')
