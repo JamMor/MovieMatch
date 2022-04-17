@@ -10,7 +10,6 @@ from django.contrib.auth.decorators import login_required
 def register_view(request):
     if request.method == 'POST':
         user_form = UserCreationForm(request.POST, prefix='user')
-        print(user_form)
         if user_form.is_valid():
             # user = User.objects.create_user(username='john', password='password4', email='lennon@thebeatles.com')
             user = user_form.save()
