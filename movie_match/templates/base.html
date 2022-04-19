@@ -46,8 +46,8 @@
                     <li><a href="#">Recent Lists</a></li>
                     <li><a href="{% url 'login_and_reg:register' %}">Register</a></li>
                     <li><a class="dropdown-trigger" href="#!" data-target="login-form">Login<i class="material-icons right">arrow_drop_down</i></a></li>
-                    <div id="login-form" class="dropdown-content cyber-grade">
-                        <form action="{% url 'login_and_reg:login' %}" method="post">
+                    <div id="login-form" class="dropdown-content">
+                        <form class="cyber-grade login-form" action="{% url 'login_and_reg:login' %}" method="post">
                             {% csrf_token %}
                             <div class="input-field">
                                 <input id="username" class="center-align" type="text">
@@ -73,7 +73,7 @@
                 <li>
                     <div class="collapsible-header">Login<i class="material-icons right">arrow_drop_down</i></div>
                     <div class="collapsible-body">
-                        <form class="cyber-grade" action="{% url 'login_and_reg:login' %}" method="post">
+                        <form class="cyber-grade login-form" action="{% url 'login_and_reg:login' %}" method="post">
                             {% csrf_token %}
                             <div class="input-field">
                                 <input id="username" class="center-align" type="text">

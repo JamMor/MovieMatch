@@ -68,8 +68,8 @@ html {
 
 /* Vertical Login Form */
 #login-form form {
-    margin: 0px 1rem;
-    margin-bottom: 1rem;
+    padding: 0px 1rem;
+    padding-bottom: 1rem;
     height: auto;
     display:flex;
     flex-direction: column;
