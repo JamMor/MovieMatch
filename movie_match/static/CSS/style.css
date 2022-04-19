@@ -74,7 +74,7 @@ html {
     display:flex;
     flex-direction: column;
 }
-#login-form form a {
+#login-form form button {
     align-self: flex-end;
 }
 /* ---------------------- */
@@ -100,7 +100,7 @@ html {
     height: auto;
 }
 
-#login-form-sidenav form a {
+#login-form-sidenav form button {
     align-self: flex-end;
 }
 
@@ -247,6 +247,10 @@ div.card-action {
 /* ======================Neon Glow====================  */
 .btn-rounded {
     border-radius: 15px;
+}
+
+.btn-small.btn-rounded {
+    border-radius: 10px;
 }
 
 .neon-blue-hover {
