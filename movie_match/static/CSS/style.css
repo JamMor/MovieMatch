@@ -19,6 +19,7 @@
 html {
     height: 100vh;
     background-color: #212121;
+    font-family: 'Orbitron', sans-serif;
 }
 
 #side-menu {
