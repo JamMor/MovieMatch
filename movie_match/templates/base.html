@@ -50,14 +50,14 @@
                         <form class="cyber-grade login-form" action="{% url 'login_and_reg:login' %}" method="post">
                             {% csrf_token %}
                             <div class="input-field">
-                                <input id="username" class="center-align" type="text">
-                                <label for="username">Username</label>
+                                <input id="nav-username" name=username" class="center-align" type="text">
+                                <label for="nav-username">Username</label>
                             </div>
                             <div class="input-field">
-                                <input id="password" class="center-align" type="text">
-                                <label for="password">Password</label>
+                                <input id="nav-password" name=password" class="center-align" type="text">
+                                <label for="nav-password">Password</label>
                             </div>
-                            <a class="neon-blue-hover btn-small btn-rounded" type="submit">Login</a>
+                            <button class="neon-blue-hover btn-small btn-rounded" type="submit">Login</button>
                         </form>
                     </div>
                     <li><a href="{% url 'login_and_reg:logout' %}">Logout</a></li>
@@ -76,14 +76,14 @@
                         <form class="cyber-grade login-form" action="{% url 'login_and_reg:login' %}" method="post">
                             {% csrf_token %}
                             <div class="input-field">
-                                <input id="username" class="center-align" type="text">
-                                <label for="username">Username</label>
+                                <input id="side-username" name="username" class="center-align" type="text">
+                                <label for="side-username">Username</label>
                             </div>
                             <div class="input-field">
-                                <input id="password" class="center-align" type="text">
-                                <label for="password">Password</label>
+                                <input id="side-password" name="password" class="center-align" type="text">
+                                <label for="side-password">Password</label>
                             </div>
-                            <a class="neon-blue-hover btn-small btn-rounded" type="submit">Login</a>
+                            <button class="neon-blue-hover btn-small btn-rounded" type="submit">Login</button>
                         </form>
                     </div>
                 </li>
