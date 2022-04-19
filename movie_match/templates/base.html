@@ -48,7 +48,7 @@
                     <li><a class="dropdown-trigger" href="#!" data-target="login-form">Login<i class="material-icons right">arrow_drop_down</i></a></li>
                     <div id="login-form" class="dropdown-content cyber-grade">
                         <form action="{% url 'login_and_reg:login' %}" method="post">
-                            {{csrf_token}}
+                            {% csrf_token %}
                             <div class="input-field">
                                 <input id="username" class="center-align" type="text">
                                 <label for="username">Username</label>
@@ -57,7 +57,7 @@
                                 <input id="password" class="center-align" type="text">
                                 <label for="password">Password</label>
                             </div>
-                            <button type="submit">Login</button>
+                            <a class="neon-blue-hover btn-small btn-rounded" type="submit">Login</a>
                         </form>
                     </div>
                     <li><a href="{% url 'login_and_reg:logout' %}">Logout</a></li>
