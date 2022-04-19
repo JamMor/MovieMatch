@@ -200,22 +200,22 @@ div.card-action {
 
 /*===== Share Modal Form ====== */
 /* label color */
-#share_modal .input-field label {
+.cyber-grade .input-field label {
     color: #616161;
 }
 /* label focus color */
-#share_modal .input-field input[type=text]:focus + label {
+.cyber-grade .input-field input[type=text]:focus + label {
     color: #8e2ba7;
 }
 /* label underline focus color */
-#share_modal .input-field input[type=text] {
+.cyber-grade .input-field input[type=text] {
     border-bottom: 1px solid #616161;
     box-shadow: 0 1px 0 0 #000;
     color:#c2185b
 }
 
 /* label underline focus color */
-#share_modal .input-field input[type=text]:focus {
+.cyber-grade .input-field input[type=text]:focus {
     border-bottom: 1px solid #8e2ba7;
     box-shadow: 0 1px 0 0 #000;
 }
