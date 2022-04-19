@@ -40,6 +40,24 @@ $(document).ready(function() {
     });
     $('.collapsible').collapsible();
 
+    //Login Submission AJAX
+    $(".login-form").on("submit", function (event) {
+        console.log("Login Button Pressed")
+        event.preventDefault()
+        let formAction = $(this).attr('action')
+        let formData = $(this).serialize()
+
+        $.post(formAction, formData, "json")
+            .done(function (data) {
+                console.log(data)
+                if (data['status'] == "success") { console.log("Login succesful!") }
+                else { console.log("Login failure!") }
+            })
+            .fail(function () {
+                console.log("Failed to send login.");
+            })
+    })
+
     //CONSTRUCTOR ELEMENTS
     //==========================================================================
 
