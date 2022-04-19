@@ -1,4 +1,13 @@
-/* MATERIALIZE COLORS: 
+/* 
+===========CSS Subheadings===========
+- =Materialize colors=
+- =Index and Search=
+- =Share Modal=
+- =Cyber Grade Form=
+- =Neon Glow=
+- =Elimination Room=
+- =Final Modal=
+*/
 
 /*====================Materialize colors====================*/
 
@@ -198,7 +207,7 @@ div.card-action {
         #01f1fb 95%) 10; 
 }
 
-/*===== Share Modal Form ====== */
+/*==================Cyber Grade Form=============== */
 /* label color */
 .cyber-grade .input-field label {
     color: #616161;
@@ -298,7 +307,7 @@ div.card-action {
         0 0 80px 0 #311b92;
 }
 
-/* ================================================== */
+/* ==================Elimination Room==================== */
 
 #user_list {
     display: flex;
@@ -372,5 +381,5 @@ div.card-action {
     text-align: center;
 }
 
-/* Animista */
+/* =============Animista=================== */
 
