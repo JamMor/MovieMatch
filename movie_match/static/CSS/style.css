@@ -1,20 +1,21 @@
 /* MATERIALIZE COLORS: 
 
-{
-    #e0e0e0 grey lighten-2
-    #212121 grey darken-4
-    #18ffff cyan accent-2
-    #1976d2 blue darken-2
-    #1a237e indigo darken-4
-    #e040fb purple accent-2
-    #c2185b pink darken-2
-    #ef6c00 orange darken-3
+/*====================Materialize colors====================*/
 
-    #311b92 deep-purple darken-4
-    #7b1fa2 purple darken-2
+:root {
+    --grey_lighten-2:#e0e0e0;
+    --grey_darken-4:#212121;
+    --cyan_accent-2:#18ffff;
+    --blue_darken-2:#1976d2;
+    --indigo_darken-4:#1a237e;
+    --purple_accent-2:#e040fb;
+    --pink_darken-2:#c2185b;
+    --orange_darken-3:#ef6c00;
+    
+    --deep-purple_darken-4:#311b92;
+    --purple_darken-2:#7b1fa2;
 }
 
-*/
 
 html {
     height: 100vh;
