@@ -22,21 +22,40 @@ html {
 }
 
 #side-menu {
-    background-color: #00000000;
-    background-image: linear-gradient(
-        270deg, 
-        #00000000 0%,
-        #e040fb 3%,
-        #ffffff 5%,
-        #e040fb 7%,
-        #74367e 20%,
-        #212121 70%
-    );
+    border-top: none;
+    border-bottom: none;
+    border-left: none;
+    height:100vh;
 }
 
-#side-menu a {
+#side-menu li>a, li>div {
     color: #e0e0e0;
     font-family: 'Orbitron', sans-serif;
+    background-color: transparent;
+}
+
+#side-menu div.collapsible-header {
+    padding-left: 32px;
+    font-weight: 500;
+}
+
+#side-menu div.collapsible-header:focus {
+    background-color: transparent;
+}
+#side-menu div.collapsible-body {
+    background-color: transparent;
+}
+
+#login-form-sidenav form {
+    border-left: none;
+    border-right: none;
+    clip-path: inset(-50px 0px -50px 0px);
+    padding: 12px;
+    display:flex;
+    flex-direction: column;
+}
+#login-form-sidenav form a {
+    align-self: flex-end;
 }
 
 header nav {

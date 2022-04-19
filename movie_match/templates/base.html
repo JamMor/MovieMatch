@@ -66,23 +66,29 @@
         </nav>
     </header>
     
-    <ul class="sidenav" id="side-menu">
+    <ul class="sidenav cyber-grade" id="side-menu">
         <li><a href="{% url 'login_and_reg:register' %}">Register</a></li>
-        <li><a class="dropdown-trigger" href="#!" data-target="login-form-sidenav">Login<i class="material-icons right">arrow_drop_down</i></a></li>
-        <div id="login-form-sidenav" class="dropdown-content cyber-grade">
-            <form action="{% url 'login_and_reg:login' %}" method="post">
-                {{csrf_token}}
-                <div class="input-field">
-                    <input id="username" class="center-align" type="text">
-                    <label for="username">Username</label>
-                </div>
-                <div class="input-field">
-                    <input id="password" class="center-align" type="text">
-                    <label for="password">Password</label>
-                </div>
-                <button type="submit">Login</button>
-            </form>
-        </div>
+        <li>
+            <ul id="login-form-sidenav" class="collapsible">
+                <li>
+                    <div class="collapsible-header">Login<i class="material-icons right">arrow_drop_down</i></div>
+                    <div class="collapsible-body">
+                        <form class="cyber-grade" action="{% url 'login_and_reg:login' %}" method="post">
+                            {% csrf_token %}
+                            <div class="input-field">
+                                <input id="username" class="center-align" type="text">
+                                <label for="username">Username</label>
+                            </div>
+                            <div class="input-field">
+                                <input id="password" class="center-align" type="text">
+                                <label for="password">Password</label>
+                            </div>
+                            <a class="neon-blue-hover btn-small btn-rounded" type="submit">Login</a>
+                        </form>
+                    </div>
+                </li>
+            </ul>
+        </li>
         <li><a href="{% url 'login_and_reg:logout' %}">Logout</a></li>
         <div class="divider"></div>
         <li><a href="#">List Builder</a></li>
