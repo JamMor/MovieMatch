@@ -3,7 +3,7 @@
 - =Materialize colors=
 - =Index and Search=
 - =Share Modal=
-- =Cyber Grade Form=
+- =Cyber Grade Inputs=
 - =Neon Glow=
 - =Elimination Room=
 - =Final Modal=
@@ -207,27 +207,63 @@ div.card-action {
         #01f1fb 95%) 10; 
 }
 
-/*==================Cyber Grade Form=============== */
-/* label color */
-.cyber-grade .input-field label {
-    color: #616161;
+/*==================Cyber Grade Inputs=============== */
+/* suffix icon */
+i.suffix {
+    position: absolute;
+    width: 3rem;
+    font-size: 2rem;
+    -webkit-transition: color 0.2s;
+    transition: color 0.2s;
+    top: 0.5rem;
+    right: 0;
+    margin-left: 15px;
 }
-/* label focus color */
-.cyber-grade .input-field input[type=text]:focus + label {
+
+/* suffix icon focus color */
+.input-field label.active + i.suffix{
     color: #8e2ba7;
 }
-/* label underline focus color */
-.cyber-grade .input-field input[type=text] {
+
+/* label color */
+.cyber-grade .input-field label, i {
+    color: #616161;
+}
+
+/* icon prefix focus color */
+.input-field .prefix.active {
+    color: #8e2ba7;
+}
+
+/* ------------------Inputs------------------ */
+/* label focus color */
+.cyber-grade .input-field input[type=text]:focus + label, .cyber-grade .input-field input[type=password]:focus + label {
+    color: #8e2ba7;
+}
+
+/* label underline color */
+.cyber-grade .input-field input[type=text], .cyber-grade .input-field input[type=password] {
     border-bottom: 1px solid #616161;
     box-shadow: 0 1px 0 0 #000;
     color:#c2185b
 }
-
 /* label underline focus color */
-.cyber-grade .input-field input[type=text]:focus {
+.cyber-grade .input-field input[type=text]:focus, .cyber-grade .input-field input[type=password]:focus {
     border-bottom: 1px solid #8e2ba7;
     box-shadow: 0 1px 0 0 #000;
 }
+
+/* valid color */
+.cyber-grade .input-field input[type=text].valid, .cyber-grade .input-field input[type=password].valid {
+    border-bottom: 1px solid #18ffff;
+    box-shadow: 0 1px 0 0 #000;
+}
+/* invalid color */
+.cyber-grade .input-field input[type=text].invalid, .cyber-grade .input-field input[type=password].invalid {
+    border-bottom: 1px solid #ef6c00;
+    box-shadow: 0 1px 0 0 #000;
+}
+/* ======================================================= */
 
 #share_modal .modal-footer {
     background-color: transparent;
