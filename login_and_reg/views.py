@@ -5,19 +5,19 @@ from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.contrib.auth.decorators import login_required
+from .forms import RegistrationForm
 
 #Make class based
 def register_view(request):
     if request.method == 'POST':
-        user_form = UserCreationForm(request.POST, prefix='user')
+        user_form = RegistrationForm(request.POST, prefix='user')
         if user_form.is_valid():
-            # user = User.objects.create_user(username='john', password='password4', email='lennon@thebeatles.com')
             user = user_form.save()
             login(request, user)
             print("USER created from form")
             return redirect('list_builder:default_redirect')
     elif request.method== "GET":
-        user_form = UserCreationForm(prefix='user')
+        user_form = RegistrationForm(prefix='user')
     return render(request, 'login_and_reg/register.html', {'user_form': user_form})
 
 def login_view(request):
