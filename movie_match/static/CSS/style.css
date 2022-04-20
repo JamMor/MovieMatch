@@ -29,24 +29,30 @@
 /* [+] */
 /*====================Materialize colors====================*/
 :root {
-    --grey_lighten-2:#e0e0e0;
     --grey_darken-4:#212121;
+    --grey_lighten-2:#e0e0e0;
+    --grey_darken-2:#616161;
+
     --cyan_accent-2:#18ffff;
     --blue_darken-2:#1976d2;
     --indigo_darken-4:#1a237e;
     --purple_accent-2:#e040fb;
     --pink_darken-2:#c2185b;
+    --pink_darken-4:#880e4f;
+
     --orange_darken-3:#ef6c00;
     
     --deep-purple_darken-4:#311b92;
     --purple_darken-2:#7b1fa2;
+    --purple_darken-1:#8e24aa;
+
 }
 
 /* [+] */
 /* =====================html (overall)===================== */
 html {
     height: 100vh;
-    background-color: #212121;
+    background-color: var(--grey_darken-4);
     font-family: 'Orbitron', sans-serif;
 }
 
@@ -55,15 +61,15 @@ html {
 .cyber-grade {
     background: #212121f1;
     box-shadow: 
-        0 0 10px 0 #c51162,
-        0 0 50px 0 #880e4f;
+        0 0 10px 0 var(--pink_darken-2),
+        0 0 50px 0 var(--pink_darken-4);
     border-width: 4px;
     border-style:solid;
     border-image: linear-gradient(
         300deg, 
-        #8e2ba7 0%, 
+        var(--purple_darken-1) 0%, 
         #8a6ff5 35%, 
-        #01f1fb 95%) 10; 
+        var(--cyan_accent-2) 95%) 10; 
 }
 
 /* [-] */
@@ -82,45 +88,45 @@ i.suffix {
 
 /* suffix icon focus color */
 .input-field label.active + i.suffix{
-    color: #8e2ba7;
+    color: var(--purple_darken-1);
 }
 
 /* label color */
-.cyber-grade .input-field label, i {
-    color: #616161;
+.cyber-grade .input-field label, .cyber-grade .input-field i {
+    color: var(--grey_darken-2);
 }
 
 /* icon prefix focus color */
 .input-field .prefix.active {
-    color: #8e2ba7;
+    color: var(--purple_darken-1);
 }
 
 /* ------------------Input Elements------------------ */
 /* label focus color */
 .cyber-grade .input-field input[type=text]:focus + label, .cyber-grade .input-field input[type=password]:focus + label {
-    color: #8e2ba7;
+    color: var(--purple_darken-1);
 }
 
 /* label underline color */
 .cyber-grade .input-field input[type=text], .cyber-grade .input-field input[type=password] {
-    border-bottom: 1px solid #616161;
+    border-bottom: 1px solid var(--grey_darken-2);
     box-shadow: 0 1px 0 0 #000;
-    color:#c2185b
+    color:var(--pink_darken-2)
 }
 /* label underline focus color */
 .cyber-grade .input-field input[type=text]:focus, .cyber-grade .input-field input[type=password]:focus {
-    border-bottom: 1px solid #8e2ba7;
+    border-bottom: 1px solid var(--purple_darken-1);
     box-shadow: 0 1px 0 0 #000;
 }
 
 /* valid color */
 .cyber-grade .input-field input[type=text].valid, .cyber-grade .input-field input[type=password].valid {
-    border-bottom: 1px solid #18ffff;
+    border-bottom: 1px solid var(--cyan_accent-2);
     box-shadow: 0 1px 0 0 #000;
 }
 /* invalid color */
 .cyber-grade .input-field input[type=text].invalid, .cyber-grade .input-field input[type=password].invalid {
-    border-bottom: 1px solid #ef6c00;
+    border-bottom: 1px solid var(--orange_darken-3);
     box-shadow: 0 1px 0 0 #000;
 }
 
@@ -137,59 +143,59 @@ i.suffix {
 .neon-blue-hover {
     background-color: #ffffff33;
     box-shadow: 
-        inset 0 0 15px 0 #1976d2,
-        inset 0 0 5px 0 #1a237e,
-        0 0 5px 0 #1976d2;
+        inset 0 0 15px 0 var(--blue_darken-2),
+        inset 0 0 5px 0 var(--indigo_darken-4),
+        0 0 5px 0 var(--blue_darken-2);
 }
 .neon-blue-hover:hover {
-    color: #1a237e;
+    color: var(--indigo_darken-4);
     background-color: #ffffff;
     box-shadow: 
-    inset 0 0 15px 0 #1976d2,
-    inset 0 0 5px 0 #1a237e,
-        0 0 40px 0 #18ffff,
-        0 0 60px 0 #1976d2,
-        0 0 80px 0 #1a237e;
+    inset 0 0 15px 0 var(--blue_darken-2),
+    inset 0 0 5px 0 var(--indigo_darken-4),
+        0 0 40px 0 var(--cyan_accent-2),
+        0 0 60px 0 var(--blue_darken-2),
+        0 0 80px 0 var(--indigo_darken-4);
 }
 
 .neon-blue.inactive{
-    color: #e0e0e0;
+    color: var(--grey_lighten-2);
     background-color: #ffffff33;
     box-shadow: 
-        inset 0 0 15px 0 #1976d2,
-        inset 0 0 5px 0 #1a237e,
-        0 0 5px 0 #1976d2;
+        inset 0 0 15px 0 var(--blue_darken-2),
+        inset 0 0 5px 0 var(--indigo_darken-4),
+        0 0 5px 0 var(--blue_darken-2);
 }
 
 .neon-blue.active{
-    color: #1a237e;
+    color: var(--indigo_darken-4);
     background-color: #ffffff;
     box-shadow: 
-    inset 0 0 15px 0 #1976d2,
-    inset 0 0 5px 0 #1a237e,
-        0 0 40px 0 #18ffff,
-        0 0 60px 0 #1976d2,
-        0 0 80px 0 #1a237e;
+    inset 0 0 15px 0 var(--blue_darken-2),
+    inset 0 0 5px 0 var(--indigo_darken-4),
+        0 0 40px 0 var(--cyan_accent-2),
+        0 0 60px 0 var(--blue_darken-2),
+        0 0 80px 0 var(--indigo_darken-4);
 }
 
 .neon-fuschia.inactive{
-    color: #e0e0e0;
+    color: var(--grey_lighten-2);
     background-color: #ffffff33;
     box-shadow: 
-        inset 0 0 15px 0 #7b1fa2,
-        inset 0 0 5px 0 #311b92,
-        0 0 5px 0 #7b1fa2;
+        inset 0 0 15px 0 var(--purple_darken-2),
+        inset 0 0 5px 0 var(--deep-purple_darken-4),
+        0 0 5px 0 var(--purple_darken-2);
 }
 
 .neon-fuschia.active{
-    color: #311b92;
+    color: var(--deep-purple_darken-4);
     background-color: #ffffff;
     box-shadow: 
-    inset 0 0 15px 0 #7b1fa2,
-    inset 0 0 5px 0 #311b92,
-        0 0 40px 0 #e040fb,
-        0 0 60px 0 #7b1fa2,
-        0 0 80px 0 #311b92;
+    inset 0 0 15px 0 var(--purple_darken-2),
+    inset 0 0 5px 0 var(--deep-purple_darken-4),
+        0 0 40px 0 var(--purple_accent-2),
+        0 0 60px 0 var(--purple_darken-2),
+        0 0 80px 0 var(--deep-purple_darken-4);
 }
 
 /* [+] */
@@ -199,7 +205,7 @@ i.suffix {
 /* -------------------------Header========================= */
 header nav {
     margin-bottom: 2rem;
-    background-color: #e040fb;
+    background-color: var(--purple_accent-2);
     color: #000000;
 }
 
@@ -211,16 +217,16 @@ header nav a {
 .logo1 {
     color: #ffffff;
     text-shadow: 
-        0 0 3px #18ffff,
-        0 0 5px #1976d2,
-        0 0 7px #1a237e;
+        0 0 3px var(--cyan_accent-2),
+        0 0 5px var(--blue_darken-2),
+        0 0 7px var(--indigo_darken-4);
 }
 .logo2 {
     color: #ffffff;
     text-shadow: 
-        0 0 4px #e040fb,
-        0 0 6px #7b1fa2,
-        0 0 8px #311b92;
+        0 0 4px var(--purple_accent-2),
+        0 0 6px var(--purple_darken-2),
+        0 0 8px var(--deep-purple_darken-4);
 }
 
 header nav a.brand-logo {
@@ -274,7 +280,7 @@ header nav a.brand-logo {
 }
 
 #side-menu li>a, li>div {
-    color: #e0e0e0;
+    color: var(--grey_lighten-2);
     font-family: 'Orbitron', sans-serif;
     background-color: transparent;
 }
@@ -323,23 +329,23 @@ header nav a.brand-logo {
 /* -----------------------SearchBar======================= */
 #search-bar, #search-bar input {
     border-radius: 15px;
-    color: #e0e0e0;
+    color: var(--grey_lighten-2);
 }
 
 nav#search-bar {
     box-shadow: 
-        inset 0 0 15px 0 #1976d2,
-        inset 0 0 5px 0 #1a237e,
-        0 0 5px 0 #1976d2;
+        inset 0 0 15px 0 var(--blue_darken-2),
+        inset 0 0 5px 0 var(--indigo_darken-4),
+        0 0 5px 0 var(--blue_darken-2);
 }
 #search-bar input:focus {
     color:#000;
     box-shadow: 
-    inset 0 0 15px 0 #1976d2,
-    inset 0 0 5px 0 #1a237e,
-        0 0 40px 0 #18ffff,
-        0 0 60px 0 #1976d2,
-        0 0 80px 0 #1a237e;
+    inset 0 0 15px 0 var(--blue_darken-2),
+    inset 0 0 5px 0 var(--indigo_darken-4),
+        0 0 40px 0 var(--cyan_accent-2),
+        0 0 60px 0 var(--blue_darken-2),
+        0 0 80px 0 var(--indigo_darken-4);
 }
 
 /* [-] */
@@ -418,7 +424,7 @@ div.card-action {
 }
 
 .eliminated {
-    box-shadow: 0px 0px 7px #ef6c00;
+    box-shadow: 0px 0px 7px var(--orange_darken-3);
     opacity: 0.2;
 }
 
