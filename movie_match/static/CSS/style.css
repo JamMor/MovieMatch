@@ -6,9 +6,9 @@
 [+] =Cyber Grade (Color Scheme Classes)=
     [-] -Cyber Grade Inputs=
 [+] =Neon Glows (Neon Light Effect Classes)=
-[+] =Header=
-    [-] -Nav=
-        -LoginForm-
+[+] =Nav=
+    [-] -Header=
+        -HeaderLoginForm-
     [-] -SideNav=
         -SideLoginForm-
 [+] =Registration Form=
@@ -235,7 +235,7 @@ header nav a.brand-logo {
     font-weight: 400;
 }
 
-/* -----------------------LoginForm----------------------- */
+/* -----------------------HeaderLoginForm----------------------- */
 /* Vertical Login Form */
 #login-form form {
     padding: 0px 1rem;
