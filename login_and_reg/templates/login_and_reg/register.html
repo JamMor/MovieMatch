@@ -2,18 +2,34 @@
 
 {% block content_block %}
     <main class="container">
-        <form class ="cyber-grade" action="{% url 'login_and_reg:register' %}" method="post">
+        <form id="registration-form" class ="cyber-grade" action="{% url 'login_and_reg:register' %}" method="post">
             {% csrf_token %}
+            {% load prefixer %}
             {% for field in user_form %}
             <div class="input-field">
-                {{ field.label_tag }} {{ field }}
+                {{ field }}
+                {{ field.label_tag }}
+
                 {% if field.help_text %}
-                <p class="help">{{ field.help_text|safe }}</p>
+                    <i class="tooltipped material-icons suffix" data-position="left">info_outline</i>
+                    {% with help_id=field.auto_id|prefix:"help_" %}
+                        {{ field.help_text|json_script:help_id }}
+                    {% endwith %}
                 {% endif %}
-                {{ field.errors }}
+
+                {% if field.errors %}
+                    {% for error in field.errors %}
+                    <span class="helper-text" data-error="{{error}}"></span>
+                    {% endfor %}
+                {% endif %}
             </div>
-        {% endfor %}
-            <button type="submit">Submit</button>
+            {% endfor %}
+            <button class="neon-blue-hover btn-large btn-rounded" type="submit">Register</button>
         </form>
     </main>
+{% endblock %}
+{% block script_block %}
+    {{ block.super }}
+    {% load static %}
+    <script src="{% static 'login_and_reg/js/register.js'%}"></script>
 {% endblock %}
