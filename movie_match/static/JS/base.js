@@ -50,13 +50,44 @@ $(document).ready(function() {
         $.post(formAction, formData, "json")
             .done(function (data) {
                 console.log(data)
-                if (data['status'] == "success") { console.log("Login succesful!") }
-                else { console.log("Login failure!") }
+                if (data['status'] == "success") {
+                    console.log("Login succesful!");
+                    location.reload();
+                }
+                else {
+                    console.log("Login failure!");
+                    $(".login-form span.error").remove();
+                    formErrorHandler(".login-form", data.errors)
+                    $('#nav-bar .dropdown-trigger').dropdown('recalculateDimensions');
+                }
             })
             .fail(function () {
                 console.log("Failed to send login.");
             })
     })
+    
+    //Inserts returned form errors into form html
+    function formErrorHandler(formSelector, errorDict){
+        for(const field of Object.keys(errorDict)){
+            if(field == "__all__"){
+                for(let errorMsg of errorDict[field]){
+                    $(formSelector)
+                        .prepend(`<span class="error center">${errorMsg}</span>`)
+                }
+            }
+            else {
+                for(let errorMsg of errorDict[field]){
+                    $(`${formSelector} input[name=${field} ~ label]`)
+                        .after(`<span class="error">${errorMsg}</span>`)
+                }
+            }
+        }
+    }
+    
+    //Allows user to tab through dropdown form fields without dropdown closing
+    $('nav .login-form').on('keydown', function(event) {
+        event.stopPropagation();
+    });
 
     //CONSTRUCTOR ELEMENTS
     //==========================================================================
