@@ -34,40 +34,47 @@
     {% csrf_token %}
     {% block header_block %}
     <header>
-        <nav>
+        <nav id="nav-bar">
             <div class="nav-wrapper">
-                <a href="#!" class="brand-logo logo1">
+                <a href="{% url 'list_builder:default_redirect' %}" class="brand-logo logo1">
                     Movie Match{% block header_subtitle %}{% endblock %}
                 </a>
                 <a href="#" data-target="side-menu" class="sidenav-trigger"><i class="material-icons">menu</i></a>
                 <ul class="right hide-on-med-and-down">
-                    <li><a href="#">List Builder</a></li>
-                    <li><a href="#">List Manager</a></li>
+                    <li><a href="{% url 'list_builder:list_builder' %}">List Builder</a></li>
                     <li><a href="#">Recent Lists</a></li>
-                    <li><a href="{% url 'login_and_reg:register' %}">Register</a></li>
+                    {% if user.is_authenticated %}
+                    <li><a href="#">List Manager</a></li>
+                    <li class="user-name"><a class="user-name" href="#"><i class="material-icons left">account_circle</i>{{user.username}}<i class="material-icons right">arrow_drop_down</i></a></li>
+                    <li><a href="{% url 'login_and_reg:logout' %}">Logout</a></li>
+                    {% else %}
                     <li><a class="dropdown-trigger" href="#!" data-target="login-form">Login<i class="material-icons right">arrow_drop_down</i></a></li>
                     <div id="login-form" class="dropdown-content">
                         <form class="cyber-grade login-form" action="{% url 'login_and_reg:login' %}" method="post">
                             {% csrf_token %}
                             <div class="input-field">
-                                <input id="nav-username" name="username" class="center-align" type="text" required>
+                                <input id="nav-username" name="username" class="validate center-align" type="text" required>
                                 <label for="nav-username">Username</label>
                             </div>
                             <div class="input-field">
-                                <input id="nav-password" name="password" class="center-align" type="password" required>
+                                <input id="nav-password" name="password" class="validate center-align" type="password" required>
                                 <label for="nav-password">Password</label>
                             </div>
                             <button class="neon-blue-hover btn-small btn-rounded" type="submit">Login</button>
+                            <a class="registration-link" href="{% url 'login_and_reg:register' %}">Register</a>
                         </form>
                     </div>
-                    <li><a href="{% url 'login_and_reg:logout' %}">Logout</a></li>
+                    {% endif %}
                 </ul>
             </div>
         </nav>
     </header>
     
     <ul class="sidenav cyber-grade hide-on-large-only" id="side-menu">
-        <li><a href="{% url 'login_and_reg:register' %}">Register</a></li>
+        {% if user.is_authenticated %}
+        <li><a class="user-name" href="#"><i class="material-icons">account_circle</i>{{user.username}}</a></li>
+        <li><a href="{% url 'login_and_reg:logout' %}">Logout</a></li>
+        {% else %}
         <li>
             <ul id="login-form-sidenav" class="collapsible">
                 <li>
@@ -76,23 +83,26 @@
                         <form class="cyber-grade login-form" action="{% url 'login_and_reg:login' %}" method="post">
                             {% csrf_token %}
                             <div class="input-field">
-                                <input id="side-username" name="username" class="center-align" type="text" required>
+                                <input id="side-username" name="username" class="validate center-align" type="text" required>
                                 <label for="side-username">Username</label>
                             </div>
                             <div class="input-field">
-                                <input id="side-password" name="password" class="center-align" type="password" required>
+                                <input id="side-password" name="password" class="validate center-align" type="password" required>
                                 <label for="side-password">Password</label>
                             </div>
                             <button class="neon-blue-hover btn-small btn-rounded" type="submit">Login</button>
+                            <a class="registration-link" href="{% url 'login_and_reg:register' %}">Register</a>
                         </form>
                     </div>
                 </li>
             </ul>
         </li>
-        <li><a href="{% url 'login_and_reg:logout' %}">Logout</a></li>
+        {% endif %}
         <div class="divider"></div>
-        <li><a href="#">List Builder</a></li>
+        <li><a href="{% url 'list_builder:list_builder' %}">List Builder</a></li>
+        {% if user.is_authenticated %}
         <li><a href="#">List Manager</a></li>
+        {% endif %}
         <li><a href="#">Recent Lists</a></li>
     </ul>
     {% endblock %}

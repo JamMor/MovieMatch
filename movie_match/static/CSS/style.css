@@ -106,6 +106,14 @@ i.suffix {
 .cyber-grade .input-field input[type=text]:focus + label, .cyber-grade .input-field input[type=password]:focus + label {
     color: var(--purple_darken-1);
 }
+/* label valid focus color */
+.cyber-grade .input-field input[type=text]:focus.valid + label, .cyber-grade .input-field input[type=password]:focus.valid + label {
+    color: var(--cyan_accent-2);
+}
+/* label invalid focus color */
+.cyber-grade .input-field input[type=text]:focus.invalid + label, .cyber-grade .input-field input[type=password]:focus.invalid + label {
+    color: var(--orange_darken-3);
+}
 
 /* label underline color */
 .cyber-grade .input-field input[type=text], .cyber-grade .input-field input[type=password] {
@@ -124,10 +132,26 @@ i.suffix {
     border-bottom: 1px solid var(--cyan_accent-2);
     box-shadow: 0 1px 0 0 #000;
 }
+/* valid text color */
+.cyber-grade .input-field input[type=text].invalid ~ span.helper-text::after, .cyber-grade .input-field input[type=password].invalid ~ span.helper-text::after{
+    color: var(--cyan_accent-2)
+}
 /* invalid color */
 .cyber-grade .input-field input[type=text].invalid, .cyber-grade .input-field input[type=password].invalid {
     border-bottom: 1px solid var(--orange_darken-3);
     box-shadow: 0 1px 0 0 #000;
+}
+/* invalid text color */
+.cyber-grade .input-field input[type=text].invalid ~ span.helper-text::after, .cyber-grade .input-field input[type=password].invalid ~ span.helper-text::after{
+    color: var(--orange_darken-3)
+}
+
+.cyber-grade .error{
+    position: relative;
+    min-height: 18px;
+    display: block;
+    font-size: 12px;
+    color: var(--orange_darken-3)
 }
 
 /* [+] */
@@ -200,6 +224,19 @@ i.suffix {
 
 /* [+] */
 /* =========================Nav========================= */
+#nav-bar .user-name, #side-menu .user-name{
+    color: var(--cyan_accent-2);
+    font-weight: 800;
+    font-size: 1.5rem;
+}
+
+.registration-link{
+    margin-top: 1rem;
+    font-size: 0.8rem;
+    color: var(--orange_darken-3);
+    line-height:normal;
+    align-self: center;
+}
 
 /* [-] */
 /* -------------------------Header========================= */
@@ -236,6 +273,15 @@ header nav a.brand-logo {
 }
 
 /* -----------------------HeaderLoginForm----------------------- */
+/* Undo Materialize Nav Settings */
+.login-form {
+    line-height: normal;
+}
+
+nav .login-form input {
+    border-bottom: 1px solid var(--grey_darken-2);
+}
+
 /* Vertical Login Form */
 #login-form form {
     padding: 0px 1rem;
@@ -264,7 +310,6 @@ header nav a.brand-logo {
     margin-bottom: 1rem;
     min-width: 250px;
 }
-
 
 #login-form form div {
     height: auto;
