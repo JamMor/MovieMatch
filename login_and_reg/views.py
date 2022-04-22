@@ -22,24 +22,32 @@ def register_view(request):
 
 def login_view(request):
     if request.method == 'POST':
-        login_form = AuthenticationForm(request.POST)
-        print(login_form)
+        sentUser = request.POST.get("username")
+        sentPass = request.POST.get("password")
+        print(f'Username: {sentUser}, Password: {sentPass}')
+
+        login_form = AuthenticationForm(data=request.POST)
+        print(f'AuthForm User: {login_form.get_user()}')
+        status = "failure"
         if login_form.is_valid():
-            print("USER form valid")
             username = login_form.cleaned_data["username"]
             password = login_form.cleaned_data["password"]
-            user = authenticate(username = username, password = password)
+            user = login_form.get_user()
             if user is not None:
                 # A backend authenticated the credentials
                 login(request, user)
-                print("Login SUCCESS")
-                success = True
+                status = "success"
             else:
                 # No backend authenticated the credentials
-                print("Login FAILED")
-                success = False
-    print(f'Success: {success}')
-    return JsonResponse({'success': success})
+                status = "failure"
+        else:
+            status = "failure"
+            print(f'AuthForm User: {login_form.get_invalid_login_error()}')
+    
+    response = {"status": status}
+    response.update({"errors" : login_form.errors})
+
+    return JsonResponse(response)
 
 def logout_view(request):
     logout(request)
