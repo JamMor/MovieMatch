@@ -5,6 +5,8 @@ from django.db import IntegrityError, models, transaction
 # Create your models here.
 class UserUUID(models.Model):
     uuid = models.CharField(max_length=255, unique=True)
+    #Is is_registered needed? Maybe just test for user_account null
+    is_registered = models.BooleanField(default = False)
     is_Registered = models.BooleanField(default = False)
     # user_account = models.ForeignKey('app_login_and_reg.User', related_name="UUID", on_delete = models.CASCADE, null=True)
     nickname = models.CharField(max_length=255, null=True)
