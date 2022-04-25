@@ -6,6 +6,7 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.contrib.auth.decorators import login_required
 from .forms import RegistrationForm
+from list_builder.models import UserUUID
 
 #Make class based
 def register_view(request):
@@ -15,6 +16,13 @@ def register_view(request):
             user = user_form.save()
             login(request, user)
             print("USER created from form")
+
+            # FLAG maybe use get_or_set_uuid here to preserve temp data so far
+            # FLAG maybe use signals to create useruuid on user creation
+            user_uuid = UserUUID.objects.create(user_account = user)
+            print(f'CREATED uuid: {user_uuid.uuid}')
+            request.session['uuid'] = user_uuid.uuid
+
             return redirect('list_builder:default_redirect')
     elif request.method== "GET":
         user_form = RegistrationForm(prefix='user')
