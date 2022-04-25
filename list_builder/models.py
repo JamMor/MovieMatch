@@ -1,14 +1,14 @@
 import json
 import shortuuid
 from django.db import IntegrityError, models, transaction
+from django.conf import settings
 
 # Create your models here.
 class UserUUID(models.Model):
     uuid = models.CharField(max_length=255, unique=True)
     #Is is_registered needed? Maybe just test for user_account null
     is_registered = models.BooleanField(default = False)
-    is_Registered = models.BooleanField(default = False)
-    # user_account = models.ForeignKey('app_login_and_reg.User', related_name="UUID", on_delete = models.CASCADE, null=True)
+    user_account = models.OneToOneField(settings.AUTH_USER_MODEL, related_name="user_uuid", on_delete = models.CASCADE, null=True)
     nickname = models.CharField(max_length=255, null=True)
 
     created_at = models.DateTimeField(auto_now_add=True)
@@ -50,7 +50,7 @@ class Movie(models.Model):
 
 class SavedMovieList(models.Model):
     list_name = models.CharField(max_length=255, null=True)
-    # created_by = models.ForeignKey('app_login_and_reg.User', related_name="saved_lists", on_delete = models.CASCADE, null=True)
+    created_by = models.ForeignKey(UserUUID, related_name="saved_lists", on_delete = models.CASCADE, null=True)
     movies = models.ManyToManyField(Movie, related_name="in_saved_lists")
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
