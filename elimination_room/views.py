@@ -8,6 +8,7 @@ from elimination_room.models import SharedMovieList, SharedMovie
 import json
 from channels.layers import get_channel_layer
 from asgiref.sync import async_to_sync
+from list_builder.uuid_assigner import get_or_set_uuid
 
 # Creates a Temporary list and returns the list, Adds new movies to DB
 def create_temp_list(movie_list, user_uuid):
@@ -59,23 +60,6 @@ def add_to_shared_list(shared_list, temp_list):
         shared_movie.save()
     shared_list.save()
     update_shared_list_channels(shared_list.sharecode)
-
-def get_or_set_uuid(request):
-    session_uuid = request.session.get("uuid")
-    #Checks to see if uuid key exists and is set in session
-    if session_uuid:
-        print("UUID in session.")
-        print(f'GET uuid: {session_uuid}')
-        try:
-            user_uuid = UserUUID.objects.get(uuid = session_uuid)
-            return user_uuid
-        except UserUUID.DoesNotExist:
-            print("Can't find UserUUID stored in session.")
-    # If no uuid in session, or UserUUID doesn't exist
-    user_uuid = UserUUID.objects.create()
-    print(f'CREATED uuid: {user_uuid.uuid}')
-    request.session['uuid'] = user_uuid.uuid
-    return user_uuid
 
 #Views
 def new_match(request):

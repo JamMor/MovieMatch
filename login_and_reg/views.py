@@ -7,6 +7,7 @@ from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.contrib.auth.decorators import login_required
 from .forms import RegistrationForm
 from list_builder.models import UserUUID
+from list_builder.uuid_assigner import get_or_set_uuid
 
 #Make class based
 def register_view(request):
