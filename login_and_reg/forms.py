@@ -5,6 +5,8 @@ from django.contrib.auth.models import User
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth import password_validation
 from django.forms.utils import ErrorList
+from django.forms import ModelForm
+from list_builder.models import UserUUID
 
 
 class RegistrationForm(UserCreationForm):
@@ -32,12 +34,18 @@ class RegistrationForm(UserCreationForm):
          return result
 
 
+class UserUUIDForm(ModelForm):
+    class Meta:
+        model = UserUUID
+        fields = ['nickname']
 
-class SpanErrorList(ErrorList):
-    def __str__(self):
-        return self.as_divs()
 
-    def as_divs(self):
-        if not self:
-            return ''
-        return '<div class="errorlist">%s</div>' % ''.join(['<div class="error">%s</div>' % e for e in self])
+
+# class SpanErrorList(ErrorList):
+#     def __str__(self):
+#         return self.as_divs()
+
+#     def as_divs(self):
+#         if not self:
+#             return ''
+#         return '<div class="errorlist">%s</div>' % ''.join(['<div class="error">%s</div>' % e for e in self])

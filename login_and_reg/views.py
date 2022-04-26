@@ -1,3 +1,4 @@
+from ast import And
 from sys import prefix
 from django.http import JsonResponse
 from django.shortcuts import redirect, render, HttpResponse
@@ -5,7 +6,7 @@ from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.contrib.auth.decorators import login_required
-from .forms import RegistrationForm
+from .forms import RegistrationForm, UserUUIDForm
 from list_builder.models import UserUUID
 from list_builder.uuid_assigner import get_or_set_uuid
 
@@ -13,21 +14,25 @@ from list_builder.uuid_assigner import get_or_set_uuid
 def register_view(request):
     if request.method == 'POST':
         user_form = RegistrationForm(request.POST, prefix='user')
-        if user_form.is_valid():
+        useruuid_form = UserUUIDForm(request.POST, prefix='useruuid')
+        if user_form.is_valid() and useruuid_form.is_valid():
             user = user_form.save()
-            login(request, user)
-            print("USER created from form")
+            useruuid = useruuid_form.save(commit=False)
+            useruuid.user_account = user
+            useruuid.save()
 
-            # FLAG maybe use get_or_set_uuid here to preserve temp data so far
-            # FLAG maybe use signals to create useruuid on user creation
-            user_uuid = UserUUID.objects.create(user_account = user)
-            print(f'CREATED uuid: {user_uuid.uuid}')
-            request.session['uuid'] = user_uuid.uuid
+            login(request, user)
+            print(f'CREATED user: <<{user.username}>> from form')
+            print(f'CREATED uuid: {useruuid.uuid} for {user.username}')
+
+            #Set uuid in session
+            request.session['uuid'] = useruuid.uuid
 
             return redirect('list_builder:default_redirect')
     elif request.method== "GET":
         user_form = RegistrationForm(prefix='user')
-    return render(request, 'login_and_reg/register.html', {'user_form': user_form})
+        useruuid_form = UserUUIDForm(prefix='useruuid')
+    return render(request, 'login_and_reg/register.html', {'user_form': user_form, 'useruuid_form': useruuid_form})
 
 def login_view(request):
     if request.method == 'POST':
