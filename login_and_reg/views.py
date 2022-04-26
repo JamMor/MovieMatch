@@ -44,8 +44,6 @@ def login_view(request):
         print(f'AuthForm User: {login_form.get_user()}')
         status = "failure"
         if login_form.is_valid():
-            username = login_form.cleaned_data["username"]
-            password = login_form.cleaned_data["password"]
             user = login_form.get_user()
             if user is not None:
                 # A backend authenticated the credentials
