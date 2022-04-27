@@ -32,6 +32,7 @@ ALLOWED_HOSTS = []
 
 INSTALLED_APPS = [
     'channels',
+    'login_and_reg',
     'list_builder',
     'elimination_room',
     'django.contrib.admin',
@@ -103,6 +104,11 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
+# Password Hashers
+PASSWORD_HASHERS = [
+    'django.contrib.auth.hashers.BCryptSHA256PasswordHasher',
+    'django.contrib.auth.hashers.PBKDF2PasswordHasher',
+]
 
 # Internationalization
 # https://docs.djangoproject.com/en/2.2/topics/i18n/

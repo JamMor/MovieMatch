@@ -124,7 +124,7 @@ $(document).ready(function() {
         let sharecode = $("#sharecode").val();
         let nickname = $("#nickname").val();
         console.log("Submitting!")
-        //=================TESTING===================
+        //=================TESTING=================== FLAG
         const JSONSizeData = (encodedString) => {
             const size = new TextEncoder()
                 .encode(encodedString)

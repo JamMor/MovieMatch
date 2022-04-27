@@ -316,28 +316,28 @@ $(document).ready(function() {
         // [styleClass, icons, statusText]
         if(status == "start"){
             [statusProperties.styleClass, statusProperties.icons, statusProperties.statusText] = [
-                "status-start waves-effect waves-light neon-blue-hover btn-large rounded-btn",
+                "status-start waves-effect waves-light neon-blue-hover btn-large btn-rounded",
                 "cast",
                 "Start Matching"
             ]
         }
         else if(status == "waiting"){
             [statusProperties.styleClass, statusProperties.icons, statusProperties.statusText] = [
-                "status-waiting neon-blue inactive btn-large rounded-btn",
+                "status-waiting neon-blue inactive btn-large btn-rounded",
                 "cast",
                 "Waiting for matching to begin..."
             ]
         }
         else if(status == "eliminating"){
             [statusProperties.styleClass, statusProperties.icons, statusProperties.statusText] = [
-                "status-eliminating neon-blue active btn-large rounded-btn",
+                "status-eliminating neon-blue active btn-large btn-rounded",
                 "cast_connected",
                 getEliminatingStatusString(user_list)
             ]
         }
         else if(status == "final"){
             [statusProperties.styleClass, statusProperties.icons, statusProperties.statusText] = [
-                "status-final waves-effect waves-light neon-fuschia active btn-large rounded-btn",
+                "status-final waves-effect waves-light neon-fuschia active btn-large btn-rounded",
                 "movie",
                 "Open final movie info"
             ]

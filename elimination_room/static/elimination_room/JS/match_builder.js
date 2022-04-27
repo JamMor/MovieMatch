@@ -24,7 +24,7 @@ function movieListBuilder(old_list, updated_list){
     
     console.log("Updated Movie List.")
 
-    //Confirming DOM and movie list are in sync
+    //Confirming DOM and movie list are in sync FLAG
     let dom_movie_ids = $('#movie_list div').map(function() {
         return this.id.split("_")[1];
         })

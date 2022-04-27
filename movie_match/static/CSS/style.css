@@ -1,47 +1,248 @@
-/* MATERIALIZE COLORS: 
+/* 
+=================CSS Subheadings=================
 
-{
-    #e0e0e0 grey lighten-2
-    #212121 grey darken-4
-    #18ffff cyan accent-2
-    #1976d2 blue darken-2
-    #1a237e indigo darken-4
-    #e040fb purple accent-2
-    #c2185b pink darken-2
-    #ef6c00 orange darken-3
+[+] =Materialize colors=
+[+] =html (overall)=
+[+] =Cyber Grade (Color Scheme Classes)=
+    [-] -Cyber Grade Inputs=
+[+] =Neon Glows (Neon Light Effect Classes)=
+[+] =Nav=
+    [-] -Header=
+        -HeaderLoginForm-
+    [-] -SideNav=
+        -SideLoginForm-
+[+] =Registration Form=
+[+] =List Builder=
+    [-] -SearchBar=
+    [-] -SearchResults=
+    [-] -ShareModal=
+[+] =Elimination Room=
+    [-] -UserList=
+    [-] -MovieList=
+    [-] -FinalModal=
+[+] =Materialize Elements=
+[+] =Animista=
 
-    #311b92 deep-purple darken-4
-    #7b1fa2 purple darken-2
-}
-
+=================================================
 */
 
+/* [+] */
+/*====================Materialize colors====================*/
+:root {
+    --grey_darken-4:#212121;
+    --grey_lighten-2:#e0e0e0;
+    --grey_darken-2:#616161;
+
+    --cyan_accent-2:#18ffff;
+    --blue_darken-2:#1976d2;
+    --indigo_darken-4:#1a237e;
+    --purple_accent-2:#e040fb;
+    --pink_darken-2:#c2185b;
+    --pink_darken-4:#880e4f;
+
+    --orange_darken-3:#ef6c00;
+    
+    --deep-purple_darken-4:#311b92;
+    --purple_darken-2:#7b1fa2;
+    --purple_darken-1:#8e24aa;
+
+}
+
+/* [+] */
+/* =====================html (overall)===================== */
 html {
     height: 100vh;
-    background-color: #212121;
-}
-
-#side-menu {
-    background-color: #00000000;
-    background-image: linear-gradient(
-        270deg, 
-        #00000000 0%,
-        #e040fb 3%,
-        #ffffff 5%,
-        #e040fb 7%,
-        #74367e 20%,
-        #212121 70%
-    );
-}
-
-#side-menu a {
-    color: #e0e0e0;
+    background-color: var(--grey_darken-4);
     font-family: 'Orbitron', sans-serif;
 }
 
+/* [+] */
+/* ==============Cyber Grade (Color Scheme Classes)============== */
+.cyber-grade {
+    background: #212121f1;
+    box-shadow: 
+        0 0 10px 0 var(--pink_darken-2),
+        0 0 50px 0 var(--pink_darken-4);
+    border-width: 4px;
+    border-style:solid;
+    border-image: linear-gradient(
+        300deg, 
+        var(--purple_darken-1) 0%, 
+        #8a6ff5 35%, 
+        var(--cyan_accent-2) 95%) 10; 
+}
+
+/* [-] */
+/*--------------------Cyber Grade Inputs================== */
+/* suffix icon */
+i.suffix {
+    position: absolute;
+    width: 3rem;
+    font-size: 2rem;
+    -webkit-transition: color 0.2s;
+    transition: color 0.2s;
+    top: 0.5rem;
+    right: 0;
+    margin-left: 15px;
+}
+
+/* suffix icon focus color */
+.input-field label.active + i.suffix{
+    color: var(--purple_darken-1);
+}
+
+/* label color */
+.cyber-grade .input-field label, .cyber-grade .input-field i {
+    color: var(--grey_darken-2);
+}
+
+/* icon prefix focus color */
+.input-field .prefix.active {
+    color: var(--purple_darken-1);
+}
+
+/* ------------------Input Elements------------------ */
+/* label focus color */
+.cyber-grade .input-field input[type=text]:focus + label, .cyber-grade .input-field input[type=password]:focus + label {
+    color: var(--purple_darken-1);
+}
+/* label valid focus color */
+.cyber-grade .input-field input[type=text]:focus.valid + label, .cyber-grade .input-field input[type=password]:focus.valid + label {
+    color: var(--cyan_accent-2);
+}
+/* label invalid focus color */
+.cyber-grade .input-field input[type=text]:focus.invalid + label, .cyber-grade .input-field input[type=password]:focus.invalid + label {
+    color: var(--orange_darken-3);
+}
+
+/* label underline color */
+.cyber-grade .input-field input[type=text], .cyber-grade .input-field input[type=password] {
+    border-bottom: 1px solid var(--grey_darken-2);
+    box-shadow: 0 1px 0 0 #000;
+    color:var(--pink_darken-2)
+}
+/* label underline focus color */
+.cyber-grade .input-field input[type=text]:focus, .cyber-grade .input-field input[type=password]:focus {
+    border-bottom: 1px solid var(--purple_darken-1);
+    box-shadow: 0 1px 0 0 #000;
+}
+
+/* valid color */
+.cyber-grade .input-field input[type=text].valid, .cyber-grade .input-field input[type=password].valid {
+    border-bottom: 1px solid var(--cyan_accent-2);
+    box-shadow: 0 1px 0 0 #000;
+}
+/* valid text color */
+.cyber-grade .input-field input[type=text].invalid ~ span.helper-text::after, .cyber-grade .input-field input[type=password].invalid ~ span.helper-text::after{
+    color: var(--cyan_accent-2)
+}
+/* invalid color */
+.cyber-grade .input-field input[type=text].invalid, .cyber-grade .input-field input[type=password].invalid {
+    border-bottom: 1px solid var(--orange_darken-3);
+    box-shadow: 0 1px 0 0 #000;
+}
+/* invalid text color */
+.cyber-grade .input-field input[type=text].invalid ~ span.helper-text::after, .cyber-grade .input-field input[type=password].invalid ~ span.helper-text::after{
+    color: var(--orange_darken-3)
+}
+
+.cyber-grade .error{
+    position: relative;
+    min-height: 18px;
+    display: block;
+    font-size: 12px;
+    color: var(--orange_darken-3)
+}
+
+/* [+] */
+/* =============Neon Glows (Neon Light Effect Classes)============  */
+.btn-rounded {
+    border-radius: 15px;
+}
+
+.btn-small.btn-rounded {
+    border-radius: 10px;
+}
+
+.neon-blue-hover {
+    background-color: #ffffff33;
+    box-shadow: 
+        inset 0 0 15px 0 var(--blue_darken-2),
+        inset 0 0 5px 0 var(--indigo_darken-4),
+        0 0 5px 0 var(--blue_darken-2);
+}
+.neon-blue-hover:hover {
+    color: var(--indigo_darken-4);
+    background-color: #ffffff;
+    box-shadow: 
+    inset 0 0 15px 0 var(--blue_darken-2),
+    inset 0 0 5px 0 var(--indigo_darken-4),
+        0 0 40px 0 var(--cyan_accent-2),
+        0 0 60px 0 var(--blue_darken-2),
+        0 0 80px 0 var(--indigo_darken-4);
+}
+
+.neon-blue.inactive{
+    color: var(--grey_lighten-2);
+    background-color: #ffffff33;
+    box-shadow: 
+        inset 0 0 15px 0 var(--blue_darken-2),
+        inset 0 0 5px 0 var(--indigo_darken-4),
+        0 0 5px 0 var(--blue_darken-2);
+}
+
+.neon-blue.active{
+    color: var(--indigo_darken-4);
+    background-color: #ffffff;
+    box-shadow: 
+    inset 0 0 15px 0 var(--blue_darken-2),
+    inset 0 0 5px 0 var(--indigo_darken-4),
+        0 0 40px 0 var(--cyan_accent-2),
+        0 0 60px 0 var(--blue_darken-2),
+        0 0 80px 0 var(--indigo_darken-4);
+}
+
+.neon-fuschia.inactive{
+    color: var(--grey_lighten-2);
+    background-color: #ffffff33;
+    box-shadow: 
+        inset 0 0 15px 0 var(--purple_darken-2),
+        inset 0 0 5px 0 var(--deep-purple_darken-4),
+        0 0 5px 0 var(--purple_darken-2);
+}
+
+.neon-fuschia.active{
+    color: var(--deep-purple_darken-4);
+    background-color: #ffffff;
+    box-shadow: 
+    inset 0 0 15px 0 var(--purple_darken-2),
+    inset 0 0 5px 0 var(--deep-purple_darken-4),
+        0 0 40px 0 var(--purple_accent-2),
+        0 0 60px 0 var(--purple_darken-2),
+        0 0 80px 0 var(--deep-purple_darken-4);
+}
+
+/* [+] */
+/* =========================Nav========================= */
+#nav-bar .user-name, #side-menu .user-name{
+    color: var(--cyan_accent-2);
+    font-weight: 800;
+    font-size: 1.5rem;
+}
+
+.registration-link{
+    margin-top: 1rem;
+    font-size: 0.8rem;
+    color: var(--orange_darken-3);
+    line-height:normal;
+    align-self: center;
+}
+
+/* [-] */
+/* -------------------------Header========================= */
 header nav {
     margin-bottom: 2rem;
-    background-color: #e040fb;
+    background-color: var(--purple_accent-2);
     color: #000000;
 }
 
@@ -53,16 +254,17 @@ header nav a {
 .logo1 {
     color: #ffffff;
     text-shadow: 
-        0 0 3px #18ffff,
-        0 0 5px #1976d2,
-        0 0 7px #1a237e;
+        0 0 3px var(--cyan_accent-2),
+        0 0 5px var(--blue_darken-2),
+        0 0 7px var(--indigo_darken-4);
+        white-space: nowrap;
 }
 .logo2 {
     color: #ffffff;
     text-shadow: 
-        0 0 4px #e040fb,
-        0 0 6px #7b1fa2,
-        0 0 8px #311b92;
+        0 0 4px var(--purple_accent-2),
+        0 0 6px var(--purple_darken-2),
+        0 0 8px var(--deep-purple_darken-4);
 }
 
 header nav a.brand-logo {
@@ -71,29 +273,129 @@ header nav a.brand-logo {
     font-weight: 400;
 }
 
-/* ===============Index and Search================= */
+/* -----------------------HeaderLoginForm----------------------- */
+/* Undo Materialize Nav Settings */
+.login-form {
+    line-height: normal;
+}
 
+nav .login-form input {
+    border-bottom: 1px solid var(--grey_darken-2);
+}
+
+/* Vertical Login Form */
+#login-form form {
+    padding: 0px 1rem;
+    padding-bottom: 1rem;
+    height: auto;
+    display:flex;
+    flex-direction: column;
+}
+#login-form form button {
+    align-self: flex-end;
+}
+/* ---------------------- */
+
+/* Horizontal Login Form */
+/* #login-form form {
+    padding: 0px 1rem;
+    height: 100%;
+    display:flex;
+    flex-direction: row;
+    align-items: center;
+} */
+/* ---------------------- */
+
+#login-form div.input-field {
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+    min-width: 250px;
+}
+
+#login-form form div {
+    height: auto;
+}
+
+/* [-] */
+/* -------------------------SideNav========================= */
+#side-menu {
+    border-top: none;
+    border-bottom: none;
+    border-left: none;
+    height:100vh;
+}
+
+#side-menu li>a, #side-menu li>div {
+    color: var(--grey_lighten-2);
+    font-family: 'Orbitron', sans-serif;
+    background-color: transparent;
+}
+
+#side-menu div.collapsible-header {
+    padding-left: 32px;
+    font-weight: 500;
+}
+
+#side-menu div.collapsible-header:focus {
+    background-color: transparent;
+}
+#side-menu div.collapsible-body {
+    background-color: transparent;
+}
+
+/* -----------------------SideLoginForm----------------------- */
+#login-form-sidenav form {
+    border-left: none;
+    border-right: none;
+    clip-path: inset(-50px 0px -50px 0px);
+    padding: 12px;
+    display:flex;
+    flex-direction: column;
+}
+
+#login-form-sidenav form button {
+    align-self: flex-end;
+}
+
+/* [+] */
+/* ====================Registration Form==================== */
+#registration-form {
+    padding: 2rem;
+    display:flex;
+    flex-direction: column;
+}
+#registration-form button {
+    align-self: flex-end;
+}
+
+/* [+] */
+/* ======================List Builder====================== */
+
+/* [-] */
+/* -----------------------SearchBar======================= */
 #search-bar, #search-bar input {
     border-radius: 15px;
-    color: #e0e0e0;
+    color: var(--grey_lighten-2);
 }
 
 nav#search-bar {
     box-shadow: 
-        inset 0 0 15px 0 #1976d2,
-        inset 0 0 5px 0 #1a237e,
-        0 0 5px 0 #1976d2;
+        inset 0 0 15px 0 var(--blue_darken-2),
+        inset 0 0 5px 0 var(--indigo_darken-4),
+        0 0 5px 0 var(--blue_darken-2);
 }
 #search-bar input:focus {
     color:#000;
     box-shadow: 
-    inset 0 0 15px 0 #1976d2,
-    inset 0 0 5px 0 #1a237e,
-        0 0 40px 0 #18ffff,
-        0 0 60px 0 #1976d2,
-        0 0 80px 0 #1a237e;
+    inset 0 0 15px 0 var(--blue_darken-2),
+    inset 0 0 5px 0 var(--indigo_darken-4),
+        0 0 40px 0 var(--cyan_accent-2),
+        0 0 60px 0 var(--blue_darken-2),
+        0 0 80px 0 var(--indigo_darken-4);
 }
 
+/* [-] */
+/* ---------------------SearchResults===================== */
 div#search-results {
     height: 0px;
     max-height: 400px;
@@ -124,44 +426,10 @@ div.card-action {
     flex-grow: 1;
 }
 
-/* ===============Share Modal================= */
+/* [-] */
+/* ----------------------ShareModal====================== */
 #share_modal {
     max-width: 400px;
-}
-.cyber-grade {
-    background: #212121f1;
-    box-shadow: 
-        0 0 10px 0 #c51162,
-        0 0 50px 0 #880e4f;
-    border-width: 4px;
-    border-style:solid;
-    border-image: linear-gradient(
-        300deg, 
-        #8e2ba7 0%, 
-        #8a6ff5 35%, 
-        #01f1fb 95%) 10; 
-}
-
-/*===== Share Modal Form ====== */
-/* label color */
-#share_modal .input-field label {
-    color: #616161;
-}
-/* label focus color */
-#share_modal .input-field input[type=text]:focus + label {
-    color: #8e2ba7;
-}
-/* label underline focus color */
-#share_modal .input-field input[type=text] {
-    border-bottom: 1px solid #616161;
-    box-shadow: 0 1px 0 0 #000;
-    color:#c2185b
-}
-
-/* label underline focus color */
-#share_modal .input-field input[type=text]:focus {
-    border-bottom: 1px solid #8e2ba7;
-    box-shadow: 0 1px 0 0 #000;
 }
 
 #share_modal .modal-footer {
@@ -179,77 +447,20 @@ div.card-action {
 #share_modal .btn-flat {
     text-align: center;
 }
-/* ======================Neon Glow====================  */
-.rounded-btn {
-    border-radius: 15px;
-}
 
-.neon-blue-hover {
-    background-color: #ffffff33;
-    box-shadow: 
-        inset 0 0 15px 0 #1976d2,
-        inset 0 0 5px 0 #1a237e,
-        0 0 5px 0 #1976d2;
-}
-.neon-blue-hover:hover {
-    color: #1a237e;
-    background-color: #ffffff;
-    box-shadow: 
-    inset 0 0 15px 0 #1976d2,
-    inset 0 0 5px 0 #1a237e,
-        0 0 40px 0 #18ffff,
-        0 0 60px 0 #1976d2,
-        0 0 80px 0 #1a237e;
-}
+/* [+] */
+/* ==================Elimination Room==================== */
 
-.neon-blue.inactive{
-    color: #e0e0e0;
-    background-color: #ffffff33;
-    box-shadow: 
-        inset 0 0 15px 0 #1976d2,
-        inset 0 0 5px 0 #1a237e,
-        0 0 5px 0 #1976d2;
-}
-
-.neon-blue.active{
-    color: #1a237e;
-    background-color: #ffffff;
-    box-shadow: 
-    inset 0 0 15px 0 #1976d2,
-    inset 0 0 5px 0 #1a237e,
-        0 0 40px 0 #18ffff,
-        0 0 60px 0 #1976d2,
-        0 0 80px 0 #1a237e;
-}
-
-.neon-fuschia.inactive{
-    color: #e0e0e0;
-    background-color: #ffffff33;
-    box-shadow: 
-        inset 0 0 15px 0 #7b1fa2,
-        inset 0 0 5px 0 #311b92,
-        0 0 5px 0 #7b1fa2;
-}
-
-.neon-fuschia.active{
-    color: #311b92;
-    background-color: #ffffff;
-    box-shadow: 
-    inset 0 0 15px 0 #7b1fa2,
-    inset 0 0 5px 0 #311b92,
-        0 0 40px 0 #e040fb,
-        0 0 60px 0 #7b1fa2,
-        0 0 80px 0 #311b92;
-}
-
-/* ================================================== */
-
+/* [-] */
+/* ---------------------UserList===================== */
 #user_list {
     display: flex;
     justify-content: space-evenly;
     padding: 5px 0px;
 }
 
+/* [-] */
+/* ---------------------MovieList===================== */
 #movie_list {
     display:grid;
     width:100%;
@@ -258,25 +469,13 @@ div.card-action {
     margin:10px;
 }
 
-/* #movie_list h5 {
-    text-align: center;
-    margin-top: 20%;
-    color:#000000;
-    text-shadow: 0 0 3px #868686, 0 0 3px #ffffff, 0 0 3px #ffffff, 0 0 3px #ffffff;
-} */
-
-/* 
-.list_item {
-    width:154px;
-    height:231px;
-} */
-
 .eliminated {
-    box-shadow: 0px 0px 7px #ef6c00;
+    box-shadow: 0px 0px 7px var(--orange_darken-3);
     opacity: 0.2;
 }
 
-/* =========Final Modal========== */
+/* [-] */
+/* ---------------------FinalModal===================== */
 #final_modal {
     max-height:95vh;
 }
@@ -316,5 +515,13 @@ div.card-action {
     text-align: center;
 }
 
-/* Animista */
+/* [+] */
+/* ======================Materialize======================= */
+.material-tooltip {
+    font-family: -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Oxygen-Sans,Ubuntu,Cantarell,"Helvetica Neue",sans-serif;
+    text-align: left;
+    list-style-type: disc;
+}
 
+/* [+] */
+/* ========================Animista======================== */
