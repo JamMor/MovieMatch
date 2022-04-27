@@ -56,7 +56,7 @@ function userListBuilder(old_list, updated_list){
     
     console.log("Updated User List.")
 
-    //Confirming DOM and user list are in sync
+    //Confirming DOM and user list are in sync FLAG
     let dom_uuids = $('#user_list div').map(function() {
         return this.id.split("_")[1];
         })

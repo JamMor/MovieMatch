@@ -13,26 +13,20 @@ class SharedMovieList(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
     
     def add_list_to_shared_list(self, movie_list):
+        """
+        Converts templist movies not already in shared list to SharedMovies 
+        that are added to SharedList
+        """
         user_uuid = movie_list.created_by
-        # print(f'Created by: {user_uuid.uuid}')
         #Use transactions here FLAG
         self.contributors.add(user_uuid)
         for each_movie in movie_list.movies.all():
-            # try:
-            #     shared_movie = SharedMovie.objects.get(
-            #         shared_list = self, 
-            #         movie = each_movie
-            #     )
-            #     print(f'{each_movie.title} would be found.')
-            # except SharedMovie.DoesNotExist:
-            #     print(f'{each_movie.title} would be created.')
             shared_movie, created = SharedMovie.objects.get_or_create(
                 shared_list = self, 
                 movie = each_movie)
             shared_movie.submitted_by.add(user_uuid)
             shared_movie.save()
         self.save()
-        # print('Shared list would be saved.')
 
     def save(self, *args, **kwargs):
         if not self.sharecode:
