@@ -55,8 +55,37 @@ class SavedMovieList(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
+class TempMovieListManager(models.Manager):
+    def create_from_movie_list(self, movie_list, creator):
+        """
+        Creates  a temp list from list of movies (dictionaries from themovieDB 
+        data), while adding new movies to local database.
+        """
+        print("Building new temp list")
+        temp_list = self.create(created_by = creator)
+        print("New Temp List created! ID: ", temp_list.id)
+        # Updates or stores movie in database if it exists
+        for movie_item in movie_list:
+            print("Assessing: ", movie_item["title"])
+            movie_object, created = Movie.objects.update_or_create(
+                movie_id = movie_item["id"],
+                title = movie_item["original_title"],
+                release_date = movie_item["release_date"],
+                defaults = {'description' : movie_item["overview"], 'poster_path' : movie_item["poster_path"]}
+            )
+            if created:
+                print ("Added new movie to database.")
+            elif not created:
+                print ("Already exists in database")
+            temp_list.movies.add(movie_object)
+            print(movie_item["title"], " added to temp list!")
+        temp_list.save()
+        
+        return temp_list
+
 class TempMovieList(models.Model):
     created_by = models.ForeignKey(UserUUID, related_name="temp_lists", on_delete = models.CASCADE, null=True)
     movies = models.ManyToManyField(Movie, related_name="in_temp_lists")
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+    objects = TempMovieListManager()
