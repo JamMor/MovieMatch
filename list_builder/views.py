@@ -30,3 +30,10 @@ def get_or_set_uuid(request):
 def index(request):
     user_uuid = get_or_set_uuid(request)
     return render(request, 'list_builder/index.html')
+
+def save(request):
+    status = "failure"
+
+    response = {"status": status}
+    # response.update({"errors" : login_form.errors})
+    return JsonResponse(response)
