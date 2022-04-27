@@ -257,6 +257,7 @@ header nav a {
         0 0 3px var(--cyan_accent-2),
         0 0 5px var(--blue_darken-2),
         0 0 7px var(--indigo_darken-4);
+        white-space: nowrap;
 }
 .logo2 {
     color: #ffffff;
@@ -324,7 +325,7 @@ nav .login-form input {
     height:100vh;
 }
 
-#side-menu li>a, li>div {
+#side-menu li>a, #side-menu li>div {
     color: var(--grey_lighten-2);
     font-family: 'Orbitron', sans-serif;
     background-color: transparent;
