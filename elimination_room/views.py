@@ -75,7 +75,7 @@ def new_match(request):
     print(user_uuid.nickname)
 
     # temp_list = create_temp_list(data['movie_list'], user_uuid)
-    temp_list = TempMovieList.objects.create_from_movie_list(movie_list = data['movie_list'], creator = user_uuid)
+    temp_list = TempMovieList.objects.create_from_movie_list(list_of_movies = data['movie_list'], creator = user_uuid)
     
     sharecode = data['sharecode']
     print("Sharecode: " + sharecode)
