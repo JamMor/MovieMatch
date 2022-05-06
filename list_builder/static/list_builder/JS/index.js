@@ -132,7 +132,12 @@ $(document).ready(function() {
 
     // POSTs name, movie list, and sharecode(if any)
     $("#share-btn").click(function (){
-        let sharecode = $("#sharecode").val();
+        let sharecode = $("#sharecode").val().toUpperCase();
+        if (!/^$|^[23456789ABCDEFGHJKLMNPQRSTUVWXYZ]{8}$/.test(sharecode)){
+            console.log("Invalid Sharecode format.")
+            return
+        }
+
         let nickname = $("#nickname").val();
         console.log("Submitting!")
 

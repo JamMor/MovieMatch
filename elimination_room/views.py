@@ -77,7 +77,7 @@ def new_match(request):
     # temp_list = create_temp_list(data['movie_list'], user_uuid)
     temp_list = TempMovieList.objects.create_from_movie_list(list_of_movies = data['movie_list'], creator = user_uuid)
     
-    sharecode = data['sharecode']
+    sharecode = data['sharecode'].upper()
     print("Sharecode: " + sharecode)
 
     #Gets SharedList if sharecode, or creates new one
