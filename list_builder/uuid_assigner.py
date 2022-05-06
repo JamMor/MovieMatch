@@ -22,7 +22,7 @@ def get_or_set_uuid(request):
         if session_uuid:
             print(f'UUID in session. Getting uuid: {session_uuid}')
             try:
-                user_uuid = UserUUID.objects.get(uuid = session_uuid)
+                user_uuid = UserUUID.objects.get(uuid = session_uuid, user_account = None)
                 return user_uuid
             except UserUUID.DoesNotExist:
                 print("Can't find UserUUID stored in session.")
