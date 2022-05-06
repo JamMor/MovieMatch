@@ -22,7 +22,6 @@ $(document).ready(function() {
 
     const api_key = "f4f5f258379baf10796e1d3aeb5add05";
     
-    var movie_list = [];
     let search_results = [];
 
     //Prevent normal form behavior for search

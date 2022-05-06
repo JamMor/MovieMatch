@@ -50,9 +50,16 @@
                 <a href="#!" class="modal-close orange-text text-darken-3 waves-effect waves-dark btn-flat">Cancel</a>
             </div>
         </div>
+
+        {% include "save_modal.html"%}
+
     {% endblock %}
 
     {% block script_block %}
         {{ block.super }}
+        <script type='text/javascript' >
+            var movie_list = [];
+        </script>
         <script src="{% static 'list_builder/js/index.js'%}"></script>
+        <script src="{% static 'js/save_modal.js'%}"></script>
     {% endblock %}
