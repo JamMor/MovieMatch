@@ -154,6 +154,12 @@ i.suffix {
     color: var(--orange_darken-3)
 }
 
+/* ------------------Modals------------------ */
+.modal .modal-footer {
+    background-color: transparent;
+    height:100%;
+}
+
 /* [+] */
 /* =============Neon Glows (Neon Light Effect Classes)============  */
 .btn-rounded {
@@ -433,11 +439,9 @@ div.card-action {
 }
 
 #share_modal .modal-footer {
-    background-color: transparent;
     display: flex;
     flex-direction: column;
     align-items: center;
-    height:100%;
 }
 
 #share_modal .modal-footer a{
