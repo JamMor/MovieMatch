@@ -161,21 +161,4 @@ $(document).ready(function() {
         movie_list = [];
         $('#movie_list').html("");
     })
-
-    //Button to save current movie list to database if logged in
-    $("#save-list").click(function (e){
-        e.preventDefault();
-        $.post("save", JSONSizeData(JSON.stringify({"movie_list": movie_list})),"json")
-            .done(function(data) {
-                console.log(data);
-                if(data['status'] == "success")
-                {console.log("Trigger saved toast");}
-                else
-                {console.log(data['status'])}
-
-                })
-            .fail(function() {
-                console.log( "Failed to send movie list." );
-                })
-    })
 })
