@@ -26,13 +26,16 @@
               <div class="nav-wrapper">
                 <ul>
                     <li class="waves-effect waves-light"><a id="refresh-btn" href="#!"><i class="material-icons indigo-text text-darken-4">refresh</i></a></li>
-                    <li><a class="disabled" href="#!"><i class="material-icons indigo-text text-darken-4">save</i></a></li>
+                    <li><a class="modal-trigger" href="#save-modal"><i class="material-icons indigo-text text-darken-4">save</i></a></li>
                     <li class="modal-close waves-effect waves-light"><a href="#!"><i class="material-icons indigo-text text-darken-4">close</i></a></li>
                 </ul>
               </div>
             </nav>
           </div>
     </div>
+
+    {% include "save_modal.html"%}
+
 {% endblock %}
 
 {% block script_block %}
@@ -46,4 +49,5 @@
     <script src="{% static 'elimination_room/js/match_builder.js'%}"></script>
     <script src="{% static 'elimination_room/js/user_builder.js'%}"></script>
     <script src="{% static 'elimination_room/js/sockets.js'%}"></script>
+    <script src="{% static 'js/save_modal.js'%}"></script>
 {% endblock %}\

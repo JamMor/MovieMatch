@@ -12,6 +12,8 @@ $(document).ready(function() {
     var retryTime = () => (1.65**retryAttempts)*initialRetryTime;
     var matchSocket = null;
 
+    $('#save-modal').modal();
+
     function createMatchSocket(){
         matchSocket = new WebSocket(
             'ws://'
