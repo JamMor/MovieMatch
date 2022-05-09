@@ -14,7 +14,7 @@ function movieListBuilder(old_list, updated_list){
     
     added_movie_list.forEach((movie) => {
         //Rename attributes for MovieCard
-        let {description:overview, shared_movie_id:id, ...rest} = movie
+        let {shared_movie_id:id, ...rest} = movie
         $("#movie_list")
             .append(
                 MovieCard("shared", {overview, id, ...rest}, ["remove", "info"])

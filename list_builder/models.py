@@ -37,9 +37,9 @@ class UserUUID(models.Model):
             super(UserUUID, self).save(*args, **kwargs)
 
 class Movie(models.Model):
-    movie_id = models.CharField(max_length=255)
+    movie_id = models.IntegerField()
     title = models.CharField(max_length=255)
-    description = models.TextField()
+    overview = models.TextField()
     poster_path = models.CharField(max_length=255)
     release_date = models.DateField()
     created_at = models.DateTimeField(auto_now_add=True)
@@ -64,7 +64,7 @@ class MovieListManager(models.Manager):
                 movie_id = movie_item["id"],
                 title = movie_item["original_title"],
                 release_date = movie_item["release_date"],
-                defaults = {'description' : movie_item["overview"], 'poster_path' : movie_item["poster_path"]}
+                defaults = {'overview' : movie_item["overview"], 'poster_path' : movie_item["poster_path"]}
             )
             if created:
                 print ("Added new movie to database.")
