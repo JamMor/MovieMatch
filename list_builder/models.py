@@ -75,6 +75,23 @@ class MovieListManager(models.Manager):
         new_movie_list.save()
         
         return new_movie_list
+    
+    def create_from_movie_ids(self, movie_ids, creator, **kwargs):
+        """
+        Creates a MovieList (temp, or saved) from list of themovieDB movie ids.
+        Movies not in local database are not added or created.
+        """
+        print("Building new list")
+        new_movie_list = self.create(created_by = creator, **kwargs)
+        print("New List created! ID: ", new_movie_list.id)
+        
+        # Gets local movie id's for all tmdb movie_id's that exist locally
+        movie_id_set = set(movie_ids)
+        ids_in_db = Movie.objects.filter(movie_id__in=movie_id_set).values_list('id', flat=True)
+        
+        new_movie_list.movies.add(*ids_in_db)
+        
+        return new_movie_list
 
 class MovieList(models.Model):
     created_by = models.ForeignKey(UserUUID, related_name="%(class)ss", on_delete = models.CASCADE, null=True)
