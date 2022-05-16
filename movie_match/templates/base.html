@@ -115,8 +115,10 @@
         var csrftoken;
         var MovieCard;
         var MovieInfoModal;
+        if(typeof construct === 'undefined' || construct === null ){ console.log("Initiating constructors."); var construct = {} }
     </script>
     <script src="{% static 'js/base.js'%}"></script>
+    <script src="{% static 'js/constructors.js'%}"></script>
     {% endblock %}
 </body>
 
