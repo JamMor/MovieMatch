@@ -7,7 +7,8 @@ $("#save-list-confirm").click(function (e){
         return
     }
 
-    $.post("/save", JSON.stringify({"list_name":list_name, "movie_list": movie_list}),"json")
+    let movie_ids = movie_list.map(movie => movie.movie_id)
+    $.post("/save", JSON.stringify({"list_name":list_name, "movie_ids": movie_ids}),"json")
         .done(function(data) {
             console.log(data);
             if(data['status'] == "success"){
