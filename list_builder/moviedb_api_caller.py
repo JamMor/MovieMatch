@@ -1,7 +1,7 @@
 from list_builder.models import Movie
 import requests
 
-def update_from_movie_id_list(movie_id_list):
+def add_movies_to_db_from_tmdb_ids(movie_id_list):
     """
     Takes a list of movieDB ID's as integers, and checks which are in local DB.
     Ones that aren't in local database have info retrieved by API call to movieDB,
@@ -43,8 +43,9 @@ def update_from_movie_id_list(movie_id_list):
     #Saves movies with retrieved data to DB
     try:
         Movie.objects.bulk_create(new_movie_list)
-        print("Succesfully added to database: ")
-        print([movie.title for movie in new_movie_list])
+        print(("Added to DB:"+", ".join(movie.title for movie in new_movie_list))
+              if new_movie_list
+              else "Nothing added to DB.")
         movies_in_db.update([movie.movie_id for movie in new_movie_list])
     except Exception as err:
         print("Movie bulk creation failed.")
