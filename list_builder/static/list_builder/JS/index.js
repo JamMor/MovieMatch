@@ -23,6 +23,8 @@ $(document).ready(function() {
     const api_key = "f4f5f258379baf10796e1d3aeb5add05";
     
     let search_results = [];
+    const search_prefix ="query";
+    const movie_list_prefix ="movie";
 
     //Prevent normal form behavior for search
     $('.ajax-form').submit(function(e){
@@ -50,9 +52,10 @@ $(document).ready(function() {
                 }, "json")
                 .done(function (data) {
                     console.log(data);
-                    search_results = data.results;
-                    if(search_results.length == 0){
+                    if(data.results.length == 0){
                         $("div.carousel")
+                            /* Gets the initial rendered height from DOM (scrollHeight) 
+                             and animates. Callback sets height to auto. */
                             .animate({height: $('div.carousel').get(0).scrollHeight}, 200, function(){
                                 $(this).height('auto');
                             })
@@ -63,9 +66,12 @@ $(document).ready(function() {
                         .animate({height: "400px"}, 200)
                         .promise().done(function (){
                             $(this)
-                                .html(search_results.map(movie => 
-                                    MovieCard("query", movie, ["add", "info"]))
-                                    .join('')
+                                .html(data.results.map(({ id: movie_id, ...rest }) => {
+                                    //Renames the movie DB ID to movie_id for Movie object creation
+                                    let movieObj = new construct.Movie({ movie_id, ...rest });
+                                    search_results.push(movieObj);
+                                    return construct.MovieCard(search_prefix, movie_id, movieObj, ["add", "info"], "carousel-item")
+                                }).join('')
                                 )
                                 .carousel({
                                     dist: -50,
@@ -83,14 +89,14 @@ $(document).ready(function() {
     //Handler to add movie to list and dom
     $('.carousel').on("click", "a.add-btn", function () {
         //Get movie ID from parent Card ID
-        let thisId = $(this).closest('div.card').attr('id')
+        let thisMovieId = $(this).closest('div.card').attr('id')
             .split("_")[1];
-        console.log(`Adding movie id ${thisId}`);
+        console.log(`Adding movie id: ${thisMovieId}`);
         let thisMovie;
         //If movie not already in list, get info from search results and push to list
-        if(!movie_list.some(movie => movie.id == thisId)){
+        if(!movie_list.some(movie => movie.movie_id == thisMovieId)){
             for(let i=0; i<search_results.length; i++){
-                if(search_results[i].id == thisId){
+                if(search_results[i].movie_id == thisMovieId){
                     thisMovie = search_results[i];
                     break
                 }
@@ -99,26 +105,28 @@ $(document).ready(function() {
             movie_list.push(thisMovie);
 
             //Add movie to DOM
-            $("#movie_list").append(MovieCard("movie", thisMovie, ["remove", "info"]));
+            $("#movie_list").append(
+                construct.MovieCard(movie_list_prefix,  thisMovie.movie_id, thisMovie, ["remove", "info"])
+                );
         }
         else{
-            console.log("Already added.")
+            console.log("ERROR: Already added.")
         }
     })
     
     //Handler to remove movie from list and dom
     $('#movie_list').on("click", "a.remove-btn", function () {
         //Get movie ID from parent Card ID
-        let thisId = $(this).closest('div.card').attr('id')
+        let thisMovieId = $(this).closest('div.card').attr('id')
             .split("_")[1];
-        console.log(`Removing movie id ${thisId}`);
+        console.log(`Removing movie id ${thisMovieId}`);
 
-        let movieIndex = movie_list.findIndex(movie => movie.id == thisId);
+        let movieIndex = movie_list.findIndex(movie => movie.movie_id == thisMovieId);
         if (movieIndex == -1){
-            console.log("Movie not found in list.")
+            console.log("ERROR: Movie not found in list.")
         }
         else{
-            $(`#movie_${thisId}`).remove();
+            $(`#movie_${thisMovieId}`).remove();
             let removedMovie = movie_list.splice(movieIndex, 1)[0];
             console.log(`Removed ${removedMovie.title}.`);
         }
@@ -152,7 +160,7 @@ $(document).ready(function() {
 
                 })
             .fail(function() {
-                console.log( "Failed to send movie list." );
+                console.log( "ERROR: Failed to send movie list." );
                 })
     })
 
