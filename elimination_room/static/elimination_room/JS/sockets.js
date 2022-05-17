@@ -278,7 +278,7 @@ $(document).ready(function() {
 
         //Toast new user turn
         let toastName = (turnUUID != user_uuid) 
-            ? `<strong class="purple-text text-accent-2">${user_list[disconnected_uuid]['nickname']}</strong>'s` 
+            ? `<strong class="purple-text text-accent-2">${user_list[turnUUID]['nickname']}</strong>'s` 
             : '<strong class="cyan-text text-accent-2">YOUR</strong>'
         let toastHtml = `<span>${toastName}&nbsp;turn.</span>`
         M.toast({html: toastHtml})
