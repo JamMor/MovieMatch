@@ -10,29 +10,6 @@ from channels.layers import get_channel_layer
 from asgiref.sync import async_to_sync
 from list_builder.uuid_assigner import get_or_set_uuid
 
-# # Creates a Temporary list and returns the list, Adds new movies to DB
-# def create_temp_list(movie_list, user_uuid):
-#     print("Building new temp list")
-#     temp_list = TempMovieList.objects.create(created_by = user_uuid)
-#     print("New Temp List created! ID: ", temp_list.id)
-#     # Updates or stores movie in database if it exists
-#     for movie_item in movie_list:
-#         print("Assessing: ", movie_item["title"])
-#         movie_object, created = Movie.objects.update_or_create(
-#             movie_id = movie_item["id"],
-#             title = movie_item["original_title"],
-#             release_date = movie_item["release_date"],
-#             defaults = {'description' : movie_item["overview"], 'poster_path' : movie_item["poster_path"]}
-#         )
-#         if created:
-#             print ("Added new movie to database.")
-#         elif not created:
-#             print ("Already exists in database")
-#         temp_list.movies.add(movie_object)
-#         print(movie_item["title"], " added to temp list!")
-#     temp_list.save()
-    
-#     return temp_list
 
 # When Shared List is updated, sends updated list to appropriate channel
 def update_shared_list_channels(sharecode):
@@ -46,20 +23,6 @@ def update_shared_list_channels(sharecode):
         group_name, 
         {"type": "update_message"})
     print("New ShareList information sent.")
-
-# # Adds Shared movie objects to a shared list or updates the users who chose it.
-# def add_to_shared_list(shared_list, temp_list):
-#     user_uuid = temp_list.created_by
-#     #Use transactions here FLAG
-#     shared_list.contributors.add(user_uuid)
-#     for each_movie in temp_list.movies.all():
-#         shared_movie, created = SharedMovie.objects.get_or_create(
-#             shared_list = shared_list, 
-#             movie = each_movie)
-#         shared_movie.submitted_by.add(user_uuid)
-#         shared_movie.save()
-#     shared_list.save()
-#     update_shared_list_channels(shared_list.sharecode)
 
 #Views
 def new_match(request):
