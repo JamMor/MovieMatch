@@ -42,9 +42,9 @@ construct.Movie = class Movie{
  * @param {object} movie - SharedMovie object from database.
  */
 construct.SharedMovie = class SharedMovie extends construct.Movie{
-    constructor({shared_id, is_eliminated, ...movie}) {
+    constructor({shared_movie_id, is_eliminated, ...movie}) {
         super(movie);
-        this.shared_id = shared_id;
+        this.shared_movie_id = shared_movie_id;
         this.is_eliminated = is_eliminated;
     }
 }
