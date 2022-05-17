@@ -149,16 +149,19 @@ $(document).ready(function() {
         let nickname = $("#nickname").val();
         console.log("Submitting!")
 
+        let movie_ids = movie_list.map(movie => movie.movie_id)
         // console.log("DATA for Django: ", {"sharecode": sharecode, "nickname": nickname, "movie_list": movie_list});
-        $.post("match/", JSONSizeData(JSON.stringify({"sharecode": sharecode, "nickname": nickname, "movie_list": movie_list})),"json")
-            .done(function(data) {
-                console.log( "Movie list successfully sent!" );
-                if(data['status'] == "success")
-                {window.location.href = `/match/${data.sharecode}`;}
-                else
-                {console.log(data['status'])}
-
-                })
+        $.post("match/", JSONSizeData(JSON.stringify({"sharecode": sharecode, "nickname": nickname, "movie_ids": movie_ids})),"json")
+            .done(function (data) {
+                console.log(data);
+                
+                if (data['status'] == "success") { 
+                    window.location.href = `/match/${data.sharecode}`; 
+                }
+                else { 
+                    console.log(data['status']) 
+                }
+            })
             .fail(function() {
                 console.log( "ERROR: Failed to send movie list." );
                 })
