@@ -1,4 +1,4 @@
-const image_link = "https://image.tmdb.org/t/p/";
+const share_list_prefix ="shared";
     
 //Adds new movies into DOM when a shared list is updated.
 function movieListBuilder(old_list, updated_list){
@@ -17,7 +17,7 @@ function movieListBuilder(old_list, updated_list){
         let {shared_movie_id:id, ...rest} = movie
         $("#movie_list")
             .append(
-                MovieCard("shared", {overview, id, ...rest}, ["remove", "info"])
+                construct.MovieCard(share_list_prefix, movie.movie_id, movie, ["remove", "info"])
             );
     })
 

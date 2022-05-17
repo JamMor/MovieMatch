@@ -55,7 +55,7 @@ $(document).ready(function() {
                 let eliminating_user = user_list[eliminating_uuid]
 
                 eliminated_movie.is_eliminated == true;
-                $(`#shared_${shared_movie_id}`).addClass('eliminated')
+                $(`#shared_${eliminated_movie.movie_id}`).addClass('eliminated')
                 console.log("Eliminated movie")
 
                 let toastClass = "purple-text text-accent-2"
@@ -108,6 +108,9 @@ $(document).ready(function() {
                     movie_list:received_movie_list, 
                     active_user_dict:received_user_list
                 } = responseData.share_list
+                received_movie_list = received_movie_list.map(movie => 
+                        new construct.SharedMovie(movie)
+                    )
 
                 movieListBuilder(movie_list, received_movie_list)
                 movie_list = received_movie_list
@@ -148,6 +151,9 @@ $(document).ready(function() {
                     movie_list:received_movie_list, 
                     active_user_dict:received_user_list
                 } = responseData.share_list
+                received_movie_list = received_movie_list.map(movie => 
+                    new construct.SharedMovie(movie)
+                )
 
                 user_list = {};
                 movie_list= [];
@@ -225,9 +231,12 @@ $(document).ready(function() {
             return
         }
 
-        //Get shared movie ID from parent Card ID
-        let shared_movie_id = $(this).closest('div.card').attr('id')
+        //Get movie ID from parent Card ID
+        let movie_id = $(this).closest('div.card').attr('id')
             .split("_")[1];
+
+        //Get shared_movie_ID
+        let {shared_movie_id} = movie_list.find(movie => movie.movie_id == movie_id)
 
         matchSocket.send(JSON.stringify({
             'command' : 'eliminate',
