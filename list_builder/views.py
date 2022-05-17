@@ -25,18 +25,23 @@ def save(request):
     else:
         data = json.loads(request.body)
         list_name = data.get("list_name")
-        movie_ids = data.get("movie_ids")
+        tmdb_ids = data.get("tmdb_ids")
 
-        if not movie_ids:
+        if not tmdb_ids:
             response.update({"errors" : "Cannot save empty list."})
         else:
             try:
                 this_persona = get_or_set_persona(request)
+                all_in_db, ids_in_db, failed_ids = add_movies_to_db_from_tmdb_ids(tmdb_ids)
                 print("All in DB!" if all_in_db else f'Failed: {list(failed_ids)}')
-                saved_list = SavedMovieList.objects.create_from_tmdb_ids(movie_ids=ids_in_db, creator=this_persona, list_name=list_name)
+                saved_list = SavedMovieList.objects.create_from_tmdb_ids(tmdb_ids=ids_in_db, creator=this_persona, list_name=list_name)
                 response.update({"status" : "success"})
             except Exception as err:
                 print(err)
                 response.update({"errors" : repr(err)})
 
     return JsonResponse(response)
+
+#Display sample icons
+def test(request):
+    return render(request,'list_builder/test.html')

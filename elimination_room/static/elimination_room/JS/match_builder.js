@@ -8,7 +8,7 @@ function movieListBuilder(current_list, new_list){
         //FLAG maybe just compare sets of ID's
         added_movie_list = new_list
             .filter(new_movie => !current_list
-                .some(current_movie => (current_movie.movie_id == new_movie.movie_id)))
+                .some(current_movie => (current_movie.tmdb_id == new_movie.tmdb_id)))
     }
     //If no movies in list yet, all are to be added
     else {added_movie_list = new_list}
@@ -16,7 +16,7 @@ function movieListBuilder(current_list, new_list){
     added_movie_list.forEach((movie) => {
         $("#movie_list")
             .append(
-                construct.MovieCard(share_list_prefix, movie.movie_id, movie, ["remove", "info"])
+                construct.MovieCard(share_list_prefix, movie.tmdb_id, movie, ["remove", "info"])
             );
     })
 
@@ -24,15 +24,15 @@ function movieListBuilder(current_list, new_list){
     console.log("Updated Movie List.")
 
     //Confirming DOM and movie list are in sync FLAG
-    let dom_movie_ids = $('#movie_list div').map(function() {
+    let dom_tmdb_ids = $('#movie_list div').map(function() {
         return this.id.split("_")[1];
         })
         .get()
-    let new_movie_ids = new Set(new_list.map(x => x.shared_movie_id))
+    let new_tmdb_ids = new Set(new_list.map(x => x.shared_tmdb_id))
     let list_verified = false;
-    if(dom_movie_ids.length == new_list.length){
-        for(let id of dom_movie_ids){
-            if(!new_movie_ids.has(id)){
+    if(dom_tmdb_ids.length == new_list.length){
+        for(let id of dom_tmdb_ids){
+            if(!new_tmdb_ids.has(id)){
                 break;
             }
         }

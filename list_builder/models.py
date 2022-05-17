@@ -36,8 +36,9 @@ class Persona(models.Model):
             print("UUID exists. Not renewing.")
             super(Persona, self).save(*args, **kwargs)
 
+# Local copy of info from TheMovieDB, https://www.themoviedb.org/
 class Movie(models.Model):
-    movie_id = models.IntegerField()
+    tmdb_id = models.IntegerField() #ID in TheMovieDB, https://www.themoviedb.org/
     title = models.CharField(max_length=255)
     overview = models.TextField()
     poster_path = models.CharField(max_length=255)
@@ -76,7 +77,7 @@ class MovieListManager(models.Manager):
         
         return new_movie_list
     
-    def create_from_movie_ids(self, movie_ids, creator, **kwargs):
+    def create_from_tmdb_ids(self, tmdb_ids, creator, **kwargs):
         """
         Creates a MovieList (temp, or saved) from list of themovieDB movie ids.
         Movies not in local database are not added or created.
@@ -85,9 +86,9 @@ class MovieListManager(models.Manager):
         new_movie_list = self.create(created_by = creator, **kwargs)
         print("New List created! ID: ", new_movie_list.id)
         
-        # Gets local movie id's for all tmdb movie_id's that exist locally
-        movie_id_set = set(movie_ids)
-        ids_in_db = Movie.objects.filter(movie_id__in=movie_id_set).values_list('id', flat=True)
+        # Gets local movie id's for all tmdb tmdb_id's that exist locally
+        tmdb_id_set = set(tmdb_ids)
+        ids_in_db = Movie.objects.filter(tmdb_id__in=tmdb_id_set).values_list('id', flat=True)
         
         new_movie_list.movies.add(*ids_in_db)
         

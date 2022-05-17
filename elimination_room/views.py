@@ -31,7 +31,7 @@ def new_match(request):
     data = json.loads(request.body)
     
     nickname = data.get("nickname")
-    movie_ids = data.get("movie_ids")
+    tmdb_ids = data.get("tmdb_ids")
     sharecode = data.get("sharecode", "").upper()
     
     print(('Sharecode: {sharecode}') if sharecode else "No sharecode.")
@@ -52,10 +52,10 @@ def new_match(request):
             return JsonResponse(response)
 
     try:
-        # Create temp_list from movie_ids
-        all_in_db, ids_in_db, failed_ids = add_movies_to_db_from_tmdb_ids(movie_ids)
+        # Create temp_list from tmdb_ids
+        all_in_db, ids_in_db, failed_ids = add_movies_to_db_from_tmdb_ids(tmdb_ids)
         print("All in DB!" if all_in_db else f'Failed: {list(failed_ids)}')
-        temp_list = TempMovieList.objects.create_from_tmdb_ids(movie_ids=ids_in_db, creator=this_persona)
+        temp_list = TempMovieList.objects.create_from_tmdb_ids(tmdb_ids=ids_in_db, creator=this_persona)
 
         # Add TempList movies to SharedList
         shared_list.add_list_to_shared_list(temp_list)

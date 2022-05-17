@@ -55,7 +55,7 @@ $(document).ready(function() {
                 let eliminating_user = user_list[eliminating_uuid]
 
                 eliminated_movie.is_eliminated == true;
-                $(`#shared_${eliminated_movie.movie_id}`).addClass('eliminated')
+                $(`#shared_${eliminated_movie.tmdb_id}`).addClass('eliminated')
                 console.log("Eliminated movie")
 
                 let toastClass = "purple-text text-accent-2"
@@ -124,7 +124,7 @@ $(document).ready(function() {
                     let finalMovie = movie_list.find(movie => movie.is_eliminated == false);
                     console.log(`${finalMovie.title} is the final choice!`)
                     
-                    getMoreMovieInfo(finalMovie.movie_id)
+                    getMoreMovieInfo(finalMovie.tmdb_id)
                         .done(returnInfo => {
                             console.log(returnInfo)
                             let finalMovieInfo = returnInfo ?? finalMovie
@@ -188,7 +188,7 @@ $(document).ready(function() {
                 let finalMovie = movie_list.find(movie => movie.shared_movie_id == finalSharedId);
                 console.log(`${finalMovie.title} is the final choice!`)
                 
-                getMoreMovieInfo(finalMovie.movie_id)
+                getMoreMovieInfo(finalMovie.tmdb_id)
                     .done(returnInfo => {
                         console.log(returnInfo)
                         let finalMovieInfo = returnInfo ?? finalMovie
@@ -231,12 +231,12 @@ $(document).ready(function() {
             return
         }
 
-        //Get movie ID from parent Card ID
-        let movie_id = $(this).closest('div.card').attr('id')
+        //Get tmdb_id from parent Card ID
+        let tmdb_id = $(this).closest('div.card').attr('id')
             .split("_")[1];
 
         //Get shared_movie_ID
-        let {shared_movie_id} = movie_list.find(movie => movie.movie_id == movie_id)
+        let {shared_movie_id} = movie_list.find(movie => movie.tmdb_id == tmdb_id)
 
         matchSocket.send(JSON.stringify({
             'command' : 'eliminate',

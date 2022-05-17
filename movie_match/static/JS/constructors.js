@@ -13,8 +13,8 @@
  * @param {object} movie - Movie object from the MovieDB search query
  */
 construct.Movie = class Movie{
-    constructor({movie_id, title, release_date, overview, poster_path}){
-        this.movie_id = movie_id;
+    constructor({tmdb_id, title, release_date, overview, poster_path}){
+        this.tmdb_id = tmdb_id;
         this.title = title;
         this.release_date = release_date;
         this.overview = overview;
@@ -168,7 +168,7 @@ construct.ProviderList = (providers) => {
 //Takes object from the movieDB movie query and returns the html as a string for 
 //the 'More Info' modal
 construct.MovieInfoModal = ( 
-        {movie_id, title, release_date, overview, fullPosterURL,
+        {tmdb_id, title, release_date, overview, fullPosterURL,
         genres, formattedRuntime, vote_average, stream, rent}
     ) => {
 

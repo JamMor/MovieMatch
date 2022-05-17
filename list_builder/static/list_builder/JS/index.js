@@ -66,11 +66,11 @@ $(document).ready(function() {
                         .animate({height: "400px"}, 200)
                         .promise().done(function (){
                             $(this)
-                                .html(data.results.map(({ id: movie_id, ...rest }) => {
-                                    //Renames the movie DB ID to movie_id for Movie object creation
-                                    let movieObj = new construct.Movie({ movie_id, ...rest });
+                                .html(data.results.map(({ id: tmdb_id, ...rest }) => {
+                                    //Renames the movie DB ID to tmdb_id for Movie object creation
+                                    let movieObj = new construct.Movie({ tmdb_id, ...rest });
                                     search_results.push(movieObj);
-                                    return construct.MovieCard(search_prefix, movie_id, movieObj, ["add", "info"], "carousel-item")
+                                    return construct.MovieCard(search_prefix, tmdb_id, movieObj, ["add", "info"], "carousel-item")
                                 }).join('')
                                 )
                                 .carousel({
@@ -94,9 +94,9 @@ $(document).ready(function() {
         console.log(`Adding movie id: ${thisMovieId}`);
         let thisMovie;
         //If movie not already in list, get info from search results and push to list
-        if(!movie_list.some(movie => movie.movie_id == thisMovieId)){
+        if(!movie_list.some(movie => movie.tmdb_id == thisMovieId)){
             for(let i=0; i<search_results.length; i++){
-                if(search_results[i].movie_id == thisMovieId){
+                if(search_results[i].tmdb_id == thisMovieId){
                     thisMovie = search_results[i];
                     break
                 }
@@ -106,7 +106,7 @@ $(document).ready(function() {
 
             //Add movie to DOM
             $("#movie_list").append(
-                construct.MovieCard(movie_list_prefix,  thisMovie.movie_id, thisMovie, ["remove", "info"])
+                construct.MovieCard(movie_list_prefix,  thisMovie.tmdb_id, thisMovie, ["remove", "info"])
                 );
         }
         else{
@@ -121,7 +121,7 @@ $(document).ready(function() {
             .split("_")[1];
         console.log(`Removing movie id ${thisMovieId}`);
 
-        let movieIndex = movie_list.findIndex(movie => movie.movie_id == thisMovieId);
+        let movieIndex = movie_list.findIndex(movie => movie.tmdb_id == thisMovieId);
         if (movieIndex == -1){
             console.log("ERROR: Movie not found in list.")
         }
@@ -149,9 +149,9 @@ $(document).ready(function() {
         let nickname = $("#nickname").val();
         console.log("Submitting!")
 
-        let movie_ids = movie_list.map(movie => movie.movie_id)
+        let tmdb_ids = movie_list.map(movie => movie.tmdb_id)
         // console.log("DATA for Django: ", {"sharecode": sharecode, "nickname": nickname, "movie_list": movie_list});
-        $.post("match/", JSONSizeData(JSON.stringify({"sharecode": sharecode, "nickname": nickname, "movie_ids": movie_ids})),"json")
+        $.post("match/", JSONSizeData(JSON.stringify({"sharecode": sharecode, "nickname": nickname, "tmdb_ids": tmdb_ids})),"json")
             .done(function (data) {
                 console.log(data);
                 
