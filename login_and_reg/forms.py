@@ -6,7 +6,7 @@ from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth import password_validation
 from django.forms.utils import ErrorList
 from django.forms import ModelForm
-from list_builder.models import UserUUID
+from list_builder.models import Persona
 
 
 class RegistrationForm(UserCreationForm):
@@ -34,9 +34,9 @@ class RegistrationForm(UserCreationForm):
          return result
 
 
-class UserUUIDForm(ModelForm):
+class PersonaForm(ModelForm):
     class Meta:
-        model = UserUUID
+        model = Persona
         fields = ['nickname']
 
 

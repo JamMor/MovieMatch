@@ -4,11 +4,11 @@ from django.db import IntegrityError, models, transaction
 from django.conf import settings
 
 # Create your models here.
-class UserUUID(models.Model):
+class Persona(models.Model):
     uuid = models.CharField(max_length=255, unique=True)
     #Is is_registered needed? Maybe just test for user_account null
     is_registered = models.BooleanField(default = False)
-    user_account = models.OneToOneField(settings.AUTH_USER_MODEL, related_name="user_uuid", on_delete = models.CASCADE, null=True)
+    user_account = models.OneToOneField(settings.AUTH_USER_MODEL, related_name="persona", on_delete = models.CASCADE, null=True)
     nickname = models.CharField(max_length=255, null=True)
 
     created_at = models.DateTimeField(auto_now_add=True)
@@ -25,7 +25,7 @@ class UserUUID(models.Model):
                 self.uuid = shortuuid.uuid()
                 try:
                     with transaction.atomic():
-                        super(UserUUID, self).save(*args, **kwargs)
+                        super(Persona, self).save(*args, **kwargs)
                         break
                 except IntegrityError:
                     print(f'Attempt {attempt}: This uuid already exists in the database.')
@@ -34,7 +34,7 @@ class UserUUID(models.Model):
                 raise IntegrityError
         else:
             print("UUID exists. Not renewing.")
-            super(UserUUID, self).save(*args, **kwargs)
+            super(Persona, self).save(*args, **kwargs)
 
 class Movie(models.Model):
     movie_id = models.IntegerField()
@@ -94,7 +94,7 @@ class MovieListManager(models.Manager):
         return new_movie_list
 
 class MovieList(models.Model):
-    created_by = models.ForeignKey(UserUUID, related_name="%(class)ss", on_delete = models.CASCADE, null=True)
+    created_by = models.ForeignKey(Persona, related_name="%(class)ss", on_delete = models.CASCADE, null=True)
     movies = models.ManyToManyField(Movie, related_name="in_%(class)ss")
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)

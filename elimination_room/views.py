@@ -3,12 +3,12 @@ from django.db import IntegrityError
 from django.shortcuts import redirect, render
 from django.http import JsonResponse
 from django.urls import reverse
-from list_builder.models import UserUUID, Movie, TempMovieList
+from list_builder.models import Persona, Movie, TempMovieList
 from elimination_room.models import SharedMovieList, SharedMovie
 import json
 from channels.layers import get_channel_layer
 from asgiref.sync import async_to_sync
-from list_builder.uuid_assigner import get_or_set_uuid
+from list_builder.persona_assigner import get_or_set_persona
 from list_builder.moviedb_api_caller import add_movies_to_db_from_tmdb_ids
 
 # When Shared List is updated, sends updated list to appropriate channel
@@ -27,7 +27,7 @@ def update_shared_list_channels(sharecode):
 #Views
 def new_match(request):
     response = {"status": "failure"}
-    user_uuid = get_or_set_uuid(request)
+    this_persona = get_or_set_persona(request)
     data = json.loads(request.body)
     
     nickname = data.get("nickname")
@@ -45,7 +45,7 @@ def new_match(request):
             return JsonResponse(response)
     else:
         try:
-            shared_list = SharedMovieList.objects.create(created_by = user_uuid)
+            shared_list = SharedMovieList.objects.create(created_by = this_persona)
         except IntegrityError as err:
             print(err)
             response.update({"errors": repr(err),"message": "Could not create SharedList.", "sharecode": sharecode})
@@ -55,7 +55,7 @@ def new_match(request):
         # Create temp_list from movie_ids
         all_in_db, ids_in_db, failed_ids = add_movies_to_db_from_tmdb_ids(movie_ids)
         print("All in DB!" if all_in_db else f'Failed: {list(failed_ids)}')
-        temp_list = TempMovieList.objects.create_from_movie_ids(movie_ids=ids_in_db, creator=user_uuid)
+        temp_list = TempMovieList.objects.create_from_tmdb_ids(movie_ids=ids_in_db, creator=this_persona)
 
         # Add TempList movies to SharedList
         shared_list.add_list_to_shared_list(temp_list)
@@ -68,16 +68,16 @@ def new_match(request):
     update_shared_list_channels(shared_list.sharecode)
 
     #Set Nickname
-    user_uuid.nickname = nickname
-    user_uuid.save(update_fields=['nickname'])
+    this_persona.nickname = nickname
+    this_persona.save(update_fields=['nickname'])
 
     response.update({"status": "success", "sharecode": shared_list.sharecode})
     return JsonResponse(response)
 
 def join_match(request, sharecode):
-    user_uuid = get_or_set_uuid(request)
+    this_persona = get_or_set_persona(request)
     context = {
         'sharecode' : sharecode,
-        'uuid' : user_uuid.uuid
+        'uuid' : this_persona.uuid
         }
     return render(request, 'elimination_room/match.html', context)
