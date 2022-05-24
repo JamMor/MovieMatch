@@ -1,6 +1,6 @@
 import json
 from django.core.serializers.json import DjangoJSONEncoder
-from list_builder.models import UserUUID, Movie
+from list_builder.models import Persona, Movie
 from elimination_room.models import SharedMovieList, SharedMovie, ShareRoomUser
 from django.db.models import Prefetch
 
@@ -8,8 +8,8 @@ def SharedListEncoder(sharecode):
     active_queryset = ShareRoomUser.objects.filter(is_active = True)
     shared_list = SharedMovieList.objects.prefetch_related(
                 # Prefetch('contributors', to_attr='pre_contributors'), 
-                Prefetch('room_users', queryset=active_queryset, to_attr='pre_active_users'), 
-                Prefetch('pre_active_users__user_uuid', to_attr='pre_uuid'), 
+                Prefetch('room_users', queryset=active_queryset, to_attr='pre_active_room_users'), 
+                Prefetch('pre_active_room_users__persona', to_attr='pre_persona'), 
                 Prefetch('shared_movies', to_attr='pre_shared_movies'), 
                 Prefetch('pre_shared_movies__submitted_by', to_attr='pre_submitted_by')).get(sharecode = sharecode)
     
@@ -22,11 +22,11 @@ def SharedListEncoder(sharecode):
     #     } 
     #     for user in shared_list.pre_active_users)
     active_user_dict = {
-        user.pre_uuid.uuid : { 
-            'nickname' : user.nickname, 
-            'is_users_turn' : user.is_users_turn
+        persona.pre_persona.uuid : { 
+            'nickname' : persona.nickname, 
+            'is_users_turn' : persona.is_users_turn
             }
-        for user in shared_list.pre_active_users}
+        for persona in shared_list.pre_active_room_users}
     
     movie_list = []
     for shared_movie in shared_list.pre_shared_movies:
@@ -35,7 +35,7 @@ def SharedListEncoder(sharecode):
         del movie_info['id']
         movie_info['shared_movie_id'] = shared_movie.id
         movie_info['is_eliminated'] = shared_movie.is_eliminated
-        movie_info['submitted_by'] = list(user.uuid for user in shared_movie.pre_submitted_by)
+        movie_info['submitted_by'] = list(persona.uuid for persona in shared_movie.pre_submitted_by)
         movie_list.append(movie_info)
         
     json_dict = {

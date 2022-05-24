@@ -3,17 +3,33 @@ from django.db import IntegrityError
 from django.shortcuts import redirect, render
 from django.http import JsonResponse
 from django.urls import reverse
-from list_builder.models import UserUUID, SavedMovieList
+from django.contrib.auth.decorators import login_required
+from django.db.models import Count
+
+from list_builder.models import Persona, SavedMovieList
 # from app_login_and_reg.models import User
 import json
 from channels.layers import get_channel_layer
 from asgiref.sync import async_to_sync
-from .uuid_assigner import get_or_set_uuid
+from .persona_assigner import get_or_set_persona
+from .moviedb_api_caller import add_movies_to_db_from_tmdb_ids
 
 # Displays main page
 def index(request):
-    user_uuid = get_or_set_uuid(request)
+    this_persona = get_or_set_persona(request)
     return render(request, 'list_builder/index.html')
+
+@login_required(redirect_field_name='default_redirect', login_url='list_builder:default_redirect')
+def list_manager(request):
+    this_persona = get_or_set_persona(request)
+
+    saved_lists = SavedMovieList.objects.filter(created_by = this_persona
+        ).prefetch_related('movies').all()
+
+    context = {
+        "saved_lists" : list(saved_lists)
+    }
+    return render(request, 'list_builder/list_manager.html', context)
 
 def save(request):
     response = {"status": "failure"}
@@ -24,18 +40,23 @@ def save(request):
     else:
         data = json.loads(request.body)
         list_name = data.get("list_name")
-        movie_list = data.get("movie_list")
-        if not movie_list:
+        tmdb_ids = data.get("tmdb_ids")
+
+        if not tmdb_ids:
             response.update({"errors" : "Cannot save empty list."})
         else:
             try:
-                user_uuid = get_or_set_uuid(request)
-                print("Would save list:", list_name)
-                print([movie["title"] for movie in movie_list])
-                saved_list = SavedMovieList.objects.create_from_movie_list(list_of_movies=movie_list, creator=user_uuid, list_name=list_name)
+                this_persona = get_or_set_persona(request)
+                all_in_db, ids_in_db, failed_ids = add_movies_to_db_from_tmdb_ids(tmdb_ids)
+                print("All in DB!" if all_in_db else f'Failed: {list(failed_ids)}')
+                saved_list = SavedMovieList.objects.create_from_tmdb_ids(tmdb_ids=ids_in_db, creator=this_persona, list_name=list_name)
                 response.update({"status" : "success"})
             except Exception as err:
                 print(err)
                 response.update({"errors" : repr(err)})
 
     return JsonResponse(response)
+
+#Display sample icons
+def test(request):
+    return render(request,'list_builder/test.html')
