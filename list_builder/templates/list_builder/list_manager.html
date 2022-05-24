@@ -1,0 +1,55 @@
+    {% extends "base.html" %}
+    {% load static %}
+
+    {% block content_block %}
+        <main>
+            <div class="container">
+                <table id="list-table" class="white-text">
+                    <thead>
+                        <tr>
+                            <th id="list-name-th">List Name</th>
+                            <th id="list-count-th"></th>
+                            <th id="created-date-th">Created On</th>
+                            <th id="actions-th"></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for list in saved_lists %}
+                        <tr class="row-collapse-trigger">
+                            <td class="list-name-td">
+                                <span class="truncate">{{list.list_name}}</span>
+                            </td>
+                            <td class="list-count-td">
+                                <span class="new badge cyan accent-2" data-badge-caption="">{{list.movies.count}}</span>
+                            </td>
+                            <td>{{list.created_at|date:"m/d/y f A"}}</td>
+                            <td><i class="material-icons">edit</i><i class="material-icons">delete</i></td>
+                        </tr>
+                        <tr>
+                            <td class="collabsible-row" colspan="4">
+                                <div class="slider-x content-collapsed">
+                                    {% for movie in list.movies.all %}
+                                    <div id="list_{{list.id}}_{{movie.tmdb_id}}" class="card grey darken-4">
+                                        <div class="card-image">
+                                            <img src="https://image.tmdb.org/t/p/w342{{movie.poster_path}}">
+                                        </div>
+                                    </div>
+                                    {% endfor %}
+                                </div>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </main>
+
+    {% endblock %}
+
+    {% block script_block %}
+        {{ block.super }}
+        <script type='text/javascript' >
+        </script>
+        <script src="{% static 'list_builder/js/slider.js'%}"></script>
+        <script src="{% static 'list_builder/js/table-collapse.js'%}"></script>
+    {% endblock %}

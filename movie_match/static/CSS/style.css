@@ -16,6 +16,9 @@
     [-] -SearchBar=
     [-] -SearchResults=
     [-] -ShareModal=
+[+] =List Manager=
+    [-] -List Table=
+    [-] -Slider Rows=
 [+] =Elimination Room=
     [-] -UserList=
     [-] -MovieList=
@@ -453,6 +456,81 @@ div.card-action {
 }
 
 /* [+] */
+/* ==================List Manager==================== */
+
+/* [-] */
+/* ---------------------List Table===================== */
+#list-table {
+    background-color: #ffffff0a;
+    table-layout: fixed;
+    width:100%;
+}
+#list-table span.badge{
+    color: black;
+}
+#list-name-th {
+    min-width: 100px;
+}
+#list-count-th {
+    width:60px;
+    min-width: 48px;
+}
+#created-date-th {
+    width:180px;
+    min-width:100px;    
+}
+#actions-th {
+    width:70px;
+}
+
+/* [-] */
+/* ---------------------Slider Rows===================== */
+.slider-x {
+    max-width:100%;
+    display:grid;
+    column-gap:10px;
+    grid-auto-flow: column;
+    grid-template-columns: repeat(auto-fill, 100px);
+    overflow-x: auto;
+    padding-left: 70px;
+    padding-right: 70px;
+    mask-image: linear-gradient(to right, #ffffff00 0%,#000000 70px, #000000 calc(100% - 70px), #ffffff00 100%);
+    -webkit-mask-image: linear-gradient(to right, #ffffff00 0%,#000000 70px, #000000 calc(100% - 70px), #ffffff00 100%);
+}
+
+
+/* Hide scrollbar */
+.slider-x {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+}
+.slider-x::-webkit-scrollbar{
+    display: none;
+}
+
+.slider-x .card{
+    width:100px;
+}
+
+/* Collapsible table row. */
+tr.row-collapse-trigger {
+    border-bottom: none;
+}
+td.collabsible-row {
+    padding:0;
+}
+.slider-x {
+    max-height: 200px;
+    margin: 5px 0px;
+    transition: max-height 0.5s ease-in-out, margin 0s;
+}
+.slider-x.content-collapsed {
+    max-height:0px;
+    margin: 0px;
+    transition: max-height 0.5s ease-in-out, margin 0.1s ease-out 0.5s;
+}
+
+/* [+] */
 /* ==================Elimination Room==================== */
 
 /* [-] */
@@ -533,3 +611,5 @@ div.card-action {
 
 /* [+] */
 /* ========================Animista======================== */
+
+/* ========================End======================== */
