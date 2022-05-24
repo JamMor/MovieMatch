@@ -1,23 +1,22 @@
-const image_link = "https://image.tmdb.org/t/p/";
+const share_list_prefix ="shared";
     
 //Adds new movies into DOM when a shared list is updated.
-function movieListBuilder(old_list, updated_list){
+function movieListBuilder(current_list, new_list){
     let added_movie_list;
-    if (old_list.length > 0){
-        // Get movies from updated list that aren't already in list to be added
-        added_movie_list = updated_list
-            .filter(new_movie => !old_list
-                .some(old_movie => (old_movie.movie_id == new_movie.movie_id)))
+    if (current_list.length > 0){
+        // Filter movies from updated list that aren't already in old list
+        //FLAG maybe just compare sets of ID's
+        added_movie_list = new_list
+            .filter(new_movie => !current_list
+                .some(current_movie => (current_movie.tmdb_id == new_movie.tmdb_id)))
     }
     //If no movies in list yet, all are to be added
-    else {added_movie_list = updated_list}
+    else {added_movie_list = new_list}
     
     added_movie_list.forEach((movie) => {
-        //Rename attributes for MovieCard
-        let {description:overview, shared_movie_id:id, ...rest} = movie
         $("#movie_list")
             .append(
-                MovieCard("shared", {overview, id, ...rest}, ["remove", "info"])
+                construct.MovieCard(share_list_prefix, movie.tmdb_id, movie, ["remove", "info"])
             );
     })
 
@@ -25,15 +24,15 @@ function movieListBuilder(old_list, updated_list){
     console.log("Updated Movie List.")
 
     //Confirming DOM and movie list are in sync FLAG
-    let dom_movie_ids = $('#movie_list div').map(function() {
+    let dom_tmdb_ids = $('#movie_list div').map(function() {
         return this.id.split("_")[1];
         })
         .get()
-    let new_movie_ids = new Set(updated_list.map(x => x.shared_movie_id))
+    let new_tmdb_ids = new Set(new_list.map(x => x.shared_tmdb_id))
     let list_verified = false;
-    if(dom_movie_ids.length == updated_list.length){
-        for(let id of dom_movie_ids){
-            if(!new_movie_ids.has(id)){
+    if(dom_tmdb_ids.length == new_list.length){
+        for(let id of dom_tmdb_ids){
+            if(!new_tmdb_ids.has(id)){
                 break;
             }
         }

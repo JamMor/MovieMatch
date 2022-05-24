@@ -5,10 +5,10 @@ from django.db import IntegrityError, models, transaction
 # Create your models here.
 class SharedMovieList(models.Model):
     sharecode = models.CharField(max_length=255, unique=True)
-    created_by = models.ForeignKey('list_builder.UserUUID', related_name="created_shared_lists", on_delete = models.CASCADE, null=True)
+    created_by = models.ForeignKey('list_builder.Persona', related_name="created_shared_lists", on_delete = models.CASCADE, null=True)
     started_eliminating = models.BooleanField(default=False)
     #Is this field ever needed?
-    contributors = models.ManyToManyField('list_builder.UserUUID', related_name="shared_lists")
+    contributors = models.ManyToManyField('list_builder.Persona', related_name="shared_lists")
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     
@@ -17,14 +17,14 @@ class SharedMovieList(models.Model):
         Converts templist movies not already in shared list to SharedMovies 
         that are added to SharedList
         """
-        user_uuid = movie_list.created_by
+        this_persona = movie_list.created_by
         #Use transactions here FLAG
-        self.contributors.add(user_uuid)
+        self.contributors.add(this_persona)
         for each_movie in movie_list.movies.all():
             shared_movie, created = SharedMovie.objects.get_or_create(
                 shared_list = self, 
                 movie = each_movie)
-            shared_movie.submitted_by.add(user_uuid)
+            shared_movie.submitted_by.add(this_persona)
             shared_movie.save()
         self.save()
 
@@ -49,13 +49,13 @@ class SharedMovieList(models.Model):
             super(SharedMovieList, self).save(*args, **kwargs)
 
 class SharedMovie(models.Model):
-    submitted_by = models.ManyToManyField('list_builder.UserUUID', related_name="submitted_movies")
+    submitted_by = models.ManyToManyField('list_builder.Persona', related_name="submitted_movies")
     shared_list = models.ForeignKey(SharedMovieList, related_name="shared_movies", on_delete = models.CASCADE, null=True)
     movie = models.ForeignKey('list_builder.Movie', related_name="shared_movies", on_delete = models.CASCADE, null=True)
     is_eliminated = models.BooleanField(default=False)
 
 class ShareRoomUser(models.Model):
-    user_uuid = models.ForeignKey('list_builder.UserUUID', related_name="in_room", on_delete = models.CASCADE)
+    persona = models.ForeignKey('list_builder.Persona', related_name="in_room", on_delete = models.CASCADE)
     list = models.ForeignKey(SharedMovieList, related_name="room_users", on_delete = models.CASCADE)
     is_active = models.BooleanField(default=True)
     is_users_turn = models.BooleanField(default=False)
@@ -67,5 +67,5 @@ class ShareRoomUser(models.Model):
 
     class Meta:
         constraints = [
-            models.UniqueConstraint(fields=['user_uuid', 'list'], name='one_user_per_room')
+            models.UniqueConstraint(fields=['persona', 'list'], name='one_user_per_room')
         ]

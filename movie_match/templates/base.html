@@ -44,7 +44,7 @@
                     <li><a href="{% url 'list_builder:list_builder' %}">List Builder</a></li>
                     <li><a href="#">Recent Lists</a></li>
                     {% if user.is_authenticated %}
-                    <li><a href="#">List Manager</a></li>
+                    <li><a href="{% url 'list_builder:list_manager' %}">List Manager</a></li>
                     <li class="user-name"><a class="user-name" href="#"><i class="material-icons left">account_circle</i>{{user.username}}<i class="material-icons right">arrow_drop_down</i></a></li>
                     <li><a href="{% url 'login_and_reg:logout' %}">Logout</a></li>
                     {% else %}
@@ -101,7 +101,7 @@
         <div class="divider"></div>
         <li><a href="{% url 'list_builder:list_builder' %}">List Builder</a></li>
         {% if user.is_authenticated %}
-        <li><a href="#">List Manager</a></li>
+        <li><a href="{% url 'list_builder:list_manager' %}">List Manager</a></li>
         {% endif %}
         <li><a href="#">Recent Lists</a></li>
     </ul>
@@ -115,8 +115,10 @@
         var csrftoken;
         var MovieCard;
         var MovieInfoModal;
+        if(typeof construct === 'undefined' || construct === null ){ console.log("Initiating constructors."); var construct = {} }
     </script>
     <script src="{% static 'js/base.js'%}"></script>
+    <script src="{% static 'js/constructors.js'%}"></script>
     {% endblock %}
 </body>
 

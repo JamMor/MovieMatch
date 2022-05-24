@@ -6,33 +6,33 @@ from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.contrib.auth.decorators import login_required
-from .forms import RegistrationForm, UserUUIDForm
-from list_builder.models import UserUUID
-from list_builder.uuid_assigner import get_or_set_uuid
+from .forms import RegistrationForm, PersonaForm
+from list_builder.models import Persona
+from list_builder.persona_assigner import get_or_set_persona
 
 #Make class based
 def register_view(request):
     if request.method == 'POST':
         user_form = RegistrationForm(request.POST, prefix='user')
-        useruuid_form = UserUUIDForm(request.POST, prefix='useruuid')
-        if user_form.is_valid() and useruuid_form.is_valid():
+        persona_form = PersonaForm(request.POST, prefix='persona')
+        if user_form.is_valid() and persona_form.is_valid():
             user = user_form.save()
-            useruuid = useruuid_form.save(commit=False)
-            useruuid.user_account = user
-            useruuid.save()
+            persona = persona_form.save(commit=False)
+            persona.user_account = user
+            persona.save()
 
             login(request, user)
             print(f'CREATED user: <<{user.username}>> from form')
-            print(f'CREATED uuid: {useruuid.uuid} for {user.username}')
+            print(f'CREATED persona: {persona.uuid} for {user.username}')
 
             #Set uuid in session
-            request.session['uuid'] = useruuid.uuid
+            request.session['uuid'] = persona.uuid
 
             return redirect('list_builder:default_redirect')
     elif request.method== "GET":
         user_form = RegistrationForm(prefix='user')
-        useruuid_form = UserUUIDForm(prefix='useruuid')
-    return render(request, 'login_and_reg/register.html', {'user_form': user_form, 'useruuid_form': useruuid_form})
+        persona_form = PersonaForm(prefix='persona')
+    return render(request, 'login_and_reg/register.html', {'user_form': user_form, 'persona_form': persona_form})
 
 def login_view(request):
     if request.method == 'POST':

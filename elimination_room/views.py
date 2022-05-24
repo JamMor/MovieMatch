@@ -3,36 +3,13 @@ from django.db import IntegrityError
 from django.shortcuts import redirect, render
 from django.http import JsonResponse
 from django.urls import reverse
-from list_builder.models import UserUUID, Movie, TempMovieList
+from list_builder.models import Persona, Movie, TempMovieList
 from elimination_room.models import SharedMovieList, SharedMovie
 import json
 from channels.layers import get_channel_layer
 from asgiref.sync import async_to_sync
-from list_builder.uuid_assigner import get_or_set_uuid
-
-# # Creates a Temporary list and returns the list, Adds new movies to DB
-# def create_temp_list(movie_list, user_uuid):
-#     print("Building new temp list")
-#     temp_list = TempMovieList.objects.create(created_by = user_uuid)
-#     print("New Temp List created! ID: ", temp_list.id)
-#     # Updates or stores movie in database if it exists
-#     for movie_item in movie_list:
-#         print("Assessing: ", movie_item["title"])
-#         movie_object, created = Movie.objects.update_or_create(
-#             movie_id = movie_item["id"],
-#             title = movie_item["original_title"],
-#             release_date = movie_item["release_date"],
-#             defaults = {'description' : movie_item["overview"], 'poster_path' : movie_item["poster_path"]}
-#         )
-#         if created:
-#             print ("Added new movie to database.")
-#         elif not created:
-#             print ("Already exists in database")
-#         temp_list.movies.add(movie_object)
-#         print(movie_item["title"], " added to temp list!")
-#     temp_list.save()
-    
-#     return temp_list
+from list_builder.persona_assigner import get_or_set_persona
+from list_builder.moviedb_api_caller import add_movies_to_db_from_tmdb_ids
 
 # When Shared List is updated, sends updated list to appropriate channel
 def update_shared_list_channels(sharecode):
@@ -47,61 +24,60 @@ def update_shared_list_channels(sharecode):
         {"type": "update_message"})
     print("New ShareList information sent.")
 
-# # Adds Shared movie objects to a shared list or updates the users who chose it.
-# def add_to_shared_list(shared_list, temp_list):
-#     user_uuid = temp_list.created_by
-#     #Use transactions here FLAG
-#     shared_list.contributors.add(user_uuid)
-#     for each_movie in temp_list.movies.all():
-#         shared_movie, created = SharedMovie.objects.get_or_create(
-#             shared_list = shared_list, 
-#             movie = each_movie)
-#         shared_movie.submitted_by.add(user_uuid)
-#         shared_movie.save()
-#     shared_list.save()
-#     update_shared_list_channels(shared_list.sharecode)
-
 #Views
 def new_match(request):
-    user_uuid = get_or_set_uuid(request)
+    response = {"status": "failure"}
+    this_persona = get_or_set_persona(request)
     data = json.loads(request.body)
     
-    nickname = data['nickname']
-    print(f'Submitted Nickname is: {nickname}')
-    user_uuid.nickname = data['nickname']
-
-    user_uuid.save(update_fields=['nickname'])
-    print("Nickname set: ")
-    print(user_uuid.nickname)
-
-    # temp_list = create_temp_list(data['movie_list'], user_uuid)
-    temp_list = TempMovieList.objects.create_from_movie_list(list_of_movies = data['movie_list'], creator = user_uuid)
+    nickname = data.get("nickname")
+    tmdb_ids = data.get("tmdb_ids")
+    sharecode = data.get("sharecode", "").upper()
     
-    sharecode = data['sharecode'].upper()
-    print("Sharecode: " + sharecode)
-
+    print(('Sharecode: {sharecode}') if sharecode else "No sharecode.")
     #Gets SharedList if sharecode, or creates new one
     if sharecode:
         try:
             shared_list = SharedMovieList.objects.get(sharecode = sharecode)
-        except SharedMovieList.DoesNotExist:
-            return JsonResponse({"status": "SharedList not found.", "sharecode": ''})
+        except SharedMovieList.DoesNotExist as err:
+            print(err)
+            response.update({"errors": repr(err),"message": "SharedList not found.", "sharecode": sharecode})
+            return JsonResponse(response)
     else:
         try:
-            shared_list = SharedMovieList.objects.create(created_by = user_uuid)
-        except IntegrityError:
-            return JsonResponse({"status": "Could not create SharedList.", "sharecode": ''})
+            shared_list = SharedMovieList.objects.create(created_by = this_persona)
+        except IntegrityError as err:
+            print(err)
+            response.update({"errors": repr(err),"message": "Could not create SharedList.", "sharecode": sharecode})
+            return JsonResponse(response)
+
+    try:
+        # Create temp_list from tmdb_ids
+        all_in_db, ids_in_db, failed_ids = add_movies_to_db_from_tmdb_ids(tmdb_ids)
+        print("All in DB!" if all_in_db else f'Failed: {list(failed_ids)}')
+        temp_list = TempMovieList.objects.create_from_tmdb_ids(tmdb_ids=ids_in_db, creator=this_persona)
+
+        # Add TempList movies to SharedList
+        shared_list.add_list_to_shared_list(temp_list)
+    except Exception as err:
+        print(err)
+        response.update({"errors" : repr(err)})
+        return JsonResponse(response)
     
-    # add_to_shared_list(shared_list, temp_list)
-    shared_list.add_list_to_shared_list(temp_list)
+    #Push updates to channel users.
     update_shared_list_channels(shared_list.sharecode)
 
-    return JsonResponse({"status": "success", "sharecode": shared_list.sharecode})
+    #Set Nickname
+    this_persona.nickname = nickname
+    this_persona.save(update_fields=['nickname'])
+
+    response.update({"status": "success", "sharecode": shared_list.sharecode})
+    return JsonResponse(response)
 
 def join_match(request, sharecode):
-    user_uuid = get_or_set_uuid(request)
+    this_persona = get_or_set_persona(request)
     context = {
         'sharecode' : sharecode,
-        'uuid' : user_uuid.uuid
+        'uuid' : this_persona.uuid
         }
     return render(request, 'elimination_room/match.html', context)

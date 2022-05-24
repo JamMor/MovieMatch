@@ -9,7 +9,7 @@ from channels.generic.websocket import JsonWebsocketConsumer
 from django.core import serializers
 from django.core.serializers.json import DjangoJSONEncoder
 
-from list_builder.models import UserUUID
+from list_builder.models import Persona
 from elimination_room.models import SharedMovie, ShareRoomUser, SharedMovieList
 from .serializer import SharedListEncoder
 from .consumer_utils import find_next_index
@@ -19,7 +19,7 @@ class MatchConsumer(JsonWebsocketConsumer):
         
         self.sharecode = self.scope['url_route']['kwargs']['sharecode']
         self.match_group_name = 'match_%s' % self.sharecode
-        self.user_uuid = self.scope["session"]["uuid"]
+        self.persona_uuid = self.scope["session"]["uuid"]
 
         # Join group
         async_to_sync(self.channel_layer.group_add)(
@@ -27,16 +27,13 @@ class MatchConsumer(JsonWebsocketConsumer):
             self.channel_name
         )
 
-        # Tell group of connection
-        user_uuid = self.scope["session"]["uuid"]
-        
         # Get user and share room to link
-        user = UserUUID.objects.get(uuid = self.user_uuid)
+        this_persona = Persona.objects.get(uuid = self.persona_uuid)
         share_list = SharedMovieList.objects.get(sharecode = self.sharecode)
         
         #Activate inactive user, or create new active user if hasn't joined yet
         room_user, created = ShareRoomUser.objects.update_or_create(
-            user_uuid = user, 
+            persona = this_persona, 
             list = share_list,
             defaults={'is_active' : True}
         )
@@ -51,8 +48,8 @@ class MatchConsumer(JsonWebsocketConsumer):
         #====================================
         #If roomuser has no name, set usernick as nick. Else make anonymous
         if created:
-            if user.nickname:
-                nickname = user.nickname
+            if this_persona.nickname:
+                nickname = this_persona.nickname
             else:
                 room_user_count = ShareRoomUser.objects.filter(list__sharecode = self.sharecode).count()
                 print(f"Number of room users: {room_user_count}")
@@ -63,13 +60,14 @@ class MatchConsumer(JsonWebsocketConsumer):
         room_user.save()
                 
         #====================================
+        # Tell group of connection
         print("Connecting User - Consumers")
-        print({user_uuid : {'nickname' : room_user.nickname, 'is_users_turn' : room_user.is_users_turn}})
+        print({self.persona_uuid : {'nickname' : room_user.nickname, 'is_users_turn' : room_user.is_users_turn}})
         async_to_sync(self.channel_layer.group_send)(
                 self.match_group_name,
                 {
                     'type': 'connect_message',
-                    'connected_user': {user_uuid : {'nickname' : room_user.nickname, 'is_users_turn' : room_user.is_users_turn}}
+                    'connected_user': {self.persona_uuid : {'nickname' : room_user.nickname, 'is_users_turn' : room_user.is_users_turn}}
                 }
         )
 
@@ -79,23 +77,23 @@ class MatchConsumer(JsonWebsocketConsumer):
         print("Disconnecting User - Consumers")
         #FLAG - Add prefetch, select_related
         #Query all active users in share list
-        share_users_qs = ShareRoomUser.objects.filter(list__sharecode = self.sharecode, is_active = True).order_by('created_at')
-        current_user = share_users_qs.get(user_uuid__uuid = self.user_uuid)
+        active_share_users_qs = ShareRoomUser.objects.filter(list__sharecode = self.sharecode, is_active = True).order_by('created_at')
+        current_user = active_share_users_qs.get(persona__uuid = self.persona_uuid)
         
         msg_data = {
             'status': 'success',
-            'disconnected_uuid': self.user_uuid
+            'disconnected_uuid': self.persona_uuid
         }
 
         #If it is users turn, assign next user to turn
         if current_user.is_users_turn:
             current_user.is_users_turn = False
-            next_index = find_next_index(self.user_uuid, list(share_users_qs.values_list('user_uuid__uuid', flat=True)))
-            next_user = share_users_qs[next_index]
+            next_index = find_next_index(self.persona_uuid, list(active_share_users_qs.values_list('persona__uuid', flat=True)))
+            next_user = active_share_users_qs[next_index]
             next_user.is_users_turn = True
             next_user.save()
             #SEND MESSAGE to channels update turn for all clients
-            msg_data['next_eliminating_uuid'] = next_user.user_uuid.uuid
+            msg_data['next_eliminating_uuid'] = next_user.persona.uuid
 
         #Set current user inactive
         current_user.is_active = False
@@ -126,9 +124,9 @@ class MatchConsumer(JsonWebsocketConsumer):
         #ELIMINATE
         if command == 'eliminate':
             
-            share_users_qs = ShareRoomUser.objects.filter(list__sharecode = self.sharecode, is_active = True).order_by('created_at')
+            active_share_users_qs = ShareRoomUser.objects.filter(list__sharecode = self.sharecode, is_active = True).order_by('created_at')
             #If it isn't any user's turn, elimination hasn't started. Return failed msg
-            if share_users_qs.filter(is_users_turn = True).count() == 0:
+            if active_share_users_qs.filter(is_users_turn = True).count() == 0:
                 self.send_json({
                         'type': 'eliminate_message',
                         'status' : 'failed',
@@ -136,7 +134,7 @@ class MatchConsumer(JsonWebsocketConsumer):
                 })
                 return
             #If it isn't THIS user's turn. Return failed msg
-            this_user = share_users_qs.get(user_uuid__uuid = self.user_uuid)
+            this_user = active_share_users_qs.get(persona__uuid = self.persona_uuid)
             if not this_user.is_users_turn:
                 self.send_json({
                         'type': 'eliminate_message',
@@ -167,14 +165,14 @@ class MatchConsumer(JsonWebsocketConsumer):
                 movies_left -= 1
                 
                 #Pick next user
-                current_user = share_users_qs.get(user_uuid__uuid = self.user_uuid)
+                current_user = active_share_users_qs.get(persona__uuid = self.persona_uuid)
                 current_user.is_users_turn = False
                 current_user.save()
-                next_index = find_next_index(self.user_uuid, list(share_users_qs.values_list('user_uuid__uuid', flat=True)))
+                next_index = find_next_index(self.persona_uuid, list(active_share_users_qs.values_list('persona__uuid', flat=True)))
                 if next_index == None:
                     print("No available user for turn.")
                     return
-                next_user = share_users_qs[next_index]
+                next_user = active_share_users_qs[next_index]
                 next_user.is_users_turn = True
                 next_user.save()
 
@@ -184,8 +182,8 @@ class MatchConsumer(JsonWebsocketConsumer):
                     {
                         'type': 'eliminate_message',
                         'shared_movie_id' : shared_movie_id,
-                        'eliminating_uuid' : self.user_uuid,
-                        'next_eliminating_uuid' : next_user.user_uuid.uuid
+                        'eliminating_uuid' : self.persona_uuid,
+                        'next_eliminating_uuid' : next_user.persona.uuid
                     }
                 )
 
@@ -201,7 +199,7 @@ class MatchConsumer(JsonWebsocketConsumer):
                         }
                     )
                 #Set all to no one's turn
-                share_users_qs.filter(is_users_turn = True).update(is_users_turn = False)
+                active_share_users_qs.filter(is_users_turn = True).update(is_users_turn = False)
 
         #INITIALIZE
         elif command == 'initialize':
@@ -216,8 +214,8 @@ class MatchConsumer(JsonWebsocketConsumer):
         
         #START ELIMINATING
         elif command == 'elimination_start':
-            share_users_qs = ShareRoomUser.objects.filter(list__sharecode = self.sharecode, is_active = True)
-            users_eliminating = share_users_qs.filter(is_users_turn = True).count()
+            active_share_users_qs = ShareRoomUser.objects.filter(list__sharecode = self.sharecode, is_active = True)
+            users_eliminating = active_share_users_qs.filter(is_users_turn = True).count()
             if users_eliminating > 0:
                 print("Elimination already in progress.")
                 return
@@ -227,7 +225,7 @@ class MatchConsumer(JsonWebsocketConsumer):
                 return
 
             #Randomly pick user to start
-            eliminating_user = random.choice(share_users_qs)
+            eliminating_user = random.choice(active_share_users_qs)
             eliminating_user.is_users_turn = True
             eliminating_user.save()
                         
@@ -235,7 +233,7 @@ class MatchConsumer(JsonWebsocketConsumer):
                     self.match_group_name,
                     {
                         'type': 'elimination_start',
-                        'eliminating_uuid': eliminating_user.user_uuid.uuid
+                        'eliminating_uuid': eliminating_user.persona.uuid
                     }
                 )
         
