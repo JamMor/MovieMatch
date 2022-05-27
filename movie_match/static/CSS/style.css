@@ -44,6 +44,8 @@
     --pink_darken-4:#880e4f;
 
     --orange_darken-3:#ef6c00;
+    --orange_darken-4:#e65100;
+    --deep-orange_darken-4:#bf360c;
     
     --deep-purple_darken-4:#311b92;
     --purple_darken-2:#7b1fa2;
@@ -480,7 +482,42 @@ div.card-action {
     min-width:100px;    
 }
 #actions-th {
-    width:70px;
+    width:100px;
+}
+
+.list-actions-td div{
+    display:flex;
+    justify-content: space-around;
+}
+
+.edit-list-btn {
+    color: var(--purple_accent-2);
+}
+
+.edit-list-btn:hover {
+    color: var(--grey_lighten-2);
+    text-shadow: 
+        0 0 5px var(--purple_accent-2),
+        0 0 10px var(--purple_accent-2),
+        0 0 15px var(--purple_darken-2),
+        0 0 20px var(--purple_darken-2),
+        0 0 30px var(--deep-purple_darken-4),
+        0 0 35px var(--deep-purple_darken-4);
+}
+
+.delete-list-btn i {
+    color: var(--orange_darken-3);
+}
+
+.delete-list-btn:hover i {
+    color: var(--grey_lighten-2);
+    text-shadow: 
+        0 0 5px var(--orange_darken-3),
+        0 0 10px var(--orange_darken-3),
+        0 0 15px var(--orange_darken-4),
+        0 0 20px var(--orange_darken-4),
+        0 0 30px var(--deep-orange_darken-4),
+        0 0 35px var(--deep-orange_darken-4);
 }
 
 /* [-] */
