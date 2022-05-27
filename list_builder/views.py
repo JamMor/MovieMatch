@@ -68,10 +68,11 @@ def delete(request, list_id):
             this_persona = get_or_set_persona(request)
             saved_list = SavedMovieList.objects.get(id = list_id, created_by = this_persona)
             list_name = saved_list.list_name
+            list_id = saved_list.id
             deleted_data = saved_list.delete()
             print("deleted_data:")
             print(deleted_data)
-            response.update({"status" : "success", "data" : list_name})
+            response.update({"status" : "success", "data" : {"list_name" : list_name, "list_id" : list_id}})
         except Exception as err:
             print(err)
             response.update({"errors" : repr(err)})
