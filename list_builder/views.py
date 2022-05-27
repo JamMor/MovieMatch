@@ -57,6 +57,27 @@ def save(request):
 
     return JsonResponse(response)
 
+def delete(request, list_id):
+    response = {"status": "failure"}
+
+    if not request.user.is_authenticated:
+        response.update({"errors" : "Only logged in users can delete list."})
+
+    else:
+        try:
+            this_persona = get_or_set_persona(request)
+            saved_list = SavedMovieList.objects.get(id = list_id, created_by = this_persona)
+            list_name = saved_list.list_name
+            deleted_data = saved_list.delete()
+            print("deleted_data:")
+            print(deleted_data)
+            response.update({"status" : "success", "data" : list_name})
+        except Exception as err:
+            print(err)
+            response.update({"errors" : repr(err)})
+
+    return JsonResponse(response)
+
 #Display sample icons
 def test(request):
     return render(request,'list_builder/test.html')

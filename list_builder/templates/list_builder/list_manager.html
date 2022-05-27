@@ -15,7 +15,7 @@
                     </thead>
                     <tbody>
                         {% for list in saved_lists %}
-                        <tr class="row-collapse-trigger">
+                        <tr id="list_{{list.id}}" class="row-collapse-trigger">
                             <td class="list-name-td">
                                 <span class="truncate">{{list.list_name}}</span>
                             </td>
@@ -23,7 +23,12 @@
                                 <span class="new badge cyan accent-2" data-badge-caption="">{{list.movies.count}}</span>
                             </td>
                             <td>{{list.created_at|date:"m/d/y f A"}}</td>
-                            <td><i class="material-icons">edit</i><i class="material-icons">delete</i></td>
+                            <td class="list-actions-td">
+                                <div>
+                                    <a class="edit-list-btn" href=""><i class="material-icons">edit</i></a>
+                                    <a class="delete-list-btn" href="#delete-modal"><i class="material-icons">delete</i></a>
+                                </div>
+                            </td>
                         </tr>
                         <tr>
                             <td class="collabsible-row" colspan="4">
@@ -44,6 +49,8 @@
             </div>
         </main>
 
+        {% include "list_builder/_list_manager_delete_modal.html"%}
+
     {% endblock %}
 
     {% block script_block %}
@@ -52,4 +59,5 @@
         </script>
         <script src="{% static 'list_builder/js/slider.js'%}"></script>
         <script src="{% static 'list_builder/js/table-collapse.js'%}"></script>
+        <script src="{% static 'list_builder/js/delete_modal.js'%}"></script>
     {% endblock %}
