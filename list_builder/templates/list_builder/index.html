@@ -30,28 +30,8 @@
                 <li class="waves-effect waves-light"><a href="#!"><i class="material-icons indigo-text text-darken-4">close</i></a></li>
             </ul>
         </div>
-        <div id="share_modal" class="modal cyber-grade">
-            <div class="modal-content pink-text text-darken-2">
-                <h4>Ready to share?</h4>
-                <form action="#" class="ajax-form">
-                    <div class="input-field">
-                        <input id="nickname" class="center-align" type="text">
-                        <label for="nickname">Nickname</label>
-                    </div>
-                    <p class="flow-text">Enter sharecode if you have one.</p>
-                    <div class="input-field">
-                        <input id="sharecode" class="center-align validate" type="text" style="text-transform:uppercase" data-length="8" minlength="8" maxlength="8" pattern="^$|^[23456789ABCDEFGHJKLMNPQRSTUVWXYZ]{8}$">
-                        <label for="sharecode">Sharecode</label>
-                        <span class="helper-text" data-error="Not a valid sharecode."></span>
-                    </div>
-                </form>
-            </div>
-            <div class="modal-footer">
-                <a id="share-btn" href="#" class="neon-blue-hover waves-effect waves-light btn-large btn-rounded">Share</a>
-                <a href="#!" class="modal-close orange-text text-darken-3 waves-effect waves-dark btn-flat">Cancel</a>
-            </div>
-        </div>
 
+        {% include "list_builder/_share_modal.html"%}
         {% include "save_modal.html"%}
 
     {% endblock %}
