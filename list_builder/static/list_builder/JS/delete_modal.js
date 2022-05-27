@@ -35,12 +35,18 @@ $(document).ready(function() {
             console.log(data);
             if(data['status'] == "success"){
                 $('#delete-modal').modal('close');
-                console.log("Success")
-                deleteStatusToast(thisList.name, "success")
+                console.log("Delete Success.")
+                deleteStatusToast(data["data"]["list_name"], "success")
+                
+                // Remove deleted row from DOM
+                let headerRow = $(`#list_${data["data"]["list_id"]}`)
+                let contentRow = headerRow.next("tr")
+                headerRow.remove();
+                contentRow.remove()
+
             }
             else {
                 console.log("Failed to delete.")
-                console.log(data['status'])
                 deleteStatusToast(thisList.name, "error")
             }
 
