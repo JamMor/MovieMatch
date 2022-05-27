@@ -13,7 +13,6 @@ document.addEventListener('DOMContentLoaded', function () {
     };
 
     const mouseUpHandler = function () {
-        console.log("Mouse Up")
         // activeSlider.style.cursor = 'grab';
         activeSlider.style.removeProperty('user-select');
 
@@ -26,7 +25,6 @@ document.addEventListener('DOMContentLoaded', function () {
         // this.style.cursor = 'grabbing';
         this.style.userSelect = 'none';
 
-        console.log("MouseDown")
         pos = {
             // Current scroll position
             left: this.scrollLeft,

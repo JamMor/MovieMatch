@@ -6,7 +6,6 @@ $(document).ready(function(){
 
     // Adds/removes 'content-collapsed' class to collapse slider row
     $(".row-collapse-trigger").on("click", function() {
-        console.log("Row Clicked")
         $(this).next()
             .find("div.slider-x")
             .toggleClass('content-collapsed')

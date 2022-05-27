@@ -4,16 +4,12 @@ $(document).ready(function() {
 
     //Gets list id, and generates then calls delete modal
     $(".delete-list-btn").on("click", function(){
-        console.log("Delete Button Clicked.")
         let thisRow = $(this).parents("tr")
         thisList["id"] = thisRow.attr("id").split("_")[1];
         thisList["name"] = thisRow
             .children(".list-name-td")
             .children("span")
             .text()
-        console.log(`List ID: ${thisList.id}`)
-        console.log(`List Name: ${thisList.name}`)
-
 
         $("#list-name-delete")
             .text(thisList.name)
@@ -25,7 +21,6 @@ $(document).ready(function() {
     //Sends delete request to server. List ID as URL parameter
     $("#delete-list-confirm").on("click", function(e){
         e.preventDefault();
-        console.log("Delete Confirmed.")
 
         $.ajax({
             url: `/delete/${thisList.id}`,
