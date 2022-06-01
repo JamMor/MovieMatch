@@ -8,18 +8,6 @@ $(document).ready(function() {
     // Materialize Modal initialize
     $('.modal').modal();
 
-    //=================TESTING=================== FLAG
-    const JSONSizeData = (encodedString) => {
-        const size = new TextEncoder()
-            .encode(encodedString)
-            .length;
-        const kiloBytes = size / 1024;
-        const megaBytes = kiloBytes / 1024;
-        console.log(`POST data is ${megaBytes} MBs or (${kiloBytes} kBs)`);
-        return encodedString
-    }
-    //===========================================
-
     const api_key = "f4f5f258379baf10796e1d3aeb5add05";
     
     let search_results = [];
