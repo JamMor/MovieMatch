@@ -17,7 +17,7 @@ from .moviedb_api_caller import add_movies_to_db_from_tmdb_ids
 # Displays main page
 def index(request):
     this_persona = get_or_set_persona(request)
-    return render(request, 'list_builder/index.html')
+    return render(request, 'list_builder/list_builder_creator.html')
 
 @login_required(redirect_field_name='default_redirect', login_url='list_builder:default_redirect')
 def list_manager(request):
