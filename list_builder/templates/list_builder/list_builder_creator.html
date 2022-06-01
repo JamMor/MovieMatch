@@ -1,0 +1,26 @@
+    {% extends "list_builder/list_builder_base.html" %}
+    {% load static %}
+
+    {% block content_block %}
+        {{ block.super }}
+        <div class="fixed-action-btn toolbar">
+            <a class="btn-floating btn-large cyan accent-2">
+                <i class="large material-icons indigo-text text-darken-4">arrow_back</i>
+            </a>
+            <ul>
+                <li class="waves-effect waves-light"><a class="modal-trigger" href="#share_modal"><i class="material-icons indigo-text text-darken-4">present_to_all</i></a></li>
+                <li class="waves-effect waves-light"><a class="modal-trigger" href="#save-modal"><i class="material-icons indigo-text text-darken-4">save</i></a></li>
+                <li class="waves-effect waves-light"><a href="#!"><i class="material-icons indigo-text text-darken-4">close</i></a></li>
+            </ul>
+        </div>
+
+        {% include "list_builder/_share_modal.html"%}
+        {% include "save_modal.html"%}
+
+    {% endblock %}
+
+    {% block script_block %}
+        {{ block.super }}
+        <script src="{% static 'list_builder/js/share_modal.js'%}"></script>
+        <script src="{% static 'js/save_modal.js'%}"></script>
+    {% endblock %}
