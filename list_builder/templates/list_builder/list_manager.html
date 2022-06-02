@@ -25,7 +25,7 @@
                             <td>{{list.created_at|date:"m/d/y f A"}}</td>
                             <td class="list-actions-td">
                                 <div>
-                                    <a class="edit-list-btn" href=""><i class="material-icons">edit</i></a>
+                                    <a class="edit-list-btn" href="{% url 'list_builder:edit_list' list_id=list.id %}"><i class="material-icons">edit</i></a>
                                     <a class="delete-list-btn" href="#delete-modal"><i class="material-icons">delete</i></a>
                                 </div>
                             </td>
