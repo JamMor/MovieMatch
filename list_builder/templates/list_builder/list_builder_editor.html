@@ -1,0 +1,42 @@
+    {% extends "list_builder/list_builder_base.html" %}
+    {% load static %}
+
+    {% block list_builder_subheading %}
+        <h3>{{ saved_list.list_name }}</h3>
+    {% endblock %}
+
+    {% block content_block %}
+        {{ block.super }}
+        <div id="editor-savebar" class="navbar-fixed">
+            <nav class="cyan accent-2">
+                <div class="nav-wrapper">
+                    <ul>
+                        <li class="waves-effect waves-light">
+                            <a class="modal-trigger indigo-text text-darken-4" href="#save-overwrite-confirm-modal">
+                                <i class="material-icons left indigo-text text-darken-4">save</i>Save
+                            </a>
+                        </li>
+                        <li class="waves-effect waves-light orange darken-3">
+                            <a class="modal-trigger" href="{% url 'list_builder:list_manager' %}">
+                                <i class="material-icons left">close</i>Cancel
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </nav>
+        </div>
+
+        {% include "list_builder/_share_modal.html"%}
+        {% include "save_modal.html"%}
+
+    {% endblock %}
+
+    {% block script_block %}
+        {{ block.super }}
+        {{ movie_list|json_script:"imported-movie-data" }}
+        <script type='text/javascript' >
+            var savedListId = '{{saved_list.id}}';
+            console.log(`List ID: ${savedListId}`)
+        </script>
+        <script src="{% static 'list_builder/js/list_editor.js'%}"></script>
+    {% endblock %}

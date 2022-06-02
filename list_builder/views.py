@@ -13,6 +13,7 @@ from channels.layers import get_channel_layer
 from asgiref.sync import async_to_sync
 from .persona_assigner import get_or_set_persona
 from .moviedb_api_caller import add_movies_to_db_from_tmdb_ids
+from .serializer import MovieListEncoder
 
 # Displays main page
 def index(request):
@@ -30,6 +31,18 @@ def list_manager(request):
         "saved_lists" : list(saved_lists)
     }
     return render(request, 'list_builder/list_manager.html', context)
+
+@login_required(redirect_field_name='default_redirect', login_url='list_builder:default_redirect')
+def edit(request, list_id):
+    this_persona = get_or_set_persona(request)
+    saved_list = SavedMovieList.objects.prefetch_related(
+                    "movies"
+                ).get(id = list_id)
+    
+    movie_list = MovieListEncoder(saved_list.movies.all())
+
+    context = {"saved_list" : saved_list, "movie_list" : movie_list}
+    return render(request, 'list_builder/list_builder_editor.html', context)
 
 def save(request):
     response = {"status": "failure"}
