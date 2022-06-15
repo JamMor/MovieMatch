@@ -12,12 +12,12 @@
                 <div class="nav-wrapper">
                     <ul>
                         <li class="waves-effect waves-light">
-                            <a class="modal-trigger indigo-text text-darken-4" href="#save-overwrite-confirm-modal">
+                            <a class="modal-trigger indigo-text text-darken-4" href="#save-modal">
                                 <i class="material-icons left indigo-text text-darken-4">save</i>Save
                             </a>
                         </li>
                         <li class="waves-effect waves-light orange darken-3">
-                            <a class="modal-trigger" href="{% url 'list_builder:list_manager' %}">
+                            <a href="{% url 'list_builder:list_manager' %}">
                                 <i class="material-icons left">close</i>Cancel
                             </a>
                         </li>
@@ -26,8 +26,7 @@
             </nav>
         </div>
 
-        {% include "list_builder/_share_modal.html"%}
-        {% include "save_modal.html"%}
+        {% include "list_builder/editor_save_modal.html"%}
 
     {% endblock %}
 
