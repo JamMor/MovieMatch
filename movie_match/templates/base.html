@@ -112,6 +112,14 @@
         var DJ_STATIC_FILES = {
         "placeholder_path": "{% static 'images/movie_placeholder.png' %}"
         };
+        var urlPath = {
+            "listCreator" : "{% url 'list_builder:list_builder' %}",
+            "listManager" : "{% url 'list_builder:list_manager' %}",
+            "saveURL" : (list_id = "") => {
+                let saveURL = "{% url 'list_builder:save_list' %}" 
+                if (list_id) {saveURL += `/${list_id}`}
+            }
+        }
         var csrftoken;
         var MovieCard;
         var MovieInfoModal;
