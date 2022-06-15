@@ -5,8 +5,11 @@ from django.http import JsonResponse
 from django.urls import reverse
 from django.contrib.auth.decorators import login_required
 from django.db.models import Count
+from django.db.models import Prefetch
+from django.core import serializers
+from django.urls import reverse
 
-from list_builder.models import Persona, SavedMovieList
+from list_builder.models import Persona, SavedMovieList, Movie
 # from app_login_and_reg.models import User
 import json
 from channels.layers import get_channel_layer
@@ -44,12 +47,13 @@ def edit(request, list_id):
     context = {"saved_list" : saved_list, "movie_list" : movie_list}
     return render(request, 'list_builder/list_builder_editor.html', context)
 
-def save(request):
+def save(request, list_id = None):
     response = {"status": "failure"}
 
     if not request.user.is_authenticated:
         response.update({"errors" : "Only logged in users can be saved."})
 
+    # If user is authenticated, try adding movies to db and saving list.
     else:
         data = json.loads(request.body)
         list_name = data.get("list_name")
@@ -62,7 +66,15 @@ def save(request):
                 this_persona = get_or_set_persona(request)
                 all_in_db, ids_in_db, failed_ids = add_movies_to_db_from_tmdb_ids(tmdb_ids)
                 print("All in DB!" if all_in_db else f'Failed: {list(failed_ids)}')
-                saved_list = SavedMovieList.objects.create_from_tmdb_ids(tmdb_ids=ids_in_db, creator=this_persona, list_name=list_name)
+                # If no list_id provided, then save a new list. If list_id, overwrite old one.
+                if not list_id:
+                    saved_list = SavedMovieList.objects.create_from_tmdb_ids(tmdb_ids=ids_in_db, creator=this_persona, list_name=list_name)
+                else:
+                    # Only gets list if also created by this user.
+                    saved_list = SavedMovieList.objects.get(id=list_id, created_by=this_persona)
+                    new_ids =list(Movie.objects.filter(tmdb_id__in=ids_in_db).values_list("id", flat=True))
+                    saved_list.movies.set(new_ids)
+                    response.update({"nextUrl" : reverse('list_builder:list_manager')})
                 response.update({"status" : "success"})
             except Exception as err:
                 print(err)
