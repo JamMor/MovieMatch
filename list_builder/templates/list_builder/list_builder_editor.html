@@ -35,7 +35,8 @@
         {{ movie_list|json_script:"imported-movie-data" }}
         <script type='text/javascript' >
             var savedListId = '{{saved_list.id}}';
-            console.log(`List ID: ${savedListId}`)
+            var savedListName = '{{saved_list.list_name}}';
         </script>
         <script src="{% static 'list_builder/js/list_editor.js'%}"></script>
+        <script src="{% static 'list_builder/js/editor_save.js'%}"></script>
     {% endblock %}
