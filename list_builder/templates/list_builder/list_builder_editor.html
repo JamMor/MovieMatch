@@ -2,7 +2,9 @@
     {% load static %}
 
     {% block list_builder_subheading %}
-        <h3>{{ saved_list.list_name }}</h3>
+        <div class="center-align">
+            <div class="btn-large btn-rounded neon-fuschia inactive">{{ saved_list.list_name }}</div>
+        </div>
     {% endblock %}
 
     {% block content_block %}
