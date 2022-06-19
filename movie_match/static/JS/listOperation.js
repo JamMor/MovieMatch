@@ -32,8 +32,7 @@ listOperation.saveList = ({tmdb_ids, list_name, list_id}) => {
                 }
                 console.log(data["nextUrl"])
                 if (data["nextUrl"]){
-                    console.log("Time to redirect")
-                    // window.location.href = data["nextUrl"];
+                    window.location.href = data["nextUrl"];
                 }
             })
             .fail(function() {
