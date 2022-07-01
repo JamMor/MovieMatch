@@ -395,6 +395,10 @@ nav .login-form input {
 
 /* [-] */
 /* ----------------------------------Search================================= */
+div#search-container {
+    margin-bottom: 2rem;
+    position:relative;
+}
 /* --------------------------------SearchBar-------------------------------- */
 #search-bar, #search-bar input {
     border-radius: 15px;
@@ -402,6 +406,7 @@ nav .login-form input {
 }
 
 nav#search-bar {
+    position:relative;
     box-shadow: 
         inset 0 0 15px 0 var(--blue_darken-2),
         inset 0 0 5px 0 var(--indigo_darken-4),
@@ -421,7 +426,9 @@ nav#search-bar {
 div#search-results {
     height: 0px;
     max-height: 400px;
-    margin-bottom: 2rem;
+    position: absolute;
+    top:64px;
+    z-index: 3;
 }
 
 #search-results div.card {
