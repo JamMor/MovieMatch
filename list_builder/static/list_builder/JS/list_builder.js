@@ -19,6 +19,26 @@ $(document).ready(function() {
         e.preventDefault();
     })
 
+
+    //Dim movie list when searching
+    $("#moviesearch-input").focus(activateSearch)
+    $(document).click(function(event){
+        let clickedTarget = $(event.target);
+        // If user clicks outside of search container
+        if (!clickedTarget.closest("#search-container").length){
+            deactivateSearch();
+        }
+    })
+    
+    function activateSearch(){
+        $("div.carousel").fadeIn(100);
+        $("#movie_list").fadeTo(500, 0.1)
+    }
+    function deactivateSearch(){
+        $("div.carousel").fadeOut(100);
+        $("#movie_list").fadeTo(500, 1);
+    }
+
     //Delay wrapper function (to limit ajax queries when typing)
     function delay(fn, ms) {
         let timer = 0
