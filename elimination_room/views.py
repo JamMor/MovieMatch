@@ -68,8 +68,7 @@ def new_match(request):
     update_shared_list_channels(shared_list.sharecode)
 
     #Set Nickname
-    this_persona.nickname = nickname
-    this_persona.save(update_fields=['nickname'])
+    this_persona.update(nickname = nickname)
 
     response.update({"status": "success", "sharecode": shared_list.sharecode})
     return JsonResponse(response)
