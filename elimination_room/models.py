@@ -25,7 +25,6 @@ class SharedMovieList(models.Model):
                 shared_list = self, 
                 movie = each_movie)
             shared_movie.submitted_by.add(this_persona)
-            shared_movie.save()
         self.save()
 
     def save(self, *args, **kwargs):
