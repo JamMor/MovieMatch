@@ -7,6 +7,7 @@
     [-] -Cyber Grade Inputs=
 [+] =Neon Glows (Neon Light Effect Classes)=
 [+] =Movie Card=
+[+] =Movie List=
 [+] =Nav=
     [-] -Header=
         -HeaderLoginForm-
@@ -242,6 +243,16 @@ i.suffix {
 /* ================================Movie Card================================ */
 .card span.card-title{
     text-shadow: -2px -2px 0 #000, 2px -2px 0 #000, -2px 2px 0 #000, 2px 2px 0 #000;
+}
+
+/* [+] */
+/* ================================Movie List================================ */
+#movie_list {
+    display:grid;
+    width:100%;
+    grid-template-columns: repeat(auto-fill, 200px);
+    gap:10px;
+    margin:10px;
 }
 
 /* [+] */
@@ -619,13 +630,6 @@ td.collabsible-row {
 
 /* [-] */
 /* ---------------------MovieList===================== */
-#movie_list {
-    display:grid;
-    width:100%;
-    grid-template-columns: repeat(auto-fill, 200px);
-    gap:10px;
-    margin:10px;
-}
 
 .eliminated {
     box-shadow: 0px 0px 7px var(--orange_darken-3);
