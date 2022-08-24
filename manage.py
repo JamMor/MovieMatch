@@ -5,6 +5,10 @@ import sys
 
 
 def main():
+    #Load .env variables
+    from dotenv import load_dotenv
+    load_dotenv()
+
     """Run administrative tasks."""
     os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'movie_match.settings.base')
     try:
