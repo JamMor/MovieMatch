@@ -4,7 +4,8 @@ services:
   moviematch:
     image: django:production
     env_file:
-      - .env
+    environment:
+      - DJANGO_SETTINGS_MODULE=movie_match.settings.docker_prod
     build:
       context: .
       dockerfile: ./Dockerfile
