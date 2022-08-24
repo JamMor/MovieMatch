@@ -4,11 +4,12 @@ services:
   moviematch:
     image: django:production
     env_file:
+      - ../.env
     environment:
       - DJANGO_SETTINGS_MODULE=movie_match.settings.docker_prod
     build:
-      context: .
-      dockerfile: ./Dockerfile
+      context: ..
+      dockerfile: ./Docker/Dockerfile
     ports:
       - 8000:8000
     volumes:

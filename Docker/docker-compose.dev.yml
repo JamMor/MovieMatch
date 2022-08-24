@@ -4,15 +4,17 @@ services:
   moviematch:
     image: django:development
     env_file:
+      - ../.env
     environment:
       - DJANGO_SETTINGS_MODULE=movie_match.settings.docker_dev
     build:
-      context: .
-      dockerfile: ./Dockerfile
+      context: ..
+      dockerfile: ./Docker/Dockerfile
     command: ["sh", "-c", "python manage.py runserver 0.0.0.0:8000 --nothreading --noreload"]
     ports:
       - 8000:8000
     volumes:
+      # - ..:/app
       - type: bind
         source: "/d/User Data/Documents/Code Projects/Portfolio/Docker/moviematch_staticfiles"
         target: /app/staticfiles
