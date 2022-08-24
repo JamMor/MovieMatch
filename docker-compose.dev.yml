@@ -1,0 +1,13 @@
+version: '3.4'
+
+services:
+  moviematch:
+    image: moviematch
+    env_file:
+      - .env
+    build:
+      context: .
+      dockerfile: ./Dockerfile
+    command: ["sh", "-c", "python manage.py runserver 0.0.0.0:8000 --nothreading --noreload"]
+    ports:
+      - 8000:8000
