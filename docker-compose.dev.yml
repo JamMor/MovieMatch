@@ -11,6 +11,10 @@ services:
     command: ["sh", "-c", "python manage.py runserver 0.0.0.0:8000 --nothreading --noreload"]
     ports:
       - 8000:8000
+    volumes:
+      - type: bind
+        source: "/d/User Data/Documents/Code Projects/Portfolio/Docker/moviematch_staticfiles"
+        target: /app/staticfiles
   redis:
     image: redis:5-alpine
     ports:
