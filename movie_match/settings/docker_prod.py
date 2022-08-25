@@ -2,7 +2,6 @@ from .base import *
 from .diag import *
 
 DOCKER = True
-
 DEBUG = False
 
 env_hosts = os.environ.get("ALLOWED_HOSTS", "").split(",")
