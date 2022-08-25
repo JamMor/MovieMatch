@@ -1,5 +1,6 @@
 version: '3.8'
 
+name: moviematch-prod
 services:
   moviematch:
     image: django:production
@@ -21,3 +22,6 @@ services:
     image: redis:5-alpine
     ports:
         - 6379:6379
+networks:
+  default:
+    name: moviematch_network

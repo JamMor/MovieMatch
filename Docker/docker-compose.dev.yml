@@ -1,5 +1,6 @@
 version: '3.8'
 
+name: moviematch-dev
 services:
   moviematch:
     image: django:development
@@ -23,3 +24,6 @@ services:
     image: redis:5-alpine
     ports:
         - 6379:6379
+networks:
+  default:
+    name: moviematch_network
