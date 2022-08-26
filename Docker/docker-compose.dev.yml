@@ -1,0 +1,29 @@
+version: '3.8'
+
+name: moviematch-dev
+services:
+  moviematch:
+    image: django:development
+    env_file:
+      - ../.env
+    environment:
+      - DJANGO_SETTINGS_MODULE=movie_match.settings.docker_dev
+      - CONTAINER_STATIC_DIRECTORY
+    build:
+      context: ..
+      dockerfile: ./Docker/Dockerfile
+    command: ["sh", "-c", "python manage.py runserver 0.0.0.0:8000 --nothreading --noreload"]
+    ports:
+      - 8000:8000
+    volumes:
+      # - ..:/app
+      - type: bind
+        source: "${LOCAL_STATIC_DIRECTORY}"
+        target: /app/${CONTAINER_STATIC_DIRECTORY}
+  redis:
+    image: redis:5-alpine
+    ports:
+        - 6379:6379
+networks:
+  default:
+    name: moviematch_network
