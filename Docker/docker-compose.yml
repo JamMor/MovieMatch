@@ -1,0 +1,24 @@
+version: '3.8'
+
+services:
+  django-app:
+    env_file:
+      - ../.env
+    environment:
+      - CONTAINER_STATIC_DIRECTORY
+    build:
+      context: ..
+      dockerfile: ./Docker/Dockerfile
+    ports:
+      - 8000:8000
+    volumes:
+      - type: bind
+        source: "${LOCAL_STATIC_DIRECTORY}"
+        target: /app/${CONTAINER_STATIC_DIRECTORY}
+  redis:
+    image: redis:5-alpine
+    ports:
+        - 6379:6379
+networks:
+  default:
+    name: moviematch_network
