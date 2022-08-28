@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/4.0/ref/settings/
 """
 
 from pathlib import Path
+from django.core.exceptions import ImproperlyConfigured
 import os
 
 from dotenv import load_dotenv, dotenv_values
@@ -82,13 +83,26 @@ WSGI_APPLICATION = 'movie_match.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/4.0/ref/settings/#databases
 
+env_db = str(os.getenv('DATABASE_ENGINE'))
+if env_db == 'sqlite3':
+    env_db_config = {
+            'ENGINE': 'django.db.backends.sqlite3',
+            'NAME': BASE_DIR / 'db.sqlite3',
+        }
+elif env_db == 'postgresql':
+    env_db_config = {
+            'ENGINE': f'django.db.backends.postgresql',
+            'NAME': str(os.getenv('DATABASE_NAME')),
+            'USER': str(os.getenv('DATABASE_USER')),
+            'PASSWORD': str(os.getenv('DATABASE_PASSWORD')),
+            'HOST': str(os.getenv('DATABASE_HOST')),
+            'PORT': str(os.getenv('DATABASE_PORT')),
+        }
+else:
+    raise ImproperlyConfigured("Database not properly specified.")
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
-    }
+    'default': env_db_config
 }
-
 
 # Password validation
 # https://docs.djangoproject.com/en/4.0/ref/settings/#auth-password-validators
