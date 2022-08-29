@@ -6,6 +6,7 @@ services:
       - ../.env
     environment:
       - CONTAINER_STATIC_DIRECTORY
+      - DATABASE_HOST=host.docker.internal
     build:
       context: ..
       dockerfile: ./Docker/Dockerfile
@@ -15,6 +16,8 @@ services:
       - type: bind
         source: "${LOCAL_STATIC_DIRECTORY}"
         target: /app/${CONTAINER_STATIC_DIRECTORY}
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
   redis:
     image: redis:5-alpine
     ports:
