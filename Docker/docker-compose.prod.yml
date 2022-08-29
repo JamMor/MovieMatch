@@ -1,6 +1,6 @@
 name: moviematch-prod
 services:
-  django-app:
+  django_app:
     image: django:production
     environment:
       - DJANGO_SETTINGS_MODULE=movie_match.settings.docker_prod

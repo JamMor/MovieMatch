@@ -19,16 +19,28 @@ def debug_pretty_print(debug_heading="", debug_lines=[]):
         print(x)
     print('*'*even_length + '\n')
 
+env_variables = [
+    'DJANGO_SETTINGS_MODULE',
+    'SECRET_KEY',
+    'ALLOWED_HOSTS',
+    'DOCKER',
+    'DEBUG',
+    'DATABASE_ENGINE',
+    'DATABASE_NAME',
+    'DATABASE_USER',
+    'DATABASE_PASSWORD',
+    'DATABASE_HOST',
+    'DATABASE_PORT'
+]
+
 def environ_status(header="Current Environment"):
-    debug_lines = []
-    env_variables = ['DJANGO_SETTINGS_MODULE', 'SECRET_KEY', 'ALLOWED_HOSTS', 'DOCKER', 'DEBUG']
+    debug_lines = [f'DJANGO_SETTINGS_MODULE: {str(os.environ.get("DJANGO_SETTINGS_MODULE", "Not Given"))}']
     for env_var in env_variables:
         debug_lines.append(f'{env_var}: {str(os.environ.get(env_var, "Not Given"))}')
     debug_pretty_print(header, debug_lines)
 
 def settings_status(settings_name = "Current Settings:"):
     debug_lines = []
-    env_variables = ['SECRET_KEY', 'ALLOWED_HOSTS', 'DOCKER', 'DEBUG']
     for env_var in env_variables:
         env_value = getattr(settings, env_var, "Not set.")
         debug_lines.append(f'{env_var}: {env_value}')
