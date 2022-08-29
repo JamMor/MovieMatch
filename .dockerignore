@@ -26,3 +26,5 @@
 **/values.dev.yaml
 README.md
 **/db.sqlite3
+**/*.log
+**/staticfiles
