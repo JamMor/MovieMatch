@@ -1,5 +1,5 @@
 # For more information, please refer to https://aka.ms/vscode-docker-python
-FROM python:3.9-alpine
+FROM python:3.9-slim-bullseye
 
 EXPOSE 8000
 
@@ -12,11 +12,10 @@ ENV PYTHONUNBUFFERED=1
 # Install temporary dependencies 'gcc' and 'musl-dev' that aren't in alpine
 # Install project pip requirements
 COPY ./requirements_base.txt .
-RUN apk add --update --no-cache --virtual .tmp-deps \
-        gcc musl-dev && \
+RUN apt-get update && apt-get -y install \
+    libpq-dev gcc && \
     python -m pip install --upgrade pip && \
-    python -m pip install -r requirements_base.txt && \
-    apk del .tmp-deps
+    python -m pip install --no-cache-dir -r requirements_base.txt
 
 WORKDIR /app
 COPY .. /app
