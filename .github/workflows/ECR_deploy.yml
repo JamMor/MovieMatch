@@ -2,7 +2,7 @@ name: Deploy to ECR
 
 on:
   push:
-    branches: [ deploy_build ]
+    branches: [ deploy_to_ecr ]
   workflow_dispatch:
 
 env:
@@ -20,10 +20,10 @@ jobs:
   # environment: aws_docker_deployment
   
     steps:
-    - name: Check out code from deploy_build branch
+    - name: Check out code from deploy_to_ecr branch
       uses: actions/checkout@v3
       with:
-        ref: deploy_build
+        ref: deploy_to_ecr
     
     - name: Get commit timestamp
       run: |
