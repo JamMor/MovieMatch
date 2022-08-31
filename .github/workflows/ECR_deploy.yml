@@ -1,0 +1,48 @@
+name: Deploy to ECR
+
+on:
+  push:
+    branches: [ deploy_build ]
+  workflow_dispatch:
+
+env:
+  AWS_REGION: us-west-2                   # set this to your preferred AWS region, e.g. us-west-1
+  ECR_REPOSITORY: moviematch              # set this to your Amazon ECR repository name
+
+permissions:
+  contents: read
+  
+jobs:
+  build:
+    name: Deploy
+    runs-on: ubuntu-latest
+    environment: aws_docker_deployment
+  
+    steps:
+    - name: Check out code
+      uses: actions/checkout@v3
+    
+    - name: Get commit timestamp
+      run: |
+        echo "COMMIT_TIME=$(git show -s --format=%cd --date="format:%Y-%m-%d.%H-%M-%S")" >> $GITHUB_ENV
+
+    - name: Configure AWS credentials
+      uses: aws-actions/configure-aws-credentials@v1
+      with:
+        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        aws-region: ${{ env.AWS_REGION }}
+
+    - name: Login to Amazon ECR
+      id: login-ecr
+      uses: aws-actions/amazon-ecr-login@v1
+
+    - name: Build, tag, and push image to Amazon ECR
+      id: build-image
+      env:
+        ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+        IMAGE_TAG: ${{ github.sha }}-${{ env.COMMIT_TIME}}
+      run: |
+        docker build -f .Docker/Dockerfile -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG .
+        docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
+      # echo "::set-output name=image::$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG"
