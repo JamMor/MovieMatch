@@ -33,7 +33,7 @@ jobs:
       uses: aws-actions/configure-aws-credentials@v1
       with:
         role-to-assume: ${{ secrets.AWS_ROLE_TO_ASSUME }}
-        role-session-name: MovieMatchDeployment-${{ github.sha }}-${{ env.COMMIT_TIME}}
+        role-session-name: MovieMatchDeployment
         aws-region: ${{ env.AWS_REGION }}
 
     - name: Login to Amazon ECR
