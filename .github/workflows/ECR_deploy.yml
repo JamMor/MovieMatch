@@ -19,8 +19,10 @@ jobs:
   # environment: aws_docker_deployment
   
     steps:
-    - name: Check out code
+    - name: Check out code from deploy_build branch
       uses: actions/checkout@v3
+      with:
+        ref: deploy_build
     
     - name: Get commit timestamp
       run: |
