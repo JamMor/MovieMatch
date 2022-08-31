@@ -1,0 +1,23 @@
+name: Deploy to ECR
+
+on:
+  push:
+    branches: [ testerino ]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  
+jobs:
+  timestamper:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Set the value
+      id: step_one
+      run: |
+        echo "COMMIT_TIME=$(git show -s --format=%cd --date="format:%Y-%m-%d.%H-%M-%S")" >> $GITHUB_ENV
+    - name: Use the value
+      id: step_two
+      run: |
+        echo "${{ env.COMMIT_TIME }}"
