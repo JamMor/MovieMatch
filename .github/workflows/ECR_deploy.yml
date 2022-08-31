@@ -16,7 +16,7 @@ jobs:
   build:
     name: Deploy
     runs-on: ubuntu-latest
-    environment: aws_docker_deployment
+  # environment: aws_docker_deployment
   
     steps:
     - name: Check out code
