@@ -24,4 +24,4 @@ jobs:
     - name: Use the value
       id: step_two
       run: |
-        echo "${{ env.COMMIT_TIME }}"
+        echo $COMMIT_TIME
