@@ -18,7 +18,7 @@ RUN apt-get update && apt-get -y install \
     python -m pip install --no-cache-dir -r requirements_base.txt
 
 WORKDIR /app
-COPY .. /app
+COPY . /app
 
 # Creates a non-root user with an explicit UID and adds permission to access the /app folder
 # For more info, please refer to https://aka.ms/vscode-docker-python-configure-containers
