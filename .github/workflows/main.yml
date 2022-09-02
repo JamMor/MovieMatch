@@ -17,12 +17,6 @@ jobs:
     steps:
     - name: Checkout
       uses: actions/checkout@v3
-    
-    - name: AWSThere
-      run: aws --version
-    
-    - name: Echo directory
-      run: echo $(ls)
       
     - name: Configure AWS credentials
       uses: aws-actions/configure-aws-credentials@v1
@@ -33,5 +27,5 @@ jobs:
       
     - name: AWSCopy
       run: |
-        aws s3 sync ./Docker s3://deploy-instructions/compose-files --dryrun \
+        aws s3 sync ./Docker s3://deploy-instructions/compose-files \
           --exclude "*" --include "docker-compose.yml" --include "docker-compose.prod.yml"
