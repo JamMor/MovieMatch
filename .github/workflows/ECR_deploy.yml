@@ -50,3 +50,8 @@ jobs:
         docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
         echo $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
       # echo "::set-output name=image::$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG"
+      
+    - name: Sync docker-compose files to S3
+      run: |
+        aws s3 sync ./Docker s3://deploy-instructions/moviematch \
+          --exclude "*" --include "docker-compose.yml" --include "docker-compose.prod.yml"
