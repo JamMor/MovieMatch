@@ -4,7 +4,11 @@ on:
   workflow_dispatch:
 
 env:
-  AWS_REGION: us-west-2 
+  AWS_REGION: us-west-2
+  
+permissions:
+  contents: read
+  id-token: write
 
 jobs:
   tester:
@@ -28,7 +32,6 @@ jobs:
         aws-region: ${{ env.AWS_REGION }}
       
     - name: AWSCopy
-      run: aws s3 cp ./Docker/docker-compose.yml s3://deploy-instructions/compose-files/docker-compose.yml
-    
-    #- name: AWSSync
-    #  run: aws aws s3 cp ./Docker/docker-compose.prod.yml s3://my_bucket/compose-files/docker-compose.prod.yml
+      run: |
+        aws s3 sync ./Docker s3://deploy-instructions/compose-files --dryrun \
+          --exclude "*" --include "docker-compose.yml" --include "docker-compose.prod.yml"
