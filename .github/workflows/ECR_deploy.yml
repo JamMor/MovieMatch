@@ -48,4 +48,5 @@ jobs:
       run: |
         docker build -f ./Docker/Dockerfile -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG .
         docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
+        echo $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
       # echo "::set-output name=image::$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG"
