@@ -1,0 +1,12 @@
+name: S3 Test
+
+on:
+  workflow_dispatch:
+
+jobs:
+  tester:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: AWSThere
+      run: aws --version
