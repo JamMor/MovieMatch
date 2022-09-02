@@ -17,5 +17,8 @@ jobs:
     - name: Echo directory
       run: echo $(ls)
       
+    - name: AWSCopy
+      run: aws aws s3 cp ./Docker/docker-compose.yml s3://deploy-instructions/compose-files/docker-compose.yml
+    
     #- name: AWSSync
-    #  run: aws s3 sync ./YOUR-BUILD-DIR s3://YOUR-BUCKET-NAME
+    #  run: aws aws s3 cp ./Docker/docker-compose.prod.yml s3://my_bucket/compose-files/docker-compose.prod.yml
