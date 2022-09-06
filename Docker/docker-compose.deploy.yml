@@ -5,7 +5,7 @@ services:
   django_app:
     image: moviematch:${IMAGE_TAG}
     env_file:
-      - ../.env
+      - ./app.env
     environment:
       - DJANGO_SETTINGS_MODULE=movie_match.settings.docker_prod
       - CONTAINER_STATIC_DIRECTORY
