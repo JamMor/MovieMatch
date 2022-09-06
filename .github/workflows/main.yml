@@ -33,10 +33,12 @@ jobs:
         aws s3 cp ./Docker/docker-compose.deploy.yml s3://deploy-instructions/$ECR_REPOSITORY/docker-compose.yml
     
     - name: SSM Send Command
+      env:
+        DOC_VERSION: "$LATEST"
       run: | 
         aws ssm send-command \
           --document-name "Update_Project" \
-          --document-version "${{ "$LATEST" }}" \
+          --document-version "$DOC_VERSION" \
           --targets '[{"Key":"InstanceIds","Values":["${{ secrets.AWS_MOVIEMATCH_EC2_INSTANCE_ID }}"]}]' \
           --parameters '{ "ecrRegistry":["$ECR_REGISTRY"], "repoName":["$ECR_REPOSITORY"], "imageTag":["$IMAGE_TAG"]}' \
           --timeout-seconds 600 \
