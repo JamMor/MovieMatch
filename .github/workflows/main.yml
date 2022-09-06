@@ -22,10 +22,9 @@ jobs:
       uses: aws-actions/configure-aws-credentials@v1
       with:
         role-to-assume: ${{ secrets.AWS_ROLE_TO_ASSUME }}
-        role-session-name: MovieMatchS3
+        role-session-name: MovieMatchS3Test
         aws-region: ${{ env.AWS_REGION }}
       
     - name: AWSCopy
       run: |
-        aws s3 sync ./Docker s3://deploy-instructions/compose-files \
-          --exclude "*" --include "docker-compose.yml" --include "docker-compose.prod.yml"
+        aws s3 cp ./Docker/docker-compose.deploy.yml s3://deploy-instructions/moviematch/docker-compose.yml
