@@ -56,12 +56,9 @@ jobs:
       run: | 
         aws ssm send-command \
           --document-name "Update_Project" \
-          --document-version "1" \
+          --document-version "$LATEST" \
           --targets '[{"Key":"InstanceIds","Values":["${{ secrets.AWS_MOVIEMATCH_EC2_INSTANCE_ID }}"]}]' \
-          --parameters '{ \
-            "ecrRegistry":["$ECR_REGISTRY"], \
-            "repoName":["$ECR_REPOSITORY"], \
-            "imageTag":["$IMAGE_TAG"]}' \
+          --parameters '{ "ecrRegistry":["$ECR_REGISTRY"], "repoName":["$ECR_REPOSITORY"], "imageTag":["$IMAGE_TAG"]}' \
           --timeout-seconds 600 \
           --max-concurrency "50" \
           --max-errors "0" \
