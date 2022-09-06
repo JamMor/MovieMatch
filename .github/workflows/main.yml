@@ -5,6 +5,9 @@ on:
 
 env:
   AWS_REGION: us-west-2
+  ECR_REPOSITORY: moviematch
+  IMAGE_TAG: 7fedd2a9b471580a205454a632e4b5190e15e75c-2022-09-06.02-12-44
+  ECR_REGISTRY: 696811202438.dkr.ecr.us-west-2.amazonaws.com
   
 permissions:
   contents: read
@@ -22,10 +25,23 @@ jobs:
       uses: aws-actions/configure-aws-credentials@v1
       with:
         role-to-assume: ${{ secrets.AWS_ROLE_TO_ASSUME }}
-        role-session-name: MovieMatchS3
+        role-session-name: MovieMatchS3Test
         aws-region: ${{ env.AWS_REGION }}
       
     - name: AWSCopy
       run: |
-        aws s3 sync ./Docker s3://deploy-instructions/compose-files \
-          --exclude "*" --include "docker-compose.yml" --include "docker-compose.prod.yml"
+        aws s3 cp ./Docker/docker-compose.deploy.yml s3://deploy-instructions/$ECR_REPOSITORY/docker-compose.yml
+    
+    - name: SSM Send Command
+      run: |
+        aws ssm send-command \
+          --document-name "Update_Project" \
+          --document-version "$DOC_VERSION" \
+          --targets '[{"Key":"InstanceIds","Values":["${{ secrets.AWS_MOVIEMATCH_EC2_INSTANCE_ID }}"]}]' \
+          --parameters '{ "ecrRegistry":["${{ env.ECR_REGISTRY }}"], "repoName":["${{ env.ECR_REPOSITORY }}"], "imageTag":["${{ env.IMAGE_TAG }}"]}' \
+          --timeout-seconds 600 \
+          --max-concurrency "50" \
+          --max-errors "0" \
+          --region us-west-2
+      env:
+        DOC_VERSION: "$LATEST"
