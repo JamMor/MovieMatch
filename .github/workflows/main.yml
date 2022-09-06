@@ -5,6 +5,7 @@ on:
 
 env:
   AWS_REGION: us-west-2
+  ECR_REPOSITORY: moviematch
   
 permissions:
   contents: read
@@ -27,4 +28,4 @@ jobs:
       
     - name: AWSCopy
       run: |
-        aws s3 cp ./Docker/docker-compose.deploy.yml s3://deploy-instructions/moviematch/docker-compose.yml
+        aws s3 cp ./Docker/docker-compose.deploy.yml s3://deploy-instructions/$ECR_REPOSITORY/docker-compose.yml
