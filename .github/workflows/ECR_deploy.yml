@@ -50,5 +50,4 @@ jobs:
       
     - name: Copy docker-compose files to S3
       run: |
-        aws s3 cp ./Docker s3://deploy-instructions/moviematch \
-          --exclude "*" --include "docker-compose.yml" --include "docker-compose.prod.yml"
+        aws s3 cp ./Docker/docker-compose.deploy.yml s3://deploy-instructions/$ECR_REPOSITORY/docker-compose.yml
