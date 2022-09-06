@@ -51,3 +51,18 @@ jobs:
     - name: Copy docker-compose files to S3
       run: |
         aws s3 cp ./Docker/docker-compose.deploy.yml s3://deploy-instructions/$ECR_REPOSITORY/docker-compose.yml
+
+    - name: Run SSM Command document to update EC2
+      run: | 
+        aws ssm send-command \
+          --document-name "Update_Project" \
+          --document-version "1" \
+          --targets '[{"Key":"InstanceIds","Values":["${{ secrets.AWS_MOVIEMATCH_EC2_INSTANCE_ID }}"]}]' \
+          --parameters '{ \
+            "ecrRegistry":["$ECR_REGISTRY"], \
+            "repoName":["$ECR_REPOSITORY"], \
+            "imageTag":["$IMAGE_TAG"]}' \
+          --timeout-seconds 600 \
+          --max-concurrency "50" \
+          --max-errors "0" \
+          --region us-west-2
