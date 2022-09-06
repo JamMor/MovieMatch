@@ -1,0 +1,27 @@
+version: '3.8'
+
+name: moviematch-app
+services:
+  django_app:
+    image: moviematch:${IMAGE_TAG}
+    env_file:
+      - ../.env
+    environment:
+      - DJANGO_SETTINGS_MODULE=movie_match.settings.docker_prod
+      - CONTAINER_STATIC_DIRECTORY
+      - DATABASE_HOST=host.docker.internal
+    ports:
+      - 8000:8000
+    volumes:
+      - type: bind
+        source: "${LOCAL_STATIC_DIRECTORY}"
+        target: /app/${CONTAINER_STATIC_DIRECTORY}
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+  redis:
+    image: redis:5-alpine
+    ports:
+        - 6379:6379
+networks:
+  default:
+    name: moviematch_network
