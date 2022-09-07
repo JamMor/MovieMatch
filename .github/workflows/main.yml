@@ -34,21 +34,7 @@ jobs:
                 "type": "section",
                 "text": {
                   "type": "mrkdwn",
-                  "text": "${{ env.GITHUB_REPOSITORY }}"
-                }
-              },
-              {
-                "type": "section",
-                "text": {
-                  "type": "mrkdwn",
-                  "text": "9-6-22 Timestamp"
-                }
-              },
-              {
-                "type": "section",
-                "text": {
-                  "type": "mrkdwn",
-                  "text": "Other info"
+                  "text": "${{ env.GITHUB_REPOSITORY }} build and push to AWS SUCCESFUL"
                 }
               }
             ]
