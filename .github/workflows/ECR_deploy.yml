@@ -65,3 +65,25 @@ jobs:
           --region ${{ env.AWS_REGION }}
       env:
         DOC_VERSION: "$LATEST"
+
+    - name: Slack Notification
+      id: slack
+      uses: slackapi/slack-github-action@v1.18.0
+      with:
+        # For posting a rich message using Block Kit
+        payload: |
+          {
+            "text": "${{ env.ECR_REPOSITORY }} build and push to AWS SUCCESFUL",
+            "blocks": [
+              {
+                "type": "section",
+                "text": {
+                  "type": "mrkdwn",
+                  "text": "${{ env.ECR_REPOSITORY }} build and push to AWS SUCCESFUL"
+                }
+              }
+            ]
+          }
+      env:
+        SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+        SLACK_WEBHOOK_TYPE: INCOMING_WEBHOOK
