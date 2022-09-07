@@ -21,27 +21,38 @@ jobs:
     - name: Checkout
       uses: actions/checkout@v3
       
-    - name: Configure AWS credentials
-      uses: aws-actions/configure-aws-credentials@v1
+    - name: Slack Test
+      id: slack
+      uses: slackapi/slack-github-action@v1.18.0
       with:
-        role-to-assume: ${{ secrets.AWS_ROLE_TO_ASSUME }}
-        role-session-name: MovieMatchS3Test
-        aws-region: ${{ env.AWS_REGION }}
-      
-    - name: AWSCopy
-      run: |
-        aws s3 cp ./Docker/docker-compose.deploy.yml s3://deploy-instructions/$ECR_REPOSITORY/docker-compose.yml
-    
-    - name: SSM Send Command
-      run: |
-        aws ssm send-command \
-          --document-name "Update_Project" \
-          --document-version "$DOC_VERSION" \
-          --targets '[{"Key":"InstanceIds","Values":["${{ secrets.AWS_MOVIEMATCH_EC2_INSTANCE_ID }}"]}]' \
-          --parameters '{ "ecrRegistry":["${{ env.ECR_REGISTRY }}"], "repoName":["${{ env.ECR_REPOSITORY }}"], "imageTag":["${{ env.IMAGE_TAG }}"]}' \
-          --timeout-seconds 600 \
-          --max-concurrency "50" \
-          --max-errors "0" \
-          --region us-west-2
+        # For posting a rich message using Block Kit
+        payload: |
+          {
+            "text": "${{ env.GITHUB_REPOSITORY }} build and push to AWS SUCCESFUL",
+            "blocks": [
+              {
+                "type": "section",
+                "text": {
+                  "type": "mrkdwn",
+                  "text": "${{ env.GITHUB_REPOSITORY }}"
+                }
+              },
+              {
+                "type": "section",
+                "text": {
+                  "type": "mrkdwn",
+                  "text": "9-6-22 Timestamp"
+                }
+              },
+              {
+                "type": "section",
+                "text": {
+                  "type": "mrkdwn",
+                  "text": "Other info"
+                }
+              }
+            ]
+          }
       env:
-        DOC_VERSION: "$LATEST"
+        SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+        SLACK_WEBHOOK_TYPE: INCOMING_WEBHOOK
