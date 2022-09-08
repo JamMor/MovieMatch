@@ -6,7 +6,7 @@ on:
 env:
   AWS_REGION: us-west-2
   ECR_REPOSITORY: moviematch
-  IMAGE_TAG: 7fedd2a9b471580a205454a632e4b5190e15e75c-2022-09-06.02-12-44
+  IMAGE_TAG: b189171b36d4b6315dcd3a3e26fdf59eb77f438d-2022-09-06.19-17-52
   ECR_REGISTRY: 696811202438.dkr.ecr.us-west-2.amazonaws.com
   
 permissions:
@@ -16,25 +16,33 @@ permissions:
 jobs:
   tester:
     runs-on: ubuntu-latest
-
-    steps:
-    - name: Checkout
-      uses: actions/checkout@v3
       
-    - name: Slack Test
+    - name: Run SSM Command document to update EC2
+      run: |
+        aws ssm send-command \
+          --document-name "Update_Project" \
+          --document-version "\$LATEST" \
+          --targets '[{"Key":"InstanceIds","Values":["${{ secrets.AWS_MOVIEMATCH_EC2_INSTANCE_ID }}"]}]' \
+          --parameters '{ "ecrRegistry":["$ECR_REGISTRY"], "repoName":["$ECR_REPOSITORY"], "imageTag":["$IMAGE_TAG"]}' \
+          --timeout-seconds 600 \
+          --max-concurrency "50" \
+          --max-errors "0" \
+          --region ${{ env.AWS_REGION }}
+
+    - name: Slack Notification
       id: slack
       uses: slackapi/slack-github-action@v1.18.0
       with:
         # For posting a rich message using Block Kit
         payload: |
           {
-            "text": "${{ env.GITHUB_REPOSITORY }} build and push to AWS SUCCESFUL",
+            "text": "${{ env.ECR_REPOSITORY }} build and push to AWS SUCCESSFUL",
             "blocks": [
               {
                 "type": "section",
                 "text": {
                   "type": "mrkdwn",
-                  "text": "${{ env.GITHUB_REPOSITORY }} build and push to AWS SUCCESFUL"
+                  "text": "${{ env.ECR_REPOSITORY }} build and push to AWS SUCCESSFUL"
                 }
               }
             ]
