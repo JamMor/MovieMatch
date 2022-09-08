@@ -16,7 +16,8 @@ permissions:
 jobs:
   tester:
     runs-on: ubuntu-latest
-      
+    
+    steps: 
     - name: Run SSM Command document to update EC2
       run: |
         aws ssm send-command \
