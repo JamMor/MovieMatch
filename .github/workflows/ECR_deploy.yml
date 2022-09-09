@@ -56,15 +56,13 @@ jobs:
       run: |
         aws ssm send-command \
           --document-name "Update_Project" \
-          --document-version "${{ env.DOC_VERSION }}" \
+          --document-version "\$LATEST" \
           --targets '[{"Key":"InstanceIds","Values":["${{ secrets.AWS_MOVIEMATCH_EC2_INSTANCE_ID }}"]}]' \
-          --parameters '{ "ecrRegistry":["$ECR_REGISTRY"], "repoName":["$ECR_REPOSITORY"], "imageTag":["$IMAGE_TAG"]}' \
+          --parameters '{ "ecrRegistry":["${{ env.ECR_REGISTRY }}"], "repoName":["${{ env.ECR_REPOSITORY }}"], "imageTag":["${{ env.IMAGE_TAG }}"]}' \
           --timeout-seconds 600 \
           --max-concurrency "50" \
           --max-errors "0" \
           --region ${{ env.AWS_REGION }}
-      env:
-        DOC_VERSION: "$LATEST"
 
     - name: Slack Notification
       id: slack
