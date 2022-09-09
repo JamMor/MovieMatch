@@ -73,13 +73,13 @@ jobs:
         # For posting a rich message using Block Kit
         payload: |
           {
-            "text": "${{ env.ECR_REPOSITORY }} build and push to AWS SUCCESFUL",
+            "text": "${{ env.ECR_REPOSITORY }} build and push to AWS SUCCESSFUL",
             "blocks": [
               {
                 "type": "section",
                 "text": {
                   "type": "mrkdwn",
-                  "text": "${{ env.ECR_REPOSITORY }} build and push to AWS SUCCESFUL"
+                  "text": "${{ env.ECR_REPOSITORY }} build and push to AWS SUCCESSFUL"
                 }
               }
             ]
