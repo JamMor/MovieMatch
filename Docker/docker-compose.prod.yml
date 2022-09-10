@@ -4,3 +4,16 @@ services:
     image: django:production
     environment:
       - DJANGO_SETTINGS_MODULE=movie_match.settings.prod
+      - POSTGRES_DB=moviematch_docker_dev_db
+      - POSTGRES_HOST=postgres_db
+  postgres_db:
+    env_file:
+      - ../.env
+    environment:
+      - POSTGRES_DB=moviematch_docker_dev_db
+      - POSTGRES_HOST=postgres_db
+    image: postgres:14.5-alpine
+    volumes:
+      - postgres_data:/var/lib/postgresql/data/
+volumes:
+  postgres_data:
