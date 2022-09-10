@@ -25,11 +25,11 @@ env_variables = [
     'ALLOWED_HOSTS',
     'DEBUG',
     'DATABASE_ENGINE',
-    'DATABASE_NAME',
-    'DATABASE_USER',
-    'DATABASE_PASSWORD',
-    'DATABASE_HOST',
-    'DATABASE_PORT'
+    'POSTGRES_NAME',
+    'POSTGRES_USER',
+    'POSTGRES_PASSWORD',
+    'POSTGRES_HOST',
+    'POSTGRES_PORT'
 ]
 
 def environ_status(header="Current Environment"):

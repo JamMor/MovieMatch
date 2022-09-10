@@ -92,11 +92,11 @@ if env_db == 'sqlite3':
 elif env_db == 'postgresql':
     env_db_config = {
             'ENGINE': f'django.db.backends.postgresql',
-            'NAME': str(os.getenv('DATABASE_NAME')),
-            'USER': str(os.getenv('DATABASE_USER')),
-            'PASSWORD': str(os.getenv('DATABASE_PASSWORD')),
-            'HOST': str(os.getenv('DATABASE_HOST')),
-            'PORT': str(os.getenv('DATABASE_PORT')),
+            'NAME': str(os.getenv('POSTGRES_DB')),
+            'USER': str(os.getenv('POSTGRES_USER')),
+            'PASSWORD': str(os.getenv('POSTGRES_PASSWORD')),
+            'HOST': str(os.getenv('POSTGRES_HOST', 'localhost')),
+            'PORT': str(os.getenv('POSTGRES_PORT', '5432')),
         }
 else:
     raise ImproperlyConfigured("Database not properly specified.")
