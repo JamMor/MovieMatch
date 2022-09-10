@@ -159,12 +159,14 @@ STATIC_ROOT =  BASE_DIR / env_static
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # Channels
+env_redis_name = str(os.getenv('REDIS_HOST_NAME', '127.0.0.1'))
+env_redis_port = int(os.getenv('REDIS_HOST_PORT', 6379))
 ASGI_APPLICATION = "movie_match.asgi.application"
 CHANNEL_LAYERS = {
     'default': {
         'BACKEND': 'channels_redis.core.RedisChannelLayer',
         'CONFIG': {
-            "hosts": [('127.0.0.1', 6379)],
+            "hosts": [(env_redis_name, env_redis_port)],
         },
     },
 }

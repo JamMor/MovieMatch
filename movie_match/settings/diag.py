@@ -23,7 +23,6 @@ env_variables = [
     'DJANGO_SETTINGS_MODULE',
     'SECRET_KEY',
     'ALLOWED_HOSTS',
-    'DOCKER',
     'DEBUG',
     'DATABASE_ENGINE',
     'DATABASE_NAME',
