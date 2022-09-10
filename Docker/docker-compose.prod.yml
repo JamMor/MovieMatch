@@ -3,4 +3,4 @@ services:
   django_app:
     image: django:production
     environment:
-      - DJANGO_SETTINGS_MODULE=movie_match.settings.docker_prod
+      - DJANGO_SETTINGS_MODULE=movie_match.settings.prod

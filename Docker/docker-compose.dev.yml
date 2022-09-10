@@ -3,6 +3,6 @@ services:
   django_app:
     image: django:development
     environment:
-      - DJANGO_SETTINGS_MODULE=movie_match.settings.docker_dev
+      - DJANGO_SETTINGS_MODULE=movie_match.settings.dev
     command: ["sh", "-c", "python manage.py runserver 0.0.0.0:8000 --nothreading --noreload"]
 
