@@ -13,7 +13,7 @@ ENV PYTHONUNBUFFERED=1
 # Install project pip requirements
 COPY ./requirements_base.txt .
 RUN apt-get update && apt-get -y install \
-    libpq-dev gcc curl && \
+    libpq-dev gcc && \
     python -m pip install --upgrade pip && \
     python -m pip install --no-cache-dir -r requirements_base.txt
 
