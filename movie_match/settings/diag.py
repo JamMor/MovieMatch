@@ -25,7 +25,7 @@ env_variables = [
     'ALLOWED_HOSTS',
     'DEBUG',
     'DATABASE_ENGINE',
-    'POSTGRES_NAME',
+    'POSTGRES_DB',
     'POSTGRES_USER',
     'POSTGRES_PASSWORD',
     'POSTGRES_HOST',
