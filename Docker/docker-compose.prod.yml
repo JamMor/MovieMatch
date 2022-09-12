@@ -6,6 +6,11 @@ services:
       - DJANGO_SETTINGS_MODULE=movie_match.settings.prod
       - POSTGRES_DB=moviematch_docker_dev_db
       - POSTGRES_HOST=postgres_db
+    ports:
+      - 8000:8000
+      - 8001:8001
+    command: ["sh", "-c", "gunicorn --bind 0.0.0.0:8000 movie_match.wsgi & daphne -b 0.0.0.0 -p 8001 movie_match.asgi:application"]
+      
   postgres_db:
     env_file:
       - ../.env
