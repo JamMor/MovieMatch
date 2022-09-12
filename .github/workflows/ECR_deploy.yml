@@ -60,7 +60,7 @@ jobs:
         aws ssm send-command \
           --document-name "Update_Project" \
           --document-version "\$LATEST" \
-          --targets '[{"Key":"InstanceIds","Values":["${{ secrets.AWS_MOVIEMATCH_EC2_INSTANCE_ID }}"]}]' \
+          --targets '[{"Key":"InstanceIds","Values":["${{ secrets.AWS_PROJECTWEBSERVER_EC2_INSTANCE_ID }}"]}]' \
           --parameters '{ "ecrRegistry":["${{ env.ECR_REGISTRY }}"], "repoName":["${{ env.ECR_REPOSITORY }}"], "imageTag":["${{ env.IMAGE_TAG }}"]}' \
           --timeout-seconds 600 \
           --max-concurrency "50" \
