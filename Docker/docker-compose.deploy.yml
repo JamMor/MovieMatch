@@ -14,6 +14,7 @@ services:
       - 8000:8000
       - 8001:8001
     command: ["sh", "-c", "gunicorn --bind 0.0.0.0:8000 movie_match.wsgi & daphne -b 0.0.0.0 -p 8001 movie_match.asgi:application"]
+    restart: always
     volumes:
       - type: bind
         source: "${LOCAL_STATIC_DIRECTORY}"
@@ -23,11 +24,13 @@ services:
     image: redis:5-alpine
     ports:
         - 6379:6379
+    restart: always
   
   postgres_db:
     env_file:
       - ./app.env
     image: postgres:14.5-alpine
+    restart: always
     volumes:
       - postgres_data:/var/lib/postgresql/data/
 
