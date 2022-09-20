@@ -3,6 +3,7 @@ services:
   django_app:
     image: django:production
     environment:
+      - DATABASE_ENGINE=postgresql
       - DJANGO_SETTINGS_MODULE=movie_match.settings.prod
       - POSTGRES_DB=moviematch_docker_dev_db
       - POSTGRES_HOST=postgres_db
