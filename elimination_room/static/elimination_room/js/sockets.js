@@ -16,7 +16,7 @@ $(document).ready(function() {
 
     function createMatchSocket(){
         matchSocket = new WebSocket(
-            'ws://'
+            'wss://'
             + window.location.host
             + '/ws/match/'
             + shareCode
