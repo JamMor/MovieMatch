@@ -36,7 +36,7 @@
                                     {% for movie in list.movies.all %}
                                     <div id="list_{{list.id}}_{{movie.tmdb_id}}" class="card grey darken-4">
                                         <div class="card-image">
-                                            <img src="https://image.tmdb.org/t/p/w342{{movie.poster_path}}">
+                                            <img loading="lazy" src="https://image.tmdb.org/t/p/w342{{movie.poster_path}}">
                                         </div>
                                     </div>
                                     {% endfor %}
