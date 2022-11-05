@@ -2,6 +2,10 @@ import math
 import os
 from django.conf import settings
 
+# These utility functions are used to print out the current environment variables, 
+# django settings, and dotenv variables for debugging wherever they are called.
+
+# This function formats the output of the others.
 def debug_pretty_print(debug_heading="", debug_lines=[]):
     # 6 for minimum of 3 flanking '*' and 2 for ': '
     heading_min_length = len(debug_heading) + 2 + 6
@@ -19,6 +23,7 @@ def debug_pretty_print(debug_heading="", debug_lines=[]):
         print(x)
     print('*'*even_length + '\n')
 
+# These are the values that will be checked for by the diagnostic functions.
 env_variables = [
     'DJANGO_SETTINGS_MODULE',
     'SECRET_KEY',
@@ -32,12 +37,14 @@ env_variables = [
     'POSTGRES_PORT'
 ]
 
+# This function prints out the current environment values for debugging.
 def environ_status(header="Current Environment"):
     debug_lines = [f'DJANGO_SETTINGS_MODULE: {str(os.environ.get("DJANGO_SETTINGS_MODULE", "Not Given"))}']
     for env_var in env_variables:
         debug_lines.append(f'{env_var}: {str(os.environ.get(env_var, "Not Given"))}')
     debug_pretty_print(header, debug_lines)
 
+# This function prints out the current django settings for debugging.
 def settings_status(settings_name = "Current Settings:"):
     debug_lines = []
     for env_var in env_variables:
@@ -45,6 +52,7 @@ def settings_status(settings_name = "Current Settings:"):
         debug_lines.append(f'{env_var}: {env_value}')
     debug_pretty_print(settings_name, debug_lines)
 
+# This function prints out the current dotenv values for debugging.
 def dotenv_status(dotenv_vars):
     debug_lines = []
     for k,v in dotenv_vars.items():
