@@ -103,5 +103,14 @@ It is still possible to run the project outside of Docker, while running the dat
 
 If using production mode, the static files must still be collected and served by a reverse proxy or other method, as Gunicorn and Daphne will not handle it themselves.
 
+---
+
+## Further Documentation
+
+- [MovieMatch Project Folder](/movie_match/README.md) - The main project folder for entrypoints, settings, and shared content
+<!-- - [List Builder App](/list_builder/README.md) - The ListBuilder app -->
+<!-- - [Elimination Room App](/elimination_room/README.md) - The EliminationRoom app -->
+<!-- - [Login and Registration App](/login_and_reg/README.md) - The LoginAndReg app -->
+
 <!-- Where users can get help with your project -->
 <!-- Who maintains and contributes to the project -->

@@ -1,4 +1,4 @@
-# Documentation
+# MovieMatch Project Folder Documentation
 
 This directory of the Django project contains code that will be used throughout all of the apps (currently: login_and_reg, list_builder, and elimination_room).
 
