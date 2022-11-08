@@ -12,31 +12,14 @@ Settings consists of the ```base.py``` file, which contains the base settings fo
 The ```dotenv``` package is used to load environment variables, however it won't overwrite any variables already set. This means that if the variables are set through the environment—as they are when running with Docker compose—the variables piped in from the ```.env``` file specified in the docker compose file will take precedence over any ```.env``` file inside the project itself.
 
 The settings controlled by the ```.env``` are discussed in more detail [here](/README.md/#1-the-env-file).
- - ```SECRET_KEY``` *required* for Django to run.
-- ```ALLOWED_HOSTS``` defaults to empty if not provided (which in debug mode will still allow localhost).
-
-- ```DJANGO_SETTINGS_MODULE``` Django settings can be split into modules. The available options for MovieMatch are [movie_match.settings.dev](#devpy)
-and [movie_match.settings.prod](#prodpy). Defaults to ```base``` if not provided.
 
 ---
 
-- ```REDIS_HOST_NAME``` Defaults to '127.0.0.1' if not provided.
-- ```REDIS_HOST_PORT``` Defaults to '6379' if not provided.
+Django settings can be split into modules, which in this case extend and overwrite the ```base.py``` settings. For MovieMatch, the available ```DJANGO_SETTINGS_MODULE``` options are [movie_match.settings.dev](#devpy)
+and [movie_match.settings.prod](#prodpy). Defaults to ```base.py``` if not provided.
 
 ---
 
-- ```DATABASE_ENGINE``` The database being used (```sqlite3``` or ``postgresql``). Throws ImproperlyConfigured error if not provided.
-
-**SQLite** should only be used for testing and requires no further configuration. If using **PostgreSQL**, the following additional variables are also required:
-- ```POSTGRES_DB``` The database name.
-- ```POSTGRES_USER``` The database user.
-- ```POSTGRES_PASSWORD``` The database password.
-- ```POSTGRES_HOST``` Defaults to 'localhost' if not provided.
-- ```POSTGRES_PORT``` Defaults to '5432' if not provided.
-
-- ```CONTAINER_STATIC_DIRECTORY``` Defaults to **staticfiles/** if not provided.
-
----
 
 ### **dev.py**
 ```DJANGO_SETTINGS_MODULE=movie_match.settings.dev```
