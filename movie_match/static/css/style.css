@@ -258,7 +258,7 @@ i.suffix {
 
 /* [+] */
 /* =========================Nav========================= */
-#nav-bar .user-name, #side-menu .user-name{
+#nav-bar .user-name, #side-menu .user-name, #side-menu .user-name i{
     color: var(--cyan_accent-2);
     font-weight: 800;
     font-size: 1.5rem;
