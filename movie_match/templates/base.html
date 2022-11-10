@@ -49,7 +49,7 @@
                     <div id="logged-in-options" class="dropdown-content">
                         <div class="cyber-grade">
                             <ul>
-                                <li><a href="#">Settings</a></li>
+                                <li><a href="{% url 'login_and_reg:settings' %}">Settings</a></li>
                                 <li><a href="{% url 'login_and_reg:logout' %}">Logout</a></li>
                             </ul>
                         </div>
@@ -80,7 +80,7 @@
     <ul class="sidenav cyber-grade hide-on-large-only" id="side-menu">
         {% if user.is_authenticated %}
         <li><a class="user-name" href="#"><i class="material-icons">account_circle</i>{{user.username}}</a></li>
-        <li><a href="#">Settings</a></li>
+        <li><a href="{% url 'login_and_reg:settings' %}">Settings</a></li>
         <li><a href="{% url 'login_and_reg:logout' %}">Logout</a></li>
         {% else %}
         <li>
