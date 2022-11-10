@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+
+{% block content_block %}
+    <main class="container">
+        <div id="account-options" class ="cyber-grade">
+            <h2>Account Options</h2>
+            <form action="#" method="post">
+                <h5>Change Password</h5>
+            </form>
+            <form action="#" method="post">
+                <h5>Change Nickname</h5>
+            </form>
+            <form action="#" method="post">
+                <h5>Change Email</h5>
+            </form>
+            <form action="#" method="post">
+                <h5>Delete Account</h5>
+            </form>
+        </div>
+    </main>
+{% endblock %}
+{% block script_block %}
+    {{ block.super }}
+    {% load static %}
+{% endblock %}
