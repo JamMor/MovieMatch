@@ -15,6 +15,7 @@
     [-] -SideNav=
         -SideLoginForm-
 [+] =Registration Form=
+[+] =Account Settings=
 [+] =List Builder=
     [-] -Search=
         -SearchBar-
@@ -422,6 +423,26 @@ nav .login-form input {
 }
 #registration-form button {
     align-self: flex-end;
+}
+
+/* [+] */
+/* ====================Account Settings==================== */
+#account-options {
+    display: flex;
+    flex-direction: column;
+    padding: 2rem 15%;
+    gap: 1.5rem;
+    text-align: center;
+}
+#account-options hr {
+    width: 100%;
+    border-width: 2px;
+    border-style:solid;
+    border-image: linear-gradient(
+        300deg, 
+        var(--purple_darken-1) 0%, 
+        #8a6ff5 35%, 
+        var(--cyan_accent-2) 95%) 10;
 }
 
 /* [+] */
