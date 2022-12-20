@@ -444,6 +444,10 @@ nav .login-form input {
         #8a6ff5 35%, 
         var(--cyan_accent-2) 95%) 10;
 }
+#account-delete-form [type="checkbox"]:checked+span:not(.lever):before {
+    border-bottom-color: var(--deep-orange_darken-4);
+    border-right-color: var(--deep-orange_darken-4);
+}
 
 /* [+] */
 /* ======================List Builder====================== */

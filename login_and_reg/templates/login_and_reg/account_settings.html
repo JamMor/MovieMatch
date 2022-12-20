@@ -9,11 +9,16 @@
             <button class="btn-large btn-rounded neon-blue-hover">Change Nickname</button>
             <button class="btn-large btn-rounded neon-blue-hover">Change Email</button>
             <hr>
-            <button class="btn-large btn-rounded neon-blue-hover">Delete Account</button>
+            <button id="delete-account-btn" class="btn-large btn-rounded neon-blue-hover">Delete Account</button>
         </div>
     </main>
+
+    <!-- Modal Structure -->
+    {% include "login_and_reg/_account_delete_modal.html"%}
+
 {% endblock %}
 {% block script_block %}
-    {{ block.super }}
     {% load static %}
+    {{ block.super }}
+    <script src="{% static 'login_and_reg/js/account_delete_modal.js'%}"></script>
 {% endblock %}
