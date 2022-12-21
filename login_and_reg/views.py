@@ -1,5 +1,5 @@
 from sys import prefix
-from django.http import JsonResponse
+from django.http import JsonResponse, HttpResponseNotAllowed 
 from django.shortcuts import redirect, render, HttpResponse
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login, logout
@@ -70,3 +70,25 @@ def logout_view(request):
 def account_settings_view(request):
     this_persona = get_or_set_persona(request)
     return render(request, 'login_and_reg/account_settings.html')
+def delete_account_view(request):
+    this_persona = get_or_set_persona(request)
+    if request.method == 'POST':
+        errors = []
+        status = "failure"
+        if request.POST.get('account-delete-verification-check') != 'on':
+            errors.append("Account delete verification check failed.")
+        else:
+            verification_password = request.POST.get('account-delete-verification-password')
+            if request.user.check_password(verification_password):
+                status = "success"
+                message = "Account deleted."
+                request.user.delete()
+                logout(request)
+            else:
+                errors.append("Incorrect password.")
+        if errors:
+            message = errors
+            status = "failure"
+        return JsonResponse({"status": status, "message": message})
+    else:
+        return HttpResponseNotAllowed(['POST'])
