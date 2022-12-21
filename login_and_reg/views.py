@@ -73,24 +73,21 @@ def account_settings_view(request):
     return render(request, 'login_and_reg/account_settings.html')
 @login_required(redirect_field_name='default_redirect', login_url='list_builder:default_redirect')
 def delete_account_view(request):
-    this_persona = get_or_set_persona(request)
     if request.method == 'POST':
-        errors = []
-        status = "failure"
-        if request.POST.get('account-delete-verification-check') != 'on':
-            errors.append("Account delete verification check failed.")
+        verification_check = request.POST.get('account-delete-verification-check')
+        verification_password = request.POST.get('account-delete-verification-password')
+        json_response = {"status":"error", "message":"An unknown error occurred.", "errors":[]}
+
+        if verification_check != 'on':
+            json_response.update({"status":"failure", "message":"Account not deleted.", "errors":["Account delete verification check failed."]})
+        elif not request.user.check_password(verification_password):
+            json_response.update({"status":"failure", "message":"Account not deleted.", "errors":["Incorrect password."]})
         else:
-            verification_password = request.POST.get('account-delete-verification-password')
-            if request.user.check_password(verification_password):
-                status = "success"
-                message = "Account deleted."
-                request.user.delete()
-                logout(request)
-            else:
-                errors.append("Incorrect password.")
-        if errors:
-            message = errors
-            status = "failure"
-        return JsonResponse({"status": status, "message": message})
-    else:
-        return HttpResponseNotAllowed(['POST'])
+            json_response.update({"status":"success", "message":"Account deleted."})
+            del json_response['errors']
+            request.user.delete()
+            logout(request)
+
+        return JsonResponse(json_response)
+
+    return HttpResponseNotAllowed(['POST'])
