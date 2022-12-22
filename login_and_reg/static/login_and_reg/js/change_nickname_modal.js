@@ -24,7 +24,7 @@ $(document).ready(function() {
             console.log(data);
             if(data['status'] == "success"){
                 $('#change-nickname-modal').modal('close');
-                console.log("Change Nick Success.")
+                console.log(`Changed nickname to ${data["data"]["nickname"]}`)
             }
             else {
                 console.log("Failed to change.")
