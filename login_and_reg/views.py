@@ -74,6 +74,29 @@ def account_settings_view(request):
         'nickname': this_persona.nickname
     }
     return render(request, 'login_and_reg/account_settings.html', context)
+
+@login_required(redirect_field_name='default_redirect', login_url='list_builder:default_redirect')
+def change_nickname_view(request):
+    this_persona = get_or_set_persona(request)
+    if request.method == 'POST':
+        json_response = {"status":"error", "message":"An unknown error occurred.", "errors":[]} #Default response
+        nickname = request.POST.get('change-nickname-input')
+        nickname = nickname.strip()
+
+        if nickname != this_persona.nickname:
+            this_persona.nickname = nickname
+            try:
+                this_persona.full_clean()
+                this_persona.save()
+                json_response.update({"status":"success", "message":"Nickname changed.", "data": {"nickname":f"{nickname}"}})
+            except Exception as err:
+                json_response.update({"status":"failure", "message":"Nickname not changed.", "errors":[repr(err)]})
+        else:
+            json_response.update({"status":"failure", "message":"Nickname not changed.", "errors":["Already the current nickname."]})
+        return JsonResponse(json_response)
+
+    return HttpResponseNotAllowed(['POST'])
+
 @login_required(redirect_field_name='default_redirect', login_url='list_builder:default_redirect')
 def delete_account_view(request):
     if request.method == 'POST':
