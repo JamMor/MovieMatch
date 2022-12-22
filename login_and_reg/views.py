@@ -70,7 +70,10 @@ def logout_view(request):
 @login_required(redirect_field_name='default_redirect', login_url='list_builder:default_redirect')
 def account_settings_view(request):
     this_persona = get_or_set_persona(request)
-    return render(request, 'login_and_reg/account_settings.html')
+    context = { 
+        'nickname': this_persona.nickname
+    }
+    return render(request, 'login_and_reg/account_settings.html', context)
 @login_required(redirect_field_name='default_redirect', login_url='list_builder:default_redirect')
 def delete_account_view(request):
     if request.method == 'POST':
