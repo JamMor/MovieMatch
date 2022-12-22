@@ -28,7 +28,7 @@ $(document).ready(function() {
             }
             else {
                 console.log("Failed to change.")
-    })
+                
 
             }
         })
