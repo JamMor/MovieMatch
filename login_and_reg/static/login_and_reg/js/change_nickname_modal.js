@@ -23,8 +23,14 @@ $(document).ready(function() {
         .done(function(data) {
             console.log(data);
             if(data['status'] == "success"){
+                let newNickname = data["data"]["nickname"]
                 $('#change-nickname-modal').modal('close');
-                console.log(`Changed nickname to ${data["data"]["nickname"]}`)
+                console.log(`Changed nickname to ${newNickname}`)
+                // Update nicknames on anywhere on page
+                let nicknameElements = document.getElementsByClassName("displayed-nickname");
+                for (let i = 0; i < nicknameElements.length; i++) {
+                    nicknameElements[i].innerText = newNickname;
+                }
             }
             else {
                 console.log("Failed to change.")
