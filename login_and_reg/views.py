@@ -5,6 +5,7 @@ from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth.password_validation import validate_password
 from .forms import RegistrationForm, PersonaForm
 from list_builder.models import Persona
 from list_builder.persona_assigner import get_or_set_persona
@@ -97,6 +98,36 @@ def change_nickname_view(request):
 
     return HttpResponseNotAllowed(['POST'])
 
+@login_required(redirect_field_name='default_redirect', login_url='list_builder:default_redirect')
+def change_password_view(request):
+    this_persona = get_or_set_persona(request)
+    if request.method == 'POST':
+        json_response = {"status":"error", "message":"An unknown error occurred.", "errors":[]} #Default response
+        print(request.POST)
+        current_password = request.POST.get('change-password-current-password')
+        new_password = request.POST.get('change-password-new-password')
+        new_password_confirm = request.POST.get('change-password-confirm-new-password')
+
+        user = request.user
+        if not user.check_password(current_password):
+            json_response.update({"status":"failure", "message":"Password not changed.", "errors":["Current password is incorrect."]})
+        elif new_password != new_password_confirm:
+            json_response.update({"status":"failure", "message":"Password not changed.", "errors":["New passwords do not match."]})
+        elif new_password == current_password:
+            json_response.update({"status":"failure", "message":"Password not changed.", "errors":["New password is the same as the current password."]})
+        else:
+            try:
+                validate_password(new_password)
+                user.set_password(new_password)
+                user.full_clean()
+                user.save()
+                json_response.update({"status":"success", "message":"Password changed."})
+            except Exception as err:
+                json_response.update({"status":"failure", "message":"Password not changed.", "errors":[repr(err)]})
+      
+        return JsonResponse(json_response)
+
+    return HttpResponseNotAllowed(['POST'])
 @login_required(redirect_field_name='default_redirect', login_url='list_builder:default_redirect')
 def delete_account_view(request):
     if request.method == 'POST':
