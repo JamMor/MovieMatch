@@ -6,7 +6,7 @@
             <h3>Account Options</h3>
             <button id="change-nickname-btn" class="btn-large btn-rounded neon-blue-hover">Change Nickname</button>
             <button class="btn-large btn-rounded neon-blue-hover">Change Email</button>
-            <button class="btn-large btn-rounded neon-blue-hover">Change Password</button>
+            <button id="change-password-btn" class="btn-large btn-rounded neon-blue-hover">Change Password</button>
             <button class="btn-large btn-rounded neon-blue-hover">Reset Password</button>
             <hr>
             <button id="account-delete-btn" class="btn-large btn-rounded neon-blue-hover">Delete Account</button>
@@ -16,6 +16,7 @@
     <!-- Modal Structure -->
     {% include "login_and_reg/_account_delete_modal.html"%}
     {% include "login_and_reg/_change_nickname_modal.html"%}
+    {% include "login_and_reg/_change_password_modal.html"%}
 
 {% endblock %}
 {% block script_block %}
@@ -23,4 +24,5 @@
     {{ block.super }}
     <script src="{% static 'login_and_reg/js/account_delete_modal.js'%}"></script>
     <script src="{% static 'login_and_reg/js/change_nickname_modal.js'%}"></script>
+    <script src="{% static 'login_and_reg/js/change_password_modal.js'%}"></script>
 {% endblock %}
