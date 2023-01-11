@@ -2,7 +2,7 @@ from sys import prefix
 from django.http import JsonResponse, HttpResponseNotAllowed 
 from django.shortcuts import redirect, render, HttpResponse
 from django.contrib.auth.models import User
-from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth import authenticate, login, logout, update_session_auth_hash
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm, PasswordChangeForm
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.password_validation import validate_password
@@ -108,6 +108,7 @@ def change_password_view(request):
         change_password_form = PasswordChangeForm(request.user, request.POST)
         if change_password_form.is_valid():
             user = change_password_form.save()
+            update_session_auth_hash(request, user) # Keeps user logged in.
             json_response.update({"status":"success", "message":"Password changed."})
         else:
             json_response.update({"status":"failure", "message":"Password not changed.", "errors":change_password_form.errors})

@@ -29,7 +29,7 @@ $(document).ready(function() {
                 $('#change-password-modal').modal('close');
                 changePasswordForm.reset();
                 console.log("Password Change Success.")
-                window.location.replace(`/`);
+                // window.location.replace(`/`); //Redirects to home page
             }
             else {
                 console.log("Failed to change password.")
