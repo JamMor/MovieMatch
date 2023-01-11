@@ -92,9 +92,9 @@ def change_nickname_view(request):
                 this_persona.save()
                 json_response.update({"status":"success", "message":"Nickname changed.", "data": {"nickname":f"{nickname}"}})
             except Exception as err:
-                json_response.update({"status":"failure", "message":"Nickname not changed.", "errors":[repr(err)]})
+                json_response.update({"status":"failure", "message":"Nickname not changed.", "errors":repr(err)})
         else:
-            json_response.update({"status":"failure", "message":"Nickname not changed.", "errors":["Already the current nickname."]})
+            json_response.update({"status":"failure", "message":"Nickname not changed.", "errors":"Already the current nickname."})
         return JsonResponse(json_response)
 
     return HttpResponseNotAllowed(['POST'])
@@ -124,9 +124,9 @@ def delete_account_view(request):
         json_response = {"status":"error", "message":"An unknown error occurred.", "errors":[]}
 
         if verification_check != 'on':
-            json_response.update({"status":"failure", "message":"Account not deleted.", "errors":["Account delete verification check failed."]})
+            json_response.update({"status":"failure", "message":"Account not deleted.", "errors":"Account delete verification check failed."})
         elif not request.user.check_password(verification_password):
-            json_response.update({"status":"failure", "message":"Account not deleted.", "errors":["Incorrect password."]})
+            json_response.update({"status":"failure", "message":"Account not deleted.", "errors":"Incorrect password."})
         else:
             json_response.update({"status":"success", "message":"Account deleted."})
             del json_response['errors']
