@@ -10,6 +10,7 @@ $(document).ready(function() {
     //Sends change password request to server.
     $("#change-password-confirm").on("click", function(e){
         e.preventDefault();
+        $("#change-password-form span.error").remove();
         console.log("Change password request sent.")
         let changePasswordForm = document.querySelector("#change-password-form");
         const changePasswordFormData = new FormData(changePasswordForm);
@@ -32,6 +33,7 @@ $(document).ready(function() {
             }
             else {
                 console.log("Failed to change password.")
+                formErrorHandler2("#change-password-form", data.errors)
                 changePasswordForm.reset();
             }
 

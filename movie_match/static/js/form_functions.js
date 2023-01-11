@@ -9,3 +9,22 @@ function applyTooltips(){
         });
     })
 }
+
+//Parses dictionary of form errors for each field and applies them in a span
+//where appropriate
+function formErrorHandler2(formSelector, errorDict){
+    for(const field of Object.keys(errorDict)){
+        if(field == "__all__"){
+            for(let errorMsg of errorDict[field]){
+                $(formSelector)
+                    .prepend(`<span class="error center">${errorMsg}</span>`)
+            }
+        }
+        else {
+            for(let errorMsg of errorDict[field]){
+                $(`${formSelector} input[name=${field}] ~ label`)
+                    .after(`<span class="error">${errorMsg}</span>`)
+            }
+        }
+    }
+}
