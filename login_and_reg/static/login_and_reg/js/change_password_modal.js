@@ -1,4 +1,6 @@
 $(document).ready(function() {
+    applyTooltips()
+
     //Initializes then calls change password modal
     $("#change-password-btn").on("click", function(){
         $(`#change-password-modal`).modal();
