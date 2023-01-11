@@ -105,27 +105,13 @@ def change_password_view(request):
     if request.method == 'POST':
         json_response = {"status":"error", "message":"An unknown error occurred.", "errors":[]} #Default response
         print(request.POST)
-        current_password = request.POST.get('change-password-current-password')
-        new_password = request.POST.get('change-password-new-password')
-        new_password_confirm = request.POST.get('change-password-confirm-new-password')
-
-        user = request.user
-        if not user.check_password(current_password):
-            json_response.update({"status":"failure", "message":"Password not changed.", "errors":["Current password is incorrect."]})
-        elif new_password != new_password_confirm:
-            json_response.update({"status":"failure", "message":"Password not changed.", "errors":["New passwords do not match."]})
-        elif new_password == current_password:
-            json_response.update({"status":"failure", "message":"Password not changed.", "errors":["New password is the same as the current password."]})
+        change_password_form = PasswordChangeForm(request.user, request.POST)
+        if change_password_form.is_valid():
+            user = change_password_form.save()
+            json_response.update({"status":"success", "message":"Password changed."})
         else:
-            try:
-                validate_password(new_password)
-                user.set_password(new_password)
-                user.full_clean()
-                user.save()
-                json_response.update({"status":"success", "message":"Password changed."})
-            except Exception as err:
-                json_response.update({"status":"failure", "message":"Password not changed.", "errors":[repr(err)]})
-      
+            json_response.update({"status":"failure", "message":"Password not changed.", "errors":change_password_form.errors})
+
         return JsonResponse(json_response)
 
     return HttpResponseNotAllowed(['POST'])
