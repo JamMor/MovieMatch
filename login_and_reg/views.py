@@ -3,7 +3,7 @@ from django.http import JsonResponse, HttpResponseNotAllowed
 from django.shortcuts import redirect, render, HttpResponse
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login, logout
-from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
+from django.contrib.auth.forms import UserCreationForm, AuthenticationForm, PasswordChangeForm
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.password_validation import validate_password
 from .forms import RegistrationForm, PersonaForm
@@ -72,7 +72,8 @@ def logout_view(request):
 def account_settings_view(request):
     this_persona = get_or_set_persona(request)
     context = { 
-        'nickname': this_persona.nickname
+        'nickname': this_persona.nickname,
+        'change_password_form' : PasswordChangeForm(request.user)
     }
     return render(request, 'login_and_reg/account_settings.html', context)
 
