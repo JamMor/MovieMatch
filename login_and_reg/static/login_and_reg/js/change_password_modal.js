@@ -36,7 +36,7 @@ $(document).ready(function() {
                 console.log("Failed to change password.")
                 formErrorHandler2("#change-password-form", data.errors)
                 changePasswordForm.reset();
-                M.toast({html: `<span><strong class="orange-text text-darken-3">Failed</strong> to change password. ${data.errors}</span>`})
+                M.toast({html: `<span><strong class="orange-text text-darken-3">Failed</strong> to change password.</span>`})
             }
 
         })
