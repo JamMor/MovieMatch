@@ -81,7 +81,7 @@ def account_settings_view(request):
 def change_nickname_view(request):
     this_persona = get_or_set_persona(request)
     if request.method == 'POST':
-        json_response = {"status":"error", "message":"An unknown error occurred.", "errors":[]} #Default response
+        json_response = {"status":"error", "message":"An unknown error occurred.", "errors":""} #Default response
         nickname = request.POST.get('change-nickname-input')
         nickname = nickname.strip()
 
@@ -103,7 +103,7 @@ def change_nickname_view(request):
 def change_password_view(request):
     this_persona = get_or_set_persona(request)
     if request.method == 'POST':
-        json_response = {"status":"error", "message":"An unknown error occurred.", "errors":[]} #Default response
+        json_response = {"status":"error", "message":"An unknown error occurred.", "errors":""} #Default response
         print(request.POST)
         change_password_form = PasswordChangeForm(request.user, request.POST)
         if change_password_form.is_valid():
@@ -121,7 +121,7 @@ def delete_account_view(request):
     if request.method == 'POST':
         verification_check = request.POST.get('account-delete-verification-check')
         verification_password = request.POST.get('account-delete-verification-password')
-        json_response = {"status":"error", "message":"An unknown error occurred.", "errors":[]}
+        json_response = {"status":"error", "message":"An unknown error occurred.", "errors":""}
 
         if verification_check != 'on':
             json_response.update({"status":"failure", "message":"Account not deleted.", "errors":"Account delete verification check failed."})
