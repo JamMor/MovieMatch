@@ -90,6 +90,7 @@ def change_nickname_view(request):
             try:
                 this_persona.full_clean()
                 this_persona.save()
+                del json_response['errors']
                 json_response.update({"status":"success", "message":"Nickname changed.", "data": {"nickname":f"{nickname}"}})
             except Exception as err:
                 json_response.update({"status":"failure", "message":"Nickname not changed.", "errors":repr(err)})
@@ -109,6 +110,7 @@ def change_password_view(request):
         if change_password_form.is_valid():
             user = change_password_form.save()
             update_session_auth_hash(request, user) # Keeps user logged in.
+            del json_response['errors']
             json_response.update({"status":"success", "message":"Password changed."})
         else:
             json_response.update({"status":"failure", "message":"Password not changed.", "errors":change_password_form.errors})
