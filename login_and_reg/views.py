@@ -118,6 +118,7 @@ def change_password_view(request):
         return JsonResponse(json_response)
 
     return HttpResponseNotAllowed(['POST'])
+
 @login_required(redirect_field_name='default_redirect', login_url='list_builder:default_redirect')
 def delete_account_view(request):
     if request.method == 'POST':
