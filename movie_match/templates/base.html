@@ -45,7 +45,7 @@
                     <li><a href="#">Recent Lists</a></li>
                     {% if user.is_authenticated %}
                     <li><a href="{% url 'list_builder:list_manager' %}">List Manager</a></li>
-                    <li class="user-name"><a class="user-name dropdown-trigger" href="#" data-target="logged-in-options"><i class="material-icons left">account_circle</i>{{user.username}}<i class="material-icons right">arrow_drop_down</i></a></li>
+                    <li><a class="user-name dropdown-trigger" href="#" data-target="logged-in-options"><i class="material-icons left">account_circle</i>{{user.username}}<i class="material-icons right">arrow_drop_down</i></a></li>
                     <div id="logged-in-options" class="dropdown-content">
                         <div class="cyber-grade">
                             <ul>
