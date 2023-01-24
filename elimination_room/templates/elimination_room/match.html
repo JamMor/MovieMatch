@@ -6,7 +6,6 @@
 {% block content_block %}
     <main>
         <div class="container">
-            <h4>Match Room ID = <span id="share-code">{{sharecode}}</span></h4>
             <div id="status_bar" class="center-align">
                 <a id="status-btn" class=" status-waiting neon-blue inactive btn-large btn-rounded">
                     <i class="material-icons left">cast</i>
@@ -19,6 +18,11 @@
             <div id="movie_list"></div>
         </div>
     </main>
+    <footer class="sharecode cyan accent-2">
+        <button id="copy-sharecode" class=" cyan accent-2 btn waves-effect">
+            <span id="sharecode">{{sharecode}}</span><i class="material-icons">content_copy</i>
+        </button>
+    </footer>
     <div id="final_modal" class="modal cyber-grade">
         <div class="modal-content pink-text text-darken-2"></div>
         <div class="navbar-fixed">
