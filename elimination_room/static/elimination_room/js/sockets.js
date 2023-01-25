@@ -16,11 +16,7 @@ $(document).ready(function() {
 
     function createMatchSocket(){
         matchSocket = new WebSocket(
-            'ws://'
-            + window.location.host
-            + '/ws/match/'
-            + shareCode
-            + '/'
+            urlPath.webSocketURL(shareCode)
         );
     
         matchSocket.onopen = function(e) {
