@@ -20,3 +20,7 @@ class FailedJsonClassObject(JsonClassObject):
         super().__init__(message)
         self.status = "failure"
         self.errors = errors
+    
+    def add_error(self, error):
+        """Adds an error to the list of errors property."""
+        self.errors.append(error)
