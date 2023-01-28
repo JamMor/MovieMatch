@@ -13,6 +13,10 @@ class SuccessJsonClassObject(JsonClassObject):
         super().__init__(message)
         self.status = "success"
         self.data = data
+    
+    def add_data(self, key, value):
+        """Adds a key value pair to the data property."""
+        self.data[key].update(value)
 
 #This is a child class for an error json response
 class FailedJsonClassObject(JsonClassObject):
