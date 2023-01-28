@@ -3,6 +3,9 @@ class JsonClassObject:
     def __init__(self, message = ""):
         self.message = message
 
+    def to_dict(self):
+        """This method returns a dictionary that can be used to create a JsonResponse"""
+        return vars(self)
 
 #This is a child class for a successful json response
 class SuccessJsonClassObject(JsonClassObject):
