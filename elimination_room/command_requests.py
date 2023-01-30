@@ -12,25 +12,19 @@ from list_builder.models import Persona
 from elimination_room.models import SharedMovie, ShareRoomUser, SharedMovieList
 from .serializer import SharedListEncoder
 from .consumer_utils import find_next_index
+from .json_response import SuccessJsonClassObject, FailedJsonClassObject
 
 
     #If it isn't any user's turn, elimination hasn't started. Return failed msg
     if active_share_users_qs.filter(is_users_turn = True).count() == 0:
-        self.send_json({
-                'type': 'eliminate_message',
-                'status' : 'failed',
-                'error_message' : "List not set to allow elimination."
-        })
-        return
+        response_object = FailedJsonClassObject(errors=["List not set to allow elimination."])
+        return response_object
+    
     #If it isn't THIS user's turn. Return failed msg
     this_user = active_share_users_qs.get(persona__uuid = self.persona_uuid)
     if not this_user.is_users_turn:
-        self.send_json({
-                'type': 'eliminate_message',
-                'status' : 'failed',
-                'error_message' : "Not this users turn."
-        })
-        return
+        response_object = FailedJsonClassObject(errors=["Not this users turn."])
+        return response_object
     #If elimination has started:
     shared_movie_id = content['shared_movie_id']
     uneliminated_movies_qs = SharedMovie.objects.filter(shared_list__sharecode = self.sharecode, is_eliminated = False)
@@ -43,12 +37,8 @@ from .consumer_utils import find_next_index
             shared_movie = uneliminated_movies_qs.get(id=shared_movie_id)
         except SharedMovie.DoesNotExist:
             print("Can't find selected movie (probably already eliminated).")
-            self.send_json({
-                'type': 'eliminate_message',
-                'status' : 'failed',
-                'error_message' : 'Shared movie not found in uneliminated movies.'
-            })
-            return
+            response_object = FailedJsonClassObject(errors=["Shared movie not found in uneliminated movies."])
+            return response_object
         shared_movie.is_eliminated = True
         shared_movie.save()
         movies_left -= 1
@@ -59,6 +49,7 @@ from .consumer_utils import find_next_index
         current_user.save()
         next_index = find_next_index(self.persona_uuid, list(active_share_users_qs.values_list('persona__uuid', flat=True)))
         if next_index == None:
+            #FLAG handle error
             print("No available user for turn.")
             return
         next_user = active_share_users_qs[next_index]
@@ -66,26 +57,38 @@ from .consumer_utils import find_next_index
         next_user.save()
 
         #Confirm Removal for Group
-        async_to_sync(self.channel_layer.group_send)(
-            self.match_group_name,
-            {
-                'type': 'eliminate_message',
-                'shared_movie_id' : shared_movie_id,
-                'eliminating_uuid' : self.persona_uuid,
-                'next_eliminating_uuid' : next_user.persona.uuid
-            }
-        )
+        response_object = SuccessJsonClassObject(data={
+            "shared_movie_id": shared_movie_id,
+            "eliminating_uuid": persona_uuid,
+            "next_eliminating_uuid": next_user.persona.uuid
+        })
+        return response_object
+        # async_to_sync(self.channel_layer.group_send)(
+        #     self.match_group_name,
+        #     {
+        #         'type': 'eliminate_message',
+        #         'shared_movie_id' : shared_movie_id,
+        #         'eliminating_uuid' : persona_uuid,
+        #         'next_eliminating_uuid' : next_user.persona.uuid
+        #     }
+        # )
 
     #If last possible elimination
     if movies_left == 1:
         final_movie = SharedMovie.objects.filter(shared_list__sharecode = self.sharecode, is_eliminated = False).first()
         #Send final movie signal
-        async_to_sync(self.channel_layer.group_send)(
-                self.match_group_name,
-                {
-                    'type': 'final_message',
-                    'shared_movie_id' : final_movie.id
-                }
-            )
+        # async_to_sync(self.channel_layer.group_send)(
+        #         self.match_group_name,
+        #         {
+        #             'type': 'final_message',
+        #             'shared_movie_id' : final_movie.id
+        #         }
+        #     )
+        response_object = SuccessJsonClassObject(data={
+            "shared_movie_id": final_movie.id,
+        })
+
         #Set all to no one's turn
         active_share_users_qs.filter(is_users_turn = True).update(is_users_turn = False)
+        
+        return response_object
