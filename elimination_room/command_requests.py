@@ -12,10 +12,8 @@ from list_builder.models import Persona
 from elimination_room.models import SharedMovie, ShareRoomUser, SharedMovieList
 from .serializer import SharedListEncoder
 from .consumer_utils import find_next_index
-from .command_requests import request_eliminat
 
-def request_eliminate(self, content):
-    active_share_users_qs = ShareRoomUser.objects.filter(list__sharecode = self.sharecode, is_active = True).order_by('created_at')
+
     #If it isn't any user's turn, elimination hasn't started. Return failed msg
     if active_share_users_qs.filter(is_users_turn = True).count() == 0:
         self.send_json({
