@@ -14,6 +14,12 @@ from .serializer import SharedListEncoder
 from .consumer_utils import find_next_index
 from .json_response import SuccessJsonClassObject, FailedJsonClassObject
 
+def request_eliminate(sharecode, persona_uuid, content):
+    """
+    Request to eliminate a movie from the list.
+    Returns object with 
+    """
+
     active_share_users_qs = ShareRoomUser.objects.filter(list__sharecode = sharecode, is_active = True).order_by('created_at')
 
     #If it isn't any user's turn, elimination hasn't started. Return failed msg
