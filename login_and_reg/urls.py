@@ -9,5 +9,7 @@ urlpatterns = [
     path('settings', views.account_settings_view, name="settings"),
     path('settings/change-nickname', views.change_nickname_view, name="change_nickname"),
     path('settings/change-password', views.change_password_view, name="change_password"),
+    # path('settings/reset-password', views.reset_password_view, name="reset_password"),
+    # path('settings/change-email', views.change_email_view, name="change_email"),
     path('settings/delete-account', views.delete_account_view, name="delete_account"),
 ]
