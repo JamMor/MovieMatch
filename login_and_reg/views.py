@@ -36,12 +36,12 @@ def register_view(request):
 
 def login_view(request):
     if request.method == 'POST':
-        sentUser = request.POST.get("username")
-        sentPass = request.POST.get("password")
-        print(f'Username: {sentUser}, Password: {sentPass}')
+        # sentUser = request.POST.get("username")
+        # sentPass = request.POST.get("password")
+        # print(f'Username: {sentUser}, Password: {sentPass}')
 
         login_form = AuthenticationForm(data=request.POST)
-        print(f'AuthForm User: {login_form.get_user()}')
+        # print(f'AuthForm User: {login_form.get_user()}')
         status = "failure"
         if login_form.is_valid():
             user = login_form.get_user()
@@ -54,7 +54,7 @@ def login_view(request):
                 status = "failure"
         else:
             status = "failure"
-            print(f'AuthForm User: {login_form.get_invalid_login_error()}')
+            # print(f'AuthForm User: {login_form.get_invalid_login_error()}')
     
     response = {"status": status}
     response.update({"errors" : login_form.errors})
