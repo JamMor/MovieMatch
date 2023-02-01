@@ -10,7 +10,7 @@ from django.core.serializers.json import DjangoJSONEncoder
 
 from list_builder.models import Persona
 from elimination_room.models import SharedMovie, ShareRoomUser, SharedMovieList
-from .serializer import SharedListEncoder
+from .serializer import SharedListEncoder as SharedListJsonEncoder
 from .consumer_utils import find_next_index
 from .json_response import SuccessJsonClassObject, FailedJsonClassObject
 
@@ -99,3 +99,10 @@ def request_eliminate(sharecode, persona_uuid, content):
         active_share_users_qs.filter(is_users_turn = True).update(is_users_turn = False)
         
         return response_object
+    
+def request_initialize(sharecode):
+    try:
+        model_dict = SharedListJsonEncoder(sharecode)
+        return SuccessJsonClassObject(data=model_dict)
+    except:
+        return FailedJsonClassObject(errors=["Error initializing list."])
