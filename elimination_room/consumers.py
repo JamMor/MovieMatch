@@ -13,7 +13,7 @@ from list_builder.models import Persona
 from elimination_room.models import SharedMovie, ShareRoomUser, SharedMovieList
 from .serializer import SharedListEncoder
 from .consumer_utils import find_next_index
-from .command_requests import request_eliminate
+from .command_requests import request_eliminate, request_initialize
 
 class MatchConsumer(JsonWebsocketConsumer):
     def connect(self):
@@ -136,14 +136,10 @@ class MatchConsumer(JsonWebsocketConsumer):
                 
         #INITIALIZE
         elif command == 'initialize':
-            print("Sharecode from Receive: " + self.sharecode)
-            model_dict = SharedListEncoder(self.sharecode)
+            
+            json_response_obj = request_initialize(self.sharecode)
 
-            self.send_json({
-                'command': 'initialized',
-                'status' : 'success',
-                'share_list': model_dict
-            })
+            self.send_json(json_response_obj.to_dict())
         
         #START ELIMINATING
         elif command == 'elimination_start':
