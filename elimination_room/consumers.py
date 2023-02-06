@@ -347,6 +347,21 @@ class MatchConsumer(JsonWebsocketConsumer):
 
     #=============================================================
 
+
+    #===========================================================
+
+    def forward_command_response_to_group(self, json_response):
+        async_to_sync(self.channel_layer.group_send)(
+            self.match_group_name,
+            {
+                'type': 'send_command_response_to_client',
+                        'json_response': json_response
+            }
+        )
+
+    #===========================================================
+
+
     #Custom JSON coders (for dates)
     @classmethod
     def decode_json(cls, text_data):
