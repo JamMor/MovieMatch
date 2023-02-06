@@ -336,6 +336,17 @@ class MatchConsumer(JsonWebsocketConsumer):
         # Send message to WebSocket Client
         self.send_json(channel_msg)
 
+    #===================The OverFunctions. Praise Be.=====================
+
+    # Receive message from ChannelLayer
+    def send_command_response_to_client(self, event):
+        json_response = event.get("json_response")
+
+        # Send message to WebSocket Client
+        self.send_json(json_response)
+
+    #=============================================================
+
     #Custom JSON coders (for dates)
     @classmethod
     def decode_json(cls, text_data):
