@@ -70,27 +70,10 @@ def request_eliminate(sharecode, persona_uuid, content):
             "next_eliminating_uuid": next_user.persona.uuid
         })
         return response_object
-        # async_to_sync(self.channel_layer.group_send)(
-        #     self.match_group_name,
-        #     {
-        #         'type': 'eliminate_message',
-        #         'shared_movie_id' : shared_movie_id,
-        #         'eliminating_uuid' : persona_uuid,
-        #         'next_eliminating_uuid' : next_user.persona.uuid
-        #     }
-        # )
 
     #If last possible elimination
     if movies_left == 1:
         final_movie = SharedMovie.objects.filter(shared_list__sharecode = sharecode, is_eliminated = False).first()
-        #Send final movie signal
-        # async_to_sync(self.channel_layer.group_send)(
-        #         self.match_group_name,
-        #         {
-        #             'type': 'final_message',
-        #             'shared_movie_id' : final_movie.id
-        #         }
-        #     )
         response_object = SuccessJsonClassObject(data={
             "shared_movie_id": final_movie.id,
         })
