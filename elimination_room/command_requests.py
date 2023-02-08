@@ -75,7 +75,7 @@ def request_eliminate(sharecode, persona_uuid, content):
     if movies_left == 1:
         final_movie = SharedMovie.objects.filter(shared_list__sharecode = sharecode, is_eliminated = False).first()
         response_object = SuccessJsonClassObject(data={
-            "shared_movie_id": final_movie.id,
+            "final_shared_movie_id": final_movie.id,
         })
 
         #Set all to no one's turn
