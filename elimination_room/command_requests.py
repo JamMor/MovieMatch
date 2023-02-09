@@ -89,3 +89,20 @@ def request_initialize(sharecode):
         return SuccessJsonClassObject(data=model_dict)
     except:
         return FailedJsonClassObject(errors=["Error initializing list."])
+    
+def request_elimination_start(sharecode):
+    active_share_users_qs = ShareRoomUser.objects.filter(list__sharecode = sharecode, is_active = True)
+    
+    users_eliminating = active_share_users_qs.filter(is_users_turn = True).count()
+    if users_eliminating > 0:
+        return FailedJsonClassObject(errors=["Elimination already in progress."])
+
+    if SharedMovie.objects.filter(shared_list__sharecode = sharecode).count() < 2:
+        return FailedJsonClassObject(errors=["Must be at least 2 movies in list to begin eliminating."])
+
+    #Randomly pick user to start
+    eliminating_user = random.choice(active_share_users_qs)
+    eliminating_user.is_users_turn = True
+    eliminating_user.save()
+                    
+    return SuccessJsonClassObject(data={"eliminating_uuid": eliminating_user.persona.uuid})
