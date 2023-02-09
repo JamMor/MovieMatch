@@ -13,7 +13,7 @@ from list_builder.models import Persona
 from elimination_room.models import SharedMovie, ShareRoomUser, SharedMovieList
 from .serializer import SharedListEncoder
 from .consumer_utils import find_next_index
-from .command_requests import request_eliminate, request_initialize
+from .command_requests import request_eliminate, request_initialize, request_elimination_start
 
 class MatchConsumer(JsonWebsocketConsumer):
     def connect(self):
@@ -143,29 +143,16 @@ class MatchConsumer(JsonWebsocketConsumer):
         
         #START ELIMINATING
         elif command == 'elimination_start':
-            active_share_users_qs = ShareRoomUser.objects.filter(list__sharecode = self.sharecode, is_active = True)
-            users_eliminating = active_share_users_qs.filter(is_users_turn = True).count()
-            if users_eliminating > 0:
-                print("Elimination already in progress.")
-                return
+            
+            json_response_obj = request_elimination_start(self.sharecode)
+            
+            if json_response_obj.status == "success":
+                self.forward_command_response_to_group(json_response_obj.to_dict())
+            elif json_response_obj.status == "failure":
+                self.send_json(json_response_obj.to_dict())
+            else:
+                print("Invalid status from request_elimination_start")
 
-            if SharedMovie.objects.filter(shared_list__sharecode = self.sharecode).count() < 2:
-                print("Must be at least 2 movies in list to begin eliminating.")
-                return
-
-            #Randomly pick user to start
-            eliminating_user = random.choice(active_share_users_qs)
-            eliminating_user.is_users_turn = True
-            eliminating_user.save()
-                        
-            async_to_sync(self.channel_layer.group_send)(
-                    self.match_group_name,
-                    {
-                        'type': 'elimination_start',
-                        'eliminating_uuid': eliminating_user.persona.uuid
-                    }
-                )
-        
         #REFRESH LIST
         elif command == 'refresh':
             
