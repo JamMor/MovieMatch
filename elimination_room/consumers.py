@@ -174,40 +174,40 @@ class MatchConsumer(JsonWebsocketConsumer):
                 'error_message' : f'Command failure: {command}.'
             })
 
-    # Receive message from ChannelLayer
-    def eliminate_message(self, event):
-        shared_movie_id = event['shared_movie_id']
-        eliminating_uuid = event['eliminating_uuid']
-        next_eliminating_uuid = event['next_eliminating_uuid']
+    # # Receive message from ChannelLayer
+    # def eliminate_message(self, event):
+    #     shared_movie_id = event['shared_movie_id']
+    #     eliminating_uuid = event['eliminating_uuid']
+    #     next_eliminating_uuid = event['next_eliminating_uuid']
 
-        # Send message to WebSocket Client
-        self.send_json({
-            'command': 'eliminated',
-            'status' : "success",
-            'shared_movie_id' : shared_movie_id,
-            'eliminating_uuid' : eliminating_uuid,
-            'next_eliminating_uuid' : next_eliminating_uuid
-        })
+    #     # Send message to WebSocket Client
+    #     self.send_json({
+    #         'command': 'eliminated',
+    #         'status' : "success",
+    #         'shared_movie_id' : shared_movie_id,
+    #         'eliminating_uuid' : eliminating_uuid,
+    #         'next_eliminating_uuid' : next_eliminating_uuid
+    #     })
     
-    def final_message(self, event):
-        shared_movie_id = event['shared_movie_id']
+    # def final_message(self, event):
+    #     shared_movie_id = event['shared_movie_id']
 
-        # Send message to WebSocket Client
-        self.send_json({
-            'command': 'finalized',
-            'status' : "success",
-            'shared_movie_id' : shared_movie_id
-        })
+    #     # Send message to WebSocket Client
+    #     self.send_json({
+    #         'command': 'finalized',
+    #         'status' : "success",
+    #         'shared_movie_id' : shared_movie_id
+    #     })
     
-    def elimination_start(self, event):
-        eliminating_uuid = event['eliminating_uuid']
+    # def elimination_start(self, event):
+    #     eliminating_uuid = event['eliminating_uuid']
 
-        # Send message to WebSocket Client
-        self.send_json({
-                'command': 'elimination_started',
-                'status' : 'success',
-                'eliminating_uuid' : eliminating_uuid
-            })
+    #     # Send message to WebSocket Client
+    #     self.send_json({
+    #             'command': 'elimination_started',
+    #             'status' : 'success',
+    #             'eliminating_uuid' : eliminating_uuid
+    #         })
     
     # Receive message from ChannelLayer
     def update_message(self, event):
