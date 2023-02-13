@@ -86,7 +86,7 @@ def request_eliminate(sharecode, persona_uuid, content):
 def request_initialize(sharecode):
     try:
         model_dict = SharedListJsonEncoder(sharecode)
-        return SuccessJsonClassObject(data=model_dict)
+        return SuccessJsonClassObject(data={"share_list": model_dict})
     except:
         return FailedJsonClassObject(errors=["Error initializing list."])
     
