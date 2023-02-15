@@ -1,4 +1,4 @@
-Django==4.1
+Django==4.1.7
 # django[bcrypt]            # installs latest django compatible bcrypt version
 bcrypt==4.0.0
 shortuuid==1.0.9
