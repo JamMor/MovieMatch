@@ -220,16 +220,16 @@ class MatchConsumer(JsonWebsocketConsumer):
             'share_list': model_dict
         })
     
-    # Receive message from ChannelLayer
-    def refresh_message(self, event):
-        model_dict = SharedListEncoder(self.sharecode)
+    # # Receive message from ChannelLayer
+    # def refresh_message(self, event):
+    #     model_dict = SharedListEncoder(self.sharecode)
 
-        # Send message to WebSocket Client
-        self.send_json({
-            'command': 'refreshed',
-            'status' : 'success',
-            'share_list': model_dict
-        })
+    #     # Send message to WebSocket Client
+    #     self.send_json({
+    #         'command': 'refreshed',
+    #         'status' : 'success',
+    #         'share_list': model_dict
+    #     })
     
     # Receive message from ChannelLayer
     def connect_message(self, event):
