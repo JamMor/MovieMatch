@@ -106,3 +106,13 @@ def request_elimination_start(sharecode):
     eliminating_user.save()
                     
     return SuccessJsonClassObject(data={"eliminating_uuid": eliminating_user.persona.uuid})
+
+def request_refresh_list(sharecode):
+    SharedMovie.objects.filter(shared_list__sharecode = sharecode).update(is_eliminated = False)
+
+    try:
+        model_dict = SharedListJsonEncoder(sharecode)
+        return SuccessJsonClassObject(data={"share_list": model_dict})
+    except:
+        return FailedJsonClassObject(errors=["Error refreshing list."])
+    
