@@ -13,6 +13,7 @@ from list_builder.models import Persona
 from elimination_room.models import SharedMovie, ShareRoomUser, SharedMovieList
 from .serializer import SharedListEncoder
 from .consumer_utils import find_next_index
+from .json_response import FailedJsonClassObject
 from .command_requests import request_eliminate, request_initialize, request_elimination_start, request_refresh_list
 
 class MatchConsumer(JsonWebsocketConsumer):
@@ -168,11 +169,9 @@ class MatchConsumer(JsonWebsocketConsumer):
         #FAILED COMMAND
         else:
             print(f'Command failure: {command}.')
-            self.send_json({
-                'command': command,
-                'status' : 'failed',
-                'error_message' : f'Command failure: {command}.'
-            })
+            
+            json_response_obj = FailedJsonClassObject(errors=[f'Command failure: {command}.'])
+            self.send_json(json_response_obj.to_dict())
 
     # # Receive message from ChannelLayer
     # def eliminate_message(self, event):
