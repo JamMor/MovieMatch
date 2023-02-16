@@ -13,7 +13,7 @@ from list_builder.models import Persona
 from elimination_room.models import SharedMovie, ShareRoomUser, SharedMovieList
 from .serializer import SharedListEncoder
 from .consumer_utils import find_next_index
-from .command_requests import request_eliminate, request_initialize, request_elimination_start
+from .command_requests import request_eliminate, request_initialize, request_elimination_start, request_refresh_list
 
 class MatchConsumer(JsonWebsocketConsumer):
     def connect(self):
@@ -156,14 +156,14 @@ class MatchConsumer(JsonWebsocketConsumer):
         #REFRESH LIST
         elif command == 'refresh':
             
-            SharedMovie.objects.filter(shared_list__sharecode = self.sharecode).update(is_eliminated = False)
-
-            async_to_sync(self.channel_layer.group_send)(
-                    self.match_group_name,
-                    {
-                        'type': 'refresh_message'
-                    }
-                )
+            json_response_obj = request_refresh_list(self.sharecode)
+            
+            if json_response_obj.status == "success":
+                self.forward_command_response_to_group(json_response_obj.to_dict())
+            elif json_response_obj.status == "failure":
+                self.send_json(json_response_obj.to_dict())
+            else:
+                print("Invalid status from request_refresh_list")
         
         #FAILED COMMAND
         else:
