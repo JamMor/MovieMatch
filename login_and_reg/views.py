@@ -1,10 +1,11 @@
 from sys import prefix
-from django.http import JsonResponse
+from django.http import JsonResponse, HttpResponseNotAllowed 
 from django.shortcuts import redirect, render, HttpResponse
 from django.contrib.auth.models import User
-from django.contrib.auth import authenticate, login, logout
-from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
+from django.contrib.auth import authenticate, login, logout, update_session_auth_hash
+from django.contrib.auth.forms import UserCreationForm, AuthenticationForm, PasswordChangeForm
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth.password_validation import validate_password
 from .forms import RegistrationForm, PersonaForm
 from list_builder.models import Persona
 from list_builder.persona_assigner import get_or_set_persona
@@ -35,12 +36,12 @@ def register_view(request):
 
 def login_view(request):
     if request.method == 'POST':
-        sentUser = request.POST.get("username")
-        sentPass = request.POST.get("password")
-        print(f'Username: {sentUser}, Password: {sentPass}')
+        # sentUser = request.POST.get("username")
+        # sentPass = request.POST.get("password")
+        # print(f'Username: {sentUser}, Password: {sentPass}')
 
         login_form = AuthenticationForm(data=request.POST)
-        print(f'AuthForm User: {login_form.get_user()}')
+        # print(f'AuthForm User: {login_form.get_user()}')
         status = "failure"
         if login_form.is_valid():
             user = login_form.get_user()
@@ -53,7 +54,7 @@ def login_view(request):
                 status = "failure"
         else:
             status = "failure"
-            print(f'AuthForm User: {login_form.get_invalid_login_error()}')
+            # print(f'AuthForm User: {login_form.get_invalid_login_error()}')
     
     response = {"status": status}
     response.update({"errors" : login_form.errors})
@@ -66,3 +67,75 @@ def logout_view(request):
     return redirect('list_builder:default_redirect')
 
 # @login_required(redirect_field_name='default_redirect', login_url='list_builder:default_redirect')
+
+@login_required(redirect_field_name='default_redirect', login_url='list_builder:default_redirect')
+def account_settings_view(request):
+    this_persona = get_or_set_persona(request)
+    context = { 
+        'nickname': this_persona.nickname,
+        'change_password_form' : PasswordChangeForm(request.user)
+    }
+    return render(request, 'login_and_reg/account_settings.html', context)
+
+@login_required(redirect_field_name='default_redirect', login_url='list_builder:default_redirect')
+def change_nickname_view(request):
+    this_persona = get_or_set_persona(request)
+    if request.method == 'POST':
+        json_response = {"status":"error", "message":"An unknown error occurred.", "errors":""} #Default response
+        nickname = request.POST.get('change-nickname-input')
+        nickname = nickname.strip()
+
+        if nickname != this_persona.nickname:
+            this_persona.nickname = nickname
+            try:
+                this_persona.full_clean()
+                this_persona.save()
+                del json_response['errors']
+                json_response.update({"status":"success", "message":"Nickname changed.", "data": {"nickname":f"{nickname}"}})
+            except Exception as err:
+                json_response.update({"status":"failure", "message":"Nickname not changed.", "errors":repr(err)})
+        else:
+            json_response.update({"status":"failure", "message":"Nickname not changed.", "errors":"Already the current nickname."})
+        return JsonResponse(json_response)
+
+    return HttpResponseNotAllowed(['POST'])
+
+@login_required(redirect_field_name='default_redirect', login_url='list_builder:default_redirect')
+def change_password_view(request):
+    this_persona = get_or_set_persona(request)
+    if request.method == 'POST':
+        json_response = {"status":"error", "message":"An unknown error occurred.", "errors":""} #Default response
+        print(request.POST)
+        change_password_form = PasswordChangeForm(request.user, request.POST)
+        if change_password_form.is_valid():
+            user = change_password_form.save()
+            update_session_auth_hash(request, user) # Keeps user logged in.
+            del json_response['errors']
+            json_response.update({"status":"success", "message":"Password changed."})
+        else:
+            json_response.update({"status":"failure", "message":"Password not changed.", "errors":change_password_form.errors})
+
+        return JsonResponse(json_response)
+
+    return HttpResponseNotAllowed(['POST'])
+
+@login_required(redirect_field_name='default_redirect', login_url='list_builder:default_redirect')
+def delete_account_view(request):
+    if request.method == 'POST':
+        verification_check = request.POST.get('account-delete-verification-check')
+        verification_password = request.POST.get('account-delete-verification-password')
+        json_response = {"status":"error", "message":"An unknown error occurred.", "errors":""}
+
+        if verification_check != 'on':
+            json_response.update({"status":"failure", "message":"Account not deleted.", "errors":"Account delete verification check failed."})
+        elif not request.user.check_password(verification_password):
+            json_response.update({"status":"failure", "message":"Account not deleted.", "errors":"Incorrect password."})
+        else:
+            json_response.update({"status":"success", "message":"Account deleted."})
+            del json_response['errors']
+            request.user.delete()
+            logout(request)
+
+        return JsonResponse(json_response)
+
+    return HttpResponseNotAllowed(['POST'])

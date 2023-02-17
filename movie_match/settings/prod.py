@@ -11,6 +11,7 @@ SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 SESSION_COOKIE_SECURE = True
 CSRF_COOKIE_SECURE = True
 
+#FLAG
 env_cookie_domains = os.environ.get("CSRF_COOKIE_DOMAIN", None)
 CSRF_COOKIE_DOMAIN = env_cookie_domains
 

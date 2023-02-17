@@ -11,9 +11,11 @@
 [+] =Nav=
     [-] -Header=
         -HeaderLoginForm-
+        -LoggedInOptions-
     [-] -SideNav=
         -SideLoginForm-
 [+] =Registration Form=
+[+] =Account Settings=
 [+] =List Builder=
     [-] -Search=
         -SearchBar-
@@ -257,10 +259,17 @@ i.suffix {
 
 /* [+] */
 /* =========================Nav========================= */
-#nav-bar .user-name, #side-menu .user-name{
+#nav-bar .user-name, #side-menu .user-name, #side-menu .user-name i{
     color: var(--cyan_accent-2);
     font-weight: 800;
     font-size: 1.5rem;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+#side-menu .user-name i{
+    margin: 0 8px 0 0;
 }
 
 .registration-link{
@@ -349,6 +358,28 @@ nav .login-form input {
     height: auto;
 }
 
+/* -----------------------LoggedInOptions----------------------- */
+#logged-in-options div {
+    min-width: 250px;
+    padding: 0px 1rem;
+    padding-bottom: 1rem;
+    height: 100%;
+    line-height: normal;
+}
+
+#logged-in-options li {
+    background-color: transparent;
+}
+
+#logged-in-options a {
+    color: var(--blue_darken-2);
+    transition: color 0.2s ease-in-out;
+}
+
+#logged-in-options a:hover {
+    color: var(--cyan_accent-2);
+}
+
 /* [-] */
 /* -------------------------SideNav========================= */
 #side-menu {
@@ -399,6 +430,30 @@ nav .login-form input {
 }
 #registration-form button {
     align-self: flex-end;
+}
+
+/* [+] */
+/* ====================Account Settings==================== */
+#account-options {
+    display: flex;
+    flex-direction: column;
+    padding: 2rem 15%;
+    gap: 1.5rem;
+    text-align: center;
+}
+#account-options hr {
+    width: 100%;
+    border-width: 2px;
+    border-style:solid;
+    border-image: linear-gradient(
+        300deg, 
+        var(--purple_darken-1) 0%, 
+        #8a6ff5 35%, 
+        var(--cyan_accent-2) 95%) 10;
+}
+#account-delete-form [type="checkbox"]:checked+span:not(.lever):before {
+    border-bottom-color: var(--deep-orange_darken-4);
+    border-right-color: var(--deep-orange_darken-4);
 }
 
 /* [+] */
