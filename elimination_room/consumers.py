@@ -82,11 +82,9 @@ class MatchConsumer(JsonWebsocketConsumer):
         active_share_users_qs = ShareRoomUser.objects.filter(list__sharecode = self.sharecode, is_active = True).order_by('created_at')
         current_user = active_share_users_qs.get(persona__uuid = self.persona_uuid)
         
-        msg_data = {
-            'status': 'success',
-            'disconnected_uuid': self.persona_uuid
-        }
-
+        json_response_obj = SuccessJsonClassObject(data= {
+            "disconnected_uuid" : self.persona_uuid
+        })
         #If it is users turn, assign next user to turn
         if current_user.is_users_turn:
             current_user.is_users_turn = False
@@ -95,7 +93,7 @@ class MatchConsumer(JsonWebsocketConsumer):
             next_user.is_users_turn = True
             next_user.save()
             #SEND MESSAGE to channels update turn for all clients
-            msg_data['next_eliminating_uuid'] = next_user.persona.uuid
+            json_response_obj.add_data('next_eliminating_uuid', next_user.persona.uuid)
 
         #Set current user inactive
         current_user.is_active = False
@@ -104,13 +102,7 @@ class MatchConsumer(JsonWebsocketConsumer):
 
 
         # Tell group of disconnect
-        async_to_sync(self.channel_layer.group_send)(
-                self.match_group_name,
-                {
-                    'type': 'disconnect_message',
-                    'msg_data' : msg_data
-                }
-        )
+        self.forward_command_response_to_group(json_response_obj.to_dict())
 
         # Leave group
         async_to_sync(self.channel_layer.group_discard)(
