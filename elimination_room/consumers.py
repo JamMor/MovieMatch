@@ -222,26 +222,26 @@ class MatchConsumer(JsonWebsocketConsumer):
     #         'share_list': model_dict
     #     })
     
-    # Receive message from ChannelLayer
-    def connect_message(self, event):
-        connected_user = event['connected_user']
+    # # Receive message from ChannelLayer
+    # def connect_message(self, event):
+    #     connected_user = event['connected_user']
 
-        # Send message to WebSocket Client
-        self.send_json({
-            'command': 'connected',
-            'status' : 'success',
-            'user': connected_user
-        })
+    #     # Send message to WebSocket Client
+    #     self.send_json({
+    #         'command': 'connected',
+    #         'status' : 'success',
+    #         'user': connected_user
+    #     })
     # Receive message from ChannelLayer
-    def disconnect_message(self, event):
-        print("Disconnect Channel Event")
-        print(event)
-        channel_msg = {'command': 'disconnected'}
-        msg_data = event.get("msg_data")
-        channel_msg.update(msg_data)
+    # def disconnect_message(self, event):
+    #     print("Disconnect Channel Event")
+    #     print(event)
+    #     channel_msg = {'command': 'disconnected'}
+    #     msg_data = event.get("msg_data")
+    #     channel_msg.update(msg_data)
 
-        # Send message to WebSocket Client
-        self.send_json(channel_msg)
+    #     # Send message to WebSocket Client
+    #     self.send_json(channel_msg)
 
     #===================The OverFunctions. Praise Be.=====================
 
