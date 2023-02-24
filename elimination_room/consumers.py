@@ -262,7 +262,7 @@ class MatchConsumer(JsonWebsocketConsumer):
             self.match_group_name,
             {
                 'type': 'send_command_response_to_client',
-                        'json_response': json_response
+                'json_response': json_response
             }
         )
 
