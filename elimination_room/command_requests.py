@@ -17,7 +17,9 @@ from .json_response import SuccessJsonClassObject, FailedJsonClassObject, Succes
 def request_eliminate(sharecode, persona_uuid, content):
     """
     Request to eliminate a movie from the list.
-    Returns object with 
+    Returns either a FailedCommandResponse or SuccessfulCommandResponse, 
+    which can be differentiated by checking the 'status' attribute.
+    The to_dict() method can be called on either to get a json serializable dictionary.
     """
     command = "eliminated"
 
