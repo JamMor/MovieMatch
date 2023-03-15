@@ -202,14 +202,16 @@ class MatchConsumer(JsonWebsocketConsumer):
     
     # Receive message from ChannelLayer
     def update_message(self, event):
-        model_dict = SharedListEncoder(self.sharecode)
+        command="updated"
 
-        # Send message to WebSocket Client
-        self.send_json({
-            'command': 'updated',
-            'status' : 'success',
-            'share_list': model_dict
-        })
+        try:
+            model_dict = SharedListEncoder(self.sharecode)
+            json_response_object = SuccessfulCommandResponse(command=command, data={"share_list": model_dict})
+        except:
+            json_response_object = FailedCommandResponse(command=command, errors=["Error updating list."])
+        
+        self.send_json(json_response_object.to_dict())
+        
     
     # # Receive message from ChannelLayer
     # def refresh_message(self, event):
