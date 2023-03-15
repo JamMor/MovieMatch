@@ -14,9 +14,9 @@ class SuccessJsonClassObject(JsonClassObject):
         self.status = "success"
         self.data = data
     
-    def add_data(self, key, value):
-        """Adds a key value pair to the data property."""
-        self.data[key].update(value)
+    def add_data(self, new_data):
+        """Adds dictionary of new data to the data property."""
+        self.data.update(new_data)
 
 #This is a child class for an error json response
 class FailedJsonClassObject(JsonClassObject):

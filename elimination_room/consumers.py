@@ -93,7 +93,7 @@ class MatchConsumer(JsonWebsocketConsumer):
             next_user.is_users_turn = True
             next_user.save()
             #SEND MESSAGE to channels update turn for all clients
-            json_response_obj.add_data('next_eliminating_uuid', next_user.persona.uuid)
+            json_response_obj.add_data({"next_eliminating_uuid": next_user.persona.uuid})
 
         #Set current user inactive
         current_user.is_active = False
