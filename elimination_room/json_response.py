@@ -28,3 +28,18 @@ class FailedJsonClassObject(JsonClassObject):
     def add_error(self, error):
         """Adds an error to the list of errors property."""
         self.errors.append(error)
+
+#This is a base class for an elimination room socket command type
+class CommandType():
+    def __init__(self, command =""):
+        self.command = command
+
+#This is a child class for a successful json response to an elimination room socket command
+class SuccessfulCommandResponse(SuccessJsonClassObject, CommandType):
+    def __init__(self, message = "", data = {}, command = ""):
+        super().__init__(message, data, command)
+
+#This is a child class for a failed json response to an elimination room socket command
+class FailedCommandResponse(FailedJsonClassObject, CommandType):
+    def __init__(self, message = "", errors = [], command = ""):
+        super().__init__(message, errors, command)
