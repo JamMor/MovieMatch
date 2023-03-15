@@ -20,7 +20,11 @@ def request_eliminate(sharecode, persona_uuid, content):
     Returns either a FailedCommandResponse or SuccessfulCommandResponse, 
     which can be differentiated by checking the 'status' attribute.
     The to_dict() method can be called on either to get a json serializable dictionary.
+    On succesful elimination, response will include 
+    "shared_movie_id, eliminating_uuid, and next_eliminating_uuid".
+    May include "final_shared_movie_id" if last elimination
     """
+
     command = "eliminated"
 
     active_share_users_qs = ShareRoomUser.objects.filter(list__sharecode = sharecode, is_active = True).order_by('created_at')
@@ -83,6 +87,14 @@ def request_eliminate(sharecode, persona_uuid, content):
     return successful_response
     
 def request_initialize(sharecode):
+    """
+    Request to intialize a movie from the list.
+    Returns either a FailedCommandResponse or SuccessfulCommandResponse, 
+    which can be differentiated by checking the 'status' attribute.
+    The to_dict() method can be called on either to get a json serializable dictionary.
+    Successful response returns the shareroom state of users and movies as "share_list".
+    """
+
     command = "initialized"
 
     try:
@@ -92,6 +104,14 @@ def request_initialize(sharecode):
         return FailedCommandResponse(command=command, errors=["Error initializing list."])
     
 def request_elimination_start(sharecode):
+    """
+    Request to start elimination in a share room.
+    Returns either a FailedCommandResponse or SuccessfulCommandResponse, 
+    which can be differentiated by checking the 'status' attribute.
+    The to_dict() method can be called on either to get a json serializable dictionary.
+    Successful response returns the "eliminating_uuid" of the first selecting user.
+    """
+
     command = "elimination_started"
     active_share_users_qs = ShareRoomUser.objects.filter(list__sharecode = sharecode, is_active = True)
     
@@ -110,6 +130,14 @@ def request_elimination_start(sharecode):
     return SuccessfulCommandResponse(command=command, data={"eliminating_uuid": eliminating_user.persona.uuid})
 
 def request_refresh_list(sharecode):
+    """
+    Request to refresh a share room to redo elimination.
+    Returns either a FailedCommandResponse or SuccessfulCommandResponse, 
+    which can be differentiated by checking the 'status' attribute.
+    The to_dict() method can be called on either to get a json serializable dictionary.
+    Successful response returns the shareroom state of users and all movies un-eliminated as "share_list".
+    """
+
     command = "refreshed"
 
     SharedMovie.objects.filter(shared_list__sharecode = sharecode).update(is_eliminated = False)
