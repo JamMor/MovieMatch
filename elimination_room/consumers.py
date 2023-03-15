@@ -13,7 +13,7 @@ from list_builder.models import Persona
 from elimination_room.models import SharedMovie, ShareRoomUser, SharedMovieList
 from .serializer import SharedListEncoder
 from .consumer_utils import find_next_index
-from .json_response import SuccessJsonClassObject, FailedJsonClassObject
+from .json_response import SuccessJsonClassObject, FailedJsonClassObject, SuccessfulCommandResponse, FailedCommandResponse
 from .command_requests import request_eliminate, request_initialize, request_elimination_start, request_refresh_list
 
 class MatchConsumer(JsonWebsocketConsumer):
@@ -65,12 +65,13 @@ class MatchConsumer(JsonWebsocketConsumer):
         # Tell group of connection
         # print("Connecting User - Consumers")
         # print({self.persona_uuid : {'nickname' : room_user.nickname, 'is_users_turn' : room_user.is_users_turn}})
-                
-        json_response_obj = SuccessJsonClassObject(data= {
+        user_data = {
             'uuid' : self.persona_uuid,
             'nickname' : room_user.nickname,
             'is_users_turn' : room_user.is_users_turn
-        })
+        }
+        json_response_obj = SuccessfulCommandResponse(command = "connected", data= user_data)
+
         self.forward_command_response_to_group(json_response_obj.to_dict())
         
         self.accept()
@@ -82,9 +83,8 @@ class MatchConsumer(JsonWebsocketConsumer):
         active_share_users_qs = ShareRoomUser.objects.filter(list__sharecode = self.sharecode, is_active = True).order_by('created_at')
         current_user = active_share_users_qs.get(persona__uuid = self.persona_uuid)
         
-        json_response_obj = SuccessJsonClassObject(data= {
-            "disconnected_uuid" : self.persona_uuid
-        })
+        json_response_obj = SuccessfulCommandResponse(command="disconnected", data= {"disconnected_uuid" : self.persona_uuid})
+
         #If it is users turn, assign next user to turn
         if current_user.is_users_turn:
             current_user.is_users_turn = False
@@ -162,7 +162,7 @@ class MatchConsumer(JsonWebsocketConsumer):
         else:
             print(f'Command failure: {command}.')
             
-            json_response_obj = FailedJsonClassObject(errors=[f'Command failure: {command}.'])
+            json_response_obj = FailedCommandResponse(command=command, errors=[f'Command failure: {command}.'])
             self.send_json(json_response_obj.to_dict())
 
     # # Receive message from ChannelLayer
