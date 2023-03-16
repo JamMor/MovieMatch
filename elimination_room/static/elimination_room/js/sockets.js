@@ -40,6 +40,11 @@ $(document).ready(function() {
             if(responseData.status != 'success'){
                 console.log("Command failed.")
                 console.log(responseData)
+                if (responseData.hasOwnProperty('errors')) {
+                    responseData.errors.forEach(error =>
+                        {console.log(error)}
+                    )
+                }
                 return
             }
             //Eliminate movie
