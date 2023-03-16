@@ -35,6 +35,7 @@ $(document).ready(function() {
         matchSocket.onmessage = function(e) {
             console.log(e);
             let responseData = JSON.parse(e.data);
+            let receivedCommand = responseData.command;
 
             // Failed command
             if(responseData.status != 'success'){
@@ -57,7 +58,7 @@ $(document).ready(function() {
             }
 
             //Eliminate movie
-            else if(responseData.command == "eliminated"){
+            if(receivedCommand == "eliminated"){
                 let shared_movie_id = responseData.shared_movie_id
                 let eliminating_uuid = responseData.eliminating_uuid
                 let next_uuid = responseData.next_eliminating_uuid
@@ -79,7 +80,7 @@ $(document).ready(function() {
             }
             
             //User connected
-            else if(responseData.command == "connected"){
+            else if(receivedCommand == "connected"){
                 let connected_user = responseData.user
                 console.log("Connected User: ");
                 console.log(connected_user);
@@ -98,7 +99,7 @@ $(document).ready(function() {
                 }
             }
             //User disconnected
-            else if(responseData.command == "disconnected"){
+            else if(receivedCommand == "disconnected"){
                 if (responseData.hasOwnProperty("next_eliminating_uuid")){
                     setUserTurn(responseData.next_eliminating_uuid)
                 }
@@ -113,7 +114,7 @@ $(document).ready(function() {
                 delete user_list[disconnected_uuid];
             }
             //Initialize/Update list of movies
-            else if(responseData.command == "initialized" || responseData.command == "updated"){
+            else if(receivedCommand == "initialized" || receivedCommand == "updated"){
                 let {
                     movie_list:received_movie_list, 
                     active_user_dict:received_user_list
@@ -156,7 +157,7 @@ $(document).ready(function() {
                 $('#status-btn span').html(statusText);
             }
             //Refresh list of movies
-            else if(responseData.command == "refreshed"){
+            else if(receivedCommand == "refreshed"){
                 let {
                     movie_list:received_movie_list, 
                     active_user_dict:received_user_list
@@ -184,7 +185,7 @@ $(document).ready(function() {
                 $('#status-btn span').html(statusText);
             }
             //Start Elimination
-            else if(responseData.command == "elimination_started"){
+            else if(receivedCommand == "elimination_started"){
                 let uuid_turn = responseData.eliminating_uuid
                 setUserTurn(uuid_turn);
                 let {styleClass, icons} = getStatusBarProperties("eliminating");
@@ -192,7 +193,7 @@ $(document).ready(function() {
                 $('#status-btn i').html(icons);
             }
             //Final movie left
-            else if(responseData.command == "finalized"){
+            else if(receivedCommand == "finalized"){
 
                 let finalSharedId = responseData.shared_movie_id;
                 let finalMovie = movie_list.find(movie => movie.shared_movie_id == finalSharedId);
