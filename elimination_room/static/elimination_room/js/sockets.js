@@ -47,6 +47,15 @@ $(document).ready(function() {
                 }
                 return
             }
+            //Successful command
+            if (responseData.hasOwnProperty('data')){
+                commandData = responseData.data
+            }
+            else{
+                console.log("Error: No data in response.")
+                return
+            }
+
             //Eliminate movie
             else if(responseData.command == "eliminated"){
                 let shared_movie_id = responseData.shared_movie_id
