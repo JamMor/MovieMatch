@@ -59,9 +59,9 @@ $(document).ready(function() {
 
             //Eliminate movie
             if(receivedCommand == "eliminated"){
-                let shared_movie_id = responseData.shared_movie_id
-                let eliminating_uuid = responseData.eliminating_uuid
-                let next_uuid = responseData.next_eliminating_uuid
+                let shared_movie_id = commandData.shared_movie_id
+                let eliminating_uuid = commandData.eliminating_uuid
+                let next_uuid = commandData.next_eliminating_uuid
                 let eliminated_movie = movie_list.find(movie => movie.shared_movie_id == shared_movie_id)
                 let eliminating_user = user_list[eliminating_uuid]
 
@@ -81,7 +81,7 @@ $(document).ready(function() {
             
             //User connected
             else if(receivedCommand == "connected"){
-                let connected_user = responseData.user
+                let connected_user = commandData.user
                 console.log("Connected User: ");
                 console.log(connected_user);
                 let connected_uuid = Object.keys(connected_user)[0]
@@ -100,11 +100,11 @@ $(document).ready(function() {
             }
             //User disconnected
             else if(receivedCommand == "disconnected"){
-                if (responseData.hasOwnProperty("next_eliminating_uuid")){
-                    setUserTurn(responseData.next_eliminating_uuid)
+                if (commandData.hasOwnProperty("next_eliminating_uuid")){
+                    setUserTurn(commandData.next_eliminating_uuid)
                 }
 
-                let disconnected_uuid = responseData.disconnected_uuid;
+                let disconnected_uuid = commandData.disconnected_uuid;
                 console.log('Disconnected UUID: ' + disconnected_uuid)
                 removeUserFromDom(disconnected_uuid);
                 if(disconnected_uuid != user_uuid){
@@ -118,7 +118,7 @@ $(document).ready(function() {
                 let {
                     movie_list:received_movie_list, 
                     active_user_dict:received_user_list
-                } = responseData.share_list
+                } = commandData.share_list
                 received_movie_list = received_movie_list.map(movie => 
                         new construct.SharedMovie(movie)
                     )
@@ -161,7 +161,7 @@ $(document).ready(function() {
                 let {
                     movie_list:received_movie_list, 
                     active_user_dict:received_user_list
-                } = responseData.share_list
+                } = commandData.share_list
                 received_movie_list = received_movie_list.map(movie => 
                     new construct.SharedMovie(movie)
                 )
@@ -186,7 +186,7 @@ $(document).ready(function() {
             }
             //Start Elimination
             else if(receivedCommand == "elimination_started"){
-                let uuid_turn = responseData.eliminating_uuid
+                let uuid_turn = commandData.eliminating_uuid
                 setUserTurn(uuid_turn);
                 let {styleClass, icons} = getStatusBarProperties("eliminating");
                 $('#status-btn').removeClass().addClass(styleClass);
@@ -195,7 +195,7 @@ $(document).ready(function() {
             //Final movie left
             else if(receivedCommand == "finalized"){
 
-                let finalSharedId = responseData.shared_movie_id;
+                let finalSharedId = commandData.shared_movie_id;
                 let finalMovie = movie_list.find(movie => movie.shared_movie_id == finalSharedId);
                 console.log(`${finalMovie.title} is the final choice!`)
                 
