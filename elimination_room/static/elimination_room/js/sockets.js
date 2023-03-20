@@ -106,19 +106,17 @@ $(document).ready(function() {
             
             //User connected
             else if(receivedCommand == "connected"){
-                let connected_user = commandData.user
-                console.log("Connected User: ");
-                console.log(connected_user);
-                let connected_uuid = Object.keys(connected_user)[0]
+                let {uuid:connected_uuid, nickname, is_users_turn} = commandData
+                console.log("Connected User: " + connected_uuid);
                 if(user_list.hasOwnProperty(connected_uuid)){
                     console.log(`User ${connected_uuid} is already in list.`)
                 }
                 else{
-                    Object.assign(user_list, connected_user);
-                    addUserToDom(connected_uuid, connected_user[connected_uuid]);
-                    console.log(`${connected_user[connected_uuid]['nickname']} has joined the room. UUID: ${Object.keys(connected_user)[0]}`)
+                    Object.assign(user_list, {connected_uuid:{"nickname": nickname, "is_users_turn": is_users_turn}});
+                    addUserToDom(connected_uuid, {"nickname": nickname, "is_users_turn": is_users_turn});
+                    console.log(`${nickname} has joined the room. UUID: ${connected_uuid}`)
                     if(connected_uuid != user_uuid){
-                        let toastHtml = `<span><strong class="purple-text text-accent-2">${connected_user[connected_uuid]['nickname']} </strong>&nbsp;has connected.</span>`
+                        let toastHtml = `<span><strong class="purple-text text-accent-2">${nickname} </strong>&nbsp;has connected.</span>`
                         M.toast({html: toastHtml})
                     }
                 }
