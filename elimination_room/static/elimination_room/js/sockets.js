@@ -112,7 +112,7 @@ $(document).ready(function() {
                     console.log(`User ${connected_uuid} is already in list.`)
                 }
                 else{
-                    Object.assign(user_list, {connected_uuid:{"nickname": nickname, "is_users_turn": is_users_turn}});
+                    user_list[connected_uuid] = {"nickname": nickname, "is_users_turn": is_users_turn};
                     addUserToDom(connected_uuid, {"nickname": nickname, "is_users_turn": is_users_turn});
                     console.log(`${nickname} has joined the room. UUID: ${connected_uuid}`)
                     if(connected_uuid != user_uuid){
