@@ -37,9 +37,11 @@ class CommandType():
 #This is a child class for a successful json response to an elimination room socket command
 class SuccessfulCommandResponse(SuccessJsonClassObject, CommandType):
     def __init__(self, message = "", data = {}, command = ""):
-        super().__init__(message, data, command)
+        super().__init__(message, data)
+        CommandType.__init__(self, command)
 
 #This is a child class for a failed json response to an elimination room socket command
 class FailedCommandResponse(FailedJsonClassObject, CommandType):
     def __init__(self, message = "", errors = [], command = ""):
-        super().__init__(message, errors, command)
+        super().__init__(message, errors)
+        CommandType.__init__(self, command)
