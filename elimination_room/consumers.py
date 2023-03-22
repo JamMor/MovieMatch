@@ -252,7 +252,7 @@ class MatchConsumer(JsonWebsocketConsumer):
         json_response = event.get("json_response")
 
         # Send message to WebSocket Client
-        self.send_json(json_response)
+        self.send(text_data=json_response)
 
     #=============================================================
 
@@ -260,11 +260,12 @@ class MatchConsumer(JsonWebsocketConsumer):
     #===========================================================
 
     def forward_command_response_to_group(self, json_response):
+        encoded_json_response = self.encode_json(json_response)
         async_to_sync(self.channel_layer.group_send)(
             self.match_group_name,
             {
                 'type': 'send_command_response_to_client',
-                'json_response': json_response
+                'json_response': encoded_json_response
             }
         )
 
