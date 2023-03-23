@@ -1,6 +1,8 @@
 #This is a base class for a json response
 class JsonClassObject:
-    def __init__(self, message = ""):
+    def __init__(self, message = None):
+        if message == None:
+            message = ""
         self.message = message
 
     def to_dict(self):
@@ -9,9 +11,11 @@ class JsonClassObject:
 
 #This is a child class for a successful json response
 class SuccessJsonClassObject(JsonClassObject):
-    def __init__(self, message = "", data = {}):
+    def __init__(self, message = None, data = None):
         super().__init__(message)
         self.status = "success"
+        if data == None:
+            data = {}
         self.data = data
     
     def add_data(self, new_data):
@@ -20,9 +24,11 @@ class SuccessJsonClassObject(JsonClassObject):
 
 #This is a child class for an error json response
 class FailedJsonClassObject(JsonClassObject):
-    def __init__(self, message = "", errors = []):
+    def __init__(self, message = None, errors = None):
         super().__init__(message)
         self.status = "failure"
+        if errors == None:
+            errors = []
         self.errors = errors
     
     def add_error(self, error):
@@ -31,17 +37,19 @@ class FailedJsonClassObject(JsonClassObject):
 
 #This is a base class for an elimination room socket command type
 class CommandType():
-    def __init__(self, command =""):
+    def __init__(self, command = None):
+        if command == None:
+            command = ""
         self.command = command
 
 #This is a child class for a successful json response to an elimination room socket command
 class SuccessfulCommandResponse(SuccessJsonClassObject, CommandType):
-    def __init__(self, message = "", data = {}, command = ""):
+    def __init__(self, message = None, data = None, command = None):
         super().__init__(message, data)
         CommandType.__init__(self, command)
 
 #This is a child class for a failed json response to an elimination room socket command
 class FailedCommandResponse(FailedJsonClassObject, CommandType):
-    def __init__(self, message = "", errors = [], command = ""):
+    def __init__(self, message = None, errors = None, command = None):
         super().__init__(message, errors)
         CommandType.__init__(self, command)
