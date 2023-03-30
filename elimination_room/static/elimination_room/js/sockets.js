@@ -49,6 +49,7 @@ $(document).ready(function() {
                 return
             }
             //Successful command
+            let commandData;
             if (responseData.hasOwnProperty('data')){
                 commandData = responseData.data
             }
