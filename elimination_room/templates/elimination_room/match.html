@@ -50,9 +50,10 @@
         var movie_list = [];
         var has_started_elimination = false;
     </script>
+    <script type="module" src="{% static 'elimination_room/js/received-commands.js'%}"></script>
     <script src="{% static 'elimination_room/js/match_builder.js'%}"></script>
     <script src="{% static 'elimination_room/js/user_builder.js'%}"></script>
-    <script src="{% static 'elimination_room/js/sockets.js'%}"></script>
+    <script type="module" src="{% static 'elimination_room/js/sockets.js'%}"></script>
     <script src="{% static 'js/save_modal.js'%}"></script>
     <script src="{% static 'elimination_room/js/sharecode_copy.js'%}"></script>
 {% endblock %}\
