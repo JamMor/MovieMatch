@@ -172,20 +172,15 @@ class MatchConsumer(JsonWebsocketConsumer):
         
         self.send_json(json_response_object.to_dict())
         
-    #===================The OverFunctions. Praise Be.=====================
 
-    # Receive message from ChannelLayer
+    # Receive json encoded message from ChannelLayer and forward to client
     def send_command_response_to_client(self, event):
         json_response = event.get("json_response")
 
         # Send message to WebSocket Client
         self.send(text_data=json_response)
 
-    #=============================================================
-
-
-    #===========================================================
-
+    # Send json encoded message to ChannelLayer (group send)
     def forward_command_response_to_group(self, json_response):
         encoded_json_response = self.encode_json(json_response)
         async_to_sync(self.channel_layer.group_send)(
@@ -195,8 +190,6 @@ class MatchConsumer(JsonWebsocketConsumer):
                 'json_response': encoded_json_response
             }
         )
-
-    #===========================================================
 
 
     #Custom JSON coders (for dates)
