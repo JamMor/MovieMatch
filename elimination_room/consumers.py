@@ -165,41 +165,6 @@ class MatchConsumer(JsonWebsocketConsumer):
             json_response_obj = FailedCommandResponse(command=command, errors=[f'Command failure: {command}.'])
             self.send_json(json_response_obj.to_dict())
 
-    # # Receive message from ChannelLayer
-    # def eliminate_message(self, event):
-    #     shared_movie_id = event['shared_movie_id']
-    #     eliminating_uuid = event['eliminating_uuid']
-    #     next_eliminating_uuid = event['next_eliminating_uuid']
-
-    #     # Send message to WebSocket Client
-    #     self.send_json({
-    #         'command': 'eliminated',
-    #         'status' : "success",
-    #         'shared_movie_id' : shared_movie_id,
-    #         'eliminating_uuid' : eliminating_uuid,
-    #         'next_eliminating_uuid' : next_eliminating_uuid
-    #     })
-    
-    # def final_message(self, event):
-    #     shared_movie_id = event['shared_movie_id']
-
-    #     # Send message to WebSocket Client
-    #     self.send_json({
-    #         'command': 'finalized',
-    #         'status' : "success",
-    #         'shared_movie_id' : shared_movie_id
-    #     })
-    
-    # def elimination_start(self, event):
-    #     eliminating_uuid = event['eliminating_uuid']
-
-    #     # Send message to WebSocket Client
-    #     self.send_json({
-    #             'command': 'elimination_started',
-    #             'status' : 'success',
-    #             'eliminating_uuid' : eliminating_uuid
-    #         })
-    
     # Receive message from ChannelLayer
     def update_message(self, event):
         command="updated"
@@ -212,39 +177,6 @@ class MatchConsumer(JsonWebsocketConsumer):
         
         self.send_json(json_response_object.to_dict())
         
-    
-    # # Receive message from ChannelLayer
-    # def refresh_message(self, event):
-    #     model_dict = SharedListEncoder(self.sharecode)
-
-    #     # Send message to WebSocket Client
-    #     self.send_json({
-    #         'command': 'refreshed',
-    #         'status' : 'success',
-    #         'share_list': model_dict
-    #     })
-    
-    # # Receive message from ChannelLayer
-    # def connect_message(self, event):
-    #     connected_user = event['connected_user']
-
-    #     # Send message to WebSocket Client
-    #     self.send_json({
-    #         'command': 'connected',
-    #         'status' : 'success',
-    #         'user': connected_user
-    #     })
-    # Receive message from ChannelLayer
-    # def disconnect_message(self, event):
-    #     print("Disconnect Channel Event")
-    #     print(event)
-    #     channel_msg = {'command': 'disconnected'}
-    #     msg_data = event.get("msg_data")
-    #     channel_msg.update(msg_data)
-
-    #     # Send message to WebSocket Client
-    #     self.send_json(channel_msg)
-
     #===================The OverFunctions. Praise Be.=====================
 
     # Receive message from ChannelLayer
