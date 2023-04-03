@@ -63,8 +63,6 @@ class MatchConsumer(JsonWebsocketConsumer):
                 
         #====================================
         # Tell group of connection
-        # print("Connecting User - Consumers")
-        # print({self.persona_uuid : {'nickname' : room_user.nickname, 'is_users_turn' : room_user.is_users_turn}})
         user_data = {
             'uuid' : self.persona_uuid,
             'nickname' : room_user.nickname,
@@ -77,7 +75,6 @@ class MatchConsumer(JsonWebsocketConsumer):
         self.accept()
 
     def disconnect(self, close_code):
-        # print("Disconnecting User - Consumers")
         #FLAG - Add prefetch, select_related
         #Query all active users in share list
         active_share_users_qs = ShareRoomUser.objects.filter(list__sharecode = self.sharecode, is_active = True).order_by('created_at')
@@ -112,9 +109,7 @@ class MatchConsumer(JsonWebsocketConsumer):
 
     # Receive message from WebSocket Client
     def receive_json(self, content):
-        # print(content)
         command = content['command']
-        # print(f'COMMAND RECEIVED - Consumers: {command}')
         #ELIMINATE
         if command == 'eliminate':
 
