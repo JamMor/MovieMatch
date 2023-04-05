@@ -9,10 +9,10 @@ $(document).ready(function() {
     const initialRetryTime = 2000;
     const maxRetryInterval = 10;
 
-    var retryAttempts = 0;
+    let retryAttempts = 0;
     //Exponentially increasing time to retry connection
-    var retryTime = () => (1.65**retryAttempts)*initialRetryTime;
-    var matchSocket = null;
+    const retryTime = () => (1.65**retryAttempts)*initialRetryTime;
+    let matchSocket = null;
 
     $('#save-modal').modal();
 
