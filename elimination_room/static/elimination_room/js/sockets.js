@@ -24,7 +24,7 @@ $(document).ready(function() {
         matchSocket.onopen = function(e) {
             console.log("Match socket opened");
 
-            //Set retry vars to defaults;
+            //Set retry attempts to defaults;
             retryAttempts = 0;
 
             //Request to initialize current share and user list.
