@@ -28,9 +28,6 @@ def SharedListEncoder(sharecode):
     
     movie_list = []
     for shared_movie in shared_list.pre_shared_movies:
-        # movie_info = shared_movie.movie.__dict__
-        # del movie_info['_state']
-        # del movie_info['id']
         movie_info = model_to_dict(shared_movie.movie,
                 fields=['tmdb_id', 'title', 'overview', 'poster_path', 'release_date']
         )
