@@ -3,9 +3,8 @@
 
 // Eliminate Movie
 function commandEliminate(commandData) {
-    let shared_movie_id = commandData.shared_movie_id
-    let eliminating_uuid = commandData.eliminating_uuid
-    let next_uuid = commandData.next_eliminating_uuid
+    let {shared_movie_id, eliminating_uuid, next_eliminating_uuid: next_uuid} = commandData
+
     let eliminated_movie = movie_list.find(movie => movie.shared_movie_id == shared_movie_id)
     let eliminating_user = user_list[eliminating_uuid]
 
