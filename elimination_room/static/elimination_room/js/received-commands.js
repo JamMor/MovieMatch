@@ -23,28 +23,33 @@ function commandEliminate(commandData) {
 
     // ====================FLAG====Temporary Final Fix=========================================
     if(commandData.hasOwnProperty('final_shared_movie_id')) {
-        let finalSharedId = commandData.final_shared_movie_id;
-        let finalMovie = movie_list.find(movie => movie.shared_movie_id == finalSharedId);
-        console.log(`${finalMovie.title} is the final choice!`)
-        
-        getMoreMovieInfo(finalMovie.tmdb_id)
-            .done(returnInfo => {
-                console.log(returnInfo)
-                let finalMovieInfo = returnInfo ?? finalMovie
-                openMoreInfoModal(finalMovieInfo, "final_modal")
-            })
-            .fail(function(){
-                console.log("AJAX error")
-            })
-
-
-        let {styleClass, icons, statusText} = getStatusBarProperties("final");
-        $('#status-btn').removeClass().addClass(styleClass);
-        $('#status-btn i').html(icons);
-        $('#status-btn span').html(statusText);
+        commandFinalized(commandData);
     }
     // ==========================================================================================
 
+}
+
+// Final Movie
+function commandFinalized(commandData) {
+    let finalSharedId = commandData.final_shared_movie_id;
+    let finalMovie = movie_list.find(movie => movie.shared_movie_id == finalSharedId);
+    console.log(`${finalMovie.title} is the final choice!`)
+    
+    getMoreMovieInfo(finalMovie.tmdb_id)
+        .done(returnInfo => {
+            console.log(returnInfo)
+            let finalMovieInfo = returnInfo ?? finalMovie
+            openMoreInfoModal(finalMovieInfo, "final_modal")
+        })
+        .fail(function(){
+            console.log("AJAX error")
+        })
+
+
+    let {styleClass, icons, statusText} = getStatusBarProperties("final");
+    $('#status-btn').removeClass().addClass(styleClass);
+    $('#status-btn i').html(icons);
+    $('#status-btn span').html(statusText);
 }
 
 // Connect User
