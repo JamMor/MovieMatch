@@ -13,10 +13,12 @@ function commandEliminate(commandData) {
     console.log("Eliminated movie")
 
     let toastClass = "purple-text text-accent-2"
+    let nickname = eliminating_user.nickname
     if(eliminating_uuid == user_uuid){
         toastClass = "cyan-text text-accent-2"
+        nickname = "You"
     }
-    let toastHtml = `<span><strong class=${toastClass}>${eliminating_user.nickname} </strong>&nbsp;eliminated&nbsp;<strong class="orange-text text-darken-3"> ${eliminated_movie.title}</strong></span>`
+    let toastHtml = `<span><strong class=${toastClass}>${nickname} </strong>&nbsp;eliminated&nbsp;<strong class="orange-text text-darken-3"> ${eliminated_movie.title}</strong></span>`
     M.toast({html: toastHtml})
     
     setUserTurn(next_uuid);
