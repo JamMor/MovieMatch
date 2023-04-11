@@ -87,26 +87,7 @@ $(document).ready(function() {
             }
             // //Final movie left
             // else if(receivedCommand == "finalized"){
-
-            //     let finalSharedId = commandData.shared_movie_id;
-            //     let finalMovie = movie_list.find(movie => movie.shared_movie_id == finalSharedId);
-            //     console.log(`${finalMovie.title} is the final choice!`)
-                
-            //     getMoreMovieInfo(finalMovie.tmdb_id)
-            //         .done(returnInfo => {
-            //             console.log(returnInfo)
-            //             let finalMovieInfo = returnInfo ?? finalMovie
-            //             openMoreInfoModal(finalMovieInfo, "final_modal")
-            //         })
-            //         .fail(function(){
-            //             console.log("AJAX error")
-            //         })
-
-
-            //     let {styleClass, icons, statusText} = getStatusBarProperties("final");
-            //     $('#status-btn').removeClass().addClass(styleClass);
-            //     $('#status-btn i').html(icons);
-            //     $('#status-btn span').html(statusText);
+            //     commandFinalized(commandData);
             // }
             else {
                 console.log("Command Unknown")
