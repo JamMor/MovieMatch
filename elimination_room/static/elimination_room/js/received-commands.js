@@ -187,6 +187,70 @@ function commandFailed(commandData) {
 // Private Functions
 
 //Returns current user whose turn it is
+
+//Sets status bar
+function setStatusBar(status){
+    // Returns eliminating user specific status bar text
+    function getEliminatingStatusString(userList) {
+        let eliminating_uuid = Object.keys(userList)
+            .find(uuid => userList[uuid].is_users_turn == true)
+        if (eliminating_uuid) {
+            return (eliminating_uuid == user_uuid)
+                ? "Waiting on YOUR turn..."
+                : `Waiting on ${userList[eliminating_uuid].nickname}'s turn...`
+        }
+        else {
+            console.log("Couldn't get uuid of eliminating user.")
+            return ""
+        }
+    }
+
+    // Returns object of status bar properties: {styleClass, icons, statusText}
+    function getStatusBarProperties(status){
+        let statusProperties = {}
+        // [styleClass, icons, statusText]
+        if(status == "start"){
+            [statusProperties.styleClass, statusProperties.icons, statusProperties.statusText] = [
+                "status-start waves-effect waves-light neon-blue-hover btn-large btn-rounded",
+                "cast",
+                "Start Matching"
+            ]
+        }
+        else if(status == "waiting"){
+            [statusProperties.styleClass, statusProperties.icons, statusProperties.statusText] = [
+                "status-waiting neon-blue inactive btn-large btn-rounded",
+                "cast",
+                "Waiting for matching to begin..."
+            ]
+        }
+        else if(status == "eliminating"){
+            [statusProperties.styleClass, statusProperties.icons, statusProperties.statusText] = [
+                "status-eliminating neon-blue active btn-large btn-rounded",
+                "cast_connected",
+                getEliminatingStatusString(user_list)
+            ]
+        }
+        else if(status == "final"){
+            [statusProperties.styleClass, statusProperties.icons, statusProperties.statusText] = [
+                "status-final waves-effect waves-light neon-fuschia active btn-large btn-rounded",
+                "movie",
+                "Open final movie info"
+            ]
+        }
+        else{
+            console.log(`Status Bar Error for status ${status}`)
+        }
+        return statusProperties
+    }
+
+    let {styleClass, icons, statusText} = getStatusBarProperties(status);
+
+    // Edit DOM
+    $('#status-btn').removeClass().addClass(styleClass);
+    $('#status-btn i').html(icons);
+    $('#status-btn span').html(statusText);
+}
+
 function getEliminatingStatusString(userList) {
     let eliminating_uuid = Object.keys(userList)
         .find(uuid => userList[uuid].is_users_turn == true)
