@@ -161,7 +161,6 @@ function commandRefreshMovieList(commandData) {
     $('#status-btn span').html(statusText);
 }
 
- 
 // Start Elimination
 function commandStartElimination(commandData) {
     let uuid_turn = commandData.eliminating_uuid
@@ -299,4 +298,11 @@ function isEliminationActive(userList){
     return Object.keys(userList).some(user => userList[user].is_users_turn == true)
 }
 
-export {commandEliminate, commandConnected, commandDisconnected, commandSyncRoom, commandRefreshMovieList, commandStartElimination};
+export { 
+    commandEliminate, 
+    commandConnected, 
+    commandDisconnected, 
+    commandSyncRoom, 
+    commandRefreshMovieList, 
+    commandStartElimination, 
+};
