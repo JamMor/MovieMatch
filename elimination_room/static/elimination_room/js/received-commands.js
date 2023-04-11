@@ -205,45 +205,35 @@ function setStatusBar(status){
         }
     }
 
-    // Returns object of status bar properties: {styleClass, icons, statusText}
-    function getStatusBarProperties(status){
-        let statusProperties = {}
-        // [styleClass, icons, statusText]
-        if(status == "start"){
-            [statusProperties.styleClass, statusProperties.icons, statusProperties.statusText] = [
-                "status-start waves-effect waves-light neon-blue-hover btn-large btn-rounded",
-                "cast",
-                "Start Matching"
-            ]
+    // Map of status bar text, css, and flanking icons
+    const statusMap = {
+        "start": {
+            "styleClass": "status-start waves-effect waves-light neon-blue-hover btn-large btn-rounded",
+            "icons": "cast",
+            "statusText": "Start Matching"
+        },
+        "waiting": {
+            "styleClass": "status-waiting neon-blue inactive btn-large btn-rounded",
+            "icons": "cast",
+            "statusText": "Waiting for matching to begin..."
+        },
+        "eliminating": {
+            "styleClass": "status-eliminating neon-blue active btn-large btn-rounded",
+            "icons": "cast_connected",
+            "statusText": getEliminatingStatusString(user_list)
+        },
+        "final": {
+            "styleClass": "status-final waves-effect waves-light neon-fuschia active btn-large btn-rounded",
+            "icons": "movie",
+            "statusText": "Open final movie info"
         }
-        else if(status == "waiting"){
-            [statusProperties.styleClass, statusProperties.icons, statusProperties.statusText] = [
-                "status-waiting neon-blue inactive btn-large btn-rounded",
-                "cast",
-                "Waiting for matching to begin..."
-            ]
-        }
-        else if(status == "eliminating"){
-            [statusProperties.styleClass, statusProperties.icons, statusProperties.statusText] = [
-                "status-eliminating neon-blue active btn-large btn-rounded",
-                "cast_connected",
-                getEliminatingStatusString(user_list)
-            ]
-        }
-        else if(status == "final"){
-            [statusProperties.styleClass, statusProperties.icons, statusProperties.statusText] = [
-                "status-final waves-effect waves-light neon-fuschia active btn-large btn-rounded",
-                "movie",
-                "Open final movie info"
-            ]
-        }
-        else{
-            console.log(`Status Bar Error for status ${status}`)
-        }
-        return statusProperties
     }
 
-    let {styleClass, icons, statusText} = getStatusBarProperties(status);
+    if (!statusMap.hasOwnProperty(status)) {
+        status = "start"
+    }
+
+    let {styleClass, icons, statusText} = statusMap[status];
 
     // Edit DOM
     $('#status-btn').removeClass().addClass(styleClass);
