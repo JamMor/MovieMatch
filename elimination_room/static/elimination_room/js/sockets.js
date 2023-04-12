@@ -1,4 +1,4 @@
-import { commandEliminate, commandConnected, commandDisconnected, commandSyncRoom, commandRefreshMovieList, commandStartElimination } from "./received-commands.js";
+import * as Received from "./received-commands.js";
 
 $(document).ready(function() {
 
@@ -62,32 +62,32 @@ $(document).ready(function() {
 
             //Eliminate movie
             if(receivedCommand == "eliminated"){
-                commandEliminate(commandData);
+                Received.commandEliminate(commandData);
             }
             
             //User connected
             else if(receivedCommand == "connected"){
-                commandConnected(commandData);
+                Received.commandConnected(commandData);
             }
             //User disconnected
             else if(receivedCommand == "disconnected"){
-                commandDisconnected(commandData);
+                Received.commandDisconnected(commandData);
             }
             //Initialize/Update list of movies
             else if(receivedCommand == "initialized" || receivedCommand == "updated"){
-                commandSyncRoom(commandData);
+                Received.commandSyncRoom(commandData);
             }
             //Refresh list of movies
             else if(receivedCommand == "refreshed"){
-                commandRefreshMovieList(commandData);
+                Received.commandRefreshMovieList(commandData);
             }
             //Start Elimination
             else if(receivedCommand == "elimination_started"){
-                commandStartElimination(commandData);
+                Received.commandStartElimination(commandData);
             }
             // //Final movie left
             // else if(receivedCommand == "finalized"){
-            //     commandFinalized(commandData);
+            //     Received.commandFinalized(commandData);
             // }
             else {
                 console.log("Command Unknown")
