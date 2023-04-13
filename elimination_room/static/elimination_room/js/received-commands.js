@@ -47,11 +47,7 @@ function commandFinalized(commandData) {
             console.log("AJAX error")
         })
 
-
-    let {styleClass, icons, statusText} = getStatusBarProperties("final");
-    $('#status-btn').removeClass().addClass(styleClass);
-    $('#status-btn i').html(icons);
-    $('#status-btn span').html(statusText);
+    setStatusBar("final");
 }
 
 // Connect User
@@ -126,10 +122,8 @@ function commandSyncRoom(commandData) {
     else{
         statusType = "start"
     }
-    let {styleClass, icons, statusText} = getStatusBarProperties(statusType);
-    $('#status-btn').removeClass().addClass(styleClass);
-    $('#status-btn i').html(icons);
-    $('#status-btn span').html(statusText);
+    
+    setStatusBar(statusType);
 }
 
 // Refreshes Movie List
@@ -155,19 +149,15 @@ function commandRefreshMovieList(commandData) {
 
     $('#final_modal').modal('close');
 
-    let {styleClass, icons, statusText} = getStatusBarProperties("start");
-    $('#status-btn').removeClass().addClass(styleClass);
-    $('#status-btn i').html(icons);
-    $('#status-btn span').html(statusText);
+    setStatusBar("start");
 }
 
 // Start Elimination
 function commandStartElimination(commandData) {
     let uuid_turn = commandData.eliminating_uuid
     setUserTurn(uuid_turn);
-    let {styleClass, icons} = getStatusBarProperties("eliminating");
-    $('#status-btn').removeClass().addClass(styleClass);
-    $('#status-btn i').html(icons);
+    
+    setStatusBar("eliminating");
 }
 
 // Failed Command
@@ -241,20 +231,6 @@ function setStatusBar(status){
     $('#status-btn span').html(statusText);
 }
 
-function getEliminatingStatusString(userList) {
-    let eliminating_uuid = Object.keys(userList)
-        .find(uuid => userList[uuid].is_users_turn == true)
-    if (eliminating_uuid) {
-        return (eliminating_uuid == user_uuid)
-            ? "Waiting on YOUR turn..."
-            : `Waiting on ${userList[eliminating_uuid].nickname}'s turn...`
-    }
-    else {
-        console.log("Couldn't get uuid of eliminating user.")
-        return ""
-    }
-}
-
 //Check if final movie
 function isFinalSelected(movieList){
     let eliminatedCount = movieList
@@ -284,44 +260,6 @@ function setUserTurn(turnUUID){
     //Put username in status bar
     let statusText = getEliminatingStatusString(user_list);
     $('#status-btn span').html(statusText);
-}
-
-//Sets status bar
-function getStatusBarProperties(status){
-    let statusProperties = {}
-    // [styleClass, icons, statusText]
-    if(status == "start"){
-        [statusProperties.styleClass, statusProperties.icons, statusProperties.statusText] = [
-            "status-start waves-effect waves-light neon-blue-hover btn-large btn-rounded",
-            "cast",
-            "Start Matching"
-        ]
-    }
-    else if(status == "waiting"){
-        [statusProperties.styleClass, statusProperties.icons, statusProperties.statusText] = [
-            "status-waiting neon-blue inactive btn-large btn-rounded",
-            "cast",
-            "Waiting for matching to begin..."
-        ]
-    }
-    else if(status == "eliminating"){
-        [statusProperties.styleClass, statusProperties.icons, statusProperties.statusText] = [
-            "status-eliminating neon-blue active btn-large btn-rounded",
-            "cast_connected",
-            getEliminatingStatusString(user_list)
-        ]
-    }
-    else if(status == "final"){
-        [statusProperties.styleClass, statusProperties.icons, statusProperties.statusText] = [
-            "status-final waves-effect waves-light neon-fuschia active btn-large btn-rounded",
-            "movie",
-            "Open final movie info"
-        ]
-    }
-    else{
-        console.log(`Status Bar Error for status ${status}`)
-    }
-    return statusProperties
 }
 
 function getMoreMovieInfo(movieId){
