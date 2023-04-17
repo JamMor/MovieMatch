@@ -128,28 +128,14 @@ function commandSyncRoom(commandData) {
 
 // Refreshes Movie List
 function commandRefreshMovieList(commandData) {
-    let {
-        movie_list:received_movie_list, 
-        active_user_dict:received_user_list
-    } = commandData.share_list
-    received_movie_list = received_movie_list.map(movie => 
-        new construct.SharedMovie(movie)
-    )
-
     user_list = {};
     movie_list= [];
     $('#user_list').html("");
     $('#movie_list').html("");
 
-    movieListBuilder(movie_list, received_movie_list)
-    movie_list = received_movie_list
-    
-    userListBuilder({user_list}, received_user_list)
-    user_list = received_user_list   
-
     $('#final_modal').modal('close');
 
-    setStatusBar("start");
+    commandSyncRoom(commandData)
 }
 
 // Start Elimination
