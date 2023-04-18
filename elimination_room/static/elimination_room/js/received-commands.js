@@ -16,7 +16,7 @@ function commandEliminate(commandData) {
     let nickname = eliminating_user.nickname
     if(eliminating_uuid == user_uuid){
         toastClass = "cyan-text text-accent-2"
-        nickname = "You"
+        nickname = "YOU"
     }
     let toastHtml = `<span><strong class=${toastClass}>${nickname} </strong>&nbsp;eliminated&nbsp;<strong class="orange-text text-darken-3"> ${eliminated_movie.title}</strong></span>`
     M.toast({html: toastHtml})
