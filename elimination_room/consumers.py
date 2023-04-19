@@ -1,19 +1,16 @@
 # chat/consumers.py
 import json
 from random import randint
-import random
-from datetime import timedelta
 from django.utils import timezone
 from asgiref.sync import async_to_sync
 from channels.generic.websocket import JsonWebsocketConsumer
-from django.core import serializers
 from django.core.serializers.json import DjangoJSONEncoder
 
 from list_builder.models import Persona
-from elimination_room.models import SharedMovie, ShareRoomUser, SharedMovieList
+from elimination_room.models import ShareRoomUser, SharedMovieList
 from .serializer import SharedListEncoder
 from .consumer_utils import find_next_index
-from .json_response import SuccessJsonClassObject, FailedJsonClassObject, SuccessfulCommandResponse, FailedCommandResponse
+from .json_response import SuccessfulCommandResponse, FailedCommandResponse
 from .command_requests import request_eliminate, request_initialize, request_elimination_start, request_refresh_list
 
 class MatchConsumer(JsonWebsocketConsumer):
