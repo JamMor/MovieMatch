@@ -28,5 +28,10 @@ To deal with disconnects, a 'round' property will be implemented to prevent repe
 Once a new "round" is started, the question is should only the present users
 be able to vote, or should users be able to join in on an unfinished round. The latter allows for latecomers and new users to immediately join in, *however* it also means users could join anonymously over and over to keep getting more votes. This would have to involve a private window or new browser as a session cookie is used to identify even anonymous users.
 
-### serializer.py
-This file contains a serializer for 
+### ```serializer.py```
+This file contains a serializer for a SharedMovieList (aka Share Room). It will return a json serializable dictionary of the active room users (```active_user_dict```) and the shared movies (```movie_list```). This dictionary is built of model instances, which means the ```DjangoJSONEncoder``` must be used to properly parse and encode the datetime objects present.
+
+As the serializer returns the entire state of the room, this is typically used for, 
+- the initial request when a user joins the room, 
+- a pushed state to existing users when a new user joins the room,
+- when a room is refreshed and the elimination states reset.
