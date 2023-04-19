@@ -74,3 +74,20 @@ Another base class is ```CommandType``` which has only a ```command``` property 
 
 which are essentially variations of the JsonClassObjects with the additional ```command``` property.
 
+---
+
+## Client Side
+
+The match.html is a simple container with a status bar and the intial html for a modal with more information for the final selected movie. It has the global variables:
+- ```user_uuid``` - the uuid string of the client user
+- ```user_list``` - a map of users in the room with their uuid as the key, and 'nickname' and 'is_users_turn' as values
+- ```movie_list``` - the list of movies (as ```Movie``` objects) in the room
+- ```has_started_elimination``` - a boolean to determine if the elimination has started
+
+It loads the JS files:
+- ```received-commands.js``` - the functions that handle the commands received from the server
+- ```match_builder.js``` - a single function that adds new movies to the DOM
+- ```user_builder.js``` - updates the user list, adding and removing users from the DOM as needed
+- ```sockets.js``` - the base file for this page that handles the websocket connection, routing commands to the appropriate function in ```received-commands.js```, and sending commands to the server
+- ```save_modal.js``` - the base level save function to save a list for the user
+- ```sharecopy.js``` - a simple function to copy the share code to the clipboard
