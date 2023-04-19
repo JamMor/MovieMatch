@@ -28,6 +28,24 @@ To deal with disconnects, a 'round' property will be implemented to prevent repe
 Once a new "round" is started, the question is should only the present users
 be able to vote, or should users be able to join in on an unfinished round. The latter allows for latecomers and new users to immediately join in, *however* it also means users could join anonymously over and over to keep getting more votes. This would have to involve a private window or new browser as a session cookie is used to identify even anonymous users.
 
+---
+## Server Side
+
+### ```consumers.py```
+This file contains the logic for the websocket connection through Django Channels. It will receive commands from the client, route those commands to the proper function in command_requests.py, and send messages to the Channels group and directly client.
+
+It will create a group name based on the room code: "```match_```**sharecode**".
+
+Received commands must be in the form of a json object with a ```command``` property. Valid commands— 
+- ```initialize```
+- ```eliminate```
+- ```elimination_start```
+- ```refresh```
+
+—will then be routed to the proper function in command_requests.py.
+
+There is also an update_message function that is only triggered from outside of the channels scope from the elimination_room views.py whenever a new user joins (and potentially adds movies to the list). This function will push the entire room state to the group, where the appropriate client functions will then add new movies and users to the DOM.
+
 ### ```serializer.py```
 This file contains a serializer for a SharedMovieList (aka Share Room). It will return a json serializable dictionary of the active room users (```active_user_dict```) and the shared movies (```movie_list```). This dictionary is built of model instances, which means the ```DjangoJSONEncoder``` must be used to properly parse and encode the datetime objects present.
 
@@ -35,3 +53,24 @@ As the serializer returns the entire state of the room, this is typically used f
 - the initial request when a user joins the room, 
 - a pushed state to existing users when a new user joins the room,
 - when a room is refreshed and the elimination states reset.
+
+### ```consumer_utils.py```
+This file contains a single function that returns the next index of the user list after the given uuid. This is used to determine the next user to eliminate a movie. When the end of the list is reached, it will loop back to the beginning.
+
+### ```json_response.py```
+This file contains several class objects that are used to return json responses to the client. These are used to standardize the responses and make it easier to handle errors and success messages.
+
+One base class is the ```JsonClassObject``` which has an optional ```message``` property that defaults to an empty string. It also has a ```to_dict``` method that will return a JSON serializable dictionary of the object for responses.
+
+The two child classes of this are the 
+- ```SuccessJsonClassObject``` and the 
+- ```FailedJsonClassObject```. 
+
+Both contain a status property of "success" or "failure" respectively. The ```SuccessJsonClassObject``` also has a ```data``` property that defaults to an empty dictionary, and an ```add_data``` method that updates the data dictionary with a given dictionary. The ```FailedJsonClassObject``` has an ```error``` property that defaults to an empty list and an ```add_error``` method that appends a given string to the error list.
+
+Another base class is ```CommandType``` which has only a ```command``` property that defaults to an empty string. This is used to form the multiple inheritance child classes of 
+- ```SuccessfulCommandResponse(SuccessJsonClassObject, CommandType)``` and 
+- ```FailedCommandResponse(FailedJsonClassObject, CommandType)```, 
+
+which are essentially variations of the JsonClassObjects with the additional ```command``` property.
+
