@@ -115,3 +115,13 @@ It loads the JS files:
 - ```sockets.js``` - the base file for this page that handles the websocket connection, routing commands to the appropriate function in ```received-commands.js```, and sending commands to the server
 - ```save_modal.js``` - the base level save function to save a list for the user
 - ```sharecopy.js``` - a simple function to copy the share code to the clipboard
+
+### Sent Command JSON Formats
+- On socket open:
+```{'command' : 'initialize'}```
+- On shared movie remove click:
+    ```{'command' : 'eliminate', 'shared_movie_id' : shared_movie_id}```
+- On start elimination click:
+```{'command' : 'elimination_start'}```
+- On refresh list click:
+```{'command' : 'refresh'}```
