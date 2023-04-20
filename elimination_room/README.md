@@ -46,6 +46,30 @@ Received commands must be in the form of a json object with a ```command``` prop
 
 There is also an update_message function that is only triggered from outside of the channels scope from the elimination_room views.py whenever a new user joins (and potentially adds movies to the list). This function will push the entire room state to the group, where the appropriate client functions will then add new movies and users to the DOM.
 
+### ```command_requests.py```
+This file contains the logic for the commands received from the client. It will then return a ```SuccessfulCommandResponse``` containing data or ```FailedCommandResponse``` containing errors to the client, which can then be appropriately forwarded to the Channels group or the requesting client directly.
+
+The current command functions available are:
+
+- #### **```request_eliminate```**
+    Takes the sharecode, uuid of user requisting elimination, and content of the received json (to get the ```shared_movie_id``` of the movie for elimination) as input. Validates that elimination is available and it is the user's turn. If successful, returns a **SuccessfulCommandResponse** containing the 
+    - ```shared_movie_id```,
+    - ```eliminating_uuid```,
+    - ```next_eliminating_uuid```
+
+    **IF** there is only one remaining movie, it will add
+    - ```final_shared_movie_id```
+
+    to the response. This is used to signal the final elimination function to the client.
+
+- #### **```request_initialize```**
+    Takes the sharecode as input, and when successful returns a **SuccessfulCommandResponse** containing the room state from the ```SharedListJsonEncoder``` of ```serializer.py```.
+
+- #### **```request_elimination_start```**
+    Takes the sharecode as input, and validates room elimination state. If successful, randomly selects a user as the first eliminator, and returns a **SuccessfulCommandResponse** containing the first ```eliminating_uuid```.
+- #### **```request_refresh_list```**
+    Takes the sharecode as input, and updates all associated **SharedMovie** objects in the database to have their ```is_eliminated``` property set to ```false```. When successful, returns a **SuccessfulCommandResponse** containing the new room state from the ```SharedListJsonEncoder``` of ```serializer.py```.
+
 ### ```serializer.py```
 This file contains a serializer for a SharedMovieList (aka Share Room). It will return a json serializable dictionary of the active room users (```active_user_dict```) and the shared movies (```movie_list```). This dictionary is built of model instances, which means the ```DjangoJSONEncoder``` must be used to properly parse and encode the datetime objects present.
 
