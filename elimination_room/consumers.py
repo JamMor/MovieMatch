@@ -85,7 +85,9 @@ class MatchConsumer(JsonWebsocketConsumer):
         user_data = {
             'uuid' : self.persona_uuid,
             'nickname' : room_user.nickname,
-            'is_users_turn' : room_user.is_users_turn
+            'is_users_turn' : room_user.is_users_turn,
+            'round' : room_user.round,
+            'position' : room_user.position
         }
         json_response_obj = SuccessfulCommandResponse(command = "connected", data= user_data)
 
