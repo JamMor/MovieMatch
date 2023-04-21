@@ -64,6 +64,10 @@ class ShareRoomUser(models.Model):
     nickname = models.CharField(max_length=255, null=True)
     last_active = models.DateTimeField(null=True)
 
+    round = models.IntegerField(default=0)
+    position = models.IntegerField(default=0)
+    has_eliminated = models.BooleanField(default=False)
+    
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
