@@ -13,6 +13,8 @@ from .consumer_utils import find_next_index
 from .json_response import SuccessfulCommandResponse, FailedCommandResponse
 from .command_requests import request_eliminate, request_initialize, request_elimination_start, request_refresh_list
 
+from django.db.models import Max
+
 class MatchConsumer(JsonWebsocketConsumer):
     def connect(self):
         
