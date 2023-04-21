@@ -28,7 +28,7 @@ class MatchConsumer(JsonWebsocketConsumer):
             self.channel_name
         )
 
-        # Get user and share room to link
+        # Get this user persona and share room
         this_persona = Persona.objects.get(uuid = self.persona_uuid)
         share_list = SharedMovieList.objects.get(sharecode = self.sharecode)
         
