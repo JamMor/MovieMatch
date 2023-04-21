@@ -36,16 +36,49 @@ class MatchConsumer(JsonWebsocketConsumer):
         #     list = share_list,
         #     defaults={'is_active' : True}
         # )
+        
+        
+        current_round = share_list.round
+        current_turn = share_list.turn
+
+        # Check if this_persona already has a ShareRoomUser associated with this list
+        room_user_qs = ShareRoomUser.objects.filter(persona = this_persona, list = share_list)
+        
+        # If a returning user, determine position and round placement
+        if room_user_qs.exists():
+            room_user = room_user_qs.first()
+            room_user.is_active = True
+
+            # For users rejoining during a round they are a part of but who haven't eliminated yet
+            if (room_user.round == current_round) and (not room_user.has_eliminated):
+                # If the user has missed their turn then move to end of queue.
+                if room_user.position < current_turn:
+                    # Set position to end of queue by making position the max position of ShareRoomUsers in this round +1
+                    room_user.position = ShareRoomUser.objects.filter(list = share_list, round = current_round).aggregate(Max('position')) + 1
+                # For those who have already eliminated, maintain position in queue
+                else:
+                    pass
+            # For those from a previous round, treat as new users.
+            if room_user.round != current_round:
+                room_user.round = 0
+            
+            room_user.save()
+        
+        # If a new user, create new ShareRoomUser
+        else:
             if this_persona.nickname:
                 nickname = this_persona.nickname
             else:
                 room_user_count = ShareRoomUser.objects.filter(list__sharecode = self.sharecode).count()
                 print(f"Number of room users: {room_user_count}")
                 nickname = f"User {room_user_count}"
-            
-            room_user.nickname = nickname
-
-        room_user.save()
+                        
+            # Create New ShareRoomUser for new room
+            room_user = ShareRoomUser.objects.create(
+                persona = this_persona, 
+                list = share_list,
+                nickname = nickname
+            )
                 
         #====================================
         # Tell group of connection
