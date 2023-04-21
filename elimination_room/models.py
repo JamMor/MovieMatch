@@ -12,6 +12,9 @@ class SharedMovieList(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     
+    round = models.IntegerField(default=0)
+    turn = models.IntegerField(default=0)
+    
     def add_list_to_shared_list(self, movie_list):
         """
         Converts templist movies not already in shared list to SharedMovies 
