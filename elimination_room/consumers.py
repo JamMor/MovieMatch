@@ -30,23 +30,12 @@ class MatchConsumer(JsonWebsocketConsumer):
         this_persona = Persona.objects.get(uuid = self.persona_uuid)
         share_list = SharedMovieList.objects.get(sharecode = self.sharecode)
         
-        #Activate inactive user, or create new active user if hasn't joined yet
-        room_user, created = ShareRoomUser.objects.update_or_create(
-            persona = this_persona, 
-            list = share_list,
-            defaults={'is_active' : True}
-        )
-        
-        #If an inactive room user becomes active again within enough time, 
-        #keeps position (created_at time) in user list. If too much time 
-        # has passed, treated as new connection and moved to end of queue.
-        # if not created and (not room_user.last_active or timezone.now()-timedelta(minutes=1) < room_user.last_active):
-        #     room_user.created_at = timezone.now()
-        #     room_user.is_users_turn = False
-            
-        #====================================
-        #If roomuser has no name, set usernick as nick. Else make anonymous
-        if created:
+        # #Activate inactive user, or create new active user if hasn't joined yet
+        # room_user, created = ShareRoomUser.objects.update_or_create(
+        #     persona = this_persona, 
+        #     list = share_list,
+        #     defaults={'is_active' : True}
+        # )
             if this_persona.nickname:
                 nickname = this_persona.nickname
             else:
