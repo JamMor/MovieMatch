@@ -2,7 +2,7 @@ from random import randint
 import random
 from asgiref.sync import async_to_sync
 
-from elimination_room.models import SharedMovie, ShareRoomUser
+from elimination_room.models import SharedMovieList, SharedMovie, ShareRoomUser
 from .serializer import SharedListEncoder as SharedListJsonEncoder
 from .consumer_utils import find_next_index
 from .json_response import SuccessfulCommandResponse, FailedCommandResponse
@@ -108,6 +108,36 @@ def request_elimination_start(sharecode):
     command = "elimination_started"
     active_share_users_qs = ShareRoomUser.objects.filter(list__sharecode = sharecode, is_active = True)
     
+    #================================
+    shared_list = SharedMovieList.objects.get(sharecode = sharecode)
+
+    #If elimination already in progress, return failed response
+    if shared_list.round > 0:
+        return FailedCommandResponse(command=command, errors=["Elimination already in progress."])
+    
+    # If less than 2 movies in list, return failed response
+    if SharedMovie.objects.filter(shared_list__sharecode = sharecode).count() < 2:
+        return FailedCommandResponse(command=command, errors=["Must be at least 2 movies in list to begin eliminating."])
+
+    # Randomize position of users and set round to 1
+    all_active_users = list(active_share_users_qs.all())
+    random.shuffle(all_active_users)
+    n = 0
+    for user in all_active_users:
+        user.round = 1
+        user.position = n
+        user.has_eliminated = False
+        n += 1
+    ShareRoomUser.objects.bulk_update(all_active_users, ['round', 'position', 'has_eliminated'])
+    eliminating_user = all_active_users[0]
+    
+    shared_list.round = 1
+    shared_list.turn = 1
+
+    return SuccessfulCommandResponse(command=command, data={"eliminating_uuid": eliminating_user.persona.uuid})
+    #================================
+
+
     users_eliminating = active_share_users_qs.filter(is_users_turn = True).count()
     if users_eliminating > 0:
         return FailedCommandResponse(command=command, errors=["Elimination already in progress."])
