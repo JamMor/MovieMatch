@@ -49,4 +49,15 @@ def assign_round_order(sharecode):
 
 # Returns next user in queue, or None if no more users
 def select_next_eliminating_user(sharecode, current_round, turn):
-    pass
+    # Gets the next user in this round if any
+    next_share_user = ShareRoomUser.objects.filter(
+        list__sharecode = sharecode, 
+        is_active = True, 
+        round = current_round,
+        position__gt = turn
+        ).order_by('position').first()
+    
+    # Set list turn to user's position
+
+    # If none, then call assign_round_order to assign next round order
+    return next_share_user
