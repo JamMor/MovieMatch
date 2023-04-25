@@ -6,6 +6,7 @@ from elimination_room.models import SharedMovieList, SharedMovie, ShareRoomUser
 from .serializer import SharedListEncoder as SharedListJsonEncoder
 from .consumer_utils import find_next_index
 from .json_response import SuccessfulCommandResponse, FailedCommandResponse
+from .user_management import assign_round_order
 
 def request_eliminate(sharecode, persona_uuid, content):
     """
@@ -119,20 +120,12 @@ def request_elimination_start(sharecode):
     if SharedMovie.objects.filter(shared_list__sharecode = sharecode).count() < 2:
         return FailedCommandResponse(command=command, errors=["Must be at least 2 movies in list to begin eliminating."])
 
-    # Randomize position of users and set round to 1
-    all_active_users = list(active_share_users_qs.all())
-    random.shuffle(all_active_users)
-    n = 0
-    for user in all_active_users:
-        user.round = 1
-        user.position = n
-        user.has_eliminated = False
-        n += 1
-    ShareRoomUser.objects.bulk_update(all_active_users, ['round', 'position', 'has_eliminated'])
-    eliminating_user = all_active_users[0]
+    # Assign User Order and Retrieve First User
+    eliminating_user = assign_round_order(sharecode, 0)
     
     shared_list.round = 1
     shared_list.turn = 1
+    shared_list.save()
 
     return SuccessfulCommandResponse(command=command, data={"eliminating_uuid": eliminating_user.persona.uuid})
     #================================
