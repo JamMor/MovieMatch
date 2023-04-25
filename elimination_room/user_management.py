@@ -16,15 +16,6 @@ def assign_round_order(sharecode, current_round):
     if current_round == 0:
         all_active_users = list(active_share_users_qs.all())
         shuffle(all_active_users)
-        n = 0
-        for user in all_active_users:
-            user.round = 1
-            user.position = n
-            user.has_eliminated = False
-            n += 1
-        ShareRoomUser.objects.bulk_update(all_active_users, ['round', 'position', 'has_eliminated'])
-        
-        return all_active_users[0]
         
     # If round > 0, first assign newly joined active users. Then assign remaining 
     # active users in order of position
@@ -34,15 +25,16 @@ def assign_round_order(sharecode, current_round):
         previous_active_users = active_share_users_qs.filter(round = current_round).order_by('position').all()
         all_active_users = list(new_active_users).extend(list(previous_active_users))
 
-        n = 0
-        for user in all_active_users:
-            user.round = current_round + 1
-            user.position = n
-            user.has_eliminated = False
-            n += 1
-        ShareRoomUser.objects.bulk_update(new_active_users, ['round', 'position', 'has_eliminated'])
-                
-        return all_active_users[0]
+    # Assign new round and position to each user
+    n = 0
+    for user in all_active_users:
+        user.round = current_round + 1
+        user.position = n
+        user.has_eliminated = False
+        n += 1
+    
+    ShareRoomUser.objects.bulk_update(all_active_users, ['round', 'position', 'has_eliminated'])     
+    return all_active_users[0]
 
 # Returns next user in queue, or None if no more users
 def select_next_eliminating_user(sharecode, current_round, turn):
