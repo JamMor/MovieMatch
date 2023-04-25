@@ -8,14 +8,11 @@ def add_user_to_end_of_queue(end_user, share_list, current_round):
     end_user.save()
 
 # Assign next round order, return first eliminating user
-def assign_round_order(sharecode):
+def assign_round_order(sharecode, current_round):
     # Active Room Users Queryset
     active_share_users_qs = ShareRoomUser.objects.filter(list__sharecode = sharecode, is_active = True)
 
-    # Get current list round
-    current_round = SharedMovieList.objects.get(sharecode = sharecode).round
-
-    # If round 0, randomize the position of all active users
+    # If initial round, randomize the position of all active users
     if current_round == 0:
         all_active_users = list(active_share_users_qs.all())
         shuffle(all_active_users)
@@ -32,7 +29,7 @@ def assign_round_order(sharecode):
     # If round > 0, first assign newly joined active users. Then assign remaining 
     # active users in order of position
     elif current_round > 0:
-        # Get newly joined active users
+        # Start the list with newly joined users and then add the remaining users from the previous round
         new_active_users = active_share_users_qs.filter(round = 0).order_by('updated_at').all()
         previous_active_users = active_share_users_qs.filter(round = current_round).order_by('position').all()
         all_active_users = list(new_active_users).extend(list(previous_active_users))
