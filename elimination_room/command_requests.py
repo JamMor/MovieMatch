@@ -107,7 +107,7 @@ def request_elimination_start(sharecode):
     """
 
     command = "elimination_started"
-    active_share_users_qs = ShareRoomUser.objects.filter(list__sharecode = sharecode, is_active = True)
+    # active_share_users_qs = ShareRoomUser.objects.filter(list__sharecode = sharecode, is_active = True)
     
     #================================
     shared_list = SharedMovieList.objects.get(sharecode = sharecode)
@@ -131,19 +131,19 @@ def request_elimination_start(sharecode):
     #================================
 
 
-    users_eliminating = active_share_users_qs.filter(is_users_turn = True).count()
-    if users_eliminating > 0:
-        return FailedCommandResponse(command=command, errors=["Elimination already in progress."])
+    # users_eliminating = active_share_users_qs.filter(is_users_turn = True).count()
+    # if users_eliminating > 0:
+    #     return FailedCommandResponse(command=command, errors=["Elimination already in progress."])
 
-    if SharedMovie.objects.filter(shared_list__sharecode = sharecode).count() < 2:
-        return FailedCommandResponse(command=command, errors=["Must be at least 2 movies in list to begin eliminating."])
+    # if SharedMovie.objects.filter(shared_list__sharecode = sharecode).count() < 2:
+    #     return FailedCommandResponse(command=command, errors=["Must be at least 2 movies in list to begin eliminating."])
 
-    #Randomly pick user to start
-    eliminating_user = random.choice(active_share_users_qs)
-    eliminating_user.is_users_turn = True
-    eliminating_user.save()
+    # #Randomly pick user to start
+    # eliminating_user = random.choice(active_share_users_qs)
+    # eliminating_user.is_users_turn = True
+    # eliminating_user.save()
                     
-    return SuccessfulCommandResponse(command=command, data={"eliminating_uuid": eliminating_user.persona.uuid})
+    # return SuccessfulCommandResponse(command=command, data={"eliminating_uuid": eliminating_user.persona.uuid})
 
 def request_refresh_list(sharecode):
     """
