@@ -14,6 +14,7 @@ from .json_response import SuccessfulCommandResponse, FailedCommandResponse
 from .command_requests import request_eliminate, request_initialize, request_elimination_start, request_refresh_list
 
 from django.db.models import Max
+from .user_management import end_of_queue_postition
 
 class MatchConsumer(JsonWebsocketConsumer):
     def connect(self):
@@ -39,7 +40,7 @@ class MatchConsumer(JsonWebsocketConsumer):
         #     defaults={'is_active' : True}
         # )
         
-        
+        # Get current round and turn
         current_round = share_list.round
         current_turn = share_list.turn
 
@@ -53,11 +54,11 @@ class MatchConsumer(JsonWebsocketConsumer):
 
             # For users rejoining during a round they are a part of but who haven't eliminated yet
             if (room_user.round == current_round) and (not room_user.has_eliminated):
-                # If the user has missed their turn then move to end of queue.
+                # If the user has missed their turn, then move to end of queue.
                 if room_user.position < current_turn:
                     # Set position to end of queue by making position the max position of ShareRoomUsers in this round +1
-                    room_user.position = ShareRoomUser.objects.filter(list = share_list, round = current_round).aggregate(Max('position')) + 1
-                # For those who have already eliminated, maintain position in queue
+                    room_user.position = end_of_queue_postition(share_list)
+                # For those who have rejoined before their turn, maintain position in queue
                 else:
                     pass
             # For those from a previous round, treat as new users.
