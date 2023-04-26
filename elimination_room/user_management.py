@@ -2,10 +2,10 @@ from elimination_room.models import ShareRoomUser, SharedMovieList
 from random import shuffle
 from django.db.models import Max
 
-#Add to end of queue
-def add_user_to_end_of_queue(end_user, share_list, current_round):
-    end_user.position = ShareRoomUser.objects.filter(list = share_list, round = current_round).aggregate(Max('position')) + 1
-    end_user.save()
+#Returns last queue position + 1
+def end_of_queue_postition(share_list):
+    position_dict = ShareRoomUser.objects.filter(list = share_list, round = share_list.round).aggregate(last_position = Max('position'))
+    return position_dict['last_position'] + 1
 
 # Assign next round order, return first eliminating user
 def assign_round_order(sharecode, current_round):
