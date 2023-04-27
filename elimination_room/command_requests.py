@@ -23,22 +23,25 @@ def request_eliminate(sharecode, persona_uuid, content):
 
     active_share_users_qs = ShareRoomUser.objects.filter(list__sharecode = sharecode, is_active = True).order_by('created_at')
 
-    #If it isn't any user's turn, elimination hasn't started. Return failed msg
+    # Error handling
+    # If it isn't any user's turn, elimination hasn't started. Return failed msg
     if active_share_users_qs.filter(is_users_turn = True).count() == 0:
         return FailedCommandResponse(command=command, errors=["List not set to allow elimination."])
-    
-    #If it isn't THIS user's turn. Return failed msg
+
+    # If it isn't THIS user's turn. Return failed msg
     this_user = active_share_users_qs.get(persona__uuid = persona_uuid)
     if not this_user.is_users_turn:
         return FailedCommandResponse(command=command, errors=["Not this users turn."])
-    #If elimination has started:
+    
+    
+    # If elimination has started:
     shared_movie_id = content['shared_movie_id']
     uneliminated_movies_qs = SharedMovie.objects.filter(shared_list__sharecode = sharecode, is_eliminated = False)
     movies_left = uneliminated_movies_qs.count()
 
     successful_response = SuccessfulCommandResponse(command=command)
 
-    #If available movies > 1
+    # If available movies > 1
     if movies_left > 1:
         #Eliminate movie
         try:
@@ -69,7 +72,7 @@ def request_eliminate(sharecode, persona_uuid, content):
             "next_eliminating_uuid": next_user.persona.uuid
         })
 
-    #If last possible elimination
+    # If last possible elimination
     if movies_left == 1:
         final_movie = SharedMovie.objects.filter(shared_list__sharecode = sharecode, is_eliminated = False).first()
 
@@ -109,7 +112,7 @@ def request_elimination_start(sharecode):
     command = "elimination_started"
     # active_share_users_qs = ShareRoomUser.objects.filter(list__sharecode = sharecode, is_active = True)
     
-    #================================
+    #======================================================================
     shared_list = SharedMovieList.objects.get(sharecode = sharecode)
 
     #If elimination already in progress, return failed response
@@ -120,7 +123,7 @@ def request_elimination_start(sharecode):
     if SharedMovie.objects.filter(shared_list__sharecode = sharecode).count() < 2:
         return FailedCommandResponse(command=command, errors=["Must be at least 2 movies in list to begin eliminating."])
 
-    # Assign User Order and Retrieve First User
+    # Assign User Order and Retrieve First User (and unused round)
     eliminating_user = assign_round_order(sharecode, 0)
     
     shared_list.round = 1
@@ -128,7 +131,7 @@ def request_elimination_start(sharecode):
     shared_list.save()
 
     return SuccessfulCommandResponse(command=command, data={"eliminating_uuid": eliminating_user.persona.uuid})
-    #================================
+    #==============================================================
 
 
     # users_eliminating = active_share_users_qs.filter(is_users_turn = True).count()
