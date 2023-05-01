@@ -2,13 +2,31 @@ from elimination_room.models import ShareRoomUser, SharedMovieList
 from random import shuffle
 from django.db.models import Max
 
-#Returns last queue position + 1
-def end_of_queue_postition(share_list):
+def end_of_queue_position(share_list):
+    """
+    Returns last queue position + 1
+
+    :param share_list: The shared list to get the end of queue position for
+    :type share_list: SharedMovieList
+    :return: Last queue position + 1
+    :rtype: int
+    """
     position_dict = ShareRoomUser.objects.filter(list = share_list, round = share_list.round).aggregate(last_position = Max('position'))
     return position_dict['last_position'] + 1
 
 # Assign next round order, return tuple with first eliminating user and room round
 def assign_round_order(sharecode, current_round):
+    """
+    Assigns the next round order for a share room and returns the first user in the queue 
+    and the room's current round
+
+    :param sharecode: The share code of the room to assign the round order for
+    :type sharecode: str
+    :param current_round: The current round of the room
+    :type current_round: int
+    :return: Tuple with first eliminating user and room round
+    :rtype: ShareRoomUser, int
+    """
     # Active Room Users Queryset
     active_share_users_qs = ShareRoomUser.objects.filter(list__sharecode = sharecode, is_active = True)
 
@@ -44,6 +62,16 @@ def assign_round_order(sharecode, current_round):
 
 # Returns a dictionary with next user in queue and the room's current round
 def select_next_eliminating_user(share_list):
+    """
+    Returns a tuple with the next user in the queue and the room's current round.
+    If the end of the queue is reached, it calls the assign_round_order function to
+    assign the next round order.
+
+    :param share_list: The shared list to get the next user in the queue for
+    :type share_list: SharedMovieList
+    :return: Tuple with next user in queue and the room's current round
+    :rtype: ShareRoomUser, int
+    """
     current_round = share_list.round
     current_turn = share_list.turn
 
