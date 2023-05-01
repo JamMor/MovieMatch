@@ -7,7 +7,7 @@ def end_of_queue_postition(share_list):
     position_dict = ShareRoomUser.objects.filter(list = share_list, round = share_list.round).aggregate(last_position = Max('position'))
     return position_dict['last_position'] + 1
 
-# Assign next round order, return first eliminating user
+# Assign next round order, return tuple with first eliminating user and room round
 def assign_round_order(sharecode, current_round):
     # Active Room Users Queryset
     active_share_users_qs = ShareRoomUser.objects.filter(list__sharecode = sharecode, is_active = True)
@@ -34,7 +34,13 @@ def assign_round_order(sharecode, current_round):
         n += 1
     
     ShareRoomUser.objects.bulk_update(all_active_users, ['round', 'position', 'has_eliminated'])     
-    return all_active_users[0]
+
+    # Update Round
+    share_list = SharedMovieList.objects.get(sharecode = sharecode)
+    share_list.round = current_round + 1
+    share_list.save()
+
+    return all_active_users[0], share_list.round
 
 # Returns next user in queue, or None if no more users
 def select_next_eliminating_user(sharecode, current_round, turn):
