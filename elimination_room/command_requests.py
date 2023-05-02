@@ -124,13 +124,17 @@ def request_elimination_start(sharecode):
         return FailedCommandResponse(command=command, errors=["Must be at least 2 movies in list to begin eliminating."])
 
     # Assign User Order and Retrieve First User (and unused round)
-    eliminating_user = assign_round_order(sharecode, 0)
+    eliminating_user, returned_round = assign_round_order(sharecode, 0)
     
     shared_list.round = 1
     shared_list.turn = 1
     shared_list.save()
 
-    return SuccessfulCommandResponse(command=command, data={"eliminating_uuid": eliminating_user.persona.uuid})
+    return SuccessfulCommandResponse(command=command, data={
+        "eliminating_uuid": eliminating_user.persona.uuid, 
+        "current_round": 1
+        })
+
     #==============================================================
 
 
