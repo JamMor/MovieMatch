@@ -14,7 +14,7 @@ from .json_response import SuccessfulCommandResponse, FailedCommandResponse
 from .command_requests import request_eliminate, request_initialize, request_elimination_start, request_refresh_list
 
 from django.db.models import Max
-from .user_management import end_of_queue_position, select_next_eliminating_user
+from .queue_management import end_of_queue_position, select_next_eliminating_user
 
 class MatchConsumer(JsonWebsocketConsumer):
     def connect(self):

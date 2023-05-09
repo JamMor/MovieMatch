@@ -6,7 +6,7 @@ from elimination_room.models import SharedMovieList, SharedMovie, ShareRoomUser
 from .serializer import SharedListEncoder as SharedListJsonEncoder
 from .consumer_utils import find_next_index
 from .json_response import SuccessfulCommandResponse, FailedCommandResponse
-from .user_management import assign_round_order
+from .queue_management import assign_round_order
 
 def request_eliminate(sharecode, persona_uuid, content):
     """
