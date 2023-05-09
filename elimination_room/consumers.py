@@ -82,28 +82,34 @@ class MatchConsumer(JsonWebsocketConsumer):
         self.accept()
 
     def disconnect(self, close_code):
-        #FLAG - Add prefetch, select_related
-        #Query all active users in share list
-        active_share_users_qs = ShareRoomUser.objects.filter(list__sharecode = self.sharecode, is_active = True).order_by('created_at')
-        current_user = active_share_users_qs.get(persona__uuid = self.persona_uuid)
-        
+
         json_response_obj = SuccessfulCommandResponse(command="disconnected", data= {"disconnected_uuid" : self.persona_uuid})
+        
+        # Get this user persona and share room
+        this_persona = Persona.objects.get(uuid = self.persona_uuid)
+        share_list = SharedMovieList.objects.get(sharecode = self.sharecode)
+        room_user = ShareRoomUser.objects.get(persona = this_persona, list = share_list)
 
-        #If it is users turn, assign next user to turn
-        if current_user.is_users_turn:
-            current_user.is_users_turn = False
-            next_index = find_next_index(self.persona_uuid, list(active_share_users_qs.values_list('persona__uuid', flat=True)))
-            next_user = active_share_users_qs[next_index]
-            next_user.is_users_turn = True
-            next_user.save()
-            #SEND MESSAGE to channels update turn for all clients
-            json_response_obj.add_data({"next_eliminating_uuid": next_user.persona.uuid})
+        # Get current round and turn
+        current_round = share_list.round
+        current_turn = share_list.turn
 
-        #Set current user inactive
-        current_user.is_active = False
-        current_user.last_active = timezone.now()
-        current_user.save()
+        # If last active user, then set list to default round 0
+        active_share_users_count = ShareRoomUser.objects.filter(list__sharecode = self.sharecode, is_active = True).count()
+        if active_share_users_count == 1:
+            share_list.round = 0
+            share_list.save()
 
+        elif active_share_users_count > 1:
+            #If it was the user's turn and they had not eliminated, assign the next user to turn
+            if room_user.position == current_turn and room_user.has_eliminated == False:
+                next_share_user, current_round = select_next_eliminating_user(share_list)
+                json_response_obj.add_data({"next_eliminating_uuid": next_share_user.persona.uuid})
+
+            json_response_obj.add_data({"round" : current_round})
+
+        room_user.is_active = False
+        room_user.save()
 
         # Tell group of disconnect
         self.forward_command_response_to_group(json_response_obj.to_dict())
