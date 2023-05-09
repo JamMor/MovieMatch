@@ -4,7 +4,7 @@ from django.db.models import Max
 
 def end_of_queue_position(share_list):
     """
-    Returns last queue position + 1
+    Returns maximum queue position + 1 for the current round
 
     :param share_list: The shared list to get the end of queue position for
     :type share_list: SharedMovieList
