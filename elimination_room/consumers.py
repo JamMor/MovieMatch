@@ -34,63 +34,46 @@ class MatchConsumer(JsonWebsocketConsumer):
         share_list = SharedMovieList.objects.get(sharecode = self.sharecode)
         
         # #Activate inactive user, or create new active user if hasn't joined yet
-        # room_user, created = ShareRoomUser.objects.update_or_create(
-        #     persona = this_persona, 
-        #     list = share_list,
-        #     defaults={'is_active' : True}
-        # )
+        room_user, created = ShareRoomUser.objects.update_or_create(
+            persona = this_persona, 
+            list = share_list,
+            defaults={'is_active' : True}
+        )
         
         # Get current round and turn
         current_round = share_list.round
         current_turn = share_list.turn
-
-        # Check if this_persona already has a ShareRoomUser associated with this list
-        room_user_qs = ShareRoomUser.objects.filter(persona = this_persona, list = share_list)
         
         # If a returning user, determine position and round placement
-        if room_user_qs.exists():
-            room_user = room_user_qs.first()
-            room_user.is_active = True
+        if not created:
 
-            # For users rejoining during a round they are a part of but who haven't eliminated yet
-            if (room_user.round == current_round) and (not room_user.has_eliminated):
-                # If the user has missed their turn, then move to end of queue.
-                if room_user.position < current_turn:
-                    # Set position to end of queue by making position the max position of ShareRoomUsers in this round +1
+            # For users rejoining during a round they are a part of but who missed their turn, move to end of queue
+            if (room_user.round == current_round) and (not room_user.has_eliminated) and (room_user.position < current_turn):
                     room_user.position = end_of_queue_position(share_list)
-                # For those who have rejoined before their turn, maintain position in queue
-                else:
-                    pass
             # For those from a previous round, treat as new users.
             if room_user.round != current_round:
                 room_user.round = 0
-            
-            room_user.save()
         
-        # If a new user, create new ShareRoomUser
+        # If a new user, set nickname
         else:
             if this_persona.nickname:
                 nickname = this_persona.nickname
+            # Set generic nickname if none already set
             else:
                 room_user_count = ShareRoomUser.objects.filter(list__sharecode = self.sharecode).count()
                 print(f"Number of room users: {room_user_count}")
                 nickname = f"User {room_user_count}"
                         
-            # Create New ShareRoomUser for new room
-            room_user = ShareRoomUser.objects.create(
-                persona = this_persona, 
-                list = share_list,
-                nickname = nickname
-            )
-                
-        #====================================
+            room_user.nickname = nickname
+        
+        room_user.save()
+
         # Tell group of connection
         user_data = {
             'uuid' : self.persona_uuid,
             'nickname' : room_user.nickname,
-            'is_users_turn' : room_user.is_users_turn,
-            'round' : room_user.round,
-            'position' : room_user.position
+            'user_round' : room_user.round,
+            'user_position' : room_user.position
         }
         json_response_obj = SuccessfulCommandResponse(command = "connected", data= user_data)
 
