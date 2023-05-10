@@ -15,20 +15,19 @@ def end_of_queue_position(share_list):
     return position_dict['last_position'] + 1
 
 # Assign next round order, return tuple with first eliminating user and room round
-def assign_round_order(sharecode, current_round):
+def assign_round_order(share_list):
     """
     Assigns the next round order for a share room and returns the first user in the queue 
     and the room's current round
 
-    :param sharecode: The share code of the room to assign the round order for
-    :type sharecode: str
-    :param current_round: The current round of the room
-    :type current_round: int
+    :param share_list: The shared list to get the next user in the queue for
+    :type share_list: SharedMovieList
     :return: Tuple with first eliminating user and room round
     :rtype: ShareRoomUser, int
     """
     # Active Room Users Queryset
-    active_share_users_qs = ShareRoomUser.objects.filter(list__sharecode = sharecode, is_active = True)
+    active_share_users_qs = ShareRoomUser.objects.filter(list = share_list, is_active = True)
+    current_round = share_list.round
 
     # If initial round, randomize the position of all active users
     if current_round == 0:
@@ -53,9 +52,9 @@ def assign_round_order(sharecode, current_round):
     
     ShareRoomUser.objects.bulk_update(all_active_users, ['round', 'position', 'has_eliminated'])     
 
-    # Update Round
-    share_list = SharedMovieList.objects.get(sharecode = sharecode)
+    # Update Round and Turn
     share_list.round = current_round + 1
+    share_list.turn = 1
     share_list.save()
 
     return all_active_users[0], share_list.round
@@ -86,9 +85,9 @@ def select_next_eliminating_user(share_list):
 
     if next_share_user == None:
         next_share_user, current_round = assign_round_order(share_list)
-
-    # Update current turn
-    share_list.turn = next_share_user.position
-    share_list.save()
+    else:
+        # Update current turn
+        share_list.turn = next_share_user.position
+        share_list.save()
     
     return next_share_user, current_round
