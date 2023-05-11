@@ -19,14 +19,19 @@ The clients will be able to validate these commands and modify the room state ac
 ---
 
 ## Room Logic
-Currently, *anyone* may trigger the start of elimination. This is again for the sake of flexibility. It is up to the users themselves to decide if they want to wait for others. Other systems would mean the room creator alone would have that power, or specific invites would need to be required to determine who is present, etc.
+Currently, *anyone* may trigger the start of elimination. This is again for the sake of flexibility. It is up to the users themselves to decide if they want to wait for others. Other systems would mean the room creator alone would have that power, or specific invites would need to be required to confirm who is present, etc.
 
-The other benefit is that users may join or leave at *any* time without interrupting or postponing the selection process if the rest of the group wishes to continue. This also means that users may continue even *without* the initial room creator. Anonymous users can also join with the sharecode.
+The other benefit is that users may join or leave at *any* time without interrupting or postponing the selection process if the rest of the group wishes to continue. This also means that users may continue even *without* the initial room creator. Anonymous users may also join with the sharecode.
 
-To deal with disconnects, a 'round' property will be implemented to prevent repeat voting. If a user reconnects before the round ends, their place is kept based on their initial time of joining. If the order has passed, they're placed at the end of the queue. In this way if they reconnect they will not find themselves at the end of the queue able to vote again.
+Elimination rooms operate on a round system to prevent repeat voting. When a room is created, it defaults to a round number of 0, awaiting the start of elimination. Similarly, newly joining users default to a round number of 0, signifying that they are not currently participating in a round. 
 
-Once a new "round" is started, the question is should only the present users
-be able to vote, or should users be able to join in on an unfinished round. The latter allows for latecomers and new users to immediately join in, *however* it also means users could join anonymously over and over to keep getting more votes. This would have to involve a private window or new browser as a session cookie is used to identify even anonymous users.
+Once elimination starts, the round is set to 1. All active users are set to round 1 as well and assigned a randomized position for turns. New users joining during this time will have the default round 0, identifying them as awaiting the next round to participate. 
+
+When a round of elimination is complete, round 0 users will be assigned in the order they joined at the beginning of the queue for the next round. The users from the former round will then follow in the same order they eliminated previously. This allows new users to immediately be included and have an equal chance to eliminate without waiting for the former users to go twice.
+
+If a user disconnects during a round, they may rejoin at no penalty if they return before their turn. However if they miss their turn, they will be added to the end of the queue for that round. If they miss the round *entirely*, then they will be treated as a new "round 0" user waiting for the next round.
+
+When every user has disconnected, the room round is reset to the default 0, which means that returning users must send the "Start Elimination" command as before. The elimination status of the movies in the list will not reset until a final movie has been chosen and the reset command has been sent.
 
 ---
 ## Server Side
