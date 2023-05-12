@@ -11,7 +11,7 @@ from elimination_room.models import ShareRoomUser, SharedMovieList
 from .serializer import SharedListEncoder
 from .consumer_utils import find_next_index
 from .json_response import SuccessfulCommandResponse, FailedCommandResponse
-from .command_requests import request_eliminate, request_initialize, request_elimination_start, request_refresh_list
+from .command_requests import request_connect, request_eliminate, request_initialize, request_elimination_start, request_refresh_list
 
 from django.db.models import Max
 from .queue_management import end_of_queue_position, select_next_eliminating_user
@@ -29,57 +29,16 @@ class MatchConsumer(JsonWebsocketConsumer):
             self.channel_name
         )
 
-        # Get this user persona and share room
-        this_persona = Persona.objects.get(uuid = self.persona_uuid)
-        share_list = SharedMovieList.objects.get(sharecode = self.sharecode)
-        
-        # #Activate inactive user, or create new active user if hasn't joined yet
-        room_user, created = ShareRoomUser.objects.update_or_create(
-            persona = this_persona, 
-            list = share_list,
-            defaults={'is_active' : True}
-        )
-        
-        # Get current round and turn
-        current_round = share_list.round
-        current_turn = share_list.turn
-        
-        # If a returning user, determine position and round placement
-        if not created:
+        json_response_obj = request_connect(self.sharecode, self.persona_uuid)
 
-            # For users rejoining during a round they are a part of but who missed their turn, move to end of queue
-            if (room_user.round == current_round) and (not room_user.has_eliminated) and (room_user.position < current_turn):
-                    room_user.position = end_of_queue_position(share_list)
-            # For those from a previous round, treat as new users.
-            if room_user.round != current_round:
-                room_user.round = 0
-        
-        # If a new user, set nickname
+        if json_response_obj.status == "success":
+            self.forward_command_response_to_group(json_response_obj.to_dict())
+            self.accept()
+        elif json_response_obj.status == "failure":
+            print("Failed to connect.")
         else:
-            if this_persona.nickname:
-                nickname = this_persona.nickname
-            # Set generic nickname if none already set
-            else:
-                room_user_count = ShareRoomUser.objects.filter(list__sharecode = self.sharecode).count()
-                print(f"Number of room users: {room_user_count}")
-                nickname = f"User {room_user_count}"
-                        
-            room_user.nickname = nickname
-        
-        room_user.save()
-
-        # Tell group of connection
-        user_data = {
-            'uuid' : self.persona_uuid,
-            'nickname' : room_user.nickname,
-            'user_round' : room_user.round,
-            'user_position' : room_user.position
-        }
-        json_response_obj = SuccessfulCommandResponse(command = "connected", data= user_data)
-
-        self.forward_command_response_to_group(json_response_obj.to_dict())
-        
-        self.accept()
+            print("Invalid status from request_connect")
+            
 
     def disconnect(self, close_code):
 

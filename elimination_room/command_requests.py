@@ -2,12 +2,69 @@ from random import randint
 import random
 from asgiref.sync import async_to_sync
 
+from list_builder.models import Persona
 from elimination_room.models import SharedMovieList, SharedMovie, ShareRoomUser
 from .serializer import SharedListEncoder as SharedListJsonEncoder
 from .consumer_utils import find_next_index
 from .json_response import SuccessfulCommandResponse, FailedCommandResponse
-from .queue_management import assign_round_order
+from .queue_management import assign_round_order, end_of_queue_position
 
+def request_connect(sharecode, persona_uuid):
+    """
+    Request to connect to elimination room
+    Returns either a FailedCommandResponse or SuccessfulCommandResponse, 
+    which can be differentiated by checking the 'status' attribute.
+    The to_dict() method can be called on either to get a json serializable dictionary.
+    Successful response returns the uuid, round, position, and nickname of the connecting user.
+    """
+
+    command = "connected"
+
+    # Get this user persona and share room
+    this_persona = Persona.objects.get(uuid = persona_uuid)
+    share_list = SharedMovieList.objects.get(sharecode = sharecode)
+    
+    # Activate inactive user, or create new active user if hasn't joined yet
+    room_user, created = ShareRoomUser.objects.update_or_create(
+        persona = this_persona, 
+        list = share_list,
+        defaults={'is_active' : True}
+    )
+        
+    # If a returning user, determine position and round placement
+    if not created:
+
+        # For users rejoining during a round they are a part of but who missed their turn, move to end of queue
+        if (room_user.round == share_list.round) and (not room_user.has_eliminated) and (room_user.position < share_list.turn):
+                room_user.position = end_of_queue_position(share_list)
+        # For those from a previous round, treat as new users.
+        if room_user.round != share_list.round:
+            room_user.round = 0
+    
+    # If a new user, set nickname
+    else:
+        if this_persona.nickname:
+            nickname = this_persona.nickname
+        # Set generic nickname if none already set
+        else:
+            room_user_count = ShareRoomUser.objects.filter(list__sharecode = sharecode).count()
+            print(f"Number of room users: {room_user_count}")
+            nickname = f"User {room_user_count}"
+                    
+        room_user.nickname = nickname
+    
+    room_user.save()
+
+    # Tell group of connection
+    user_data = {
+        'uuid' : persona_uuid,
+        'nickname' : room_user.nickname,
+        'user_round' : room_user.round,
+        'user_position' : room_user.position
+    }
+
+    return SuccessfulCommandResponse(command = command, data = user_data)
+    
 def request_eliminate(sharecode, persona_uuid, content):
     """
     Request to eliminate a movie from the list.
@@ -33,7 +90,7 @@ def request_eliminate(sharecode, persona_uuid, content):
     if not this_user.is_users_turn:
         return FailedCommandResponse(command=command, errors=["Not this users turn."])
     
-    
+
     # If elimination has started:
     shared_movie_id = content['shared_movie_id']
     uneliminated_movies_qs = SharedMovie.objects.filter(shared_list__sharecode = sharecode, is_eliminated = False)
