@@ -7,7 +7,7 @@ from elimination_room.models import SharedMovieList, SharedMovie, ShareRoomUser
 from .serializer import SharedListEncoder as SharedListJsonEncoder
 from .consumer_utils import find_next_index
 from .json_response import SuccessfulCommandResponse, FailedCommandResponse
-from .queue_management import assign_round_order, end_of_queue_position
+from .queue_management import assign_round_order, end_of_queue_position, select_next_eliminating_user
 
 def request_connect(sharecode, persona_uuid):
     """
@@ -65,6 +65,47 @@ def request_connect(sharecode, persona_uuid):
 
     return SuccessfulCommandResponse(command = command, data = user_data)
     
+def request_disconnect(sharecode, persona_uuid):
+    """
+    Request to disconnect from elimination room.
+    Returns either a FailedCommandResponse or SuccessfulCommandResponse, 
+    which can be differentiated by checking the 'status' attribute.
+    The to_dict() method can be called on either to get a json serializable dictionary.
+    Successful response returns the disconnected uuid. If disconnecting user was 
+    in the middle of their turn, a successful response will also include the 
+    next eliminating uuid and the round.
+    """
+
+    command = "disconnected"
+
+    disconnect_data= {"disconnected_uuid" : persona_uuid}
+
+    # Get this user persona and share room
+    this_persona = Persona.objects.get(uuid = persona_uuid)
+    share_list = SharedMovieList.objects.get(sharecode = sharecode)
+    room_user = ShareRoomUser.objects.get(persona = this_persona, list = share_list)
+
+    current_round = share_list.round
+
+    # If last active user, then set list to default round 0
+    active_share_users_count = ShareRoomUser.objects.filter(list__sharecode = sharecode, is_active = True).count()
+    if active_share_users_count == 1:
+        share_list.round = 0
+        share_list.save()
+
+    elif active_share_users_count > 1:
+        #If it was the user's turn and they had not eliminated, assign the next user to turn
+        if (room_user.position == share_list.turn) and (room_user.has_eliminated == False):
+            next_share_user, current_round = select_next_eliminating_user(share_list)
+            disconnect_data.update({"next_eliminating_uuid": next_share_user.persona.uuid})
+
+        disconnect_data.update({"round" : current_round})
+
+    room_user.is_active = False
+    room_user.save()
+
+    return SuccessfulCommandResponse(command=command, data=disconnect_data)
+
 def request_eliminate(sharecode, persona_uuid, content):
     """
     Request to eliminate a movie from the list.
