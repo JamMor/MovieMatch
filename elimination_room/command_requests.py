@@ -120,21 +120,21 @@ def request_eliminate(sharecode, persona_uuid, content):
     command = "eliminated"
 
     active_share_users_qs = ShareRoomUser.objects.filter(list__sharecode = sharecode, is_active = True).order_by('created_at')
-
+    share_list = SharedMovieList.objects.get(sharecode = sharecode)
     # Error handling
-    # If it isn't any user's turn, elimination hasn't started. Return failed msg
-    if active_share_users_qs.filter(is_users_turn = True).count() == 0:
+    # If elimination hasn't started. Return failed msg
+    if share_list.round == 0:
         return FailedCommandResponse(command=command, errors=["List not set to allow elimination."])
-
+    
     # If it isn't THIS user's turn. Return failed msg
     this_user = active_share_users_qs.get(persona__uuid = persona_uuid)
-    if not this_user.is_users_turn:
+    if this_user.position != share_list.turn:
         return FailedCommandResponse(command=command, errors=["Not this users turn."])
     
 
     # If elimination has started:
     shared_movie_id = content['shared_movie_id']
-    uneliminated_movies_qs = SharedMovie.objects.filter(shared_list__sharecode = sharecode, is_eliminated = False)
+    uneliminated_movies_qs = SharedMovie.objects.filter(shared_list= share_list, is_eliminated = False)
     movies_left = uneliminated_movies_qs.count()
 
     successful_response = SuccessfulCommandResponse(command=command)
@@ -152,32 +152,20 @@ def request_eliminate(sharecode, persona_uuid, content):
         movies_left -= 1
         
         #Pick next user
-        current_user = active_share_users_qs.get(persona__uuid = persona_uuid)
-        current_user.is_users_turn = False
-        current_user.save()
-        next_index = find_next_index(persona_uuid, list(active_share_users_qs.values_list('persona__uuid', flat=True)))
-        if next_index == None:
-            #FLAG handle error
-            print("No available user for turn.")
-            return
-        next_user = active_share_users_qs[next_index]
-        next_user.is_users_turn = True
-        next_user.save()
+        next_eliminating_user, round = select_next_eliminating_user(share_list)
 
         successful_response.add_data({
             "shared_movie_id": shared_movie_id,
             "eliminating_uuid": persona_uuid,
-            "next_eliminating_uuid": next_user.persona.uuid
+            "next_eliminating_uuid": next_eliminating_user.persona.uuid,
+            "round": round
         })
 
     # If last possible elimination
     if movies_left == 1:
-        final_movie = SharedMovie.objects.filter(shared_list__sharecode = sharecode, is_eliminated = False).first()
+        final_movie = uneliminated_movies_qs.first()
 
         successful_response.add_data({"final_shared_movie_id": final_movie.id})
-
-        #Set all to no one's turn
-        active_share_users_qs.filter(is_users_turn = True).update(is_users_turn = False)
         
     return successful_response
     
