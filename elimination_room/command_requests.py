@@ -188,17 +188,16 @@ def request_initialize(sharecode):
     
 def request_elimination_start(sharecode):
     """
-    Request to start elimination in a share room.
+    Request to start elimination in an elimination room.
     Returns either a FailedCommandResponse or SuccessfulCommandResponse, 
     which can be differentiated by checking the 'status' attribute.
     The to_dict() method can be called on either to get a json serializable dictionary.
-    Successful response returns the "eliminating_uuid" of the first selecting user.
+    Successful response returns the "eliminating_uuid" of the first selecting user 
+    and the current round (1).
     """
 
     command = "elimination_started"
-    # active_share_users_qs = ShareRoomUser.objects.filter(list__sharecode = sharecode, is_active = True)
     
-    #======================================================================
     shared_list = SharedMovieList.objects.get(sharecode = sharecode)
 
     #If elimination already in progress, return failed response
@@ -209,34 +208,13 @@ def request_elimination_start(sharecode):
     if SharedMovie.objects.filter(shared_list__sharecode = sharecode).count() < 2:
         return FailedCommandResponse(command=command, errors=["Must be at least 2 movies in list to begin eliminating."])
 
-    # Assign User Order and Retrieve First User (and unused round)
+    # Assign User Order and Retrieve First User (and round which should be 1)
     eliminating_user, returned_round = assign_round_order(shared_list)
-    
-    shared_list.round = 1
-    shared_list.turn = 1
-    shared_list.save()
-
+ 
     return SuccessfulCommandResponse(command=command, data={
         "eliminating_uuid": eliminating_user.persona.uuid, 
-        "current_round": 1
+        "current_round": returned_round
         })
-
-    #==============================================================
-
-
-    # users_eliminating = active_share_users_qs.filter(is_users_turn = True).count()
-    # if users_eliminating > 0:
-    #     return FailedCommandResponse(command=command, errors=["Elimination already in progress."])
-
-    # if SharedMovie.objects.filter(shared_list__sharecode = sharecode).count() < 2:
-    #     return FailedCommandResponse(command=command, errors=["Must be at least 2 movies in list to begin eliminating."])
-
-    # #Randomly pick user to start
-    # eliminating_user = random.choice(active_share_users_qs)
-    # eliminating_user.is_users_turn = True
-    # eliminating_user.save()
-                    
-    # return SuccessfulCommandResponse(command=command, data={"eliminating_uuid": eliminating_user.persona.uuid})
 
 def request_refresh_list(sharecode):
     """
