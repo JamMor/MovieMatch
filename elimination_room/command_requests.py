@@ -171,7 +171,7 @@ def request_eliminate(sharecode, persona_uuid, content):
     
 def request_initialize(sharecode):
     """
-    Request to intialize a movie from the list.
+    Request to intialize a the movie list for an elimination room.
     Returns either a FailedCommandResponse or SuccessfulCommandResponse, 
     which can be differentiated by checking the 'status' attribute.
     The to_dict() method can be called on either to get a json serializable dictionary.
