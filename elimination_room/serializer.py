@@ -22,7 +22,8 @@ def SharedListEncoder(sharecode):
     active_user_dict = {
         persona.pre_persona.uuid : { 
             'nickname' : persona.nickname, 
-            'is_users_turn' : persona.is_users_turn
+            'round' : persona.round,
+            'position' : persona.position,
             }
         for persona in shared_list.pre_active_room_users}
     
@@ -38,7 +39,9 @@ def SharedListEncoder(sharecode):
         
     json_dict = {
         'active_user_dict' : active_user_dict,
-        'movie_list' : movie_list
+        'movie_list' : movie_list,
+        'round' : shared_list.round,
+        'turn' : shared_list.turn
         }
 
     return json_dict
