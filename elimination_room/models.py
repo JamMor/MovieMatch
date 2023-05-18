@@ -6,6 +6,7 @@ from django.db import IntegrityError, models, transaction
 class SharedMovieList(models.Model):
     sharecode = models.CharField(max_length=255, unique=True)
     created_by = models.ForeignKey('list_builder.Persona', related_name="created_shared_lists", on_delete = models.CASCADE, null=True)
+    # FLAG: Is this needed with Rounds?
     started_eliminating = models.BooleanField(default=False)
     contributors = models.ManyToManyField('list_builder.Persona', related_name="shared_lists")
     created_at = models.DateTimeField(auto_now_add=True)
@@ -59,8 +60,10 @@ class ShareRoomUser(models.Model):
     persona = models.ForeignKey('list_builder.Persona', related_name="in_room", on_delete = models.CASCADE)
     list = models.ForeignKey(SharedMovieList, related_name="room_users", on_delete = models.CASCADE)
     is_active = models.BooleanField(default=True)
+    #FLAG: Is this used?
     is_users_turn = models.BooleanField(default=False)
     nickname = models.CharField(max_length=255, null=True)
+    #FLAG: Is this used?
     last_active = models.DateTimeField(null=True)
 
     round = models.IntegerField(default=0)

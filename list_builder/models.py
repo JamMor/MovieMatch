@@ -50,6 +50,7 @@ class Movie(models.Model):
         return self.title
 
 class MovieListManager(models.Manager):
+    # FLAG: Obsolete?
     # def create_from_movie_list(self, list_of_movies, creator, **kwargs):
     #     """
     #     Creates a MovieList (temp, or saved) from list of movies (dictionaries 
