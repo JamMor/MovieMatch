@@ -57,10 +57,11 @@ This file contains the logic for the commands received from the client. It will 
 The current command functions available are:
 
 - #### **```request_eliminate```**
-    Takes the sharecode, uuid of user requisting elimination, and content of the received json (to get the ```shared_movie_id``` of the movie for elimination) as input. Validates that elimination is available and it is the user's turn. If successful, returns a **SuccessfulCommandResponse** containing the 
+    Takes the sharecode, uuid of user requesting elimination, and content of the received json (to get the ```shared_movie_id``` of the movie for elimination) as input. Validates that elimination is available and it is the user's turn. If successful, returns a **SuccessfulCommandResponse** containing the 
     - ```shared_movie_id```,
     - ```eliminating_uuid```,
-    - ```next_eliminating_uuid```
+    - ```next_eliminating_uuid```,
+    - ```round```
 
     **IF** there is only one remaining movie, it will add
     - ```final_shared_movie_id```
@@ -71,16 +72,33 @@ The current command functions available are:
     Takes the sharecode as input, and when successful returns a **SuccessfulCommandResponse** containing the room state from the ```SharedListJsonEncoder``` of ```serializer.py```.
 
 - #### **```request_elimination_start```**
-    Takes the sharecode as input, and validates room elimination state. If successful, randomly selects a user as the first eliminator, and returns a **SuccessfulCommandResponse** containing the first ```eliminating_uuid```.
+    Takes the sharecode as input, and validates room elimination state. If successful, calls the ```assign_round_order``` function from ```queue_management.py``` which begins a new round and returns the first eliminating user. The **SuccessfulCommandResponse** contains the first ```eliminating_uuid``` and the ```current_round``` of the room which should always be **1**.
 - #### **```request_refresh_list```**
     Takes the sharecode as input, and updates all associated **SharedMovie** objects in the database to have their ```is_eliminated``` property set to ```false```. When successful, returns a **SuccessfulCommandResponse** containing the new room state from the ```SharedListJsonEncoder``` of ```serializer.py```.
 
+Additional functions (though not received commands from the client) contain the logic for user joining and leaving the room.
+- #### **```request_connect```**
+    Takes the sharecode and persona uuid as input, and creates or updates a **ShareRoomUser**, sets to active, adds nickname, and assigns queue position. When successful, returns a **SuccessfulCommandResponse** containing the 
+    - ```uuid```,
+    - ```nickname```,
+    - ```user_round```,
+    - ```user_position```
+- #### **```request_disconnect```**
+    Takes the sharecode and persona uuid as input, and sets the user to inactive, *if* the last user resets the room round, and chooses a new eliminating user if disconnecting in the middle of their turn. When successful, returns a **SuccessfulCommandResponse** containing the 
+    - ```disconnecting_uuid```,
+    *if disconnected in middle of turn*
+    - ```next_eliminating_uuid```,
+    - ```user_round```
+
 ### ```serializer.py```
-This file contains a serializer for a SharedMovieList (aka Share Room). It will return a json serializable dictionary of the active room users (```active_user_dict```) and the shared movies (```movie_list```). This dictionary is built of model instances, which means the ```DjangoJSONEncoder``` must be used to properly parse and encode the datetime objects present.
+This file contains a serializer for a SharedMovieList (aka Share Room). It will return 
+- a json serializable dictionary of the active room users (```active_user_dict```) and the the shared movies (```movie_list```), 
+- the room round (```round```) and turn (```turn```). 
+The dictionaries are built of model instances, which means the ```DjangoJSONEncoder``` must be used to properly parse and encode the datetime objects present.
 
 As the serializer returns the entire state of the room, this is typically used for, 
 - the initial request when a user joins the room, 
-- a pushed state to existing users when a new user joins the room,
+- a pushed updated state to existing users when a new user joins the room,
 - when a room is refreshed and the elimination states reset.
 
 ### ```consumer_utils.py```
