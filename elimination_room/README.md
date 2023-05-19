@@ -101,9 +101,6 @@ As the serializer returns the entire state of the room, this is typically used f
 - a pushed updated state to existing users when a new user joins the room,
 - when a room is refreshed and the elimination states reset.
 
-### ```consumer_utils.py```
-This file contains a single function that returns the next index of the user list after the given uuid. This is used to determine the next user to eliminate a movie. When the end of the list is reached, it will loop back to the beginning.
-
 ### ```json_response.py```
 This file contains several class objects that are used to return json responses to the client. These are used to standardize the responses and make it easier to handle errors and success messages.
 
