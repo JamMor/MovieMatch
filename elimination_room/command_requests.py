@@ -5,7 +5,6 @@ from asgiref.sync import async_to_sync
 from list_builder.models import Persona
 from elimination_room.models import SharedMovieList, SharedMovie, ShareRoomUser
 from .serializer import SharedListEncoder as SharedListJsonEncoder
-from .consumer_utils import find_next_index
 from .json_response import SuccessfulCommandResponse, FailedCommandResponse
 from .queue_management import assign_round_order, end_of_queue_position, select_next_eliminating_user
 
