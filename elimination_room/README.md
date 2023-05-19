@@ -120,6 +120,29 @@ which are essentially variations of the JsonClassObjects with the additional ```
 
 ---
 
+
+### ```queue_management.py```
+This file contains three functions for managing the queue of room users. 
+
+- #### ```end_of_queue_position.py```
+    This is for adding a user to the end of the current round queue. It takes the ```share_list``` as input and returns the highest position + 1 (as an **int**).
+
+- #### ```assign_round_order.py```
+    This manages the turn order for each new round. It takes the ```share_list``` as input.
+
+    The initial round order is randomized among all current active users when elimination is started. Subsequent rounds begin with all *new* active users waiting to be assigned in the order of when they joined the room. They are followed by the previous active users in their same order from before.
+
+    It resets all users ```has_eliminated``` status to false, and assigns their ```position```. As well as saving the new round and turn position of the room.
+
+    It returns the first user in the queue for the next round and the new room round number.
+
+- #### ```select_next_eliminating_user.py```
+    This is for selecting the next eliminating user. It takes the ```share_list``` as input and returns a tuple with the ```next_share_user``` in the queue and the room's ```current_round``` (as an int).
+
+    The active users in the round are simply ordered by position and the next after the current turn is chosen.
+
+    *If* the end of the active users for the round are reached however, it will call the ```assign_round_order``` function to progress to the next round.
+
 ## Client Side
 
 The match.html is a simple container with a status bar and the intial html for a modal with more information for the final selected movie. It has the global variables:
