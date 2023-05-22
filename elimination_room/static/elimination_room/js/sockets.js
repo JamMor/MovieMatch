@@ -152,8 +152,8 @@ $(document).ready(function() {
     
 
     //Check if elimination is active (if it is a users turn)
-    function isEliminationActive(userList){
-        return Object.keys(userList).some(user => userList[user].is_users_turn == true)
+    function isEliminationActive(){
+        return room_round > 0
     }
 
     //Opens final modal for now
