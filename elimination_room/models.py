@@ -72,6 +72,18 @@ class ShareRoomUser(models.Model):
     has_eliminated = models.BooleanField(default=False)
     
     position = models.IntegerField(default=0)
+
+    class UserStatus(models.TextChoices):
+        INACTIVE = "IA" # Not in room
+        STANDBY = "SB"  # Waiting for next voting round
+        VOTED = "VO"    # Voted to eliminate
+        WAITING = "WA"  # Waiting to vote
+
+    status = models.CharField(
+        max_length=2,
+        choices=UserStatus.choices,
+        default=UserStatus.INACTIVE,
+    )
     
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
