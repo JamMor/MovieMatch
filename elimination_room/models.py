@@ -66,9 +66,11 @@ class ShareRoomUser(models.Model):
     #FLAG: Is this used?
     last_active = models.DateTimeField(null=True)
 
+    #FLAG: Planned for deprecation
     round = models.IntegerField(default=0)
-    position = models.IntegerField(default=0)
     has_eliminated = models.BooleanField(default=False)
+    
+    position = models.IntegerField(default=0)
     
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
