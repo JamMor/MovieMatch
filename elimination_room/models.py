@@ -12,6 +12,7 @@ class SharedMovieList(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     
+    is_active = models.BooleanField(default=False)
     round = models.IntegerField(default=0)
     turn = models.IntegerField(default=0)
     
