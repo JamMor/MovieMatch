@@ -1,6 +1,7 @@
 import json
 import shortuuid
 from django.db import IntegrityError, models, transaction
+from django.db.models import Q
 
 # Create your models here.
 class SharedMovieList(models.Model):
@@ -57,6 +58,14 @@ class SharedMovie(models.Model):
     movie = models.ForeignKey('list_builder.Movie', related_name="shared_movies", on_delete = models.CASCADE, null=True)
     is_eliminated = models.BooleanField(default=False)
 
+class ShareRoomUserQuerySet(models.QuerySet):
+    def currently_eliminating(self):
+        return self.filter(Q(status=ShareRoomUser.UserStatus.WAITING) | Q(status=ShareRoomUser.UserStatus.VOTED))
+    def are_active(self):
+        return self.exclude(status=ShareRoomUser.UserStatus.INACTIVE)
+    def on_standby(self):
+        return self.filter(status=ShareRoomUser.UserStatus.STANDBY)
+
 class ShareRoomUser(models.Model):
     persona = models.ForeignKey('list_builder.Persona', related_name="in_room", on_delete = models.CASCADE)
     list = models.ForeignKey(SharedMovieList, related_name="room_users", on_delete = models.CASCADE)
@@ -87,6 +96,8 @@ class ShareRoomUser(models.Model):
     
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+
+    objects = ShareRoomUserQuerySet.as_manager()
 
     class Meta:
         constraints = [
