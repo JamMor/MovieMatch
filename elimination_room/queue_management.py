@@ -11,7 +11,7 @@ def end_of_queue_position(share_list):
     :return: Last queue position + 1
     :rtype: int
     """
-    position_dict = ShareRoomUser.objects.filter(list = share_list, round = share_list.round).aggregate(last_position = Max('position'))
+    position_dict = ShareRoomUser.objects.filter(list = share_list).currently_eliminating().aggregate(last_position = Max('position'))
     return position_dict['last_position'] + 1
 
 # Assign next round order, return tuple with first eliminating user and room round
