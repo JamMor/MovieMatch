@@ -26,38 +26,35 @@ def assign_round_order(share_list):
     :rtype: ShareRoomUser, int
     """
     # Active Room Users Queryset
-    active_share_users_qs = ShareRoomUser.objects.filter(list = share_list, is_active = True)
-    current_round = share_list.round
+    active_share_users_qs = ShareRoomUser.objects.filter(list = share_list).are_active()
 
     # If initial round, randomize the position of all active users
-    if current_round == 0:
+    if not share_list.is_active:
         all_active_users = list(active_share_users_qs.all())
         shuffle(all_active_users)
+        share_list.is_active = True
         
-    # If round > 0, first assign newly joined active users. Then assign remaining 
+    # If later round, first assign newly joined active users. Then assign remaining 
     # active users in order of position
-    elif current_round > 0:
+    else:
         # Start the list with newly joined users and then add the remaining users from the previous round
-        new_active_users = active_share_users_qs.filter(round = 0).order_by('updated_at').all()
-        previous_active_users = active_share_users_qs.filter(round = current_round).order_by('position').all()
-        all_active_users = list(new_active_users).extend(list(previous_active_users))
+        all_active_users = list(active_share_users_qs.order_by('position', 'updated_at').all())
 
-    # Assign new round and position to each user
-    n = 0
+    # Assign new position to each user
+    n = 1
     for user in all_active_users:
-        user.round = current_round + 1
+        user.status = ShareRoomUser.UserStatus.WAITING
         user.position = n
-        user.has_eliminated = False
         n += 1
     
-    ShareRoomUser.objects.bulk_update(all_active_users, ['round', 'position', 'has_eliminated'])     
+    ShareRoomUser.objects.bulk_update(all_active_users, ['status', 'position'])
+    ShareRoomUser.objects.filter(list = share_list, status = ShareRoomUser.UserStatus.INACTIVE).update(position=0)
 
-    # Update Round and Turn
-    share_list.round = current_round + 1
+    # Update Turn
     share_list.turn = 1
     share_list.save()
 
-    return all_active_users[0], share_list.round
+    return all_active_users[0]
 
 # Returns a dictionary with next user in queue and the room's current round
 def select_next_eliminating_user(share_list):
