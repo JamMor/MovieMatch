@@ -68,23 +68,21 @@ def select_next_eliminating_user(share_list):
     :return: Tuple with next user in queue and the room's current round
     :rtype: ShareRoomUser, int
     """
-    current_round = share_list.round
+    
     current_turn = share_list.turn
 
     # Gets the next user in this round if any
     next_share_user = ShareRoomUser.objects.filter(
         list = share_list, 
-        is_active = True, 
-        round = current_round,
-        position__gt = current_turn
+        position__gte = current_turn
         ).order_by('position').first()
     
 
     if next_share_user == None:
-        next_share_user, current_round = assign_round_order(share_list)
+        next_share_user = assign_round_order(share_list)
     else:
         # Update current turn
         share_list.turn = next_share_user.position
         share_list.save()
     
-    return next_share_user, current_round
+    return next_share_user
