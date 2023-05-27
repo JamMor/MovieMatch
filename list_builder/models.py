@@ -6,7 +6,7 @@ from django.conf import settings
 # Create your models here.
 class Persona(models.Model):
     uuid = models.CharField(max_length=255, unique=True)
-    #Is is_registered needed? Maybe just test for user_account null
+    #FLAG Is is_registered needed? Maybe just test for user_account null
     is_registered = models.BooleanField(default = False)
     user_account = models.OneToOneField(settings.AUTH_USER_MODEL, related_name="persona", on_delete = models.CASCADE, null=True)
     nickname = models.CharField(max_length=255, null=True)
