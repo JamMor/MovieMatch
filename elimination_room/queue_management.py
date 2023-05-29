@@ -22,8 +22,8 @@ def assign_round_order(share_list):
 
     :param share_list: The shared list to get the next user in the queue for
     :type share_list: SharedMovieList
-    :return: Tuple with first eliminating user and room round
-    :rtype: ShareRoomUser, int
+    :return: First eliminating user
+    :rtype: ShareRoomUser
     """
     # Active Room Users Queryset
     active_share_users_qs = ShareRoomUser.objects.filter(list = share_list).are_active()
@@ -59,14 +59,14 @@ def assign_round_order(share_list):
 # Returns a dictionary with next user in queue and the room's current round
 def select_next_eliminating_user(share_list):
     """
-    Returns a tuple with the next user in the queue and the room's current round.
+    Returns the next user in the queue .
     If the end of the queue is reached, it calls the assign_round_order function to
     assign the next round order.
 
     :param share_list: The shared list to get the next user in the queue for
     :type share_list: SharedMovieList
-    :return: Tuple with next user in queue and the room's current round
-    :rtype: ShareRoomUser, int
+    :return: Next eliminating user
+    :rtype: ShareRoomUser
     """
     
     current_turn = share_list.turn
