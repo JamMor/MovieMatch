@@ -14,7 +14,7 @@ def end_of_queue_position(share_list):
     position_dict = ShareRoomUser.objects.filter(list = share_list).currently_eliminating().aggregate(last_position = Max('position'))
     return position_dict['last_position'] + 1
 
-# Assign next round order, return tuple with first eliminating user and room round
+# Assign next round order, return first eliminating user
 def assign_round_order(share_list):
     """
     Assigns the next round order for a share room and returns the first user in the queue 
@@ -56,7 +56,7 @@ def assign_round_order(share_list):
 
     return all_active_users[0]
 
-# Returns a dictionary with next user in queue and the room's current round
+# Returns next user in queue
 def select_next_eliminating_user(share_list):
     """
     Returns the next user in the queue .
