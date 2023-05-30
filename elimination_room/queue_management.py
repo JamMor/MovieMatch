@@ -47,7 +47,10 @@ def assign_round_order(share_list):
         user.position = n
         n += 1
     
+    # Update active users positions
     ShareRoomUser.objects.bulk_update(all_active_users, ['status', 'position'])
+
+    # Reset inactive users positions
     ShareRoomUser.objects.filter(list = share_list, status = ShareRoomUser.UserStatus.INACTIVE).update(position=0)
 
     # Update Turn
