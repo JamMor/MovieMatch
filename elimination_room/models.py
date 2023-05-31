@@ -70,6 +70,7 @@ class ShareRoomUserQuerySet(models.QuerySet):
 class ShareRoomUser(models.Model):
     persona = models.ForeignKey('list_builder.Persona', related_name="in_room", on_delete = models.CASCADE)
     list = models.ForeignKey(SharedMovieList, related_name="room_users", on_delete = models.CASCADE)
+    #FLAG: Is this used?
     is_active = models.BooleanField(default=True)
     #FLAG: Is this used?
     # is_users_turn = models.BooleanField(default=False)
