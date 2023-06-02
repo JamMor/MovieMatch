@@ -33,12 +33,11 @@ def request_connect(sharecode, persona_uuid):
     # If a returning user, determine position and round placement
     if not created:
 
-        # For users rejoining during a round they are a part of but who missed their turn, move to end of queue
-        if (room_user.round == share_list.round) and (not room_user.has_eliminated) and (room_user.position < share_list.turn):
+        # For users rejoining before the end of the current round who missed their turn, move to end of queue
+        if (not room_user.has_eliminated) and (room_user.position < share_list.turn):
                 room_user.position = end_of_queue_position(share_list)
-        # For those from a previous round, treat as new users.
-        if room_user.round != share_list.round:
-            room_user.round = 0
+        # For users rejoining before the end of the current round who have not yet taken their turn, do nothing
+        # For users rejoining before the end of the current round who have already taken their turn, do nothing
     
     # If a new user, set nickname
     else:
@@ -58,7 +57,6 @@ def request_connect(sharecode, persona_uuid):
     user_data = {
         'uuid' : persona_uuid,
         'nickname' : room_user.nickname,
-        'user_round' : room_user.round,
         'user_position' : room_user.position
     }
 
@@ -84,21 +82,23 @@ def request_disconnect(sharecode, persona_uuid):
     share_list = SharedMovieList.objects.get(sharecode = sharecode)
     room_user = ShareRoomUser.objects.get(persona = this_persona, list = share_list)
 
-    current_round = share_list.round
-
-    # If last active user, then set list to default round 0
-    active_share_users_count = ShareRoomUser.objects.filter(list__sharecode = sharecode, is_active = True).count()
+    # If last active user, then set list to inactive
+    active_share_users_count = ShareRoomUser.objects.filter(list = share_list, is_active = True).count()
     if active_share_users_count == 1:
-        share_list.round = 0
+        share_list.is_active = False
         share_list.save()
 
     elif active_share_users_count > 1:
         #If it was the user's turn and they had not eliminated, assign the next user to turn
         if (room_user.position == share_list.turn) and (room_user.has_eliminated == False):
-            next_share_user, current_round = select_next_eliminating_user(share_list)
+            next_share_user, user_positional_dict = select_next_eliminating_user(share_list)
             disconnect_data.update({"next_eliminating_uuid": next_share_user.persona.uuid})
 
-        disconnect_data.update({"round" : current_round})
+            # Send new order if any
+            if user_positional_dict != None:
+                disconnect_data.update({
+                    "updated_positions": user_positional_dict
+                })
 
     room_user.is_active = False
     room_user.save()
@@ -120,9 +120,12 @@ def request_eliminate(sharecode, persona_uuid, content):
 
     active_share_users_qs = ShareRoomUser.objects.filter(list__sharecode = sharecode, is_active = True).order_by('created_at')
     share_list = SharedMovieList.objects.get(sharecode = sharecode)
+    active_share_users_qs = ShareRoomUser.objects.filter(list = share_list, is_active = True)
+    # .order_by('created_at')
+
     # Error handling
     # If elimination hasn't started. Return failed msg
-    if share_list.round == 0:
+    if share_list.is_active == False:
         return FailedCommandResponse(command=command, errors=["List not set to allow elimination."])
     
     # If it isn't THIS user's turn. Return failed msg
@@ -138,7 +141,7 @@ def request_eliminate(sharecode, persona_uuid, content):
 
     successful_response = SuccessfulCommandResponse(command=command)
 
-    # If available movies > 1
+    # If still movies to eliminate
     if movies_left > 1:
         #Eliminate movie
         try:
@@ -149,21 +152,26 @@ def request_eliminate(sharecode, persona_uuid, content):
         shared_movie.is_eliminated = True
         shared_movie.save()
         movies_left -= 1
-        
-        #Pick next user
-        next_eliminating_user, round = select_next_eliminating_user(share_list)
-
         successful_response.add_data({
-            "shared_movie_id": shared_movie_id,
             "eliminating_uuid": persona_uuid,
-            "next_eliminating_uuid": next_eliminating_user.persona.uuid,
-            "round": round
-        })
+            "shared_movie_id": shared_movie_id})
 
-    # If last possible elimination
+        # If still potential movies to eliminate, pick next user
+        if movies_left > 1:
+            next_eliminating_user, user_positional_dict = select_next_eliminating_user(share_list)
+            successful_response.add_data({
+                "next_eliminating_uuid": next_eliminating_user.persona.uuid
+            })
+
+            # Send new order if any
+            if user_positional_dict != None:
+                successful_response.add_data({
+                    "updated_positions": user_positional_dict
+                })
+
+    # If last movie eliminated
     if movies_left == 1:
         final_movie = uneliminated_movies_qs.first()
-
         successful_response.add_data({"final_shared_movie_id": final_movie.id})
         
     return successful_response
@@ -200,19 +208,19 @@ def request_elimination_start(sharecode):
     shared_list = SharedMovieList.objects.get(sharecode = sharecode)
 
     #If elimination already in progress, return failed response
-    if shared_list.round > 0:
+    if shared_list.is_active:
         return FailedCommandResponse(command=command, errors=["Elimination already in progress."])
     
     # If less than 2 movies in list, return failed response
     if SharedMovie.objects.filter(shared_list__sharecode = sharecode).count() < 2:
         return FailedCommandResponse(command=command, errors=["Must be at least 2 movies in list to begin eliminating."])
 
-    # Assign User Order and Retrieve First User (and round which should be 1)
-    eliminating_user, returned_round = assign_round_order(shared_list)
- 
+    # Assign User Order and Retrieve First User
+    eliminating_user, user_positional_dict = assign_round_order(shared_list)
+
     return SuccessfulCommandResponse(command=command, data={
         "eliminating_uuid": eliminating_user.persona.uuid, 
-        "current_round": returned_round
+        "updated_positions": user_positional_dict
         })
 
 def request_refresh_list(sharecode):
@@ -226,6 +234,11 @@ def request_refresh_list(sharecode):
 
     command = "refreshed"
 
+    # Set list to inactive
+    shared_list = SharedMovieList.objects.get(sharecode = sharecode)
+    shared_list.is_active = False
+    shared_list.turn = 0
+    shared_list.save()
     SharedMovie.objects.filter(shared_list__sharecode = sharecode).update(is_eliminated = False)
 
     try:
