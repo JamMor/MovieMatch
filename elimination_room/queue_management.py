@@ -26,7 +26,7 @@ def assign_round_order(share_list):
     :rtype: ShareRoomUser
     """
     # Active Room Users Queryset
-    active_share_users_qs = ShareRoomUser.objects.filter(list = share_list, is_active = True)
+    active_share_users_qs = ShareRoomUser.objects.filter(list = share_list, is_active = True).select_related('persona')
 
     # If initial round, randomize the position of all active users
     if not share_list.is_active:
@@ -40,11 +40,13 @@ def assign_round_order(share_list):
         # Start the list with newly joined users and then add the remaining users from the previous round
         all_active_users = list(active_share_users_qs.order_by('position', 'updated_at').all())
 
-    # Assign new position to each user
+    # Assign new position to each user, and build dictionary of user uuids and positions
+    user_positional_dict = {}
     n = 1
     for user in all_active_users:
         user.has_eliminated = False
         user.position = n
+        user_positional_dict.update({user.persona.uuid: n})
         n += 1
     
     # Update active users positions
@@ -57,7 +59,7 @@ def assign_round_order(share_list):
     share_list.turn = 1
     share_list.save()
 
-    return all_active_users[0]
+    return all_active_users[0], user_positional_dict
 
 # Returns next user in queue
 def select_next_eliminating_user(share_list):
@@ -71,6 +73,8 @@ def select_next_eliminating_user(share_list):
     :return: Next eliminating user
     :rtype: ShareRoomUser
     """
+
+    user_positional_dict = None
     
     # Gets the next user in this round if any
     next_share_user = ShareRoomUser.objects.filter(
@@ -81,10 +85,10 @@ def select_next_eliminating_user(share_list):
     
 
     if next_share_user == None:
-        next_share_user = assign_round_order(share_list)
+        next_share_user, user_positional_dict = assign_round_order(share_list)
     else:
         # Update current turn
         share_list.turn = next_share_user.position
         share_list.save()
     
-    return next_share_user
+    return next_share_user, user_positional_dict
