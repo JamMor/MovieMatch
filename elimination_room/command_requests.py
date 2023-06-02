@@ -105,7 +105,7 @@ def request_disconnect(sharecode, persona_uuid):
 
     return SuccessfulCommandResponse(command=command, data=disconnect_data)
 
-def request_eliminate(sharecode, persona_uuid, content):
+def request_eliminate(sharecode, persona_uuid, shared_movie_id):
     """
     Request to eliminate a movie from the list.
     Returns either a FailedCommandResponse or SuccessfulCommandResponse, 
@@ -134,7 +134,6 @@ def request_eliminate(sharecode, persona_uuid, content):
     
 
     # If elimination has started:
-    shared_movie_id = content['shared_movie_id']
     uneliminated_movies_qs = SharedMovie.objects.filter(shared_list= share_list, is_eliminated = False)
     movies_left = uneliminated_movies_qs.count()
 

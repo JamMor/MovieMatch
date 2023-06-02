@@ -61,7 +61,7 @@ class MatchConsumer(JsonWebsocketConsumer):
         #ELIMINATE
         if command == 'eliminate':
 
-            json_response_obj = request_eliminate(self.sharecode, self.persona_uuid, content)
+            json_response_obj = request_eliminate(self.sharecode, self.persona_uuid, content['shared_movie_id'])
 
             if json_response_obj.status == "success":
                 self.forward_command_response_to_group(json_response_obj.to_dict())
