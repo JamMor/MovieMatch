@@ -11,7 +11,7 @@ def end_of_queue_position(share_list):
     :return: Last queue position + 1
     :rtype: int
     """
-    position_dict = ShareRoomUser.objects.filter(list = share_list).currently_eliminating().aggregate(last_position = Max('position'))
+    position_dict = ShareRoomUser.objects.filter(list = share_list, is_active = True).aggregate(last_position = Max('position'))
     return position_dict['last_position'] + 1
 
 # Assign next round order, return first eliminating user
@@ -26,7 +26,7 @@ def assign_round_order(share_list):
     :rtype: ShareRoomUser
     """
     # Active Room Users Queryset
-    active_share_users_qs = ShareRoomUser.objects.filter(list = share_list).are_active()
+    active_share_users_qs = ShareRoomUser.objects.filter(list = share_list, is_active = True)
 
     # If initial round, randomize the position of all active users
     if not share_list.is_active:
@@ -43,15 +43,15 @@ def assign_round_order(share_list):
     # Assign new position to each user
     n = 1
     for user in all_active_users:
-        user.status = ShareRoomUser.UserStatus.WAITING
+        user.has_eliminated = False
         user.position = n
         n += 1
     
     # Update active users positions
-    ShareRoomUser.objects.bulk_update(all_active_users, ['status', 'position'])
+    ShareRoomUser.objects.bulk_update(all_active_users, ['has_eliminated', 'position'])
 
     # Reset inactive users positions
-    ShareRoomUser.objects.filter(list = share_list, status = ShareRoomUser.UserStatus.INACTIVE).update(position=0)
+    ShareRoomUser.objects.filter(list = share_list, is_active = False).update(has_eliminated = False, position=0)
 
     # Update Turn
     share_list.turn = 1
@@ -72,12 +72,11 @@ def select_next_eliminating_user(share_list):
     :rtype: ShareRoomUser
     """
     
-    current_turn = share_list.turn
-
     # Gets the next user in this round if any
     next_share_user = ShareRoomUser.objects.filter(
         list = share_list, 
-        position__gte = current_turn
+        is_active = True,
+        position__gte = share_list.turn
         ).order_by('position').first()
     
 
