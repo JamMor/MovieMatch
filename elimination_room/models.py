@@ -59,13 +59,13 @@ class SharedMovie(models.Model):
     movie = models.ForeignKey('list_builder.Movie', related_name="shared_movies", on_delete = models.CASCADE, null=True)
     is_eliminated = models.BooleanField(default=False)
 
-class ShareRoomUserQuerySet(models.QuerySet):
-    def currently_eliminating(self):
-        return self.filter(Q(status=ShareRoomUser.UserStatus.WAITING) | Q(status=ShareRoomUser.UserStatus.VOTED))
-    def are_active(self):
-        return self.exclude(status=ShareRoomUser.UserStatus.INACTIVE)
-    def on_standby(self):
-        return self.filter(status=ShareRoomUser.UserStatus.STANDBY)
+# class ShareRoomUserQuerySet(models.QuerySet):
+#     def currently_eliminating(self):
+#         return self.filter(Q(status=ShareRoomUser.UserStatus.WAITING) | Q(status=ShareRoomUser.UserStatus.VOTED))
+#     def are_active(self):
+#         return self.exclude(status=ShareRoomUser.UserStatus.INACTIVE)
+#     def on_standby(self):
+#         return self.filter(status=ShareRoomUser.UserStatus.STANDBY)
 
 class ShareRoomUser(models.Model):
     persona = models.ForeignKey('list_builder.Persona', related_name="in_room", on_delete = models.CASCADE)
@@ -84,22 +84,22 @@ class ShareRoomUser(models.Model):
     
     position = models.IntegerField(default=0)
 
-    class UserStatus(models.TextChoices):
-        INACTIVE = "IA" # Not in room
-        STANDBY = "SB"  # Waiting for next voting round
-        VOTED = "VO"    # Voted to eliminate
-        WAITING = "WA"  # Waiting to vote
+    # class UserStatus(models.TextChoices):
+    #     INACTIVE = "IA" # Not in room
+    #     STANDBY = "SB"  # Waiting for next voting round
+    #     VOTED = "VO"    # Voted to eliminate
+    #     WAITING = "WA"  # Waiting to vote
 
-    status = models.CharField(
-        max_length=2,
-        choices=UserStatus.choices,
-        default=UserStatus.INACTIVE,
-    )
+    # status = models.CharField(
+    #     max_length=2,
+    #     choices=UserStatus.choices,
+    #     default=UserStatus.INACTIVE,
+    # )
     
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
-    objects = ShareRoomUserQuerySet.as_manager()
+    # objects = ShareRoomUserQuerySet.as_manager()
 
     class Meta:
         constraints = [
