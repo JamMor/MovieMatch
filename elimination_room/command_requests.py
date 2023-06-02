@@ -45,7 +45,7 @@ def request_connect(sharecode, persona_uuid):
             nickname = this_persona.nickname
         # Set generic nickname if none already set
         else:
-            room_user_count = ShareRoomUser.objects.filter(list__sharecode = sharecode).count()
+            room_user_count = ShareRoomUser.objects.filter(list = share_list).count()
             print(f"Number of room users: {room_user_count}")
             nickname = f"User {room_user_count}"
                     
@@ -118,7 +118,6 @@ def request_eliminate(sharecode, persona_uuid, content):
 
     command = "eliminated"
 
-    active_share_users_qs = ShareRoomUser.objects.filter(list__sharecode = sharecode, is_active = True).order_by('created_at')
     share_list = SharedMovieList.objects.get(sharecode = sharecode)
     active_share_users_qs = ShareRoomUser.objects.filter(list = share_list, is_active = True)
     # .order_by('created_at')
@@ -212,7 +211,7 @@ def request_elimination_start(sharecode):
         return FailedCommandResponse(command=command, errors=["Elimination already in progress."])
     
     # If less than 2 movies in list, return failed response
-    if SharedMovie.objects.filter(shared_list__sharecode = sharecode).count() < 2:
+    if SharedMovie.objects.filter(shared_list = shared_list).count() < 2:
         return FailedCommandResponse(command=command, errors=["Must be at least 2 movies in list to begin eliminating."])
 
     # Assign User Order and Retrieve First User
@@ -239,7 +238,9 @@ def request_refresh_list(sharecode):
     shared_list.is_active = False
     shared_list.turn = 0
     shared_list.save()
-    SharedMovie.objects.filter(shared_list__sharecode = sharecode).update(is_eliminated = False)
+
+    # Un-eliminate all movies
+    SharedMovie.objects.filter(shared_list = shared_list).update(is_eliminated = False)
 
     try:
         model_dict = SharedListJsonEncoder(sharecode)
