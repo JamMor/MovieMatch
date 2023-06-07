@@ -40,7 +40,6 @@ def SharedListEncoder(sharecode):
     json_dict = {
         'active_user_dict' : active_user_dict,
         'movie_list' : movie_list,
-        'round' : shared_list.round,
         'turn' : shared_list.turn
         }
 
