@@ -20,12 +20,11 @@ def SharedListEncoder(sharecode):
                 Prefetch('pre_shared_movies__submitted_by', to_attr='pre_submitted_by')).get(sharecode = sharecode)
     
     active_user_dict = {
-        persona.pre_persona.uuid : { 
-            'nickname' : persona.nickname, 
-            'round' : persona.round,
-            'position' : persona.position,
+        room_user.pre_persona.uuid : { 
+            'nickname' : room_user.nickname,
+            'position' : room_user.position,
             }
-        for persona in shared_list.pre_active_room_users}
+        for room_user in shared_list.pre_active_room_users}
     
     movie_list = []
     for shared_movie in shared_list.pre_shared_movies:
