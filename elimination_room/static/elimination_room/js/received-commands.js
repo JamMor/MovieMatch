@@ -52,14 +52,14 @@ function commandFinalized(commandData) {
 
 // Connect User
 function commandConnected(commandData) {
-    let {uuid:connected_uuid, nickname, is_users_turn} = commandData
+    let {uuid:connected_uuid, nickname, position} = commandData
     console.log("Connected User: " + connected_uuid);
     if(user_list.hasOwnProperty(connected_uuid)){
         console.log(`User ${connected_uuid} is already in list.`)
     }
     else{
-        user_list[connected_uuid] = {"nickname": nickname, "is_users_turn": is_users_turn};
-        addUserToDom(connected_uuid, {"nickname": nickname, "is_users_turn": is_users_turn});
+        user_list[connected_uuid] = {"nickname": nickname, "position": position};
+        addUserToDom(connected_uuid, {"nickname": nickname, "position": position});
         console.log(`${nickname} has joined the room. UUID: ${connected_uuid}`)
         if(connected_uuid != user_uuid){
             let toastHtml = `<span><strong class="purple-text text-accent-2">${nickname} </strong>&nbsp;has connected.</span>`
