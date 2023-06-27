@@ -39,7 +39,18 @@ def SharedListEncoder(sharecode):
     json_dict = {
         'active_user_dict' : active_user_dict,
         'movie_list' : movie_list,
-        'turn' : shared_list.turn
+        'is_active' : shared_list.is_active
         }
+
+    if (shared_list.is_active) & (shared_list.turn > 0):
+        # selects the user whose position equals the shared_list.turn
+        # and returns the uuid of the persona associated with that user
+        eliminator_uuid = None
+        for room_user in shared_list.pre_active_room_users:
+            if room_user.position == shared_list.turn:
+                eliminator_uuid = room_user.pre_persona.uuid
+                break
+        if eliminator_uuid != None:
+            json_dict['eliminating_uuid'] = eliminator_uuid
 
     return json_dict
