@@ -1,15 +1,27 @@
 //Adds user to DOM
 function addUserToDom(uuid, user){
-    let nickname = user['nickname']
+    let { nickname, position } = user;
     //Other users are fuschia, this user is blue
     let color = user_uuid == uuid ? "neon-blue" : "neon-fuschia"
-    let is_users_turn = user['is_users_turn'] 
-        ? "active"
-        : "inactive"
+    // FLAG deprecate is_users_turn
+    // let is_users_turn = user['is_users_turn'] 
+    //     ? "active"
+    //     : "inactive"
     
-    $('#user_list')
-        .append(
-            `<div id='user_${uuid}' class="chip ${color} ${is_users_turn}">
+    let userContainer = $('#user_list')
+    let insertBeforePosition = userContainer.children().length
+
+    userContainer.children().each(function(index){
+        let element_position = parseInt($(this).data('position'))
+        if (element_position > position){
+            insertBeforePosition = index
+            return false
+        }
+    })
+
+    userContainer.children().eq(insertBeforePosition)
+        .before(
+            `<div id='user_${uuid}' class="chip ${color} inactive" data-position="${position}">
                 ${nickname}
             </div>`
             );
