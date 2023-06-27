@@ -107,7 +107,7 @@ $(document).ready(function() {
 
     //Send which movie to eliminate on click
     $('#movie_list').on('click', 'a.remove-btn' , function() {
-        if(!isEliminationActive(user_list)){
+        if(!elimination_active){
             console.log("Host has not started elimination.")
             return
         }
@@ -148,13 +148,6 @@ $(document).ready(function() {
             'command' : 'refresh'
         }))
     });
-
-    
-
-    //Check if elimination is active (if it is a users turn)
-    function isEliminationActive(userList){
-        return Object.keys(userList).some(user => userList[user].is_users_turn == true)
-    }
 
     //Opens final modal for now
     $('#status_bar').on('click', '.status-final' , function() {

@@ -116,7 +116,7 @@ function commandSyncRoom(commandData) {
                 console.log("AJAX error")
             })
     }
-    else if(isEliminationActive(user_list) ){
+    else if(elimination_active){
         statusType = "eliminating"
     }
     else{
@@ -269,11 +269,6 @@ function openMoreInfoModal(movieInfo, targetModalId){
     $(`#${targetModalId} .collapsible`).collapsible();
     $(`#${targetModalId} .tooltipped`).tooltip();
     $(`#${targetModalId}`).modal('open');
-}
-
-//Duplicated function FLAG
-function isEliminationActive(userList){
-    return Object.keys(userList).some(user => userList[user].is_users_turn == true)
 }
 
 export { 
