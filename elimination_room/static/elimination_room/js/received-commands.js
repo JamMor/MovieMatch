@@ -3,17 +3,16 @@
 
 // Eliminate Movie
 function commandEliminate(commandData) {
-    let {shared_movie_id, eliminating_uuid, next_eliminating_uuid: next_uuid} = commandData
+    let {shared_movie_id, eliminating_uuid, next_eliminating_uuid} = commandData
 
     let eliminated_movie = movie_list.find(movie => movie.shared_movie_id == shared_movie_id)
-    let eliminating_user = user_list[eliminating_uuid]
 
     eliminated_movie.is_eliminated == true;
     $(`#shared_${eliminated_movie.tmdb_id}`).addClass('eliminated')
     console.log("Eliminated movie")
 
     let toastClass = "purple-text text-accent-2"
-    let nickname = eliminating_user.nickname
+    let nickname = user_list[eliminating_uuid]['nickname']
     if(eliminating_uuid == user_uuid){
         toastClass = "cyan-text text-accent-2"
         nickname = "YOU"
@@ -21,7 +20,7 @@ function commandEliminate(commandData) {
     let toastHtml = `<span><strong class=${toastClass}>${nickname} </strong>&nbsp;eliminated&nbsp;<strong class="orange-text text-darken-3"> ${eliminated_movie.title}</strong></span>`
     M.toast({html: toastHtml})
     
-    setUserTurn(next_uuid);
+    setUserTurn(next_eliminating_uuid);
 
     // ====================FLAG====Temporary Final Fix=========================================
     if(commandData.hasOwnProperty('final_shared_movie_id')) {
