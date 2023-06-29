@@ -88,7 +88,9 @@ function commandDisconnected(commandData) {
 function commandSyncRoom(commandData) {
     let {
         movie_list:received_movie_list, 
-        active_user_dict:received_user_list
+        active_user_dict:received_user_list,
+        is_active,
+        eliminating_uuid = null
     } = commandData.share_list
     received_movie_list = received_movie_list.map(movie => 
             new construct.SharedMovie(movie)
@@ -99,6 +101,8 @@ function commandSyncRoom(commandData) {
     
     userListBuilder(user_list, received_user_list)
     user_list = received_user_list
+
+    elimination_active = is_active;
 
     let statusType;
     if(isFinalSelected(movie_list)){
