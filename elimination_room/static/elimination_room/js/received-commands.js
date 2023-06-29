@@ -168,20 +168,21 @@ function commandFailed(commandData) {
 
 //Returns current user whose turn it is
 
+// FLAG deprecation
 // Returns eliminating user specific status bar text
-function getEliminatingStatusString(userList) {
-    let eliminating_uuid = Object.keys(userList)
-        .find(uuid => userList[uuid].is_users_turn == true)
-    if (eliminating_uuid) {
-        return (eliminating_uuid == user_uuid)
-            ? "Waiting on YOUR turn..."
-            : `Waiting on ${userList[eliminating_uuid].nickname}'s turn...`
-    }
-    else {
-        console.log("Couldn't get uuid of eliminating user.")
-        return ""
-    }
-}
+// function getEliminatingStatusString(userList) {
+//     let eliminating_uuid = Object.keys(userList)
+//         .find(uuid => userList[uuid].is_users_turn == true)
+//     if (eliminating_uuid) {
+//         return (eliminating_uuid == user_uuid)
+//             ? "Waiting on YOUR turn..."
+//             : `Waiting on ${userList[eliminating_uuid].nickname}'s turn...`
+//     }
+//     else {
+//         console.log("Couldn't get uuid of eliminating user.")
+//         return ""
+//     }
+// }
 
 //Sets status bar
 function setStatusBar(status){
@@ -200,7 +201,7 @@ function setStatusBar(status){
         "eliminating": {
             "styleClass": "status-eliminating neon-blue active btn-large btn-rounded",
             "icons": "cast_connected",
-            "statusText": getEliminatingStatusString(user_list)
+            "statusText": "Elimination Activated!"
         },
         "final": {
             "styleClass": "status-final waves-effect waves-light neon-fuschia active btn-large btn-rounded",
@@ -246,7 +247,10 @@ function setUserTurn(turnUUID){
     M.toast({html: toastHtml})
 
     //Put username in status bar
-    let statusText = getEliminatingStatusString(user_list);
+    let statusText = (turnUUID == user_uuid)
+            ? "Waiting on YOUR turn..."
+            : `Waiting on ${userList[turnUUID].nickname}'s turn...`
+
     $('#status-btn span').html(statusText);
 }
 
