@@ -226,14 +226,12 @@ function isFinalSelected(movieList){
 
 //Set active user turn
 function setUserTurn(turnUUID){
-    //Set all user turn to false and remove any active classes
-    Object.keys(user_list).forEach(user => {
-        user_list[user].is_users_turn = false;
-    })
+    
+    //Remove any active classes
     $(`#user_list div.active`).removeClass('active').addClass('inactive');
     
     //Set current user turn to true and add active class
-    user_list[turnUUID]['is_users_turn'] = true;
+    current_eliminating_uuid = turnUUID;
     $(`#user_${turnUUID}`).addClass('active').removeClass('inactive');
 
     //Toast new user turn
