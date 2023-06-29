@@ -128,6 +128,10 @@ function commandSyncRoom(commandData) {
     }
     
     setStatusBar(statusType);
+
+    if(eliminating_uuid != null){
+        setUserTurn(eliminating_uuid);
+    }
 }
 
 // Refreshes Movie List
@@ -145,9 +149,11 @@ function commandRefreshMovieList(commandData) {
 // Start Elimination
 function commandStartElimination(commandData) {
     let uuid_turn = commandData.eliminating_uuid
-    setUserTurn(uuid_turn);
+    
     
     setStatusBar("eliminating");
+    setUserTurn(uuid_turn);
+    
 }
 
 // Failed Command
