@@ -21,9 +21,7 @@ function commandEliminate(commandData) {
     M.toast({html: toastHtml})
     
     if (commandData.hasOwnProperty("updated_positions")){
-        // FLAG orderUsers function to update user order
-        // orderUsers(commandData.updated_positions)
-        ;
+        userListBuilder(commandData.updated_positions);
     }
     setUserTurn(next_eliminating_uuid);
 
@@ -75,9 +73,7 @@ function commandConnected(commandData) {
 // Disconnect User
 function commandDisconnected(commandData) {
     if (commandData.hasOwnProperty("updated_positions")){
-        // FLAG orderUsers function to update user order
-        // orderUsers(commandData.updated_positions)
-        ;
+        userListBuilder(commandData.updated_positions);
     }
     if (commandData.hasOwnProperty("next_eliminating_uuid")){
         setUserTurn(commandData.next_eliminating_uuid)
@@ -158,8 +154,8 @@ function commandRefreshMovieList(commandData) {
 // Start Elimination
 function commandStartElimination(commandData) {
     let {eliminating_uuid, updated_positions} = commandData;    
-    // FLAG orderUsers function to update user order
-
+    
+    userListBuilder(updated_positions);
     setStatusBar("eliminating");
     setUserTurn(eliminating_uuid);
     
