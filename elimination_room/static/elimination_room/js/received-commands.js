@@ -22,7 +22,7 @@ function commandEliminate(commandData) {
     
     if (commandData.hasOwnProperty("updated_positions")){
         userListBuilder(user_list, commandData.updated_positions);
-        user_list = updated_positions;
+        user_list = commandData.updated_positions;
     }
     setUserTurn(next_eliminating_uuid);
 
@@ -75,7 +75,7 @@ function commandConnected(commandData) {
 function commandDisconnected(commandData) {
     if (commandData.hasOwnProperty("updated_positions")){
         userListBuilder(user_list, commandData.updated_positions);
-        user_list = updated_positions;
+        user_list = commandData.updated_positions;
     }
     if (commandData.hasOwnProperty("next_eliminating_uuid")){
         setUserTurn(commandData.next_eliminating_uuid)
@@ -264,7 +264,7 @@ function setUserTurn(turnUUID){
     //Put username in status bar
     let statusText = (turnUUID == user_uuid)
             ? "Waiting on YOUR turn..."
-            : `Waiting on ${userList[turnUUID].nickname}'s turn...`
+            : `Waiting on ${user_list[turnUUID].nickname}'s turn...`
 
     $('#status-btn span').html(statusText);
 }
