@@ -111,7 +111,7 @@ $(document).ready(function() {
             console.log("Host has not started elimination.")
             return
         }
-        if(!user_list[user_uuid]['is_users_turn']){
+        if(user_uuid != current_eliminating_uuid){
             console.log("Not this users turn.")
             return
         }
