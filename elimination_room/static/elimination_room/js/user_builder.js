@@ -61,7 +61,7 @@ function userListBuilder(old_list, updated_list){
     let added_uuid_list = new Set();
     let deleted_uuid_list = new Set();
     let updated_uuids = new Set(Object.keys(updated_list));
-    let existing_uuid_list = new Set();
+    let existing_uuid_list = [];
 
     if (old_uuids.size > 0){
         added_uuid_list = new Set(updated_uuids)
@@ -71,7 +71,7 @@ function userListBuilder(old_list, updated_list){
         for (let old_uuid of old_uuids){
             if (added_uuid_list.has(old_uuid)){
                 added_uuid_list.delete(old_uuid)
-                existing_uuid_list.add(old_uuid)
+                existing_uuid_list.push(old_uuid)
             }
             else {
                 deleted_uuid_list.add(old_uuid)
