@@ -18,13 +18,20 @@ function addUserToDom(uuid, user){
             return false
         }
     })
-
-    userContainer.children().eq(insertBeforePosition)
-        .before(
-            `<div id='user_${uuid}' class="chip ${color} inactive" data-position="${position}">
-                ${nickname}
-            </div>`
-            );
+    let computated_html = `<div id='user_${uuid}' class="chip ${color} inactive" data-position="${position}">
+        ${nickname}
+    </div>`
+    if (insertBeforePosition < userContainer.children().length){
+        userContainer.children().eq(insertBeforePosition)
+            .before(
+                computated_html
+                );
+    }
+    else {
+        userContainer.append(
+                computated_html
+                );
+    }
 }
 
 //Removes user from DOM
