@@ -3,7 +3,7 @@
 
 // Eliminate Movie
 function commandEliminate(commandData) {
-    let {shared_movie_id, eliminating_uuid, next_eliminating_uuid} = commandData
+    let {shared_movie_id, eliminating_uuid, next_eliminating_uuid = null} = commandData
 
     let eliminated_movie = movie_list.find(movie => movie.shared_movie_id == shared_movie_id)
 
@@ -24,7 +24,10 @@ function commandEliminate(commandData) {
         userListBuilder(user_list, commandData.updated_positions);
         user_list = commandData.updated_positions;
     }
-    setUserTurn(next_eliminating_uuid);
+
+    if(next_eliminating_uuid != null){
+        setUserTurn(next_eliminating_uuid);
+    }
 
     // ====================FLAG====Temporary Final Fix=========================================
     if(commandData.hasOwnProperty('final_shared_movie_id')) {
