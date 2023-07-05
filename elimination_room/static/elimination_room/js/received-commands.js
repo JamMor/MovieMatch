@@ -160,6 +160,8 @@ function commandStartElimination(commandData) {
     userListBuilder(user_list, updated_positions);
     user_list = updated_positions;
 
+    elimination_active = true;
+
     setStatusBar("eliminating");
     setUserTurn(eliminating_uuid);
     
