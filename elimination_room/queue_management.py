@@ -80,7 +80,7 @@ def select_next_eliminating_user(share_list):
     next_share_user = ShareRoomUser.objects.filter(
         list = share_list, 
         is_active = True,
-        position__gte = share_list.turn
+        position__gt = share_list.turn
         ).order_by('position').first()
     
 
