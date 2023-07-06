@@ -57,7 +57,7 @@ def request_connect(sharecode, persona_uuid):
     user_data = {
         'uuid' : persona_uuid,
         'nickname' : room_user.nickname,
-        'user_position' : room_user.position
+        'position' : room_user.position
     }
 
     return SuccessfulCommandResponse(command = command, data = user_data)
