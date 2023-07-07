@@ -90,7 +90,7 @@ def request_disconnect(sharecode, persona_uuid):
 
     elif active_share_users_count > 1:
         #If it was the user's turn and they had not eliminated, assign the next user to turn
-        if (room_user.position == share_list.turn) and (room_user.has_eliminated == False):
+        if (share_list.is_active == True) and (room_user.position == share_list.turn) and (room_user.has_eliminated == False):
             next_share_user, user_positional_dict = select_next_eliminating_user(share_list)
             disconnect_data.update({"next_eliminating_uuid": next_share_user.persona.uuid})
 
