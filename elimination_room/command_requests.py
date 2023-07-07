@@ -149,6 +149,8 @@ def request_eliminate(sharecode, persona_uuid, shared_movie_id):
             return FailedCommandResponse(command=command, errors=["Shared movie not found in uneliminated movies."])
         shared_movie.is_eliminated = True
         shared_movie.save()
+        this_user.has_eliminated = True
+        this_user.save()
         movies_left -= 1
         successful_response.add_data({
             "eliminating_uuid": persona_uuid,
