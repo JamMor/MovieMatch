@@ -131,6 +131,9 @@ def request_eliminate(sharecode, persona_uuid, shared_movie_id):
     this_user = active_share_users_qs.get(persona__uuid = persona_uuid)
     if this_user.position != share_list.turn:
         return FailedCommandResponse(command=command, errors=["Not this users turn."])
+    if this_user.has_eliminated == True:
+        return FailedCommandResponse(command=command, errors=["Already voted this round."])
+    
     
 
     # If elimination has started:
