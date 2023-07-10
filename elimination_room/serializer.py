@@ -21,8 +21,8 @@ def SharedListEncoder(sharecode):
     
     active_user_dict = {
         room_user.pre_persona.uuid : { 
-            'nickname' : room_user.nickname,
             'position' : room_user.position,
+            'nickname' : room_user.nickname,
             }
         for room_user in shared_list.pre_active_room_users}
     
