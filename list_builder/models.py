@@ -50,34 +50,6 @@ class Movie(models.Model):
         return self.title
 
 class MovieListManager(models.Manager):
-    # FLAG: Obsolete?
-    # def create_from_movie_list(self, list_of_movies, creator, **kwargs):
-    #     """
-    #     Creates a MovieList (temp, or saved) from list of movies (dictionaries 
-    #     from themovieDB data), while adding new movies to local database.
-    #     """
-    #     print("Building new list")
-    #     new_movie_list = self.create(created_by = creator, **kwargs)
-    #     print("New List created! ID: ", new_movie_list.id)
-    #     # Updates or stores movie in database if it exists
-    #     for movie_item in list_of_movies:
-    #         print("Assessing: ", movie_item["title"])
-    #         movie_object, created = Movie.objects.update_or_create(
-    #             tmdb_id = movie_item["id"],
-    #             title = movie_item["original_title"],
-    #             release_date = movie_item["release_date"],
-    #             defaults = {'overview' : movie_item["overview"], 'poster_path' : movie_item["poster_path"]}
-    #         )
-    #         if created:
-    #             print ("Added new movie to database.")
-    #         elif not created:
-    #             print ("Already exists in database")
-    #         new_movie_list.movies.add(movie_object)
-    #         print(movie_item["title"], " added to list!")
-    #     new_movie_list.save()
-        
-    #     return new_movie_list
-    
     def create_from_tmdb_ids(self, tmdb_ids, creator, **kwargs):
         """
         Creates a MovieList (temp, or saved) from list of themovieDB movie ids.

@@ -3,10 +3,6 @@ function addUserToDom(uuid, user){
     let { nickname, position } = user;
     //Other users are fuschia, this user is blue
     let color = user_uuid == uuid ? "neon-blue" : "neon-fuschia"
-    // FLAG deprecate is_users_turn
-    // let is_users_turn = user['is_users_turn'] 
-    //     ? "active"
-    //     : "inactive"
     
     let userContainer = $('#user_list')
     let insertBeforePosition = userContainer.children().length

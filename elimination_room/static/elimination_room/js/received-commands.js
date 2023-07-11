@@ -33,8 +33,6 @@ function commandEliminate(commandData) {
     if(commandData.hasOwnProperty('final_shared_movie_id')) {
         commandFinalized(commandData);
     }
-    // ==========================================================================================
-
 }
 
 // Final Movie
@@ -185,24 +183,6 @@ function commandFailed(commandData) {
 }
 
 // Private Functions
-
-//Returns current user whose turn it is
-
-// FLAG deprecation
-// Returns eliminating user specific status bar text
-// function getEliminatingStatusString(userList) {
-//     let eliminating_uuid = Object.keys(userList)
-//         .find(uuid => userList[uuid].is_users_turn == true)
-//     if (eliminating_uuid) {
-//         return (eliminating_uuid == user_uuid)
-//             ? "Waiting on YOUR turn..."
-//             : `Waiting on ${userList[eliminating_uuid].nickname}'s turn...`
-//     }
-//     else {
-//         console.log("Couldn't get uuid of eliminating user.")
-//         return ""
-//     }
-// }
 
 //Sets status bar
 function setStatusBar(status){

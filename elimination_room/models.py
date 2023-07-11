@@ -7,15 +7,11 @@ from django.db.models import Q
 class SharedMovieList(models.Model):
     sharecode = models.CharField(max_length=255, unique=True)
     created_by = models.ForeignKey('list_builder.Persona', related_name="created_shared_lists", on_delete = models.CASCADE, null=True)
-    # FLAG: Is this needed with Rounds?
-    # started_eliminating = models.BooleanField(default=False)
     contributors = models.ManyToManyField('list_builder.Persona', related_name="shared_lists")
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     
     is_active = models.BooleanField(default=False)
-    # FLAG: Planned for deprecation
-    # round = models.IntegerField(default=0)
     turn = models.IntegerField(default=0)
     
     def add_list_to_shared_list(self, movie_list):
@@ -70,16 +66,8 @@ class SharedMovie(models.Model):
 class ShareRoomUser(models.Model):
     persona = models.ForeignKey('list_builder.Persona', related_name="in_room", on_delete = models.CASCADE)
     list = models.ForeignKey(SharedMovieList, related_name="room_users", on_delete = models.CASCADE)
-    #FLAG: Is this used?
     is_active = models.BooleanField(default=True)
-    #FLAG: Is this used?
-    # is_users_turn = models.BooleanField(default=False)
     nickname = models.CharField(max_length=255, null=True)
-    #FLAG: Is this used?
-    # last_active = models.DateTimeField(null=True)
-
-    #FLAG: Planned for deprecation
-    # round = models.IntegerField(default=0)
     has_eliminated = models.BooleanField(default=False)
     
     position = models.IntegerField(default=0)
