@@ -83,7 +83,7 @@ def select_next_eliminating_user(share_list):
         position__gt = share_list.turn
         ).order_by('position').first()
     
-
+    # If no more users in this round, assign next round order
     if next_share_user == None:
         next_share_user, user_positional_dict = assign_round_order(share_list)
     else:
