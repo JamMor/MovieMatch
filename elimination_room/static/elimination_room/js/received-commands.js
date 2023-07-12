@@ -3,9 +3,9 @@
 
 // Eliminate Movie
 function commandEliminate(commandData) {
-    let {shared_movie_id, eliminating_uuid, next_eliminating_uuid = null} = commandData
+    const {shared_movie_id, eliminating_uuid, next_eliminating_uuid = null} = commandData
 
-    let eliminated_movie = movie_list.find(movie => movie.shared_movie_id == shared_movie_id)
+    const eliminated_movie = movie_list.find(movie => movie.shared_movie_id == shared_movie_id)
 
     eliminated_movie.is_eliminated == true;
     $(`#shared_${eliminated_movie.tmdb_id}`).addClass('eliminated')
@@ -17,7 +17,7 @@ function commandEliminate(commandData) {
         toastClass = "cyan-text text-accent-2"
         nickname = "YOU"
     }
-    let toastHtml = `<span><strong class=${toastClass}>${nickname} </strong>&nbsp;eliminated&nbsp;<strong class="orange-text text-darken-3"> ${eliminated_movie.title}</strong></span>`
+    const toastHtml = `<span><strong class=${toastClass}>${nickname} </strong>&nbsp;eliminated&nbsp;<strong class="orange-text text-darken-3"> ${eliminated_movie.title}</strong></span>`
     M.toast({html: toastHtml})
     
     if (commandData.hasOwnProperty("updated_positions")){
@@ -37,8 +37,8 @@ function commandEliminate(commandData) {
 
 // Final Movie
 function commandFinalized(commandData) {
-    let finalSharedId = commandData.final_shared_movie_id;
-    let finalMovie = movie_list.find(movie => movie.shared_movie_id == finalSharedId);
+    const finalSharedId = commandData.final_shared_movie_id;
+    const finalMovie = movie_list.find(movie => movie.shared_movie_id == finalSharedId);
     console.log(`${finalMovie.title} is the final choice!`)
     
     getMoreMovieInfo(finalMovie.tmdb_id)
@@ -56,7 +56,7 @@ function commandFinalized(commandData) {
 
 // Connect User
 function commandConnected(commandData) {
-    let {uuid:connected_uuid, nickname, position} = commandData
+    const {uuid:connected_uuid, nickname, position} = commandData
     console.log("Connected User: " + connected_uuid);
     if(user_list.hasOwnProperty(connected_uuid)){
         console.log(`User ${connected_uuid} is already in list.`)
@@ -66,7 +66,7 @@ function commandConnected(commandData) {
         addUserToDom(connected_uuid, {"position": position, "nickname": nickname});
         console.log(`${nickname} has joined the room. UUID: ${connected_uuid}`)
         if(connected_uuid != user_uuid){
-            let toastHtml = `<span><strong class="purple-text text-accent-2">${nickname} </strong>&nbsp;has connected.</span>`
+            const toastHtml = `<span><strong class="purple-text text-accent-2">${nickname} </strong>&nbsp;has connected.</span>`
             M.toast({html: toastHtml})
         }
     }
@@ -82,11 +82,11 @@ function commandDisconnected(commandData) {
         setUserTurn(commandData.next_eliminating_uuid)
     }
 
-    let disconnected_uuid = commandData.disconnected_uuid;
+    const disconnected_uuid = commandData.disconnected_uuid;
     console.log('Disconnected UUID: ' + disconnected_uuid)
     removeUserFromDom(disconnected_uuid);
     if(disconnected_uuid != user_uuid){
-        let toastHtml = `<span><strong class="purple-text text-accent-2">${user_list[disconnected_uuid]['nickname']} </strong>&nbsp;has disconnected.</span>`
+        const toastHtml = `<span><strong class="purple-text text-accent-2">${user_list[disconnected_uuid]['nickname']} </strong>&nbsp;has disconnected.</span>`
         M.toast({html: toastHtml})
     }
     delete user_list[disconnected_uuid];
@@ -115,7 +115,7 @@ function commandSyncRoom(commandData) {
     let statusType;
     if(isFinalSelected(movie_list)){
         statusType = "final";
-        let finalMovie = movie_list.find(movie => movie.is_eliminated == false);
+        const finalMovie = movie_list.find(movie => movie.is_eliminated == false);
         console.log(`${finalMovie.title} is the final choice!`)
         
         getMoreMovieInfo(finalMovie.tmdb_id)
@@ -156,7 +156,7 @@ function commandRefreshMovieList(commandData) {
 
 // Start Elimination
 function commandStartElimination(commandData) {
-    let {eliminating_uuid, updated_positions} = commandData;    
+    const {eliminating_uuid, updated_positions} = commandData;    
     
     userListBuilder(user_list, updated_positions);
     user_list = updated_positions;
@@ -222,7 +222,7 @@ function setStatusBar(status){
 
 //Check if final movie
 function isFinalSelected(movieList){
-    let eliminatedCount = movieList
+    const eliminatedCount = movieList
         .reduce((prev, curr) => prev + curr.is_eliminated, 0)
     return movieList.length - eliminatedCount == 1
 }
@@ -238,14 +238,14 @@ function setUserTurn(turnUUID){
     $(`#user_${turnUUID}`).addClass('active').removeClass('inactive');
 
     //Toast new user turn
-    let toastName = (turnUUID != user_uuid) 
+    const toastName = (turnUUID != user_uuid) 
         ? `<strong class="purple-text text-accent-2">${user_list[turnUUID]['nickname']}</strong>'s` 
         : '<strong class="cyan-text text-accent-2">YOUR</strong>'
-    let toastHtml = `<span>${toastName}&nbsp;turn.</span>`
+    const toastHtml = `<span>${toastName}&nbsp;turn.</span>`
     M.toast({html: toastHtml})
 
     //Put username in status bar
-    let statusText = (turnUUID == user_uuid)
+    const statusText = (turnUUID == user_uuid)
             ? "Waiting on YOUR turn..."
             : `Waiting on ${user_list[turnUUID].nickname}'s turn...`
 

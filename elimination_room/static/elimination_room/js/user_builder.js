@@ -1,10 +1,10 @@
 //Adds user to DOM
 function addUserToDom(uuid, user){
-    let { nickname, position } = user;
+    const { nickname, position } = user;
     //Other users are fuschia, this user is blue
-    let color = user_uuid == uuid ? "neon-blue" : "neon-fuschia"
+    const color = user_uuid == uuid ? "neon-blue" : "neon-fuschia"
     
-    let userContainer = $('#user_list')
+    const userContainer = $('#user_list')
     let insertBeforePosition = userContainer.children().length
 
     userContainer.children().each(function(index){
@@ -33,17 +33,17 @@ function removeUserFromDom(uuid){
 function reorderUsersInDom(uuids, user_list){
     
     // Get current user elements
-    let userContainer = $('#user_list')
-    let userElements = userContainer.children()
+    const userContainer = $('#user_list')
+    const userElements = userContainer.children()
 
     // Get sorted list of uuids
-    let sortedUUIDs = uuids.sort((a, b) => user_list[a].position - user_list[b].position)
+    const sortedUUIDs = uuids.sort((a, b) => user_list[a].position - user_list[b].position)
 
     // Insertion sort user elements and update data-position
     userElements.each(function(elementIndex){
-        let elementUUID = $(this).attr('id').split("_")[1]
+        const elementUUID = $(this).attr('id').split("_")[1]
         $(this).data('position', user_list[elementUUID].position)
-        let newIndex = sortedUUIDs.indexOf(elementUUID)
+        const newIndex = sortedUUIDs.indexOf(elementUUID)
         if (newIndex != elementIndex){
             $(this).insertBefore(userElements.eq(newIndex))
         }
