@@ -52,6 +52,8 @@ function commandFinalized(commandData) {
         })
 
     setStatusBar("final");
+    elimination_active = false;
+    current_eliminating_uuid = null;
 }
 
 // Connect User
