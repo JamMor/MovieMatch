@@ -62,8 +62,8 @@ function commandConnected(commandData) {
         console.log(`User ${connected_uuid} is already in list.`)
     }
     else{
-        user_list[connected_uuid] = {"nickname": nickname, "position": position};
-        addUserToDom(connected_uuid, {"nickname": nickname, "position": position});
+        user_list[connected_uuid] = {"position": position, "nickname": nickname};
+        addUserToDom(connected_uuid, {"position": position, "nickname": nickname});
         console.log(`${nickname} has joined the room. UUID: ${connected_uuid}`)
         if(connected_uuid != user_uuid){
             let toastHtml = `<span><strong class="purple-text text-accent-2">${nickname} </strong>&nbsp;has connected.</span>`
@@ -170,8 +170,6 @@ function commandStartElimination(commandData) {
 
 // Failed Command
 function commandFailed(commandData) {
-    // let {error_message} = commandData
-    // M.toast({html: error_message})
     console.log("Command failed.")
     console.log(responseData)
     if (responseData.hasOwnProperty('errors')) {

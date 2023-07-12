@@ -14,32 +14,24 @@ function addUserToDom(uuid, user){
             return false
         }
     })
-    let computated_html = `<div id='user_${uuid}' class="chip ${color} inactive" data-position="${position}">
+    const userDomHTML = `<div id='user_${uuid}' class="chip ${color} inactive" data-position="${position}">
         ${nickname}
     </div>`
     if (insertBeforePosition < userContainer.children().length){
-        userContainer.children().eq(insertBeforePosition)
-            .before(
-                computated_html
-                );
+        userContainer.children().eq(insertBeforePosition).before(userDomHTML);
     }
     else {
-        userContainer.append(
-                computated_html
-                );
+        userContainer.append(userDomHTML);
     }
 }
 
 //Removes user from DOM
 function removeUserFromDom(uuid){
-    console.log(`Trying to remove User ${uuid}`)
     $(`#user_${uuid}`).remove()
 }
 
 function reorderUsersInDom(uuids, user_list){
     
-    //
-
     // Get current user elements
     let userContainer = $('#user_list')
     let userElements = userContainer.children()
