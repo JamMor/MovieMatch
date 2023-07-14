@@ -87,6 +87,12 @@ def request_disconnect(sharecode, persona_uuid):
     if active_share_users_count == 1:
         share_list.is_active = False
         share_list.save()
+        ShareRoomUser.objects.filter(list=share_list).update(
+            is_active=False,
+            has_eliminated=False,
+            position=0
+        )
+        room_user.position = 0
 
     elif active_share_users_count > 1:
         #If it was the user's turn and they had not eliminated, assign the next user to turn
