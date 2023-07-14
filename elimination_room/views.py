@@ -84,4 +84,4 @@ def join_match(request, sharecode):
             }
         return render(request, 'elimination_room/match.html', context)
     else:
-        return redirect(reverse('list_builder:home'))
+        return redirect(reverse('list_builder:default_redirect'))
