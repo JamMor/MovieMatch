@@ -34,7 +34,7 @@ def request_connect(sharecode, persona_uuid):
     if not created:
 
         # For users rejoining before the end of the current round who missed their turn, move to end of queue
-        if (not room_user.has_eliminated) and (room_user.position < share_list.turn):
+        if (not room_user.has_eliminated) and (room_user.position > 0) and (room_user.position < share_list.turn):
                 room_user.position = end_of_queue_position(share_list)
         # For users rejoining before the end of the current round who have not yet taken their turn, do nothing
         # For users rejoining before the end of the current round who have already taken their turn, do nothing
