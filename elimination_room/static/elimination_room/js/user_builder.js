@@ -1,26 +1,54 @@
 //Adds user to DOM
 function addUserToDom(uuid, user){
-    let nickname = user['nickname']
+    const { nickname, position } = user;
     //Other users are fuschia, this user is blue
-    let color = user_uuid == uuid ? "neon-blue" : "neon-fuschia"
-    let is_users_turn = user['is_users_turn'] 
-        ? "active"
-        : "inactive"
+    const color = user_uuid == uuid ? "neon-blue" : "neon-fuschia"
     
-    $('#user_list')
-        .append(
-            `<div id='user_${uuid}' class="chip ${color} ${is_users_turn}">
-                ${nickname}
-            </div>`
-            );
+    const userContainer = $('#user_list')
+    let insertBeforePosition = userContainer.children().length
+
+    userContainer.children().each(function(index){
+        let element_position = parseInt($(this).data('position'))
+        if (element_position > position){
+            insertBeforePosition = index
+            return false
+        }
+    })
+    const userDomHTML = `<div id='user_${uuid}' class="chip ${color} inactive" data-position="${position}">
+        ${nickname}
+    </div>`
+    if (insertBeforePosition < userContainer.children().length){
+        userContainer.children().eq(insertBeforePosition).before(userDomHTML);
+    }
+    else {
+        userContainer.append(userDomHTML);
+    }
 }
 
 //Removes user from DOM
 function removeUserFromDom(uuid){
-    console.log(`Trying to remove User ${uuid}`)
     $(`#user_${uuid}`).remove()
 }
 
+function reorderUsersInDom(uuids, user_list){
+    
+    // Get current user elements
+    const userContainer = $('#user_list')
+    const userElements = userContainer.children()
+
+    // Get sorted list of uuids
+    const sortedUUIDs = uuids.sort((a, b) => user_list[a].position - user_list[b].position)
+
+    // Insertion sort user elements and update data-position
+    userElements.each(function(elementIndex){
+        const elementUUID = $(this).attr('id').split("_")[1]
+        $(this).data('position', user_list[elementUUID].position)
+        const newIndex = sortedUUIDs.indexOf(elementUUID)
+        if (newIndex != elementIndex){
+            $(this).insertBefore(userElements.eq(newIndex))
+        }
+    })
+}
 
 //Updates user list and renders in DOM when intialized or share list updated.
 function userListBuilder(old_list, updated_list){
@@ -28,6 +56,7 @@ function userListBuilder(old_list, updated_list){
     let added_uuid_list = new Set();
     let deleted_uuid_list = new Set();
     let updated_uuids = new Set(Object.keys(updated_list));
+    let existing_uuid_list = [];
 
     if (old_uuids.size > 0){
         added_uuid_list = new Set(updated_uuids)
@@ -37,6 +66,7 @@ function userListBuilder(old_list, updated_list){
         for (let old_uuid of old_uuids){
             if (added_uuid_list.has(old_uuid)){
                 added_uuid_list.delete(old_uuid)
+                existing_uuid_list.push(old_uuid)
             }
             else {
                 deleted_uuid_list.add(old_uuid)
@@ -47,9 +77,20 @@ function userListBuilder(old_list, updated_list){
         added_uuid_list = updated_uuids
     }
 
+    // Remove deleted users from DOM
     for (let deleted_uuid of deleted_uuid_list){
         removeUserFromDom(deleted_uuid);
     }
+
+    // Run reorder function if any users have changed position
+    for (let this_uuid of existing_uuid_list){
+        if (old_list[this_uuid].position != updated_list[this_uuid].position){
+            reorderUsersInDom(existing_uuid_list, updated_list)
+            break
+        }
+    }
+
+    // Add new users to DOM
     for (let added_uuid of added_uuid_list){
         addUserToDom(added_uuid, updated_list[added_uuid]);
     }

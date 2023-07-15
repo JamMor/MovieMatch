@@ -8,7 +8,7 @@
 //==============================================================================
 
 /**
- * Constructs a Movie object for movie_lis
+ * Constructs a Movie object for movie_list
  * @class Movie
  * @param {object} movie - Movie object from the MovieDB search query
  */

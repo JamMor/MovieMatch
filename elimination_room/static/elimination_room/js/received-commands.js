@@ -3,38 +3,42 @@
 
 // Eliminate Movie
 function commandEliminate(commandData) {
-    let {shared_movie_id, eliminating_uuid, next_eliminating_uuid: next_uuid} = commandData
+    const {shared_movie_id, eliminating_uuid, next_eliminating_uuid = null} = commandData
 
-    let eliminated_movie = movie_list.find(movie => movie.shared_movie_id == shared_movie_id)
-    let eliminating_user = user_list[eliminating_uuid]
+    const eliminated_movie = movie_list.find(movie => movie.shared_movie_id == shared_movie_id)
 
     eliminated_movie.is_eliminated == true;
     $(`#shared_${eliminated_movie.tmdb_id}`).addClass('eliminated')
     console.log("Eliminated movie")
 
     let toastClass = "purple-text text-accent-2"
-    let nickname = eliminating_user.nickname
+    let nickname = user_list[eliminating_uuid]['nickname']
     if(eliminating_uuid == user_uuid){
         toastClass = "cyan-text text-accent-2"
         nickname = "YOU"
     }
-    let toastHtml = `<span><strong class=${toastClass}>${nickname} </strong>&nbsp;eliminated&nbsp;<strong class="orange-text text-darken-3"> ${eliminated_movie.title}</strong></span>`
+    const toastHtml = `<span><strong class=${toastClass}>${nickname} </strong>&nbsp;eliminated&nbsp;<strong class="orange-text text-darken-3"> ${eliminated_movie.title}</strong></span>`
     M.toast({html: toastHtml})
     
-    setUserTurn(next_uuid);
+    if (commandData.hasOwnProperty("updated_positions")){
+        userListBuilder(user_list, commandData.updated_positions);
+        user_list = commandData.updated_positions;
+    }
+
+    if(next_eliminating_uuid != null){
+        setUserTurn(next_eliminating_uuid);
+    }
 
     // ====================FLAG====Temporary Final Fix=========================================
     if(commandData.hasOwnProperty('final_shared_movie_id')) {
         commandFinalized(commandData);
     }
-    // ==========================================================================================
-
 }
 
 // Final Movie
 function commandFinalized(commandData) {
-    let finalSharedId = commandData.final_shared_movie_id;
-    let finalMovie = movie_list.find(movie => movie.shared_movie_id == finalSharedId);
+    const finalSharedId = commandData.final_shared_movie_id;
+    const finalMovie = movie_list.find(movie => movie.shared_movie_id == finalSharedId);
     console.log(`${finalMovie.title} is the final choice!`)
     
     getMoreMovieInfo(finalMovie.tmdb_id)
@@ -48,21 +52,23 @@ function commandFinalized(commandData) {
         })
 
     setStatusBar("final");
+    elimination_active = false;
+    current_eliminating_uuid = null;
 }
 
 // Connect User
 function commandConnected(commandData) {
-    let {uuid:connected_uuid, nickname, is_users_turn} = commandData
+    const {uuid:connected_uuid, nickname, position} = commandData
     console.log("Connected User: " + connected_uuid);
     if(user_list.hasOwnProperty(connected_uuid)){
         console.log(`User ${connected_uuid} is already in list.`)
     }
     else{
-        user_list[connected_uuid] = {"nickname": nickname, "is_users_turn": is_users_turn};
-        addUserToDom(connected_uuid, {"nickname": nickname, "is_users_turn": is_users_turn});
+        user_list[connected_uuid] = {"position": position, "nickname": nickname};
+        addUserToDom(connected_uuid, {"position": position, "nickname": nickname});
         console.log(`${nickname} has joined the room. UUID: ${connected_uuid}`)
         if(connected_uuid != user_uuid){
-            let toastHtml = `<span><strong class="purple-text text-accent-2">${nickname} </strong>&nbsp;has connected.</span>`
+            const toastHtml = `<span><strong class="purple-text text-accent-2">${nickname} </strong>&nbsp;has connected.</span>`
             M.toast({html: toastHtml})
         }
     }
@@ -70,15 +76,19 @@ function commandConnected(commandData) {
 
 // Disconnect User
 function commandDisconnected(commandData) {
+    if (commandData.hasOwnProperty("updated_positions")){
+        userListBuilder(user_list, commandData.updated_positions);
+        user_list = commandData.updated_positions;
+    }
     if (commandData.hasOwnProperty("next_eliminating_uuid")){
         setUserTurn(commandData.next_eliminating_uuid)
     }
 
-    let disconnected_uuid = commandData.disconnected_uuid;
+    const disconnected_uuid = commandData.disconnected_uuid;
     console.log('Disconnected UUID: ' + disconnected_uuid)
     removeUserFromDom(disconnected_uuid);
     if(disconnected_uuid != user_uuid){
-        let toastHtml = `<span><strong class="purple-text text-accent-2">${user_list[disconnected_uuid]['nickname']} </strong>&nbsp;has disconnected.</span>`
+        const toastHtml = `<span><strong class="purple-text text-accent-2">${user_list[disconnected_uuid]['nickname']} </strong>&nbsp;has disconnected.</span>`
         M.toast({html: toastHtml})
     }
     delete user_list[disconnected_uuid];
@@ -88,7 +98,9 @@ function commandDisconnected(commandData) {
 function commandSyncRoom(commandData) {
     let {
         movie_list:received_movie_list, 
-        active_user_dict:received_user_list
+        active_user_dict:received_user_list,
+        is_active,
+        eliminating_uuid = null
     } = commandData.share_list
     received_movie_list = received_movie_list.map(movie => 
             new construct.SharedMovie(movie)
@@ -100,10 +112,12 @@ function commandSyncRoom(commandData) {
     userListBuilder(user_list, received_user_list)
     user_list = received_user_list
 
+    elimination_active = is_active;
+
     let statusType;
     if(isFinalSelected(movie_list)){
         statusType = "final";
-        let finalMovie = movie_list.find(movie => movie.is_eliminated == false);
+        const finalMovie = movie_list.find(movie => movie.is_eliminated == false);
         console.log(`${finalMovie.title} is the final choice!`)
         
         getMoreMovieInfo(finalMovie.tmdb_id)
@@ -116,7 +130,7 @@ function commandSyncRoom(commandData) {
                 console.log("AJAX error")
             })
     }
-    else if(isEliminationActive(user_list) ){
+    else if(elimination_active){
         statusType = "eliminating"
     }
     else{
@@ -124,6 +138,10 @@ function commandSyncRoom(commandData) {
     }
     
     setStatusBar(statusType);
+
+    if(eliminating_uuid != null){
+        setUserTurn(eliminating_uuid);
+    }
 }
 
 // Refreshes Movie List
@@ -140,16 +158,20 @@ function commandRefreshMovieList(commandData) {
 
 // Start Elimination
 function commandStartElimination(commandData) {
-    let uuid_turn = commandData.eliminating_uuid
-    setUserTurn(uuid_turn);
+    const {eliminating_uuid, updated_positions} = commandData;    
     
+    userListBuilder(user_list, updated_positions);
+    user_list = updated_positions;
+
+    elimination_active = true;
+
     setStatusBar("eliminating");
+    setUserTurn(eliminating_uuid);
+    
 }
 
 // Failed Command
 function commandFailed(commandData) {
-    // let {error_message} = commandData
-    // M.toast({html: error_message})
     console.log("Command failed.")
     console.log(responseData)
     if (responseData.hasOwnProperty('errors')) {
@@ -161,23 +183,6 @@ function commandFailed(commandData) {
 }
 
 // Private Functions
-
-//Returns current user whose turn it is
-
-// Returns eliminating user specific status bar text
-function getEliminatingStatusString(userList) {
-    let eliminating_uuid = Object.keys(userList)
-        .find(uuid => userList[uuid].is_users_turn == true)
-    if (eliminating_uuid) {
-        return (eliminating_uuid == user_uuid)
-            ? "Waiting on YOUR turn..."
-            : `Waiting on ${userList[eliminating_uuid].nickname}'s turn...`
-    }
-    else {
-        console.log("Couldn't get uuid of eliminating user.")
-        return ""
-    }
-}
 
 //Sets status bar
 function setStatusBar(status){
@@ -196,7 +201,7 @@ function setStatusBar(status){
         "eliminating": {
             "styleClass": "status-eliminating neon-blue active btn-large btn-rounded",
             "icons": "cast_connected",
-            "statusText": getEliminatingStatusString(user_list)
+            "statusText": "Elimination Activated!"
         },
         "final": {
             "styleClass": "status-final waves-effect waves-light neon-fuschia active btn-large btn-rounded",
@@ -219,32 +224,33 @@ function setStatusBar(status){
 
 //Check if final movie
 function isFinalSelected(movieList){
-    let eliminatedCount = movieList
+    const eliminatedCount = movieList
         .reduce((prev, curr) => prev + curr.is_eliminated, 0)
     return movieList.length - eliminatedCount == 1
 }
 
 //Set active user turn
 function setUserTurn(turnUUID){
-    //Set all user turn to false and remove any active classes
-    Object.keys(user_list).forEach(user => {
-        user_list[user].is_users_turn = false;
-    })
+    
+    //Remove any active classes
     $(`#user_list div.active`).removeClass('active').addClass('inactive');
     
     //Set current user turn to true and add active class
-    user_list[turnUUID]['is_users_turn'] = true;
+    current_eliminating_uuid = turnUUID;
     $(`#user_${turnUUID}`).addClass('active').removeClass('inactive');
 
     //Toast new user turn
-    let toastName = (turnUUID != user_uuid) 
+    const toastName = (turnUUID != user_uuid) 
         ? `<strong class="purple-text text-accent-2">${user_list[turnUUID]['nickname']}</strong>'s` 
         : '<strong class="cyan-text text-accent-2">YOUR</strong>'
-    let toastHtml = `<span>${toastName}&nbsp;turn.</span>`
+    const toastHtml = `<span>${toastName}&nbsp;turn.</span>`
     M.toast({html: toastHtml})
 
     //Put username in status bar
-    let statusText = getEliminatingStatusString(user_list);
+    const statusText = (turnUUID == user_uuid)
+            ? "Waiting on YOUR turn..."
+            : `Waiting on ${user_list[turnUUID].nickname}'s turn...`
+
     $('#status-btn span').html(statusText);
 }
 
@@ -269,11 +275,6 @@ function openMoreInfoModal(movieInfo, targetModalId){
     $(`#${targetModalId} .collapsible`).collapsible();
     $(`#${targetModalId} .tooltipped`).tooltip();
     $(`#${targetModalId}`).modal('open');
-}
-
-//Duplicated function FLAG
-function isEliminationActive(userList){
-    return Object.keys(userList).some(user => userList[user].is_users_turn == true)
 }
 
 export { 

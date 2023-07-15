@@ -9,9 +9,11 @@ from django.core.serializers.json import DjangoJSONEncoder
 from list_builder.models import Persona
 from elimination_room.models import ShareRoomUser, SharedMovieList
 from .serializer import SharedListEncoder
-from .consumer_utils import find_next_index
 from .json_response import SuccessfulCommandResponse, FailedCommandResponse
-from .command_requests import request_eliminate, request_initialize, request_elimination_start, request_refresh_list
+from .command_requests import request_connect, request_disconnect, request_eliminate, request_initialize, request_elimination_start, request_refresh_list
+
+from django.db.models import Max
+from .queue_management import end_of_queue_position, select_next_eliminating_user
 
 class MatchConsumer(JsonWebsocketConsumer):
     def connect(self):
@@ -26,83 +28,32 @@ class MatchConsumer(JsonWebsocketConsumer):
             self.channel_name
         )
 
-        # Get user and share room to link
-        this_persona = Persona.objects.get(uuid = self.persona_uuid)
-        share_list = SharedMovieList.objects.get(sharecode = self.sharecode)
-        
-        #Activate inactive user, or create new active user if hasn't joined yet
-        room_user, created = ShareRoomUser.objects.update_or_create(
-            persona = this_persona, 
-            list = share_list,
-            defaults={'is_active' : True}
-        )
-        
-        #If an inactive room user becomes active again within enough time, 
-        #keeps position (created_at time) in user list. If too much time 
-        # has passed, treated as new connection and moved to end of queue.
-        # if not created and (not room_user.last_active or timezone.now()-timedelta(minutes=1) < room_user.last_active):
-        #     room_user.created_at = timezone.now()
-        #     room_user.is_users_turn = False
-            
-        #====================================
-        #If roomuser has no name, set usernick as nick. Else make anonymous
-        if created:
-            if this_persona.nickname:
-                nickname = this_persona.nickname
-            else:
-                room_user_count = ShareRoomUser.objects.filter(list__sharecode = self.sharecode).count()
-                print(f"Number of room users: {room_user_count}")
-                nickname = f"User {room_user_count}"
-            
-            room_user.nickname = nickname
+        json_response_obj = request_connect(self.sharecode, self.persona_uuid)
 
-        room_user.save()
-                
-        #====================================
-        # Tell group of connection
-        user_data = {
-            'uuid' : self.persona_uuid,
-            'nickname' : room_user.nickname,
-            'is_users_turn' : room_user.is_users_turn
-        }
-        json_response_obj = SuccessfulCommandResponse(command = "connected", data= user_data)
-
-        self.forward_command_response_to_group(json_response_obj.to_dict())
-        
-        self.accept()
+        if json_response_obj.status == "success":
+            self.forward_command_response_to_group(json_response_obj.to_dict())
+            self.accept()
+        elif json_response_obj.status == "failure":
+            print("Failed to connect.")
+        else:
+            print("Invalid status from request_connect")
+            
 
     def disconnect(self, close_code):
-        #FLAG - Add prefetch, select_related
-        #Query all active users in share list
-        active_share_users_qs = ShareRoomUser.objects.filter(list__sharecode = self.sharecode, is_active = True).order_by('created_at')
-        current_user = active_share_users_qs.get(persona__uuid = self.persona_uuid)
-        
-        json_response_obj = SuccessfulCommandResponse(command="disconnected", data= {"disconnected_uuid" : self.persona_uuid})
 
-        #If it is users turn, assign next user to turn
-        if current_user.is_users_turn:
-            current_user.is_users_turn = False
-            next_index = find_next_index(self.persona_uuid, list(active_share_users_qs.values_list('persona__uuid', flat=True)))
-            next_user = active_share_users_qs[next_index]
-            next_user.is_users_turn = True
-            next_user.save()
-            #SEND MESSAGE to channels update turn for all clients
-            json_response_obj.add_data({"next_eliminating_uuid": next_user.persona.uuid})
+        json_response_obj = request_disconnect(self.sharecode, self.persona_uuid)
 
-        #Set current user inactive
-        current_user.is_active = False
-        current_user.last_active = timezone.now()
-        current_user.save()
-
-
-        # Tell group of disconnect
-        self.forward_command_response_to_group(json_response_obj.to_dict())
-
-        # Leave group
-        async_to_sync(self.channel_layer.group_discard)(
-            self.match_group_name,
-            self.channel_name
-        )
+        if json_response_obj.status == "success":
+            self.forward_command_response_to_group(json_response_obj.to_dict())
+            # Leave group
+            async_to_sync(self.channel_layer.group_discard)(
+                self.match_group_name,
+                self.channel_name
+            )
+        elif json_response_obj.status == "failure":
+            print("Failed to disconnect.")
+        else:
+            print("Invalid status from request_disconnect")
 
     # Receive message from WebSocket Client
     def receive_json(self, content):
@@ -110,7 +61,7 @@ class MatchConsumer(JsonWebsocketConsumer):
         #ELIMINATE
         if command == 'eliminate':
 
-            json_response_obj = request_eliminate(self.sharecode, self.persona_uuid, content)
+            json_response_obj = request_eliminate(self.sharecode, self.persona_uuid, content['shared_movie_id'])
 
             if json_response_obj.status == "success":
                 self.forward_command_response_to_group(json_response_obj.to_dict())
