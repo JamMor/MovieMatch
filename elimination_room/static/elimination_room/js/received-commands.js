@@ -1,3 +1,7 @@
+import { MovieListManager, UserListManager } from "./list-managers.js";
+const {syncMovieList:movieListBuilder} = MovieListManager;
+const {syncUserList:userListBuilder, addUserToDom, removeUserFromDom} = UserListManager;
+
 //These are the functions that are called when a succesful socket command is 
 // received from the server
 
