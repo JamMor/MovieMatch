@@ -30,6 +30,7 @@ function removeUserFromDom(uuid){
     $(`#user_${uuid}`).remove()
 }
 
+//Reorders users in DOM based on the current user dict and a list of the uuids to reorder
 function reorderUsersInDom(uuids, user_list){
     
     // Get current user elements
