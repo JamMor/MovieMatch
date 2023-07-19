@@ -6,8 +6,8 @@ import * as CopyToClipBoard from "./sharecode_copy.js";
 
 //Elimination Room Entry Point
 $(document).ready(function() {
-    createMatchSocket();
+    let matchSocket = createMatchSocket();
     MaterializeComponents.init();
-    ClickHandlers.init();
+    ClickHandlers.init(matchSocket);
     CopyToClipBoard.init();
 });

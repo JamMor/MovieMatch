@@ -99,6 +99,8 @@ function createMatchSocket(){
         //Ceiling for increasing timeout interval
         retryAttempts += (retryAttempts <= maxRetryInterval) ? 1 : 0;
     };
+
+    return matchSocket;
 }
 
 export {createMatchSocket}
