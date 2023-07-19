@@ -1,6 +1,6 @@
 // Attaches click handlers to elements on the page
 
-const init = () => {
+const init = (matchSocket) => {
     console.log("Initializing click handlers.")
     //Send which movie to eliminate on click
     $('#movie_list').on('click', 'a.remove-btn' , function() {
