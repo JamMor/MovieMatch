@@ -98,7 +98,7 @@ const UserListManager = {
             }
         })
     },
-    //Updates user list and renders in DOM when intialized or share list updated.
+    //Syncs the DOM with changes from the old user list to the new one
     syncUserList : (old_list, updated_list) => {
         let old_uuids = new Set(Object.keys(old_list))
         let added_uuid_list = new Set();
