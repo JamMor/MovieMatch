@@ -1,6 +1,4 @@
 import { MovieListManager, UserListManager } from "./list-managers.js";
-const {syncMovieList:movieListBuilder} = MovieListManager;
-const {syncUserList:userListBuilder, addUserToDom, removeUserFromDom} = UserListManager;
 
 //These are the functions that are called when a succesful socket command is 
 // received from the server
@@ -25,7 +23,7 @@ function commandEliminate(commandData) {
     M.toast({html: toastHtml})
     
     if (commandData.hasOwnProperty("updated_positions")){
-        userListBuilder(user_list, commandData.updated_positions);
+        UserListManager.syncUserList(user_list, commandData.updated_positions);
         user_list = commandData.updated_positions;
     }
 
@@ -69,7 +67,7 @@ function commandConnected(commandData) {
     }
     else{
         user_list[connected_uuid] = {"position": position, "nickname": nickname};
-        addUserToDom(connected_uuid, {"position": position, "nickname": nickname});
+        UserListManager.addUserToDom(connected_uuid, {"position": position, "nickname": nickname});
         console.log(`${nickname} has joined the room. UUID: ${connected_uuid}`)
         if(connected_uuid != user_uuid){
             const toastHtml = `<span><strong class="purple-text text-accent-2">${nickname} </strong>&nbsp;has connected.</span>`
@@ -81,7 +79,7 @@ function commandConnected(commandData) {
 // Disconnect User
 function commandDisconnected(commandData) {
     if (commandData.hasOwnProperty("updated_positions")){
-        userListBuilder(user_list, commandData.updated_positions);
+        UserListManager.syncUserList(user_list, commandData.updated_positions);
         user_list = commandData.updated_positions;
     }
     if (commandData.hasOwnProperty("next_eliminating_uuid")){
@@ -90,7 +88,7 @@ function commandDisconnected(commandData) {
 
     const disconnected_uuid = commandData.disconnected_uuid;
     console.log('Disconnected UUID: ' + disconnected_uuid)
-    removeUserFromDom(disconnected_uuid);
+    UserListManager.removeUserFromDom(disconnected_uuid);
     if(disconnected_uuid != user_uuid){
         const toastHtml = `<span><strong class="purple-text text-accent-2">${user_list[disconnected_uuid]['nickname']} </strong>&nbsp;has disconnected.</span>`
         M.toast({html: toastHtml})
@@ -110,10 +108,10 @@ function commandSyncRoom(commandData) {
             new construct.SharedMovie(movie)
         )
 
-    movieListBuilder(movie_list, received_movie_list)
+    MovieListManager.syncMovieList(movie_list, received_movie_list)
     movie_list = received_movie_list
     
-    userListBuilder(user_list, received_user_list)
+    UserListManager.syncUserList(user_list, received_user_list)
     user_list = received_user_list
 
     elimination_active = is_active;
@@ -164,7 +162,7 @@ function commandRefreshMovieList(commandData) {
 function commandStartElimination(commandData) {
     const {eliminating_uuid, updated_positions} = commandData;    
     
-    userListBuilder(user_list, updated_positions);
+    UserListManager.syncUserList(user_list, updated_positions);
     user_list = updated_positions;
 
     elimination_active = true;
