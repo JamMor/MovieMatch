@@ -76,8 +76,12 @@ def new_match(request):
 
 def join_match(request, sharecode):
     this_persona = get_or_set_persona(request)
-    context = {
-        'sharecode' : sharecode,
-        'uuid' : this_persona.uuid
-        }
-    return render(request, 'elimination_room/match.html', context)
+    #Tests to see if sharecode is exists
+    if SharedMovieList.objects.filter(sharecode = sharecode).exists():
+        context = {
+            'sharecode' : sharecode,
+            'uuid' : this_persona.uuid
+            }
+        return render(request, 'elimination_room/match.html', context)
+    else:
+        return redirect(reverse('list_builder:default_redirect'))

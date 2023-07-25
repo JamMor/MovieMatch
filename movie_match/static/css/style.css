@@ -681,13 +681,14 @@ td.collabsible-row {
 /* [-] */
 /* ---------------------ShareCodeFooter===================== */
 footer.sharecode{
-    position: absolute;
+    position: fixed;
     bottom: 0;
     height: 56px;
     width: 100%;
     display: flex;
     justify-content: center;
     align-items: center;
+    z-index: 10;
 }
 footer.sharecode button{
     height:100%;

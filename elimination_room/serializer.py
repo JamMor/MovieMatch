@@ -20,17 +20,14 @@ def SharedListEncoder(sharecode):
                 Prefetch('pre_shared_movies__submitted_by', to_attr='pre_submitted_by')).get(sharecode = sharecode)
     
     active_user_dict = {
-        persona.pre_persona.uuid : { 
-            'nickname' : persona.nickname, 
-            'is_users_turn' : persona.is_users_turn
+        room_user.pre_persona.uuid : { 
+            'position' : room_user.position,
+            'nickname' : room_user.nickname,
             }
-        for persona in shared_list.pre_active_room_users}
+        for room_user in shared_list.pre_active_room_users}
     
     movie_list = []
     for shared_movie in shared_list.pre_shared_movies:
-        # movie_info = shared_movie.movie.__dict__
-        # del movie_info['_state']
-        # del movie_info['id']
         movie_info = model_to_dict(shared_movie.movie,
                 fields=['tmdb_id', 'title', 'overview', 'poster_path', 'release_date']
         )
@@ -41,7 +38,19 @@ def SharedListEncoder(sharecode):
         
     json_dict = {
         'active_user_dict' : active_user_dict,
-        'movie_list' : movie_list
+        'movie_list' : movie_list,
+        'is_active' : shared_list.is_active
         }
+
+    if (shared_list.is_active) & (shared_list.turn > 0):
+        # selects the user whose position equals the shared_list.turn
+        # and returns the uuid of the persona associated with that user
+        eliminator_uuid = None
+        for room_user in shared_list.pre_active_room_users:
+            if room_user.position == shared_list.turn:
+                eliminator_uuid = room_user.pre_persona.uuid
+                break
+        if eliminator_uuid != None:
+            json_dict['eliminating_uuid'] = eliminator_uuid
 
     return json_dict

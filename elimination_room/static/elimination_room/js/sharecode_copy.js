@@ -5,7 +5,8 @@ function copyToClipboard() {
     M.toast({html: `Sharecode, <strong class="cyan-text text-accent-2">${shareCode}</strong>, copied to clipboard!`});
 }
 
-// This attaches an event listener to the copy button that calls the copyToClipboard function when the document is ready
-$(document).ready(function () {
+const init = () => {
     $("#copy-sharecode").on("click", copyToClipboard);
-});
+}
+
+export {init};
