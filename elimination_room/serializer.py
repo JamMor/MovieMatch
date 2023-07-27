@@ -26,16 +26,16 @@ def SharedListEncoder(sharecode):
             'position' : room_user.position,
             'nickname' : room_user.nickname,
             }
-        for room_user in shared_list.room_users}
+        for room_user in shared_list.room_users.all()}
     
     movie_list = []
-    for shared_movie in shared_list.shared_movies:
+    for shared_movie in shared_list.shared_movies.all():
         movie_info = model_to_dict(shared_movie.movie,
                 fields=['tmdb_id', 'title', 'overview', 'poster_path', 'release_date']
         )
         movie_info['shared_movie_id'] = shared_movie.id
         movie_info['is_eliminated'] = shared_movie.is_eliminated
-        movie_info['submitted_by'] = list(persona.uuid for persona in shared_movie.submitted_by)
+        movie_info['submitted_by'] = list(persona.uuid for persona in shared_movie.submitted_by.all())
         movie_list.append(movie_info)
         
     json_dict = {
@@ -48,7 +48,7 @@ def SharedListEncoder(sharecode):
         # selects the user whose position equals the shared_list.turn
         # and returns the uuid of the persona associated with that user
         eliminator_uuid = None
-        for room_user in shared_list.room_users:
+        for room_user in shared_list.room_users.all():
             if room_user.position == shared_list.turn:
                 eliminator_uuid = room_user.persona.uuid
                 break
