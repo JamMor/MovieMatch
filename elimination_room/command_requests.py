@@ -91,7 +91,6 @@ def request_disconnect(sharecode, persona_uuid):
             has_eliminated=False,
             position=0
         )
-        room_user.position = 0
 
     elif active_share_users_count > 1:
         #If it was the user's turn and they had not eliminated, assign the next user to turn
@@ -105,8 +104,8 @@ def request_disconnect(sharecode, persona_uuid):
                     "updated_positions": user_positional_dict
                 })
 
-    room_user.is_active = False
-    room_user.save()
+        room_user.is_active = False
+        room_user.save()
 
     return SuccessfulCommandResponse(command=command, data=disconnect_data)
 
