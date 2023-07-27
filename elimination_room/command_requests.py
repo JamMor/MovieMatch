@@ -78,9 +78,8 @@ def request_disconnect(sharecode, persona_uuid):
     disconnect_data= {"disconnected_uuid" : persona_uuid}
 
     # Get this user persona and share room
-    this_persona = Persona.objects.get(uuid = persona_uuid)
-    share_list = SharedMovieList.objects.get(sharecode = sharecode)
-    room_user = ShareRoomUser.objects.get(persona = this_persona, list = share_list)
+    room_user = ShareRoomUser.objects.select_related("list").get(persona__uuid = persona_uuid, list__sharecode = sharecode)
+    share_list = room_user.list
 
     # If last active user, then set list to inactive
     active_share_users_count = ShareRoomUser.objects.filter(list = share_list, is_active = True).count()
