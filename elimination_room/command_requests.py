@@ -24,10 +24,9 @@ def request_connect(sharecode, persona_uuid):
     share_list = SharedMovieList.objects.get(sharecode = sharecode)
     
     # Activate inactive user, or create new active user if hasn't joined yet
-    room_user, created = ShareRoomUser.objects.update_or_create(
+    room_user, created = ShareRoomUser.objects.get_or_create(
         persona = this_persona, 
-        list = share_list,
-        defaults={'is_active' : True}
+        list = share_list
     )
         
     # If a returning user, determine position and round placement
@@ -51,6 +50,7 @@ def request_connect(sharecode, persona_uuid):
                     
         room_user.nickname = nickname
     
+    room_user.is_active = True
     room_user.save()
 
     # Tell group of connection
