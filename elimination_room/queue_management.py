@@ -2,6 +2,19 @@ from elimination_room.models import ShareRoomUser, SharedMovieList
 from random import shuffle
 from django.db.models import Max
 
+def assign_generic_nickname(share_list):
+    """
+    Assigns generic nickname based on user count
+    
+    :param share_list: The shared list the user is joining
+    :type share_list: SharedMovieList
+    :return: "User {room_user_count}"
+    :rtype: str
+    """
+    room_user_count = ShareRoomUser.objects.filter(list = share_list).count()
+    
+    return f"User {room_user_count}"
+
 def end_of_queue_position(share_list):
     """
     Returns maximum queue position + 1 for the current round

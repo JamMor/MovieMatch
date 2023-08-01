@@ -6,7 +6,7 @@ from list_builder.models import Persona
 from elimination_room.models import SharedMovieList, SharedMovie, ShareRoomUser
 from .serializer import SharedListEncoder as SharedListJsonEncoder
 from .json_response import SuccessfulCommandResponse, FailedCommandResponse
-from .queue_management import assign_round_order, end_of_queue_position, select_next_eliminating_user
+from .queue_management import assign_generic_nickname, assign_round_order, end_of_queue_position, select_next_eliminating_user
 
 def request_connect(sharecode, persona_uuid):
     """
@@ -38,16 +38,9 @@ def request_connect(sharecode, persona_uuid):
         # For users rejoining before the end of the current round who have not yet taken their turn, do nothing
         # For users rejoining before the end of the current round who have already taken their turn, do nothing
     
-    # If a new user, set nickname
-    else:
-        if this_persona.nickname:
-            nickname = this_persona.nickname
-        # Set generic nickname if none already set
-        else:
-            room_user_count = ShareRoomUser.objects.filter(list = share_list).count()
-            print(f"Number of room users: {room_user_count}")
-            nickname = f"User {room_user_count}"
-                    
+    if not room_user.nickname:
+        #Set nickname to this_persona.nickname if any, or run assign_nickname
+        nickname = this_persona.nickname if this_persona.nickname else assign_generic_nickname(share_list)
         room_user.nickname = nickname
     
     room_user.is_active = True
