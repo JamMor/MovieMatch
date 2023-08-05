@@ -4,7 +4,7 @@ from django.shortcuts import redirect, render
 from django.http import JsonResponse
 from django.urls import reverse
 from list_builder.models import Persona, Movie, TempMovieList
-from elimination_room.models import SharedMovieList, SharedMovie
+from elimination_room.models import SharedMovieList, SharedMovie, ShareRoomUser
 import json
 from channels.layers import get_channel_layer
 from asgiref.sync import async_to_sync
@@ -67,17 +67,24 @@ def new_match(request):
     #Push updates to channel users.
     update_shared_list_channels(shared_list.sharecode)
 
-    #Set Nickname
-    this_persona.nickname = nickname
-    this_persona.save(update_fields=['nickname'])
+    #Create or Update ShareRoomUser for this user with nickname
+    ShareRoomUser.objects.update_or_create(
+        persona = this_persona, 
+        list = shared_list,
+        defaults = {"nickname": nickname}
+        )
 
     response.update({"status": "success", "sharecode": shared_list.sharecode})
     return JsonResponse(response)
 
 def join_match(request, sharecode):
     this_persona = get_or_set_persona(request)
-    context = {
-        'sharecode' : sharecode,
-        'uuid' : this_persona.uuid
-        }
-    return render(request, 'elimination_room/match.html', context)
+    #Tests to see if sharecode is exists
+    if SharedMovieList.objects.filter(sharecode = sharecode).exists():
+        context = {
+            'sharecode' : sharecode,
+            'uuid' : this_persona.uuid
+            }
+        return render(request, 'elimination_room/match.html', context)
+    else:
+        return redirect(reverse('list_builder:default_redirect'))

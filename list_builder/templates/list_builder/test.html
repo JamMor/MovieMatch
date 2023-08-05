@@ -2,6 +2,13 @@
 
 {% block content_block %}
 <main class="container">
+    <h1 class="grey-text text-lighten-2">Debug Mode: 
+        {% if IN_DEBUG %}
+        <span class="cyan-text text-accent-2">True</span>
+        {% else %}
+        <span class="orange-text text-darken-4">False</span>
+        {% endif %}
+    </h1>
     <h6 class="grey-text text-lighten-2"><i class="left material-icons">tv</i>tv</h6>
     <h6 class="grey-text text-lighten-2"><i class="left material-icons">live_tv</i>live_tv</h6>
     <h6 class="grey-text text-lighten-2"><i class="left material-icons">movie</i>movie</h6>

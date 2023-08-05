@@ -10,7 +10,6 @@ from .forms import RegistrationForm, PersonaForm
 from list_builder.models import Persona
 from list_builder.persona_assigner import get_or_set_persona
 
-#FLAG Make class based
 def register_view(request):
     if request.method == 'POST':
         user_form = RegistrationForm(request.POST, prefix='user')

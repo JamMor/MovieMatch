@@ -126,8 +126,14 @@
             "saveURL" : (list_id = "") => {
                 let saveURL = "{% url 'list_builder:save_list' %}" 
                 if (list_id) {saveURL += `/${list_id}`}
+            },
+            "webSocketURL" : (shareCode = "") => {
+                let webSocketProtocol = "{% if IN_DEBUG %}ws://{% else %}wss://{% endif %}"
+                let baseURL = window.location.host
+                
+                return `${webSocketProtocol}${baseURL}/ws/match/${shareCode}/`
             }
-        }
+        };
         var csrftoken;
         var MovieCard;
         var MovieInfoModal;

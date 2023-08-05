@@ -31,6 +31,7 @@
     [-] -UserList=
     [-] -MovieList=
     [-] -FinalModal=
+    [-] -ShareCodeFooter=
 [+] =Materialize Elements=
 [+] =Animista=
 
@@ -730,6 +731,26 @@ td.collabsible-row {
 #final_modal .nav-wrapper ul>li {
     width:100%;
     text-align: center;
+}
+
+/* [-] */
+/* ---------------------ShareCodeFooter===================== */
+footer.sharecode{
+    position: fixed;
+    bottom: 0;
+    height: 56px;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 10;
+}
+footer.sharecode button{
+    height:100%;
+    color: black;
+}
+footer.sharecode i{
+    margin-left:10px;
 }
 
 /* [+] */

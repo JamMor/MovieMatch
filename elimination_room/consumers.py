@@ -1,18 +1,19 @@
 # chat/consumers.py
 import json
 from random import randint
-import random
-from datetime import timedelta
 from django.utils import timezone
 from asgiref.sync import async_to_sync
 from channels.generic.websocket import JsonWebsocketConsumer
-from django.core import serializers
 from django.core.serializers.json import DjangoJSONEncoder
 
 from list_builder.models import Persona
-from elimination_room.models import SharedMovie, ShareRoomUser, SharedMovieList
+from elimination_room.models import ShareRoomUser, SharedMovieList
 from .serializer import SharedListEncoder
-from .consumer_utils import find_next_index
+from .json_response import SuccessfulCommandResponse, FailedCommandResponse
+from .command_requests import request_connect, request_disconnect, request_eliminate, request_initialize, request_elimination_start, request_refresh_list
+
+from django.db.models import Max
+from .queue_management import end_of_queue_position, select_next_eliminating_user
 
 class MatchConsumer(JsonWebsocketConsumer):
     def connect(self):
@@ -27,314 +28,117 @@ class MatchConsumer(JsonWebsocketConsumer):
             self.channel_name
         )
 
-        # Get user and share room to link
-        this_persona = Persona.objects.get(uuid = self.persona_uuid)
-        share_list = SharedMovieList.objects.get(sharecode = self.sharecode)
-        
-        #Activate inactive user, or create new active user if hasn't joined yet
-        room_user, created = ShareRoomUser.objects.update_or_create(
-            persona = this_persona, 
-            list = share_list,
-            defaults={'is_active' : True}
-        )
-        
-        #If an inactive room user becomes active again within enough time, 
-        #keeps position (created_at time) in user list. If too much time 
-        # has passed, treated as new connection and moved to end of queue.
-        # if not created and (not room_user.last_active or timezone.now()-timedelta(minutes=1) < room_user.last_active):
-        #     room_user.created_at = timezone.now()
-        #     room_user.is_users_turn = False
-            
-        #====================================
-        #If roomuser has no name, set usernick as nick. Else make anonymous
-        if created:
-            if this_persona.nickname:
-                nickname = this_persona.nickname
-            else:
-                room_user_count = ShareRoomUser.objects.filter(list__sharecode = self.sharecode).count()
-                print(f"Number of room users: {room_user_count}")
-                nickname = f"User {room_user_count}"
-            
-            room_user.nickname = nickname
+        json_response_obj = request_connect(self.sharecode, self.persona_uuid)
 
-        room_user.save()
-                
-        #====================================
-        # Tell group of connection
-        print("Connecting User - Consumers")
-        print({self.persona_uuid : {'nickname' : room_user.nickname, 'is_users_turn' : room_user.is_users_turn}})
-        async_to_sync(self.channel_layer.group_send)(
-                self.match_group_name,
-                {
-                    'type': 'connect_message',
-                    'connected_user': {self.persona_uuid : {'nickname' : room_user.nickname, 'is_users_turn' : room_user.is_users_turn}}
-                }
-        )
-
-        self.accept()
+        if json_response_obj.status == "success":
+            self.forward_command_response_to_group(json_response_obj.to_dict())
+            self.accept()
+        elif json_response_obj.status == "failure":
+            print("Failed to connect.")
+        else:
+            print("Invalid status from request_connect")
+            
 
     def disconnect(self, close_code):
-        print("Disconnecting User - Consumers")
-        #FLAG - Add prefetch, select_related
-        #Query all active users in share list
-        active_share_users_qs = ShareRoomUser.objects.filter(list__sharecode = self.sharecode, is_active = True).order_by('created_at')
-        current_user = active_share_users_qs.get(persona__uuid = self.persona_uuid)
-        
-        msg_data = {
-            'status': 'success',
-            'disconnected_uuid': self.persona_uuid
-        }
 
-        #If it is users turn, assign next user to turn
-        if current_user.is_users_turn:
-            current_user.is_users_turn = False
-            next_index = find_next_index(self.persona_uuid, list(active_share_users_qs.values_list('persona__uuid', flat=True)))
-            next_user = active_share_users_qs[next_index]
-            next_user.is_users_turn = True
-            next_user.save()
-            #SEND MESSAGE to channels update turn for all clients
-            msg_data['next_eliminating_uuid'] = next_user.persona.uuid
+        json_response_obj = request_disconnect(self.sharecode, self.persona_uuid)
 
-        #Set current user inactive
-        current_user.is_active = False
-        current_user.last_active = timezone.now()
-        current_user.save()
-
-
-        # Tell group of disconnect
-        async_to_sync(self.channel_layer.group_send)(
+        if json_response_obj.status == "success":
+            self.forward_command_response_to_group(json_response_obj.to_dict())
+            # Leave group
+            async_to_sync(self.channel_layer.group_discard)(
                 self.match_group_name,
-                {
-                    'type': 'disconnect_message',
-                    'msg_data' : msg_data
-                }
-        )
-
-        # Leave group
-        async_to_sync(self.channel_layer.group_discard)(
-            self.match_group_name,
-            self.channel_name
-        )
+                self.channel_name
+            )
+        elif json_response_obj.status == "failure":
+            print("Failed to disconnect.")
+        else:
+            print("Invalid status from request_disconnect")
 
     # Receive message from WebSocket Client
     def receive_json(self, content):
-        print(content)
         command = content['command']
-        print(f'COMMAND RECEIVED - Consumers: {command}')
         #ELIMINATE
         if command == 'eliminate':
-            
-            active_share_users_qs = ShareRoomUser.objects.filter(list__sharecode = self.sharecode, is_active = True).order_by('created_at')
-            #If it isn't any user's turn, elimination hasn't started. Return failed msg
-            if active_share_users_qs.filter(is_users_turn = True).count() == 0:
-                self.send_json({
-                        'type': 'eliminate_message',
-                        'status' : 'failed',
-                        'error_message' : "List not set to allow elimination."
-                })
-                return
-            #If it isn't THIS user's turn. Return failed msg
-            this_user = active_share_users_qs.get(persona__uuid = self.persona_uuid)
-            if not this_user.is_users_turn:
-                self.send_json({
-                        'type': 'eliminate_message',
-                        'status' : 'failed',
-                        'error_message' : "Not this users turn."
-                })
-                return
-            #If elimination has started:
-            shared_movie_id = content['shared_movie_id']
-            uneliminated_movies_qs = SharedMovie.objects.filter(shared_list__sharecode = self.sharecode, is_eliminated = False)
-            movies_left = uneliminated_movies_qs.count()
 
-            #If available movies > 1
-            if movies_left > 1:
-                #Eliminate movie
-                try:
-                    shared_movie = uneliminated_movies_qs.get(id=shared_movie_id)
-                except SharedMovie.DoesNotExist:
-                    print("Can't find selected movie (probably already eliminated).")
-                    self.send_json({
-                        'type': 'eliminate_message',
-                        'status' : 'failed',
-                        'error_message' : 'Shared movie not found in uneliminated movies.'
-                    })
-                    return
-                shared_movie.is_eliminated = True
-                shared_movie.save()
-                movies_left -= 1
+            json_response_obj = request_eliminate(self.sharecode, self.persona_uuid, content['shared_movie_id'])
+
+            if json_response_obj.status == "success":
+                self.forward_command_response_to_group(json_response_obj.to_dict())
+            elif json_response_obj.status == "failure":
+                self.send_json(json_response_obj.to_dict())
+            else:
+                print("Invalid status from request_eliminate")
                 
-                #Pick next user
-                current_user = active_share_users_qs.get(persona__uuid = self.persona_uuid)
-                current_user.is_users_turn = False
-                current_user.save()
-                next_index = find_next_index(self.persona_uuid, list(active_share_users_qs.values_list('persona__uuid', flat=True)))
-                if next_index == None:
-                    print("No available user for turn.")
-                    return
-                next_user = active_share_users_qs[next_index]
-                next_user.is_users_turn = True
-                next_user.save()
-
-                #Confirm Removal for Group
-                async_to_sync(self.channel_layer.group_send)(
-                    self.match_group_name,
-                    {
-                        'type': 'eliminate_message',
-                        'shared_movie_id' : shared_movie_id,
-                        'eliminating_uuid' : self.persona_uuid,
-                        'next_eliminating_uuid' : next_user.persona.uuid
-                    }
-                )
-
-            #If last possible elimination
-            if movies_left == 1:
-                final_movie = SharedMovie.objects.filter(shared_list__sharecode = self.sharecode, is_eliminated = False).first()
-                #Send final movie signal
-                async_to_sync(self.channel_layer.group_send)(
-                        self.match_group_name,
-                        {
-                            'type': 'final_message',
-                            'shared_movie_id' : final_movie.id
-                        }
-                    )
-                #Set all to no one's turn
-                active_share_users_qs.filter(is_users_turn = True).update(is_users_turn = False)
-
         #INITIALIZE
         elif command == 'initialize':
-            print("Sharecode from Receive: " + self.sharecode)
-            model_dict = SharedListEncoder(self.sharecode)
+            
+            json_response_obj = request_initialize(self.sharecode)
 
-            self.send_json({
-                'command': 'initialized',
-                'status' : 'success',
-                'share_list': model_dict
-            })
+            self.send_json(json_response_obj.to_dict())
         
         #START ELIMINATING
         elif command == 'elimination_start':
-            active_share_users_qs = ShareRoomUser.objects.filter(list__sharecode = self.sharecode, is_active = True)
-            users_eliminating = active_share_users_qs.filter(is_users_turn = True).count()
-            if users_eliminating > 0:
-                print("Elimination already in progress.")
-                return
+            
+            json_response_obj = request_elimination_start(self.sharecode)
+            
+            if json_response_obj.status == "success":
+                self.forward_command_response_to_group(json_response_obj.to_dict())
+            elif json_response_obj.status == "failure":
+                self.send_json(json_response_obj.to_dict())
+            else:
+                print("Invalid status from request_elimination_start")
 
-            if SharedMovie.objects.filter(shared_list__sharecode = self.sharecode).count() < 2:
-                print("Must be at least 2 movies in list to begin eliminating.")
-                return
-
-            #Randomly pick user to start
-            eliminating_user = random.choice(active_share_users_qs)
-            eliminating_user.is_users_turn = True
-            eliminating_user.save()
-                        
-            async_to_sync(self.channel_layer.group_send)(
-                    self.match_group_name,
-                    {
-                        'type': 'elimination_start',
-                        'eliminating_uuid': eliminating_user.persona.uuid
-                    }
-                )
-        
         #REFRESH LIST
         elif command == 'refresh':
             
-            SharedMovie.objects.filter(shared_list__sharecode = self.sharecode).update(is_eliminated = False)
-
-            async_to_sync(self.channel_layer.group_send)(
-                    self.match_group_name,
-                    {
-                        'type': 'refresh_message'
-                    }
-                )
+            json_response_obj = request_refresh_list(self.sharecode)
+            
+            if json_response_obj.status == "success":
+                self.forward_command_response_to_group(json_response_obj.to_dict())
+            elif json_response_obj.status == "failure":
+                self.send_json(json_response_obj.to_dict())
+            else:
+                print("Invalid status from request_refresh_list")
         
         #FAILED COMMAND
         else:
             print(f'Command failure: {command}.')
-            self.send_json({
-                'command': command,
-                'status' : 'failed',
-                'error_message' : f'Command failure: {command}.'
-            })
+            
+            json_response_obj = FailedCommandResponse(command=command, errors=[f'Command failure: {command}.'])
+            self.send_json(json_response_obj.to_dict())
 
-    # Receive message from ChannelLayer
-    def eliminate_message(self, event):
-        shared_movie_id = event['shared_movie_id']
-        eliminating_uuid = event['eliminating_uuid']
-        next_eliminating_uuid = event['next_eliminating_uuid']
-
-        # Send message to WebSocket Client
-        self.send_json({
-            'command': 'eliminated',
-            'status' : "success",
-            'shared_movie_id' : shared_movie_id,
-            'eliminating_uuid' : eliminating_uuid,
-            'next_eliminating_uuid' : next_eliminating_uuid
-        })
-    
-    def final_message(self, event):
-        shared_movie_id = event['shared_movie_id']
-
-        # Send message to WebSocket Client
-        self.send_json({
-            'command': 'finalized',
-            'status' : "success",
-            'shared_movie_id' : shared_movie_id
-        })
-    
-    def elimination_start(self, event):
-        eliminating_uuid = event['eliminating_uuid']
-
-        # Send message to WebSocket Client
-        self.send_json({
-                'command': 'elimination_started',
-                'status' : 'success',
-                'eliminating_uuid' : eliminating_uuid
-            })
-    
     # Receive message from ChannelLayer
     def update_message(self, event):
-        model_dict = SharedListEncoder(self.sharecode)
+        command="updated"
+
+        try:
+            model_dict = SharedListEncoder(self.sharecode)
+            json_response_object = SuccessfulCommandResponse(command=command, data={"share_list": model_dict})
+        except:
+            json_response_object = FailedCommandResponse(command=command, errors=["Error updating list."])
+        
+        self.send_json(json_response_object.to_dict())
+        
+
+    # Receive json encoded message from ChannelLayer and forward to client
+    def send_command_response_to_client(self, event):
+        json_response = event.get("json_response")
 
         # Send message to WebSocket Client
-        self.send_json({
-            'command': 'updated',
-            'status' : 'success',
-            'share_list': model_dict
-        })
-    
-    # Receive message from ChannelLayer
-    def refresh_message(self, event):
-        model_dict = SharedListEncoder(self.sharecode)
+        self.send(text_data=json_response)
 
-        # Send message to WebSocket Client
-        self.send_json({
-            'command': 'refreshed',
-            'status' : 'success',
-            'share_list': model_dict
-        })
-    
-    # Receive message from ChannelLayer
-    def connect_message(self, event):
-        connected_user = event['connected_user']
+    # Send json encoded message to ChannelLayer (group send)
+    def forward_command_response_to_group(self, json_response):
+        encoded_json_response = self.encode_json(json_response)
+        async_to_sync(self.channel_layer.group_send)(
+            self.match_group_name,
+            {
+                'type': 'send_command_response_to_client',
+                'json_response': encoded_json_response
+            }
+        )
 
-        # Send message to WebSocket Client
-        self.send_json({
-            'command': 'connected',
-            'status' : 'success',
-            'user': connected_user
-        })
-    # Receive message from ChannelLayer
-    def disconnect_message(self, event):
-        print("Disconnect Channel Event")
-        print(event)
-        channel_msg = {'command': 'disconnected'}
-        msg_data = event.get("msg_data")
-        channel_msg.update(msg_data)
-
-        # Send message to WebSocket Client
-        self.send_json(channel_msg)
 
     #Custom JSON coders (for dates)
     @classmethod
