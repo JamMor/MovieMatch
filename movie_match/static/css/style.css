@@ -60,6 +60,14 @@
     --purple_darken-2:#7b1fa2;
     --purple_darken-1:#8e24aa;
 
+    --hue-blue: 200;
+    --hue-purple: 300;
+    --hue-orange: 30;
+
+    --base-mid:hsl(var(--hue), 79%, 46%);
+    --base-dark:hsl(var(--hue), 66%, 30%);
+    --base-bright:hsl(var(--hue), 100%, 55%);
+
 }
 
 /* [+] */
@@ -200,6 +208,34 @@ i.suffix {
         0 0 40px 0 var(--cyan_accent-2),
         0 0 60px 0 var(--blue_darken-2),
         0 0 80px 0 var(--indigo_darken-4);
+}
+
+.neon-orange {
+    --hue:21;
+}
+.neon-purple {
+    --hue:291;
+}
+.neon-cyan {
+    --hue:180;
+}
+.neon-glow-hover {
+    color: var(--grey_lighten-2);
+    background-color: #ffffff33;
+    box-shadow: 
+        inset 0 0 15px 0 hsl(var(--hue), 79%, 46%),
+        inset 0 0 5px 0 hsl(var(--hue), 66%, 30%),
+        0 0 5px 0 hsl(var(--hue), 79%, 46%);
+}
+.neon-glow-hover:hover {
+    color: hsl(var(--hue), 66%, 30%);
+    background-color: #ffffff;
+    box-shadow: 
+    inset 0 0 15px 0 hsl(var(--hue), 79%, 46%),
+    inset 0 0 5px 0 hsl(var(--hue), 66%, 30%),
+        0 0 40px 0 hsl(var(--hue), 100%, 55%),
+        0 0 60px 0 hsl(var(--hue), 79%, 46%),
+        0 0 80px 0 hsl(var(--hue), 66%, 30%);
 }
 
 .neon-blue.inactive{
