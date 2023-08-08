@@ -37,6 +37,9 @@ class PersonaForm(ModelForm):
     class Meta:
         model = Persona
         fields = ['nickname']
+        help_texts = {
+            "nickname": "Optional. 20 characters or fewer."
+        }
 
 
 
