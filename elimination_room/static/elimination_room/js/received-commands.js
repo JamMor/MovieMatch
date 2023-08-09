@@ -46,7 +46,7 @@ function commandFinalized(commandData) {
     getMoreMovieInfo(finalMovie.tmdb_id)
         .done(returnInfo => {
             console.log(returnInfo)
-            let finalMovieInfo = returnInfo ?? finalMovie
+            let finalMovieInfo = new construct.DetailedMovie(returnInfo ?? finalMovie)
             openMoreInfoModal(finalMovieInfo, "final_modal")
         })
         .fail(function(){
