@@ -33,14 +33,21 @@ function commandEliminate(commandData) {
 
     // ====================FLAG====Temporary Final Fix=========================================
     if(commandData.hasOwnProperty('final_shared_movie_id')) {
-        commandFinalized(commandData);
+        commandFinalized(commandData.final_shared_movie_id);
     }
 }
 
 // Final Movie
-function commandFinalized(commandData) {
-    const finalSharedId = commandData.final_shared_movie_id;
-    const finalMovie = movie_list.find(movie => movie.shared_movie_id == finalSharedId);
+function commandFinalized(finalSharedId = null) {
+    let finalMovie;
+    // If ID given, find the movie via ID
+    if (finalSharedId !== null){
+        finalMovie = movie_list.find(movie => movie.shared_movie_id == finalSharedId);
+    }
+    // If no ID, find the movie that is not eliminated
+    else {
+        finalMovie = movie_list.find(movie => movie.is_eliminated == false);
+    }
     console.log(`${finalMovie.title} is the final choice!`)
     
     getMoreMovieInfo(finalMovie.tmdb_id)
