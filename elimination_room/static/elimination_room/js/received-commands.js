@@ -123,31 +123,16 @@ function commandSyncRoom(commandData) {
 
     elimination_active = is_active;
 
-    let statusType;
     if(isFinalSelected(movie_list)){
-        statusType = "final";
-        const finalMovie = movie_list.find(movie => movie.is_eliminated == false);
-        console.log(`${finalMovie.title} is the final choice!`)
-        
-        getMoreMovieInfo(finalMovie.tmdb_id)
-            .done(returnInfo => {
-                console.log(returnInfo)
-                let finalMovieInfo = returnInfo ?? finalMovie
-                openMoreInfoModal(finalMovieInfo, "final_modal")
-            })
-            .fail(function(){
-                console.log("AJAX error")
-            })
+        commandFinalized();
     }
     else if(elimination_active){
-        statusType = "eliminating"
+        setStatusBar("eliminating")
     }
     else{
-        statusType = "start"
+        setStatusBar("start")
     }
     
-    setStatusBar(statusType);
-
     if(eliminating_uuid != null){
         setUserTurn(eliminating_uuid);
     }
