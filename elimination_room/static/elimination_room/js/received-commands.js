@@ -259,7 +259,7 @@ function getMoreMovieInfo(movieId){
 //Movie Info object from getMoreMovieInfo, and the ID name of the modal element
 function openMoreInfoModal(movieInfo, targetModalId){
     $(`#${targetModalId} div.modal-content`)
-        .html(MovieInfoModal(movieInfo))
+        .html(construct.MovieInfoModal(movieInfo))
     
     $(`#${targetModalId}`).modal({
         inDuration: 1500,
