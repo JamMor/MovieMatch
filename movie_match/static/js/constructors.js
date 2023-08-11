@@ -160,7 +160,7 @@ construct.ProviderList = (providers) => {
     }
     return providers.map(prv => 
         `<li class="tooltipped" data-position="bottom" data-tooltip="${prv.provider_name}">
-            <img src="${image_prefix}w45${prv.logo_path}" alt="${prv.provider_name}">
+            <img src="${DJ_STATIC_FILES.image_prefix}w45${prv.logo_path}" alt="${prv.provider_name}">
         </li>`
         ).join('');
 }
