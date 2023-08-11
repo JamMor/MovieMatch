@@ -118,7 +118,8 @@
     {% block script_block %}
     <script type="text/javascript">
         var DJ_STATIC_FILES = {
-        "placeholder_path": "{% static 'images/movie_placeholder.png' %}"
+        "placeholder_path": "{% static 'images/movie_placeholder.png' %}",
+        "image_prefix": "https://image.tmdb.org/t/p/"
         };
         var urlPath = {
             "listCreator" : "{% url 'list_builder:list_builder' %}",
