@@ -31,7 +31,6 @@ function commandEliminate(commandData) {
         setUserTurn(next_eliminating_uuid);
     }
 
-    // ====================FLAG====Temporary Final Fix=========================================
     if(commandData.hasOwnProperty('final_shared_movie_id')) {
         commandFinalized(commandData.final_shared_movie_id);
     }
