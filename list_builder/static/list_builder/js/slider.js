@@ -1,4 +1,4 @@
-document.addEventListener('DOMContentLoaded', function () {
+const init = () => {
     const sliders = document.querySelectorAll('.slider-x');
 
     let pos = { left: 0, x: 0 };
@@ -44,4 +44,6 @@ document.addEventListener('DOMContentLoaded', function () {
         slider.addEventListener('mousedown', mouseDownHandler);
         // slider.style.cursor = "grab";
     })
-})
+}
+
+export { init }
