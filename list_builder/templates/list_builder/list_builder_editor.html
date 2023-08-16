@@ -39,6 +39,5 @@
             var savedListId = '{{saved_list.id}}';
             var savedListName = '{{saved_list.list_name}}';
         </script>
-        <script src="{% static 'list_builder/js/list_editor.js'%}"></script>
-        <script src="{% static 'list_builder/js/editor_save.js'%}"></script>
+        <script type="module" src="{% static 'list_builder/js/list_editor/index.js'%}"></script>
     {% endblock %}
