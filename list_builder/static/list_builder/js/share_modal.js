@@ -1,24 +1,30 @@
-$(document).ready(function () {
-    // POSTs name, movie list, and sharecode(if any)
-    $("#share-btn").click(function () {
-        let sharecode = $("#sharecode").val().toUpperCase();
-        if (!/^$|^[23456789ABCDEFGHJKLMNPQRSTUVWXYZ]{8}$/.test(sharecode)) {
-            console.log("Invalid Sharecode format.")
-            return
+let sharecode = $("#sharecode").val().toUpperCase();
+let nickname = $("#nickname").val();
+
+function validateSharecode(sharecode) {
+    if (!/^$|^[23456789ABCDEFGHJKLMNPQRSTUVWXYZ]{8}$/.test(sharecode)) {
+        console.log("Invalid Sharecode format.")
+        return false
+    }
+    return true
+}
+
+function submitEliminationList() {
+    if (!validateSharecode(sharecode)) {
+        //FLAG Toast error
+        return
+    }
+
+
+    let tmdb_ids = movie_list.map(movie => movie.tmdb_id)
+    
+    $.post("match/", JSON.stringify(
+        {
+            "sharecode": sharecode,
+            "nickname": nickname,
+            "tmdb_ids": tmdb_ids
         }
-
-        let nickname = $("#nickname").val();
-        console.log("Submitting!")
-
-        let tmdb_ids = movie_list.map(movie => movie.tmdb_id)
-        // console.log("DATA for Django: ", {"sharecode": sharecode, "nickname": nickname, "movie_list": movie_list});
-        $.post("match/", JSON.stringify(
-            {
-                "sharecode": sharecode,
-                "nickname": nickname,
-                "tmdb_ids": tmdb_ids
-            }
-        ), "json")
+    ), "json")
         .done(function (data) {
             console.log(data);
 
@@ -32,5 +38,11 @@ $(document).ready(function () {
         .fail(function () {
             console.log("ERROR: Failed to send movie list.");
         })
-})
-})
+}
+
+const init = () => {
+    // POSTs name, movie list, and sharecode(if any)
+    $("#share-btn").click(function () {
+        submitEliminationList();
+    })
+}
