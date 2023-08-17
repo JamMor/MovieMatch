@@ -18,3 +18,5 @@ const init = function(){
         handleEditorSave();
     })
 }
+
+export {init}

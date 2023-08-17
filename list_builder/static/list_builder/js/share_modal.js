@@ -46,3 +46,5 @@ const init = () => {
         submitEliminationList();
     })
 }
+
+export { init }
