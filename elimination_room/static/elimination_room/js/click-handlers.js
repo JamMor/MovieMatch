@@ -45,12 +45,6 @@ const init = (matchSocket) => {
             'command' : 'refresh'
         }))
     });
-
-    //Opens final modal for now
-    $('#status_bar').on('click', '.status-final' , function() {
-        console.log("Opening Modal")
-        $('#final_modal').modal('open');
-    });
 }
 
 export {init}
