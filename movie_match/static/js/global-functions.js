@@ -9,7 +9,7 @@ function formErrorHandler(formSelector, errorDict){
         }
         else {
             for(let errorMsg of errorDict[field]){
-                $(`${formSelector} input[name=${field} ~ label]`)
+                $(`${formSelector} input[name=${field}] ~ label`)
                     .after(`<span class="error">${errorMsg}</span>`)
             }
         }
