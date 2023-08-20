@@ -1,3 +1,6 @@
+import { Movie } from "/static/js/constructors.js";
+import { MovieCard } from "/static/js/DOMelements.js";
+
 $(document).ready(function() {
 
     // Materialize FAB button initialize
@@ -76,9 +79,9 @@ $(document).ready(function() {
                             $(this)
                                 .html(data.results.map(({ id: tmdb_id, ...rest }) => {
                                     //Renames the movie DB ID to tmdb_id for Movie object creation
-                                    let movieObj = new construct.Movie({ tmdb_id, ...rest });
+                                    let movieObj = new Movie({ tmdb_id, ...rest });
                                     search_results.push(movieObj);
-                                    return construct.MovieCard(search_prefix, tmdb_id, movieObj, ["add", "info"], "carousel-item")
+                                    return MovieCard(search_prefix, tmdb_id, movieObj, ["add", "info"], "carousel-item")
                                 }).join('')
                                 )
                                 .carousel({
@@ -114,7 +117,7 @@ $(document).ready(function() {
 
             //Add movie to DOM
             $("#movie_list").append(
-                construct.MovieCard(movie_list_prefix,  thisMovie.tmdb_id, thisMovie, ["remove", "info"])
+                MovieCard(movie_list_prefix,  thisMovie.tmdb_id, thisMovie, ["remove", "info"])
                 );
         }
         else{

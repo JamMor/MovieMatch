@@ -1,3 +1,6 @@
+import { Movie } from "/static/js/constructors.js";
+import { MovieCard } from "/static/js/DOMelements.js";
+
 const movie_list_prefix ="movie";
 let importedList = JSON.parse(
     document.getElementById('imported-movie-data').textContent);
@@ -10,10 +13,10 @@ function addMoviesToList(...movies) {
     movies.forEach(movie => {
         //Only adds movies not already in list
         if (!current_movie_ids_set.has(movie.tmdb_id)){
-            let movieObject = new construct.Movie(movie);
+            let movieObject = new Movie(movie);
             movie_list.push(movieObject)
 
-            DOMstring += construct.MovieCard(
+            DOMstring += MovieCard(
                 movie_list_prefix,  
                 movieObject.tmdb_id, 
                 movieObject, 

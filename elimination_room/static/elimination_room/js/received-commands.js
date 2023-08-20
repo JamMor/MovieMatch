@@ -1,4 +1,6 @@
 import { MovieListManager, UserListManager } from "./list-managers.js";
+import { SharedMovie, DetailedMovie } from "/static/js/constructors.js";
+import { MovieInfoModal } from "/static/js/DOMelements.js";
 
 //These are the functions that are called when a succesful socket command is 
 // received from the server
@@ -52,7 +54,7 @@ function commandFinalized(finalSharedId = null) {
     getMoreMovieInfo(finalMovie.tmdb_id)
         .done(returnInfo => {
             console.log(returnInfo)
-            let finalMovieInfo = new construct.DetailedMovie(returnInfo ?? finalMovie)
+            let finalMovieInfo = new DetailedMovie(returnInfo ?? finalMovie)
             openMoreInfoModal(finalMovieInfo, "final_modal")
         })
         .fail(function(){
@@ -111,7 +113,7 @@ function commandSyncRoom(commandData) {
         eliminating_uuid = null
     } = commandData.share_list
     received_movie_list = received_movie_list.map(movie => 
-            new construct.SharedMovie(movie)
+            new SharedMovie(movie)
         )
 
     MovieListManager.syncMovieList(movie_list, received_movie_list)
@@ -258,7 +260,7 @@ function getMoreMovieInfo(movieId){
 //Movie Info object from getMoreMovieInfo, and the ID name of the modal element
 function openMoreInfoModal(movieInfo, targetModalId){
     $(`#${targetModalId} div.modal-content`)
-        .html(construct.MovieInfoModal(movieInfo))
+        .html(MovieInfoModal(movieInfo))
     
     $(`#${targetModalId}`).modal({
         inDuration: 1500,

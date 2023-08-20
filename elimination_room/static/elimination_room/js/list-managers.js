@@ -1,3 +1,5 @@
+import { MovieCard } from "/static/js/DOMelements.js";
+
 const share_list_prefix = "shared";
 
 const MovieListManager = {
@@ -18,7 +20,7 @@ const MovieListManager = {
         added_movie_list.forEach((movie) => {
             $("#movie_list")
                 .append(
-                    construct.MovieCard(share_list_prefix, movie.tmdb_id, movie, ["remove", "info"])
+                    MovieCard(share_list_prefix, movie.tmdb_id, movie, ["remove", "info"])
                 );
         })
 
