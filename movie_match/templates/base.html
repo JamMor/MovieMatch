@@ -136,11 +136,12 @@
             }
         };
         var csrftoken;
-        if(typeof construct === 'undefined' || construct === null ){ console.log("Initiating constructors."); var construct = {} }
+        // if(typeof construct === 'undefined' || construct === null ){ console.log("Initiating constructors."); var construct = {} }
         var listOperation = {}
     </script>
     <script type="module" src="{% static 'js/index.js'%}"></script>
-    <script src="{% static 'js/constructors.js'%}"></script>
+    <script type="module" src="{% static 'js/constructors.js'%}"></script>
+    <script type="module" src="{% static 'js/DOMelements.js'%}"></script>
     <script src="{% static 'js/listOperation.js'%}"></script>
     <script src="{% static 'js/form_functions.js'%}"></script>
     <script type="module" src="{% static 'js/materialize-components.js'%}"></script>
