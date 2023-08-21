@@ -1,4 +1,4 @@
-function sendEliminate(matchSocket, shared_movie_id){
+function sendEliminate(matchSocket){
     //Validate
     if(!elimination_active){
         console.log("Host has not started elimination.")
