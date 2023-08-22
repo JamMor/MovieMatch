@@ -1,3 +1,5 @@
+import {applyTooltips, formErrorHandler} from "/static/js/form_functions.js";
+
 function openChangePasswordModal(){
     $(`#change-password-modal`).modal();
     $(`#change-password-modal`).modal('open');
@@ -28,7 +30,7 @@ function sendChangePasswordRequest(){
         }
         else {
             console.log("Failed to change password.")
-            formErrorHandler2("#change-password-form", data.errors)
+            formErrorHandler("#change-password-form", data.errors)
             changePasswordForm.reset();
             M.toast({html: `<span><strong class="orange-text text-darken-3">Failed</strong> to change password.</span>`})
         }

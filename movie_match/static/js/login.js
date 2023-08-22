@@ -1,4 +1,4 @@
-import { formErrorHandler } from "./global-functions.js";
+import { formErrorHandler } from "/static/js/form_functions.js";
 
 function loginHandler(){
    
