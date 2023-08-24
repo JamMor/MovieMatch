@@ -1,12 +1,9 @@
-function handleEditorSave(){
-    if(movie_list.length == 0){
-        listOperation.saveStatusToast(list_name, "empty")
-        return
-    }
+import {saveList} from "/static/js/save_list.js"
 
+function handleEditorSave(){
     let tmdb_ids = movie_list.map(movie => movie.tmdb_id)
 
-    listOperation.saveList({
+    saveList({
         "tmdb_ids" : tmdb_ids, 
         "list_name" : savedListName, 
         "list_id": savedListId})

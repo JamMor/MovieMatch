@@ -22,6 +22,6 @@
     {% block script_block %}
         {{ block.super }}
         <script type="module" src="{% static 'list_builder/js/list_builder/share_modal.js'%}"></script>
-        <script src="{% static 'js/save_modal.js'%}"></script>
+        <script type="module" src="{% static 'js/save_modal.js'%}"></script>
         <script type="module" src="{% static 'list_builder/js/list_builder/index.js'%}"></script>
     {% endblock %}

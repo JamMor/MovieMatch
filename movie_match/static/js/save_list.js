@@ -8,6 +8,12 @@
  * @param {number} input.list_id - ID of list to save if modifying existing list.
  */
 function saveList ({tmdb_ids, list_name, list_id}) {
+    if(tmdb_ids.length == 0){
+        console.log("Cannot save empty list.")
+        saveStatusToast(list_name, "empty")
+        return
+    }
+
     let saveURL = "/save"
     // if there is a list ID, save will append to url to update a list
     // else save will create a new list
