@@ -4,6 +4,8 @@ import { MovieCard } from "/static/js/DOMelements.js";
 const api_key = "f4f5f258379baf10796e1d3aeb5add05";
 const search_prefix ="query";
 
+const searchDelayTime = 1000;
+const minSearchQueryLength = 2;
 
 function activateSearch(){
     $("div.carousel").fadeIn(100);
@@ -23,46 +25,47 @@ function delay(fn, ms) {
     }
 }
 
-//FLAG Simplify and modularize
-function searchMovies() {
-    var searchQuery = this.value;
-    if (searchQuery.length >= 2) {
-        console.log(searchQuery)
-        $.get(`https://api.themoviedb.org/3/search/movie?api_key=${api_key}&query=${searchQuery}`,
-            function () {
-                console.log("AJAX sent to TMDB");
-                return
-            }, "json")
-            .done(function (data) {
-                console.log(data);
-                if (data.results.length == 0) {
-                    $("div.carousel")
-                        /* Gets the initial rendered height from DOM (scrollHeight) 
-                            and animates. Callback sets height to auto. */
-                        .animate({ height: $('div.carousel').get(0).scrollHeight }, 200, function () {
-                            $(this).height('auto');
-                        })
-                        .html('<h6 class="center-align grey-text text-lighten-2">No results</h6>')
-                    return
-                }
-                $("div.carousel")
-                    .animate({ height: "400px" }, 200)
-                    .promise().done(function () {
-                        $(this)
-                            .html(data.results.map(({ id: tmdb_id, ...rest }) => {
-                                //Renames the movie DB ID to tmdb_id for Movie object creation
-                                let movieObj = new Movie({ tmdb_id, ...rest });
-                                search_results.push(movieObj);
-                                return MovieCard(search_prefix, tmdb_id, movieObj, ["add", "info"], "carousel-item")
-                            }).join('')
-                            )
-                            .carousel({
-                                dist: -50,
-                                numVisible: 10,
-                                noWrap: true
-                            })
-                    })
+function updateSearchResultsDOM(data){
+    console.log(data);
+    //If no search results
+    if (data.results.length == 0) {
+        $("div.carousel")
+            /* Gets the initial rendered height from DOM (scrollHeight) 
+                and animates. Callback sets height to auto. */
+            .animate({ height: $('div.carousel').get(0).scrollHeight }, 200, function () {
+                $(this).height('auto');
             })
+            .html('<h6 class="center-align grey-text text-lighten-2">No results</h6>')
+        return
+    }
+
+    $("div.carousel")
+        .animate({ height: "400px" }, 200)
+        .promise().done(function () {
+            $(this)
+                .html(data.results.map(({ id: tmdb_id, ...rest }) => {
+                    //Renames the movie DB ID to tmdb_id for Movie object creation
+                    let movieObj = new Movie({ tmdb_id, ...rest });
+                    search_results.push(movieObj);
+                    return MovieCard(search_prefix, tmdb_id, movieObj, ["add", "info"], "carousel-item")
+                }).join('')
+                )
+                .carousel({
+                    dist: -50,
+                    numVisible: 10,
+                    noWrap: true
+                })
+        })
+}
+
+function searchMovies(searchQuery) {
+    if (searchQuery.length >= minSearchQueryLength) {
+        console.log(searchQuery)
+        $.get(`https://api.themoviedb.org/3/search/movie?api_key=${api_key}&query=${searchQuery}`, "json")
+            .done(updateSearchResultsDOM)
+            .fail(function () {
+                console.log("AJAX error");
+            });
     }
     else if (searchQuery.length == 0) {
         $("div.carousel").animate({ height: "0px" }, 150).html("")
@@ -94,8 +97,9 @@ const init = () => {
 
     //Custom autocomplete jquery ajax to materialize carousel feature
     $('#moviesearch-input').on("input", delay(function () {
-        searchMovies.call(this);
-    }, 1000));
+        const searchQuery = this.value;
+        searchMovies(searchQuery);
+    }, searchDelayTime));
 
     
     // Clear search results
