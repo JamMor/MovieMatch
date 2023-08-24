@@ -1,8 +1,123 @@
 import { Movie } from "/static/js/constructors.js";
 import { MovieCard } from "/static/js/DOMelements.js";
 
-$(document).ready(function() {
+const api_key = "f4f5f258379baf10796e1d3aeb5add05";
 
+let search_results = [];
+const search_prefix ="query";
+const movie_list_prefix ="movie";
+
+function activateSearch(){
+    $("div.carousel").fadeIn(100);
+    $("#movie_list").fadeTo(500, 0.1)
+}
+function deactivateSearch(){
+    $("div.carousel").fadeOut(100);
+    $("#movie_list").fadeTo(500, 1);
+}
+
+//FLAG Simplify and modularize
+function searchMovies() {
+    var searchQuery = this.value;
+    if (searchQuery.length >= 2) {
+        console.log(searchQuery)
+        $.get(`https://api.themoviedb.org/3/search/movie?api_key=${api_key}&query=${searchQuery}`,
+            function () {
+                console.log("AJAX sent to TMDB");
+                return
+            }, "json")
+            .done(function (data) {
+                console.log(data);
+                if (data.results.length == 0) {
+                    $("div.carousel")
+                        /* Gets the initial rendered height from DOM (scrollHeight) 
+                            and animates. Callback sets height to auto. */
+                        .animate({ height: $('div.carousel').get(0).scrollHeight }, 200, function () {
+                            $(this).height('auto');
+                        })
+                        .html('<h6 class="center-align grey-text text-lighten-2">No results</h6>')
+                    return
+                }
+                $("div.carousel")
+                    .animate({ height: "400px" }, 200)
+                    .promise().done(function () {
+                        $(this)
+                            .html(data.results.map(({ id: tmdb_id, ...rest }) => {
+                                //Renames the movie DB ID to tmdb_id for Movie object creation
+                                let movieObj = new Movie({ tmdb_id, ...rest });
+                                search_results.push(movieObj);
+                                return MovieCard(search_prefix, tmdb_id, movieObj, ["add", "info"], "carousel-item")
+                            }).join('')
+                            )
+                            .carousel({
+                                dist: -50,
+                                numVisible: 10,
+                                noWrap: true
+                            })
+                    })
+            })
+    }
+    else if (searchQuery.length == 0) {
+        $("div.carousel").animate({ height: "0px" }, 150).html("")
+    }
+}
+
+function addMovieToDOM(thisMovieTmdbId){
+    let thisMovie;
+    //If movie not already in list, get info from search results and push to list
+    if(!movie_list.some(movie => movie.tmdb_id == thisMovieTmdbId)){
+        for(let i=0; i<search_results.length; i++){
+            if(search_results[i].tmdb_id == thisMovieTmdbId){
+                thisMovie = search_results[i];
+                break
+            }
+        }
+        console.log(thisMovie.title)
+        movie_list.push(thisMovie);
+
+        //Add movie to DOM
+        $("#movie_list").append(
+            MovieCard(movie_list_prefix,  thisMovie.tmdb_id, thisMovie, ["remove", "info"])
+            );
+    }
+    else{
+        console.log("ERROR: Already added.")
+    }
+}
+
+function removeMovieFromDOM(thisMovieTmdbId){
+    let movieIndex = movie_list.findIndex(movie => movie.tmdb_id == thisMovieTmdbId);
+    if (movieIndex == -1){
+        console.log("ERROR: Movie not found in list.")
+    }
+    else{
+        $(`#movie_${thisMovieTmdbId}`).remove();
+        let removedMovie = movie_list.splice(movieIndex, 1)[0];
+        console.log(`Removed ${removedMovie.title}.`);
+    }
+}
+
+function clearSearchResults(){
+    $("#moviesearch-input").val('');
+    $("div.carousel").animate({height: "0px"}, 150).html("");
+}
+
+function clearMovieList(){
+    movie_list = [];
+    $('#movie_list').html("");
+}
+
+//Delay wrapper function (to limit ajax queries when typing)
+function delay(fn, ms) {
+    let timer = 0
+    return function (...args) {
+        clearTimeout(timer)
+        timer = setTimeout(fn.bind(this, ...args), ms || 0)
+    }
+}
+
+// Attach handlers to DOM elements
+const init = () => {
     // Materialize FAB button initialize
     $('.fixed-action-btn').floatingActionButton({
         toolbarEnabled: true
@@ -10,18 +125,13 @@ $(document).ready(function() {
     
     // Materialize Modal initialize
     $('.modal').modal();
-
-    const api_key = "f4f5f258379baf10796e1d3aeb5add05";
-    
-    let search_results = [];
-    const search_prefix ="query";
-    const movie_list_prefix ="movie";
-
+    //==========================================================================
     //Prevent normal form behavior for search
     $('.ajax-form').submit(function(e){
         e.preventDefault();
     })
 
+    //==========================================================================
 
     //Dim movie list when searching
     $("#moviesearch-input").focus(activateSearch)
@@ -32,70 +142,14 @@ $(document).ready(function() {
             deactivateSearch();
         }
     })
-    
-    function activateSearch(){
-        $("div.carousel").fadeIn(100);
-        $("#movie_list").fadeTo(500, 0.1)
-    }
-    function deactivateSearch(){
-        $("div.carousel").fadeOut(100);
-        $("#movie_list").fadeTo(500, 1);
-    }
 
-    //Delay wrapper function (to limit ajax queries when typing)
-    function delay(fn, ms) {
-        let timer = 0
-        return function (...args) {
-            clearTimeout(timer)
-            timer = setTimeout(fn.bind(this, ...args), ms || 0)
-        }
-    }
 
     //Custom autocomplete jquery ajax to materialize carousel feature
     $('#moviesearch-input').on("input", delay(function () {
-        var searchQuery = this.value;
-        if (searchQuery.length >= 2) {
-            console.log(searchQuery)
-            $.get(`https://api.themoviedb.org/3/search/movie?api_key=${api_key}&query=${searchQuery}`,
-                function () {
-                    console.log("AJAX sent to TMDB");
-                    return
-                }, "json")
-                .done(function (data) {
-                    console.log(data);
-                    if(data.results.length == 0){
-                        $("div.carousel")
-                            /* Gets the initial rendered height from DOM (scrollHeight) 
-                             and animates. Callback sets height to auto. */
-                            .animate({height: $('div.carousel').get(0).scrollHeight}, 200, function(){
-                                $(this).height('auto');
-                            })
-                            .html('<h6 class="center-align grey-text text-lighten-2">No results</h6>')
-                        return
-                    }
-                    $("div.carousel")
-                        .animate({height: "400px"}, 200)
-                        .promise().done(function (){
-                            $(this)
-                                .html(data.results.map(({ id: tmdb_id, ...rest }) => {
-                                    //Renames the movie DB ID to tmdb_id for Movie object creation
-                                    let movieObj = new Movie({ tmdb_id, ...rest });
-                                    search_results.push(movieObj);
-                                    return MovieCard(search_prefix, tmdb_id, movieObj, ["add", "info"], "carousel-item")
-                                }).join('')
-                                )
-                                .carousel({
-                                    dist: -50,
-                                    numVisible: 10,
-                                    noWrap: true
-                                })
-                        })
-                })
-        }
-        else if (searchQuery.length == 0) {
-            $("div.carousel").animate({height: "0px"}, 150).html("")
-        }
+        searchMovies.call(this);
     }, 1000));
+
+    //==========================================================================
 
     //Handler to add movie to list and dom
     $('.carousel').on("click", "a.add-btn", function () {
@@ -103,55 +157,29 @@ $(document).ready(function() {
         let thisMovieId = $(this).closest('div.card').attr('id')
             .split("_")[1];
         console.log(`Adding movie id: ${thisMovieId}`);
-        let thisMovie;
-        //If movie not already in list, get info from search results and push to list
-        if(!movie_list.some(movie => movie.tmdb_id == thisMovieId)){
-            for(let i=0; i<search_results.length; i++){
-                if(search_results[i].tmdb_id == thisMovieId){
-                    thisMovie = search_results[i];
-                    break
-                }
-            }
-            console.log(thisMovie.title)
-            movie_list.push(thisMovie);
-
-            //Add movie to DOM
-            $("#movie_list").append(
-                MovieCard(movie_list_prefix,  thisMovie.tmdb_id, thisMovie, ["remove", "info"])
-                );
-        }
-        else{
-            console.log("ERROR: Already added.")
-        }
+        addMovieToDOM(thisMovieId);
     })
-    
+
     //Handler to remove movie from list and dom
     $('#movie_list').on("click", "a.remove-btn", function () {
         //Get movie ID from parent Card ID
-        let thisMovieId = $(this).closest('div.card').attr('id')
+        let thisMovieTmdbId = $(this).closest('div.card').attr('id')
             .split("_")[1];
-        console.log(`Removing movie id ${thisMovieId}`);
-
-        let movieIndex = movie_list.findIndex(movie => movie.tmdb_id == thisMovieId);
-        if (movieIndex == -1){
-            console.log("ERROR: Movie not found in list.")
-        }
-        else{
-            $(`#movie_${thisMovieId}`).remove();
-            let removedMovie = movie_list.splice(movieIndex, 1)[0];
-            console.log(`Removed ${removedMovie.title}.`);
-        }
+        console.log(`Removing movie id ${thisMovieTmdbId}`);
+        removeMovieFromDOM(thisMovieTmdbId);
     })
 
+    //==========================================================================
+    
     // Clear search results
     $("#search-close").click(function() {
-        $("#moviesearch-input").val('');
-        $("div.carousel").animate({height: "0px"}, 150).html("");
+        clearSearchResults();
     });
 
-    // Button to clear current user list
+    // Button to clear current movie list FLAG: Is used?
     $("#clear").click(function (){
-        movie_list = [];
-        $('#movie_list').html("");
+        clearMovieList();
     })
-})
+}
+
+export { init }
