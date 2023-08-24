@@ -1,0 +1,19 @@
+{% load prefixer %}
+
+<form class="cyber-grade login-form" action="{% url 'login_and_reg:login' %}" method="post">
+    {% csrf_token %}
+    <div class="input-field">
+        {% with username_id="-username"|prefix:pre_id %}
+        <input id="{{username_id}}" name="username" class="validate center-align" type="text" required>
+        <label for="{{username_id}}">Username</label>
+        {% endwith %}
+    </div>
+    <div class="input-field">
+        {% with password_id="-password"|prefix:pre_id %}
+        <input id="{{password_id}}" name="password" class="validate center-align" type="password" required>
+        <label for="{{password_id}}">Password</label>
+        {% endwith %}
+    </div>
+    <button class="neon-blue-hover btn-small btn-rounded" type="submit">Login</button>
+    <a class="registration-link" href="{% url 'login_and_reg:register' %}">Register</a>
+</form>

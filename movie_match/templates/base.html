@@ -57,19 +57,7 @@
                     {% else %}
                     <li><a class="dropdown-trigger" href="#!" data-target="login-form">Login<i class="material-icons right">arrow_drop_down</i></a></li>
                     <div id="login-form" class="dropdown-content">
-                        <form class="cyber-grade login-form" action="{% url 'login_and_reg:login' %}" method="post">
-                            {% csrf_token %}
-                            <div class="input-field">
-                                <input id="nav-username" name="username" class="validate center-align" type="text" required>
-                                <label for="nav-username">Username</label>
-                            </div>
-                            <div class="input-field">
-                                <input id="nav-password" name="password" class="validate center-align" type="password" required>
-                                <label for="nav-password">Password</label>
-                            </div>
-                            <button class="neon-blue-hover btn-small btn-rounded" type="submit">Login</button>
-                            <a class="registration-link" href="{% url 'login_and_reg:register' %}">Register</a>
-                        </form>
+                        {% include "_login_form.html" with pre_id="nav" %}
                     </div>
                     {% endif %}
                 </ul>
@@ -88,19 +76,7 @@
                 <li>
                     <div class="collapsible-header">Login<i class="material-icons right">arrow_drop_down</i></div>
                     <div class="collapsible-body">
-                        <form class="cyber-grade login-form" action="{% url 'login_and_reg:login' %}" method="post">
-                            {% csrf_token %}
-                            <div class="input-field">
-                                <input id="side-username" name="username" class="validate center-align" type="text" required>
-                                <label for="side-username">Username</label>
-                            </div>
-                            <div class="input-field">
-                                <input id="side-password" name="password" class="validate center-align" type="password" required>
-                                <label for="side-password">Password</label>
-                            </div>
-                            <button class="neon-blue-hover btn-small btn-rounded" type="submit">Login</button>
-                            <a class="registration-link" href="{% url 'login_and_reg:register' %}">Register</a>
-                        </form>
+                        {% include "_login_form.html" with pre_id="side" %}
                     </div>
                 </li>
             </ul>
