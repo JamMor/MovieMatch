@@ -1,9 +1,3 @@
-/**
- * Constructor namespace.
- * @namespace listOperation
- */
-// const listOperation = {};
-
 // Save List
 
 /**
@@ -13,7 +7,7 @@
  * @param {string} input.list_name - Name of list to be saved as.
  * @param {number} input.list_id - ID of list to save if modifying existing list.
  */
-listOperation.saveList = ({tmdb_ids, list_name, list_id}) => {
+function saveList ({tmdb_ids, list_name, list_id}) {
     let saveURL = "/save"
     // if there is a list ID, save will append to url to update a list
     // else save will create a new list
@@ -24,11 +18,11 @@ listOperation.saveList = ({tmdb_ids, list_name, list_id}) => {
                 console.log(data);
                 if(data['status'] == "success"){
                     $('#save-modal').modal('close');
-                    listOperation.saveStatusToast(list_name, "success")
+                    saveStatusToast(list_name, "success")
                 }
                 else {
                     console.log(data['status'])
-                    listOperation.saveStatusToast(list_name, "error")
+                    saveStatusToast(list_name, "error")
                 }
                 console.log(data["nextUrl"])
                 if (data["nextUrl"]){
@@ -37,7 +31,7 @@ listOperation.saveList = ({tmdb_ids, list_name, list_id}) => {
             })
             .fail(function() {
                 console.log( "Failed to send movie list." );
-                listOperation.saveStatusToast(list_name, "fail-send")
+                saveStatusToast(list_name, "fail-send")
             })
 }
 
@@ -46,7 +40,7 @@ listOperation.saveList = ({tmdb_ids, list_name, list_id}) => {
  * @param {string} listName - Name of list succesfully saved, or name given for failed save.
  * @param {string} status - success/error/empty/fail-send. Status of save list operation.
  */
-listOperation.saveStatusToast = (listName, status) =>{
+function saveStatusToast (listName, status) {
     let toast = {}
     // Truncate list name if too long.
     toast.name = (listName.length > 10) ? `${listName.slice(0,9)}...` : listName;
@@ -70,3 +64,5 @@ listOperation.saveStatusToast = (listName, status) =>{
 
     M.toast({html: `<span>${toast.text}&nbsp;<strong class=${toast.class}>${toast.name}</strong></span>`})
 }
+
+export {saveList}
