@@ -71,4 +71,32 @@ function saveStatusToast (listName, status) {
     M.toast({html: `<span>${toast.text}&nbsp;<strong class=${toast.class}>${toast.name}</strong></span>`})
 }
 
-export {saveList}
+function handleEditorSave(){
+    let tmdb_ids = movie_list.map(movie => movie.tmdb_id)
+
+    saveList({
+        "tmdb_ids" : tmdb_ids, 
+        "list_name" : savedListName, 
+        "list_id": savedListId})
+}
+function handleNewSave(){
+    let list_name = $("#list-name").val();
+    let tmdb_ids = movie_list.map(movie => movie.tmdb_id)
+
+    saveList({
+        "tmdb_ids" : tmdb_ids, 
+        "list_name":list_name
+    })
+}
+
+function init(saveHandler){
+    $("#save-list-confirm").click(function (e){
+        e.preventDefault();
+        saveHandler();
+    })
+}
+
+const editorSave = () => init(handleEditorSave);
+const newSave = () => init(handleNewSave);
+
+export {editorSave, newSave}
