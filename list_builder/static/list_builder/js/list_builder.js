@@ -47,16 +47,6 @@ function clearMovieList(){
 
 // Attach handlers to DOM elements
 const init = () => {
-    // Materialize FAB button initialize
-    $('.fixed-action-btn').floatingActionButton({
-        toolbarEnabled: true
-    });
-    
-    // Materialize Modal initialize
-    $('.modal').modal();
-
-    //==========================================================================
-
     //Handler to add movie to list and dom
     $('.carousel').on("click", "a.add-btn", function () {
         //Get movie ID from parent Card ID
@@ -74,9 +64,6 @@ const init = () => {
         console.log(`Removing movie id ${thisMovieTmdbId}`);
         removeMovieFromDOM(thisMovieTmdbId);
     })
-
-    //==========================================================================
-    
 
     // Button to clear current movie list FLAG: Is used?
     $("#clear").click(function (){
