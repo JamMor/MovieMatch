@@ -2,6 +2,72 @@ import { MovieCard } from "/static/js/DOMelements.js";
 
 const share_list_prefix = "shared";
 
+function verifyMovieListDOMSync(sourceList){
+    //Confirming DOM and movie list are in sync FLAG
+    let domTmdbIds = $('#movie_list div').map(function() {
+        return this.id.split("_")[1];
+        })
+        .get()
+        
+    let sourceTmdbIds = new Set(sourceList.map(x => x.shared_tmdb_id))
+    let list_verified = false;
+    if(domTmdbIds.length == sourceList.length){
+        for(let tmdbId of domTmdbIds){
+            if(!sourceTmdbIds.has(tmdbId)){
+                break;
+            }
+        }
+        list_verified = true;
+    }
+    console.log(`DOM and movie_list are${list_verified ? "" : " NOT"} in sync.`)
+}
+
+function verifyUserListDOMSync(sourceDict){
+    //Confirming DOM and user list are in sync FLAG
+    const domUsers = $('#user_list div').map(function() {
+        const thisUuid = this.id.split("_")[1];
+        const thisPosition = parseInt($(this).data('position'));
+        const thisNickname = $(this).text().trim();
+        return {"uuid": thisUuid, "position": thisPosition, "nickname": thisNickname} ;
+        })
+        .get()
+
+    let errorMessage;
+    const errorMessages = {
+        "length": "DOM and user_list are not the same length.",
+        "missing_uuid": "DOM has a user that is not in user_list.",
+        "position": "Positions not synced.",
+        "nickname": "Nicknames not synced."
+    }
+
+    const sourceLength = Object.keys(sourceDict).length;
+    if(domUsers.length == sourceLength){
+        for(let user of domUsers){
+            if(!sourceDict.hasOwnProperty(user.uuid)){
+                errorMessage = errorMessages.missing_uuid;
+                break;
+            }
+            if(sourceDict[user.uuid].position != user.position){
+                errorMessage = errorMessages.position;
+                break;
+            }
+            if(sourceDict[user.uuid].nickname != user.nickname){
+                errorMessage = errorMessages.nickname;
+                break;
+            }
+        }
+    }
+    else {
+        errorMessage = errorMessages.length
+    }
+    
+    console.log(`DOM and user_list are${errorMessage ? " NOT" : ""} in sync.`)
+    if (errorMessage){
+        console.log(errorMessage)
+    }
+
+}
+
 const MovieListManager = {
     
     //Adds new movies into DOM when a shared list is updated.
@@ -24,26 +90,8 @@ const MovieListManager = {
                 );
         })
 
-        
-        console.log("Updated Movie List.")
-
-        //Confirming DOM and movie list are in sync FLAG
-        let dom_tmdb_ids = $('#movie_list div').map(function() {
-            return this.id.split("_")[1];
-            })
-            .get()
-        let new_tmdb_ids = new Set(new_list.map(x => x.shared_tmdb_id))
-        let list_verified = false;
-        if(dom_tmdb_ids.length == new_list.length){
-            for(let id of dom_tmdb_ids){
-                if(!new_tmdb_ids.has(id)){
-                    break;
-                }
-            }
-            list_verified = true;
-        }
-        console.log(`DOM and movie_list are${list_verified ? "" : " NOT"} in sync.`)
-
+        console.log("Updated Movie List.");
+        verifyMovieListDOMSync(new_list);
     }
 }
 
@@ -145,23 +193,8 @@ const UserListManager = {
             UserListManager.addUserToDom(added_uuid, updated_list[added_uuid]);
         }
         
-        console.log("Updated User List.")
-
-        //Confirming DOM and user list are in sync FLAG
-        let dom_uuids = $('#user_list div').map(function() {
-            return this.id.split("_")[1];
-            })
-            .get()
-        let list_verified = false;
-        if(dom_uuids.length == updated_uuids.size){
-            for(let uuid of dom_uuids){
-                if(!updated_uuids.has(uuid)){
-                    break;
-                }
-            }
-            list_verified = true;
-        }
-        console.log(`DOM and user_list are${list_verified ? "" : " NOT"} in sync.`)
+        console.log("Updated User List.");
+        verifyUserListDOMSync(updated_list);
     }
 }
 
