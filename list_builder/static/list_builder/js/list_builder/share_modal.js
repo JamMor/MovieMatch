@@ -1,6 +1,3 @@
-let sharecode = $("#sharecode").val().toUpperCase();
-let nickname = $("#nickname").val();
-
 function validateSharecode(sharecode) {
     if (!/^$|^[23456789ABCDEFGHJKLMNPQRSTUVWXYZ]{8}$/.test(sharecode)) {
         console.log("Invalid Sharecode format.")
@@ -10,6 +7,9 @@ function validateSharecode(sharecode) {
 }
 
 function submitEliminationList() {
+    let sharecode = $("#sharecode").val().toUpperCase();
+    let nickname = $("#nickname").val();
+
     if (!validateSharecode(sharecode)) {
         //FLAG Toast error
         return
