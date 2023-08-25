@@ -47,28 +47,20 @@ function saveList ({tmdb_ids, list_name, list_id}) {
  * @param {string} status - success/error/empty/fail-send. Status of save list operation.
  */
 function saveStatusToast (listName, status) {
-    let toast = {}
+    const statusMessages = {
+        "success" : "Saved list to",
+        "error" : "Could not save",
+        "empty" : "Cannot save empty list",
+        "fail-send" : "Failed to send"
+    }
+    
+    const message = statusMessages[status] || "Unknown status"
+    
     // Truncate list name if too long.
-    toast.name = (listName.length > 10) ? `${listName.slice(0,9)}...` : listName;
-
-    if(status == "success"){
-        toast.class = "cyan-text text-accent-2"
-        toast.text = "Saved list to"
-    }
-    else if(status == "error"){
-        toast.class = "orange-text text-darken-3"
-        toast.text = "Could not save"
-    }
-    else if(status == "empty"){
-        toast.class = "orange-text text-darken-3"
-        toast.text = "Cannot save empty list"
-    }
-    else if(status == "fail-send"){
-        toast.class = "orange-text text-darken-3"
-        toast.text = "Failed to send"
-    }
-
-    M.toast({html: `<span>${toast.text}&nbsp;<strong class=${toast.class}>${toast.name}</strong></span>`})
+    const displayName = (listName.length > 10) ? `${listName.slice(0,9)}...` : listName;
+    const classColor = (status == "success") ? "cyan-text text-accent-2" : "orange-text text-darken-3"
+    
+    M.toast({html: `<span>${message}&nbsp;<strong class=${classColor}>${displayName}</strong></span>`})
 }
 
 function handleEditorSave(){
