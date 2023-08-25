@@ -2,9 +2,10 @@ import { Movie } from "/static/js/constructors.js";
 import { MovieCard } from "/static/js/DOMelements.js";
 
 const movie_list_prefix ="movie";
-let importedList = JSON.parse(
+const importedList = JSON.parse(
     document.getElementById('imported-movie-data').textContent);
 
+//Adds movies to list and DOM from script data source
 function addMoviesToList(...movies) {
     let current_movie_ids_set = new Set(movie_list.map(movie => movie.tmdb_id));
 
