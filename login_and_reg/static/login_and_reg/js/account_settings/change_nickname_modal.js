@@ -1,3 +1,5 @@
+import {applyTooltips, formErrorHandler} from "/static/js/form_functions.js";
+
 function openChangeNicknameModal(){
     $(`#change-nickname-modal`).modal();
     $(`#change-nickname-modal`).modal('open');
@@ -32,6 +34,7 @@ function sendChangeNicknameRequest(){
         else {
             console.log("Failed to change.")
             M.toast({html: `<span><strong class="orange-text text-darken-3">Failed</strong> to change nickname. ${data.errors}</span>`})
+            formErrorHandler("#change-nickname-form", data.errors)
         }
     })
     .fail(function() {
@@ -41,6 +44,8 @@ function sendChangeNicknameRequest(){
 }
 
 const init = () => {
+    applyTooltips()
+
     //Initializes then calls change nickname modal
     $("#change-nickname-btn").on("click", function(){
         openChangeNicknameModal();
