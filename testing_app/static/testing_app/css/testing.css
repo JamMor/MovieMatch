@@ -10,3 +10,80 @@
     justify-content: left;
     margin: 5px;
 }
+
+#hue-adj {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+}
+
+#hue-adj form {
+    flex:1;
+    margin: 10px;
+    border:none;
+}
+
+#hue-adj input[type=text]{
+    color:hsl(var(--hue), 100%, 55%);
+    text-align: center;
+}
+
+#hue-adj input[type=range]{
+    color:lightgray;
+    border:none;
+}
+
+#hue-adj input[type=range]::-webkit-slider-thumb {
+    background: hsl(var(--hue), 100%, 55%);
+}
+
+#hue-adj input[type=range]::-moz-range-thumb {
+    background: hsl(var(--hue), 100%, 55%);
+}
+
+#hue-adj input[type=range]::-ms-thumb {
+    background: hsl(var(--hue), 100%, 55%);
+}
+
+datalist {
+    color: lightgray;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    width: 100%;
+}
+
+option {
+    padding: 0;
+}
+
+#glow-btns {
+    display:flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: start;
+    margin: 5px;
+}
+
+div.bi-col {
+    /* each column takes up half of the parent flexbox */
+    flex: 1;
+    display:flex;
+    flex-direction: column;
+}
+
+div.pseudo-btn {
+    margin: 15px;
+    height: 54px;
+    line-height: 54px;
+    font-size: 15px;
+    padding: 0 28px;
+    text-align: center;
+    letter-spacing: .5px;
+    outline: 0;
+    border: none;
+    display: inline-block;
+    vertical-align: middle;
+    text-transform: uppercase;
+}

@@ -61,8 +61,8 @@
     --purple_darken-1:#8e24aa;
 
     --hue-blue: 200;
-    --hue-purple: 300;
-    --hue-orange: 30;
+    --hue-purple: 282;
+    --hue-orange: 27;
 
     --base-mid:hsl(var(--hue), 79%, 46%);
     --base-dark:hsl(var(--hue), 66%, 30%);
@@ -211,23 +211,23 @@ i.suffix {
 }
 
 .neon-orange {
-    --hue:21;
+    --hue:27;
 }
 .neon-purple {
-    --hue:291;
+    --hue:282;
 }
 .neon-cyan {
-    --hue:180;
+    --hue:200;
 }
-.neon-glow-hover {
+.neon-glow-hover, .neon-unlit {
     color: var(--grey_lighten-2);
-    background-color: #ffffff33;
+    background-color: #69696933;
     box-shadow: 
         inset 0 0 15px 0 hsl(var(--hue), 79%, 46%),
         inset 0 0 5px 0 hsl(var(--hue), 66%, 30%),
         0 0 5px 0 hsl(var(--hue), 79%, 46%);
 }
-.neon-glow-hover:hover {
+.neon-glow-hover:hover, .neon-lit {
     color: hsl(var(--hue), 66%, 30%);
     background-color: #ffffff;
     box-shadow: 
