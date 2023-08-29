@@ -1,0 +1,12 @@
+#icons {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, max-content));
+    grid-gap: 5px;
+}
+
+#icons h6 {
+    display: flex;
+    align-items: center;
+    justify-content: left;
+    margin: 5px;
+}
