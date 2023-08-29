@@ -3,6 +3,10 @@ from .diag import *
 
 DEBUG = True
 
+INSTALLED_APPS += (
+    'testing_app',
+)
+
 # ALLOWED_HOSTS = []
 
 # environ_status(f'{__name__} Environ')

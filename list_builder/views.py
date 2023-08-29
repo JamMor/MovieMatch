@@ -103,7 +103,3 @@ def delete(request, list_id):
             response.update({"errors" : repr(err)})
 
     return JsonResponse(response)
-
-#Display sample icons
-def test(request):
-    return render(request,'list_builder/test.html')

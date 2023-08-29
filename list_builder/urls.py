@@ -9,6 +9,5 @@ urlpatterns = [
     path('save', views.save, name="save_list"),
     path('edit/<int:list_id>', views.edit, name="edit_list"),
     path('delete/<int:list_id>', views.delete, name="delete_list"),
-    path('test', views.test, name="test"),
     path('', views.index, name="default_redirect")
 ]
