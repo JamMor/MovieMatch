@@ -11,8 +11,8 @@ function applyTooltips(){
 }
 
 //Parses dictionary of form errors for each field and applies them in a span
-//where appropriate
-function formErrorHandler2(formSelector, errorDict){
+//where appropriate. (For AJAX form submissions)
+function formErrorHandler(formSelector, errorDict){
     for(const field of Object.keys(errorDict)){
         if(field == "__all__"){
             for(let errorMsg of errorDict[field]){
@@ -28,3 +28,5 @@ function formErrorHandler2(formSelector, errorDict){
         }
     }
 }
+
+export {applyTooltips, formErrorHandler}

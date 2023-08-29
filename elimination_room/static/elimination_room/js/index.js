@@ -1,13 +1,15 @@
 //Imports
-import * as ClickHandlers from "./click-handlers.js";
+import * as SendCommands from "./send-commands.js";
 import * as MaterializeComponents from "./materialize-inits.js";
 import {createMatchSocket} from "./sockets.js";
 import * as CopyToClipBoard from "./sharecode_copy.js";
+import { newSave } from "/static/js/save_list.js";
 
 //Elimination Room Entry Point
 $(document).ready(function() {
     let matchSocket = createMatchSocket();
     MaterializeComponents.init();
-    ClickHandlers.init(matchSocket);
+    SendCommands.init(matchSocket);
     CopyToClipBoard.init();
+    newSave();
 });

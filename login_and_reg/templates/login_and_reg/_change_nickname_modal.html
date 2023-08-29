@@ -6,10 +6,8 @@
             {% endif %}
             ?</h5>
         <form action="#" id="change-nickname-form">
-            <div class="input-field">
-                <input id="change-nickname-input" name="change-nickname-input" class="center-align" type="text" value="{{nickname}}">
-                <label for="change-nickname-input">Nickname</label>
-            </div>
+            {% csrf_token %}
+            {% include "form_template.html" with form=change_nickname_form %}
         </form>
     </div>
     <div class="modal-footer">

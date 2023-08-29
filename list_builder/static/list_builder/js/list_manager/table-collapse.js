@@ -1,4 +1,4 @@
-$(document).ready(function(){
+const init = () => {
     // Prevents selecting a list action from also triggering list expand/collapse
     $(".list-actions-td").on("click", function(e){
         e.stopPropagation();
@@ -10,4 +10,6 @@ $(document).ready(function(){
             .find("div.slider-x")
             .toggleClass('content-collapsed')
     })
-})
+}
+
+export {init}

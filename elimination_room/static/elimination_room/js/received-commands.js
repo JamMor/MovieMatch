@@ -1,4 +1,6 @@
 import { MovieListManager, UserListManager } from "./list-managers.js";
+import { SharedMovie, DetailedMovie } from "/static/js/constructors.js";
+import { MovieInfoModal } from "/static/js/DOMelements.js";
 
 //These are the functions that are called when a succesful socket command is 
 // received from the server
@@ -31,22 +33,28 @@ function commandEliminate(commandData) {
         setUserTurn(next_eliminating_uuid);
     }
 
-    // ====================FLAG====Temporary Final Fix=========================================
     if(commandData.hasOwnProperty('final_shared_movie_id')) {
-        commandFinalized(commandData);
+        commandFinalized(commandData.final_shared_movie_id);
     }
 }
 
 // Final Movie
-function commandFinalized(commandData) {
-    const finalSharedId = commandData.final_shared_movie_id;
-    const finalMovie = movie_list.find(movie => movie.shared_movie_id == finalSharedId);
+function commandFinalized(finalSharedId = null) {
+    let finalMovie;
+    // If ID given, find the movie via ID
+    if (finalSharedId !== null){
+        finalMovie = movie_list.find(movie => movie.shared_movie_id == finalSharedId);
+    }
+    // If no ID, find the movie that is not eliminated
+    else {
+        finalMovie = movie_list.find(movie => movie.is_eliminated == false);
+    }
     console.log(`${finalMovie.title} is the final choice!`)
     
     getMoreMovieInfo(finalMovie.tmdb_id)
         .done(returnInfo => {
             console.log(returnInfo)
-            let finalMovieInfo = returnInfo ?? finalMovie
+            let finalMovieInfo = new DetailedMovie(returnInfo ?? finalMovie)
             openMoreInfoModal(finalMovieInfo, "final_modal")
         })
         .fail(function(){
@@ -105,7 +113,7 @@ function commandSyncRoom(commandData) {
         eliminating_uuid = null
     } = commandData.share_list
     received_movie_list = received_movie_list.map(movie => 
-            new construct.SharedMovie(movie)
+            new SharedMovie(movie)
         )
 
     MovieListManager.syncMovieList(movie_list, received_movie_list)
@@ -116,31 +124,16 @@ function commandSyncRoom(commandData) {
 
     elimination_active = is_active;
 
-    let statusType;
     if(isFinalSelected(movie_list)){
-        statusType = "final";
-        const finalMovie = movie_list.find(movie => movie.is_eliminated == false);
-        console.log(`${finalMovie.title} is the final choice!`)
-        
-        getMoreMovieInfo(finalMovie.tmdb_id)
-            .done(returnInfo => {
-                console.log(returnInfo)
-                let finalMovieInfo = returnInfo ?? finalMovie
-                openMoreInfoModal(finalMovieInfo, "final_modal")
-            })
-            .fail(function(){
-                console.log("AJAX error")
-            })
+        commandFinalized();
     }
     else if(elimination_active){
-        statusType = "eliminating"
+        setStatusBar("eliminating")
     }
     else{
-        statusType = "start"
+        setStatusBar("start")
     }
     
-    setStatusBar(statusType);
-
     if(eliminating_uuid != null){
         setUserTurn(eliminating_uuid);
     }

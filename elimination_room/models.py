@@ -58,7 +58,7 @@ class ShareRoomUser(models.Model):
     persona = models.ForeignKey('list_builder.Persona', related_name="in_room", on_delete = models.CASCADE)
     list = models.ForeignKey(SharedMovieList, related_name="room_users", on_delete = models.CASCADE)
     is_active = models.BooleanField(default=False)
-    nickname = models.CharField(max_length=255, null=True)
+    nickname = models.CharField(max_length=255, null=True, blank=True)
     has_eliminated = models.BooleanField(default=False)
     
     position = models.IntegerField(default=0)

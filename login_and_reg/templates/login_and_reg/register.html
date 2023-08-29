@@ -13,5 +13,5 @@
 {% block script_block %}
     {{ block.super }}
     {% load static %}
-    <script src="{% static 'login_and_reg/js/register.js'%}"></script>
+    <script type="module" src="{% static 'login_and_reg/js/registration/register.js'%}"></script>
 {% endblock %}

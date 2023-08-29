@@ -72,6 +72,7 @@ def account_settings_view(request):
     this_persona = get_or_set_persona(request)
     context = { 
         'nickname': this_persona.nickname,
+        'change_nickname_form' : PersonaForm(instance=this_persona),
         'change_password_form' : PasswordChangeForm(request.user)
     }
     return render(request, 'login_and_reg/account_settings.html', context)
@@ -81,20 +82,20 @@ def change_nickname_view(request):
     this_persona = get_or_set_persona(request)
     if request.method == 'POST':
         json_response = {"status":"error", "message":"An unknown error occurred.", "errors":""} #Default response
-        nickname = request.POST.get('change-nickname-input')
-        nickname = nickname.strip()
-
-        if nickname != this_persona.nickname:
-            this_persona.nickname = nickname
-            try:
-                this_persona.full_clean()
-                this_persona.save()
-                del json_response['errors']
-                json_response.update({"status":"success", "message":"Nickname changed.", "data": {"nickname":f"{nickname}"}})
-            except Exception as err:
-                json_response.update({"status":"failure", "message":"Nickname not changed.", "errors":repr(err)})
-        else:
-            json_response.update({"status":"failure", "message":"Nickname not changed.", "errors":"Already the current nickname."})
+        
+        current_nickname = this_persona.nickname
+        change_nickname_form = PersonaForm(request.POST, instance=this_persona)
+        
+        if change_nickname_form.is_valid():
+            if change_nickname_form.cleaned_data['nickname'] != current_nickname:
+                try:
+                    updated_persona = change_nickname_form.save()
+                    del json_response['errors']
+                    json_response.update({"status":"success", "message":"Nickname changed.", "data": {"nickname":f"{updated_persona.nickname}"}})
+                except Exception as err:
+                    json_response.update({"status":"failure", "message":"Nickname not changed.", "errors":repr(err)})
+            else:
+                json_response.update({"status":"failure", "message":"Nickname not changed.", "errors":"Already the current nickname."})
         return JsonResponse(json_response)
 
     return HttpResponseNotAllowed(['POST'])

@@ -22,7 +22,8 @@
 {% block script_block %}
     {% load static %}
     {{ block.super }}
-    <script src="{% static 'login_and_reg/js/account_delete_modal.js'%}"></script>
-    <script src="{% static 'login_and_reg/js/change_nickname_modal.js'%}"></script>
-    <script src="{% static 'login_and_reg/js/change_password_modal.js'%}"></script>
+    <script type="module" src="{% static 'login_and_reg/js/account_settings/index.js'%}"></script>
+    <script type="module" src="{% static 'login_and_reg/js/account_settings/account_delete_modal.js'%}"></script>
+    <script type="module" src="{% static 'login_and_reg/js/account_settings/change_nickname_modal.js'%}"></script>
+    <script type="module" src="{% static 'login_and_reg/js/account_settings/change_password_modal.js'%}"></script>
 {% endblock %}
