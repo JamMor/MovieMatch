@@ -184,22 +184,22 @@ function setStatusBar(status){
     // Map of status bar text, css, and flanking icons
     const statusMap = {
         "start": {
-            "styleClass": "status-start waves-effect waves-light neon-blue-hover btn-large btn-rounded",
+            "styleClass": "status-start waves-effect waves-light neon-cyan neon-glow-hover btn-large btn-rounded",
             "icons": "cast",
             "statusText": "Start Matching"
         },
         "waiting": {
-            "styleClass": "status-waiting neon-blue inactive btn-large btn-rounded",
+            "styleClass": "status-waiting neon-cyan neon-unlit btn-large btn-rounded",
             "icons": "cast",
             "statusText": "Waiting for matching to begin..."
         },
         "eliminating": {
-            "styleClass": "status-eliminating neon-blue active btn-large btn-rounded",
+            "styleClass": "status-eliminating neon-cyan neon-lit btn-large btn-rounded",
             "icons": "cast_connected",
             "statusText": "Elimination Activated!"
         },
         "final": {
-            "styleClass": "status-final waves-effect waves-light neon-fuschia active btn-large btn-rounded",
+            "styleClass": "status-final waves-effect waves-light neon-purple neon-lit btn-large btn-rounded",
             "icons": "movie",
             "statusText": "Open final movie info"
         }
@@ -226,13 +226,15 @@ function isFinalSelected(movieList){
 
 //Set active user turn
 function setUserTurn(turnUUID){
+    const activatedClass = "neon-lit";
+    const inactivatedClass = "neon-unlit";
     
     //Remove any active classes
-    $(`#user_list div.active`).removeClass('active').addClass('inactive');
+    $(`#user_list div.${activatedClass}`).removeClass(activatedClass).addClass(inactivatedClass);
     
     //Set current user turn to true and add active class
     current_eliminating_uuid = turnUUID;
-    $(`#user_${turnUUID}`).addClass('active').removeClass('inactive');
+    $(`#user_${turnUUID}`).addClass(activatedClass).removeClass(inactivatedClass);
 
     //Toast new user turn
     const toastName = (turnUUID != user_uuid) 

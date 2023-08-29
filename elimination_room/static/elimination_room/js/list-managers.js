@@ -100,7 +100,7 @@ const UserListManager = {
     addUserToDom : (uuid, user) => {
         const { nickname, position } = user;
         //Other users are fuschia, this user is blue
-        const color = user_uuid == uuid ? "neon-blue" : "neon-fuschia"
+        const color = user_uuid == uuid ? "neon-cyan" : "neon-purple"
         
         const userContainer = $('#user_list')
         let insertBeforePosition = userContainer.children().length
@@ -112,7 +112,7 @@ const UserListManager = {
                 return false
             }
         })
-        const userDomHTML = `<div id='user_${uuid}' class="chip ${color} inactive" data-position="${position}">
+        const userDomHTML = `<div id='user_${uuid}' class="chip ${color} neon-unlit" data-position="${position}">
             ${nickname}
         </div>`
         if (insertBeforePosition < userContainer.children().length){
