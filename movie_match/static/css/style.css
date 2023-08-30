@@ -239,9 +239,28 @@ i.suffix {
 #movie_list {
     display:grid;
     width:100%;
-    grid-template-columns: repeat(auto-fill, 200px);
-    gap:10px;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap:15px;
     margin:10px;
+}
+
+@media(max-width:1050px) {
+    #movie_list {
+        grid-template-columns: repeat(auto-fill, minmax(170px, 1fr));
+    }
+}
+
+@media(max-width:767px) {
+    #movie_list {
+        grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+    }
+}
+
+@media(max-width:380px) {
+    #movie_list {
+        grid-template-columns: repeat(auto-fill, minmax(136px, 1fr));
+        gap: 10px;
+    }
 }
 
 /* [+] */
