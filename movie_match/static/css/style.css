@@ -203,7 +203,10 @@ i.suffix {
     --hue:200;
 }
 
-.neon-glow-hover, .neon-unlit, #moviesearch-input {
+.neon-glow-hover, 
+.neon-unlit, 
+.neon-unlit:hover, 
+#moviesearch-input {
     color: var(--grey_lighten-2);
     background-color: #69696933;
     box-shadow: 
@@ -211,7 +214,10 @@ i.suffix {
         inset 0 0 5px 0 hsl(var(--hue), 66%, 30%),
         0 0 5px 0 hsl(var(--hue), 79%, 46%);
 }
-.neon-glow-hover:hover, .neon-lit, #moviesearch-input:focus {
+.neon-glow-hover:hover, 
+.neon-lit, 
+.neon-lit:hover, 
+#moviesearch-input:focus {
     color: hsl(var(--hue), 66%, 30%);
     background-color: #ffffff;
     box-shadow: 
