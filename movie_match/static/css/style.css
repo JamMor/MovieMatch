@@ -241,7 +241,6 @@ i.suffix {
     width:100%;
     grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
     gap:15px;
-    margin:10px;
 }
 
 @media(max-width:1050px) {
@@ -491,6 +490,7 @@ div#search-results {
     position: absolute;
     top:64px;
     z-index: 3;
+    user-select: none;
 }
 
 #search-results div.card {
