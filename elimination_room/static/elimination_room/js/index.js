@@ -4,6 +4,7 @@ import * as MaterializeComponents from "./materialize-inits.js";
 import {createMatchSocket} from "./sockets.js";
 import * as CopyToClipBoard from "./sharecode_copy.js";
 import { newSave } from "/static/js/save_list.js";
+import * as UserSlider from "/static/list_builder/js/list_manager/slider.js"
 
 //Elimination Room Entry Point
 $(document).ready(function() {
@@ -12,4 +13,5 @@ $(document).ready(function() {
     SendCommands.init(matchSocket);
     CopyToClipBoard.init();
     newSave();
+    UserSlider.init();
 });
