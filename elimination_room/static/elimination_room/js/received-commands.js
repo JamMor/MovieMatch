@@ -1,6 +1,7 @@
 import { MovieListManager, UserListManager } from "./list-managers.js";
 import { SharedMovie, DetailedMovie } from "/static/js/constructors.js";
 import { MovieInfoModal } from "/static/js/DOMelements.js";
+import { scrollHorizontallyTo } from "/static/list_builder/js/list_manager/slider.js";
 
 //These are the functions that are called when a succesful socket command is 
 // received from the server
@@ -232,9 +233,10 @@ function setUserTurn(turnUUID){
     //Remove any active classes
     $(`#user_list div.${activatedClass}`).removeClass(activatedClass).addClass(inactivatedClass);
     
-    //Set current user turn to true and add active class
+    //Set current user turn to true and add active class, then scroll user into view
     current_eliminating_uuid = turnUUID;
     $(`#user_${turnUUID}`).addClass(activatedClass).removeClass(inactivatedClass);
+    scrollHorizontallyTo($(`#user_${turnUUID}`).get(0));
 
     //Toast new user turn
     const toastName = (turnUUID != user_uuid) 

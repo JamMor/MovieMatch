@@ -37,6 +37,22 @@ const mouseDownHandler = function (e) {
     document.addEventListener('mouseup', mouseUpHandler);
 };
 
+function scrollHorizontallyTo(element) {
+    const parent = element.parentNode;
+    console.log(`Parent scrollLeft: ${parent.scrollLeft}, element offsetLeft: ${element.offsetLeft}`)
+    // If the element is to the left of the current scroll position, scroll to the beginning of element
+    if (parent.scrollLeft > element.offsetLeft) {
+        parent.scrollTo({left:element.offsetLeft, top:0, behavior: 'smooth'});
+    } 
+    // If the element is to the right of the rightmost visible area, scroll to the right end of element
+    else if (parent.scrollLeft + parent.offsetWidth < element.offsetLeft + element.offsetWidth) {
+        const leftVal = element.offsetLeft + element.offsetWidth - parent.offsetWidth
+        parent.scrollTo(
+            {left: leftVal, top: 0, behavior: 'smooth'}
+        );
+    }
+}
+
 const init = () => {
     // Attach the handler
     sliders.forEach(slider => {
@@ -45,4 +61,4 @@ const init = () => {
     })
 }
 
-export { init }
+export { init, scrollHorizontallyTo }
