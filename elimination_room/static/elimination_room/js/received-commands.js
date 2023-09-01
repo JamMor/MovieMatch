@@ -1,7 +1,7 @@
 import { MovieListManager, UserListManager } from "./list-managers.js";
 import { SharedMovie, DetailedMovie } from "/static/js/constructors.js";
 import { MovieInfoModal } from "/static/js/DOMelements.js";
-import { scrollHorizontallyTo } from "/static/list_builder/js/list_manager/slider.js";
+import { scrollHorizontallyTo } from "/static/js/slider.js";
 
 //These are the functions that are called when a succesful socket command is 
 // received from the server
