@@ -230,7 +230,7 @@ i.suffix {
 
 /* [+] */
 /* ================================Movie Card================================ */
-.card span.card-title{
+.card div.card-image span.card-title{
     text-shadow: -2px -2px 0 #000, 2px -2px 0 #000, -2px 2px 0 #000, 2px 2px 0 #000;
 }
 
