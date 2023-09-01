@@ -195,7 +195,7 @@ function setStatusBar(status){
             "statusText": "Waiting for matching to begin..."
         },
         "eliminating": {
-            "styleClass": "status-eliminating neon-cyan neon-lit btn-large btn-rounded",
+            "styleClass": "status-eliminating neon-cyan neon-lit btn-small btn-rounded",
             "icons": "cast_connected",
             "statusText": "Elimination Activated!"
         },
