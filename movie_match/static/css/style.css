@@ -234,6 +234,12 @@ i.suffix {
     text-shadow: -2px -2px 0 #000, 2px -2px 0 #000, -2px 2px 0 #000, 2px 2px 0 #000;
 }
 
+.card-btn {
+    color: hsl(var(--hue), 79%, 86%);
+    border: 2px solid hsl(var(--hue), 79%, 86%);
+    background-color: #202020cc;
+}
+
 /* [+] */
 /* ================================Movie List================================ */
 #movie_list {
