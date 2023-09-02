@@ -1,3 +1,4 @@
+/* Icons */
 #icons {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(150px, max-content));
@@ -11,6 +12,8 @@
     margin: 5px;
 }
 
+
+/* Glow Button Effects */
 #hue-adj {
     display: flex;
     flex-direction: row;
@@ -73,7 +76,7 @@ div.bi-col {
     flex-direction: column;
 }
 
-div.pseudo-btn {
+div.pseudo-btn-large {
     margin: 15px;
     height: 54px;
     line-height: 54px;
@@ -86,4 +89,120 @@ div.pseudo-btn {
     display: inline-block;
     vertical-align: middle;
     text-transform: uppercase;
+}
+
+div.pseudo-btn-small {
+    margin:15px;
+    height: 32.4px;
+    line-height: 32.4px;
+    font-size: 13px;
+    outline: 0;
+    text-decoration: none;
+    text-align: center;
+    letter-spacing: .5px;
+    -webkit-transition: background-color .2s ease-out;
+    transition: background-color .2s ease-out;
+    cursor: pointer;
+    border: none;
+    display: inline-block;
+    padding: 0 16px;
+    text-transform: uppercase;
+    vertical-align: middle;
+    -webkit-tap-highlight-color: transparent;
+}
+
+div.pseudo-btn-small i {
+    font-size: 1.2rem
+}
+
+.neon-orange {
+    --hue:27;
+}
+.neon-purple {
+    --hue:282;
+}
+.neon-cyan {
+    --hue:200;
+}
+
+.neon-glow-hover2, 
+.neon-unlit2, 
+.neon-unlit2:hover {
+    color: var(--grey_lighten-2);
+    background-color: #69696933;
+    box-shadow: 
+        inset 0 0 1em 0 hsl(var(--hue), 79%, 46%),
+        inset 0 0 0.3em 0 hsl(var(--hue), 66%, 30%);
+}
+.neon-glow-hover2:hover, 
+.neon-lit2, 
+.neon-lit2:hover {
+    color: hsl(var(--hue), 66%, 30%);
+    background-color: #ffffff;
+    box-shadow: 
+    inset 0 0 1em 0 hsl(var(--hue), 79%, 46%),
+    inset 0 0 0.3em 0 hsl(var(--hue), 66%, 30%),
+        0 0 2.6em 0 hsl(var(--hue), 100%, 55%),
+        0 0 4em 0 hsl(var(--hue), 79%, 46%),
+        0 0 5.3em 0 hsl(var(--hue), 66%, 30%);
+}
+
+
+/* card CSS */
+div.movie-list {
+    display:grid;
+    width:100%;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap:15px;
+}
+
+@media(max-width:1050px) {
+    div.movie-list {
+        grid-template-columns: repeat(auto-fill, minmax(170px, 1fr));
+    }
+}
+
+@media(max-width:767px) {
+    div.movie-list {
+        grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+    }
+}
+
+@media(max-width:380px) {
+    div.movie-list {
+        grid-template-columns: repeat(auto-fill, minmax(136px, 1fr));
+        gap: 10px;
+    }
+}
+
+div.custom-style btn {
+    background-color: #202020;
+    
+}
+div.custom-style btn.add-btn {
+    --hue:190;
+    color: hsl(var(--hue), 79%, 86%);
+    border: 2px solid hsl(var(--hue), 79%, 86%);
+    /* box-shadow: 
+        inset 0 0 7px 0 hsl(var(--hue), 79%, 46%),
+        inset 0 0 5px 0 hsl(var(--hue), 66%, 30%),
+        0 0 5px 0 hsl(var(--hue), 79%, 46%); */
+}
+div.custom-style btn.remove-btn {
+    --hue:27;
+    color: hsl(var(--hue), 79%, 86%);
+    border: 2px solid hsl(var(--hue), 79%, 86%);
+    /* box-shadow: 
+        inset 0 0 7px 0 hsl(var(--hue), 79%, 46%),
+        inset 0 0 5px 0 hsl(var(--hue), 66%, 30%),
+        0 0 5px 0 hsl(var(--hue), 79%, 46%); */
+}
+div.custom-style btn.activator {
+    --hue:290;
+    color: hsl(var(--hue), 79%, 86%);
+    border: 2px solid hsl(var(--hue), 79%, 86%);
+    /* box-shadow: 
+        inset 0 0 7px 0 hsl(var(--hue), 79%, 46%),
+        inset 0 0 5px 0 hsl(var(--hue), 66%, 30%),
+        0 0 5px 0 hsl(var(--hue), 79%, 46%); */
 }

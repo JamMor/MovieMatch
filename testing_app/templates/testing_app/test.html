@@ -158,45 +158,121 @@
     </section>
     <section id="glow-btns">
         <div class="bi-col">
-            <div class="center-align neon-blue inactive pseudo-btn btn-rounded">
+            <div class="center-align neon-cyan neon-unlit2 pseudo-btn-large btn-rounded">
                 Test strip
             </div>
-            <div class="center-align neon-blue active pseudo-btn btn-rounded">
+            <div class="center-align neon-cyan neon-lit2 pseudo-btn-large btn-rounded">
                 Test strip
             </div>
-            <div class="center-align neon-fuschia inactive pseudo-btn btn-rounded">
+            <div class="center-align neon-purple neon-unlit2 pseudo-btn-large btn-rounded">
                 Test strip
             </div>
-            <div class="center-align neon-fuschia active pseudo-btn btn-rounded">
+            <div class="center-align neon-purple neon-lit2 pseudo-btn-large btn-rounded">
                 Test strip
             </div>
-            <div class="center-align neon-blue-hover pseudo-btn btn-rounded">
+            <div class="center-align neon-orange neon-unlit2 pseudo-btn-large btn-rounded">
+                Test strip
+            </div>
+            <div class="center-align neon-orange neon-lit2 pseudo-btn-large btn-rounded">
+                Test strip
+            </div>
+            <div class="center-align neon-cyan neon-glow-hover2 pseudo-btn-large btn-rounded">
+                Test strip
+            </div>
+            <div class="center-align neon-purple neon-glow-hover2 pseudo-btn-large btn-rounded">
+                Test strip
+            </div>
+            <div class="center-align neon-orange neon-glow-hover2 pseudo-btn-large btn-rounded">
+                Test strip
+            </div>
+            <div class="center-align neon-cyan neon-unlit2 pseudo-btn-small btn-rounded">
+                Test strip
+            </div>
+            <div class="center-align neon-cyan neon-lit2 pseudo-btn-small btn-rounded">
+                Test strip
+            </div>
+            <div class="center-align neon-purple neon-unlit2 pseudo-btn-small btn-rounded">
+                Test strip
+            </div>
+            <div class="center-align neon-purple neon-lit2 pseudo-btn-small btn-rounded">
+                Test strip
+            </div>
+            <div class="center-align neon-orange neon-unlit2 pseudo-btn-small btn-rounded">
+                Test strip
+            </div>
+            <div class="center-align neon-orange neon-lit2 pseudo-btn-small btn-rounded">
+                Test strip
+            </div>
+            <div class="center-align neon-cyan neon-glow-hover2 pseudo-btn-small btn-rounded">
+                Test strip
+            </div>
+            <div class="center-align neon-purple neon-glow-hover2 pseudo-btn-small btn-rounded">
+                Test strip
+            </div>
+            <div class="center-align neon-orange neon-glow-hover2 pseudo-btn-small btn-rounded">
                 Test strip
             </div>
         </div>
         <div class="bi-col">
-            <div class="center-align neon-cyan neon-unlit pseudo-btn btn-rounded">
+            <div class="center-align neon-cyan neon-unlit pseudo-btn-large btn-rounded">
                 Test strip
             </div>
-            <div class="center-align neon-cyan neon-lit pseudo-btn btn-rounded">
+            <div class="center-align neon-cyan neon-lit pseudo-btn-large btn-rounded">
                 Test strip
             </div>
-            <div class="center-align neon-purple neon-unlit pseudo-btn btn-rounded">
+            <div class="center-align neon-purple neon-unlit pseudo-btn-large btn-rounded">
                 Test strip
             </div>
-            <div class="center-align neon-purple neon-lit pseudo-btn btn-rounded">
+            <div class="center-align neon-purple neon-lit pseudo-btn-large btn-rounded">
                 Test strip
             </div>
-            <div class="center-align neon-cyan neon-glow-hover pseudo-btn btn-rounded">
+            <div class="center-align neon-orange neon-unlit pseudo-btn-large btn-rounded">
                 Test strip
             </div>
-            <div class="center-align neon-purple neon-glow-hover pseudo-btn btn-rounded">
+            <div class="center-align neon-orange neon-lit pseudo-btn-large btn-rounded">
                 Test strip
             </div>
-            <div class="center-align neon-orange neon-glow-hover pseudo-btn btn-rounded">
+            <div class="center-align neon-cyan neon-glow-hover pseudo-btn-large btn-rounded">
+                Test strip
+            </div>
+            <div class="center-align neon-purple neon-glow-hover pseudo-btn-large btn-rounded">
+                Test strip
+            </div>
+            <div class="center-align neon-orange neon-glow-hover pseudo-btn-large btn-rounded">
+                Test strip
+            </div>
+            <div class="center-align neon-cyan neon-unlit pseudo-btn-small btn-rounded">
+                Test strip
+            </div>
+            <div class="center-align neon-cyan neon-lit pseudo-btn-small btn-rounded">
+                Test strip
+            </div>
+            <div class="center-align neon-purple neon-unlit pseudo-btn-small btn-rounded">
+                Test strip
+            </div>
+            <div class="center-align neon-purple neon-lit pseudo-btn-small btn-rounded">
+                Test strip
+            </div>
+            <div class="center-align neon-orange neon-unlit pseudo-btn-small btn-rounded">
+                Test strip
+            </div>
+            <div class="center-align neon-orange neon-lit pseudo-btn-small btn-rounded">
+                Test strip
+            </div>
+            <div class="center-align neon-cyan neon-glow-hover pseudo-btn-small btn-rounded">
+                Test strip
+            </div>
+            <div class="center-align neon-purple neon-glow-hover pseudo-btn-small btn-rounded">
+                Test strip
+            </div>
+            <div class="center-align neon-orange neon-glow-hover pseudo-btn-small btn-rounded">
                 Test strip
             </div>
         </div>
+    </section>
+    <section id="card-btns">
+        <div class="movie-list bi-col"></div>
+        <div class="movie-list bi-col"></div>
     </section>
 </main>
 {% endblock %}
@@ -204,6 +280,6 @@
 {% load static %}
 {% block script_block %}
     {{ block.super }}
-    <script src="{% static 'testing_app/js/index.js' %}"></script>
+    <script type="module" src="{% static 'testing_app/js/index.js' %}"></script>
     <link rel="stylesheet" type="text/css" href="{% static 'testing_app/css/testing.css' %}">
 {% endblock %}
