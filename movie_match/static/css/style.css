@@ -712,6 +712,7 @@ td.collabsible-row {
 .eliminated {
     box-shadow: 0px 0px 7px var(--orange_darken-3);
     opacity: 0.2;
+    pointer-events: none;
 }
 
 /* [-] */
