@@ -41,7 +41,7 @@ function sendRefresh(matchSocket){
 
 const init = (matchSocket) => {
     //Send which movie to eliminate on click
-    $('#movie_list').on('click', 'a.remove-btn' , function() {
+    $('#movie_list').on('click', 'btn.remove-btn' , function() {
         sendEliminate.call(this, matchSocket)
     });
 
