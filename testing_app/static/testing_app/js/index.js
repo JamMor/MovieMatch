@@ -77,7 +77,7 @@ function cardInit() {
         "overview": "When Ripley's lifepod is found by a salvage crew over 50 years later, she finds that terra-formers are on the very planet they found the alien species. When the company sends a family of colonists out to investigate her story—all contact is lost with the planet and colonists. They enlist Ripley and the colonial marines to return and search for answers.",
         "tmdb_id": "679"
     });
-    const gridIter = 5;
+    const gridIter = 2;
     $("#card-btns div.bi-col").each(function(index){
         let n=0;
         let customClass = index == 0 ? "" : "custom-style";
@@ -100,19 +100,10 @@ function cardInit() {
             n++;
         }
     })
-    const btnMap = {
-        "add-btn": "blue darken-2",
-        "remove-btn": "orange darken-3",
-        "activator": "purple accent-2"
-    }
-    const btnTypes = Object.keys(btnMap);
+    
     let cardCustomBtns = $("#card-btns div.movie-list div.custom-style btn");
     cardCustomBtns.each(function(index){
-        //see which button is present by checking to see which class is present
-        let btnType = btnTypes.find(btnType => $(this).hasClass(btnType));
-        //remove mapped class from button if present
-        $(this).removeClass(btnMap[btnType]);
-        $(this).addClass("neon-glow-hover2");
+        $(this).addClass("dimmed");
     })
 }
 	

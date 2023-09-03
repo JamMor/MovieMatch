@@ -227,7 +227,7 @@ function isFinalSelected(movieList){
 
 //Set active user turn
 function setUserTurn(turnUUID){
-    const activatedClass = "neon-lit";
+    const activatedClass = "neon-lit dimmed";
     const inactivatedClass = "neon-unlit";
     
     //Remove any active classes
