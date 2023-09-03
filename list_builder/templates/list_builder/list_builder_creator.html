@@ -9,7 +9,7 @@
             </a>
             <ul>
                 <li class="waves-effect waves-light"><a class="modal-trigger" href="#share_modal"><i class="material-icons indigo-text text-darken-4">present_to_all</i></a></li>
-                <li class="waves-effect waves-light"><a class="modal-trigger" href="#save-modal"><i class="material-icons indigo-text text-darken-4">save</i></a></li>
+                <li class="waves-effect waves-light"><a id="open-save-btn" class="{% if user.is_authenticated %}modal-trigger{% else %}disabled-btn{% endif %}" href="#save-modal"><i class="material-icons indigo-text text-darken-4">save</i></a></li>
                 <li class="waves-effect waves-light"><a href="#!"><i class="material-icons indigo-text text-darken-4">close</i></a></li>
             </ul>
         </div>

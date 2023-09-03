@@ -88,7 +88,14 @@ function init(saveHandler){
     })
 }
 
+function disabledSave(){
+    $("#open-save-btn.disabled-btn").click(function (e){
+        e.preventDefault();
+        M.toast({html: `<span><strong  class="orange-text text-darken-3">Must be logged in to save list.</strong></span>`});
+    })
+}
+
 const editorSave = () => init(handleEditorSave);
 const newSave = () => init(handleNewSave);
 
-export {editorSave, newSave}
+export {editorSave, newSave, disabledSave}
