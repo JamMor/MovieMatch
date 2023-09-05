@@ -112,7 +112,7 @@ const UserListManager = {
                 return false
             }
         })
-        const userDomHTML = `<div id='user_${uuid}' class="chip ${color} neon-unlit" data-position="${position}">
+        const userDomHTML = `<div id='user_${uuid}' class="chip ${color} neon-unlit dimmed" data-position="${position}">
             ${nickname}
         </div>`
         if (insertBeforePosition < userContainer.children().length){

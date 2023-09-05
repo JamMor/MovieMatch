@@ -677,12 +677,12 @@ tr.row-collapse-trigger {
 td.collabsible-row {
     padding:0;
 }
-.slider-x {
+td.collabsible-row .slider-x {
     max-height: 200px;
     margin: 5px 0px;
     transition: max-height 0.5s ease-in-out, margin 0s;
 }
-.slider-x.content-collapsed {
+td.collabsible-row .slider-x.content-collapsed {
     max-height:0px;
     margin: 0px;
     transition: max-height 0.5s ease-in-out, margin 0.1s ease-out 0.5s;

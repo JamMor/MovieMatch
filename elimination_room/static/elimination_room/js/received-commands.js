@@ -22,7 +22,7 @@ function commandEliminate(commandData) {
         toastClass = "cyan-text text-accent-2"
         nickname = "YOU"
     }
-    const toastHtml = `<span><strong class=${toastClass}>${nickname} </strong>&nbsp;eliminated&nbsp;<strong class="orange-text text-darken-3"> ${eliminated_movie.title}</strong></span>`
+    const toastHtml = `<span><strong class="${toastClass}">${nickname} </strong>&nbsp;eliminated&nbsp;<strong class="orange-text text-darken-3"> ${eliminated_movie.title}</strong></span>`
     M.toast({html: toastHtml})
     
     if (commandData.hasOwnProperty("updated_positions")){
@@ -227,7 +227,7 @@ function isFinalSelected(movieList){
 
 //Set active user turn
 function setUserTurn(turnUUID){
-    const activatedClass = "neon-lit dimmed";
+    const activatedClass = "neon-lit";
     const inactivatedClass = "neon-unlit";
     
     //Remove any active classes
