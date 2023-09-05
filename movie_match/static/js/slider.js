@@ -39,7 +39,6 @@ const mouseDownHandler = function (e) {
 
 function scrollHorizontallyTo(element) {
     const parent = element.parentNode;
-    console.log(`Parent scrollLeft: ${parent.scrollLeft}, element offsetLeft: ${element.offsetLeft}`)
     // If the element is to the left of the current scroll position, scroll to the beginning of element
     if (parent.scrollLeft > element.offsetLeft) {
         parent.scrollTo({left:element.offsetLeft, top:0, behavior: 'smooth'});

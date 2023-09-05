@@ -694,12 +694,19 @@ td.collabsible-row .slider-x.content-collapsed {
 /* [-] */
 /* ---------------------UserList===================== */
 #user_list {
-    padding: 5px 0px;
+    padding-top: 1em;
+    padding-bottom: 1em;
+    margin-top: -0.4em;
+    margin-bottom: -1em;
 }
 
 #user_list.slider-x {
-    justify-content: space-around;
+    justify-content: space-between;
 }
+
+#user_list::before, #user_list::after {
+    content: ''; /* Insert space before the first item and after the last one */
+  }
 
 #user_list.slider-x div {
     white-space: nowrap;
