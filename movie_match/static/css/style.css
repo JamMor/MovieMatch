@@ -801,6 +801,15 @@ footer.sharecode i{
     filter: grayscale(100%);
 }
 
+/* Disabled Card Button Class */
+.card-btn.disabled-btn {
+    color: hsl(var(--hue), 79%, 36%);
+    border: 2px solid hsl(var(--hue), 79%, 36%);
+    background-color: #202020cc;
+    filter: grayscale(100%);
+    pointer-events: none;
+}
+
 /* [+] */
 /* ========================Animista======================== */
 

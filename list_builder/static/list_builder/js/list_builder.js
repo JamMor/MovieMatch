@@ -1,4 +1,5 @@
 import { MovieCard } from "/static/js/DOMelements.js";
+import { disableSearchAddButtons, enableSearchAddButtons } from "./search_bar.js";
 
 const movie_list_prefix ="movie";
 
@@ -54,6 +55,7 @@ const init = () => {
             .split("_")[1];
         console.log(`Adding movie id: ${thisMovieId}`);
         addMovieToDOM(thisMovieId);
+        disableSearchAddButtons(thisMovieId)
     })
 
     //Handler to remove movie from list and dom
@@ -63,6 +65,7 @@ const init = () => {
             .split("_")[1];
         console.log(`Removing movie id ${thisMovieTmdbId}`);
         removeMovieFromDOM(thisMovieTmdbId);
+        enableSearchAddButtons(thisMovieTmdbId);
     })
 
     // Button to clear current movie list FLAG: Is used?
