@@ -62,6 +62,7 @@ function commandFinalized(finalSharedId = null) {
             console.log("AJAX error")
         })
 
+    setUserTurn(null);
     setStatusBar("final");
     elimination_active = false;
     current_eliminating_uuid = null;
@@ -195,7 +196,7 @@ function setStatusBar(status){
             "statusText": "Waiting for matching to begin..."
         },
         "eliminating": {
-            "styleClass": "status-eliminating neon-cyan neon-lit btn-small btn-rounded",
+            "styleClass": "status-eliminating neon-cyan neon-lit dimmed btn-small btn-rounded",
             "icons": "cast_connected",
             "statusText": "Elimination Activated!"
         },
@@ -226,13 +227,18 @@ function isFinalSelected(movieList){
 }
 
 //Set active user turn
-function setUserTurn(turnUUID){
+function setUserTurn(turnUUID = null){
     const activatedClass = "neon-lit";
     const inactivatedClass = "neon-unlit";
     
     //Remove any active classes
     $(`#user_list div.${activatedClass}`).removeClass(activatedClass).addClass(inactivatedClass);
     
+    // If no next user, return with no active class set
+    if(turnUUID == null){
+        return
+    }
+
     //Set current user turn to true and add active class, then scroll user into view
     current_eliminating_uuid = turnUUID;
     $(`#user_${turnUUID}`).addClass(activatedClass).removeClass(inactivatedClass);
