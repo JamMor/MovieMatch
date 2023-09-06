@@ -25,14 +25,14 @@ function submitEliminationList() {
             "tmdb_ids": tmdb_ids
         }
     ), "json")
-        .done(function (data) {
-            console.log(data);
+        .done(function (response) {
+            console.log(response);
 
-            if (data['status'] == "success") {
-                window.location.href = `/match/${data.sharecode}`;
+            if (response.status == "success") {
+                window.location.href = `/match/${response.data.sharecode}`;
             }
             else {
-                console.log(data['status'])
+                console.log(response.status)
             }
         })
         .fail(function () {

@@ -9,7 +9,7 @@ from django.core.serializers.json import DjangoJSONEncoder
 from list_builder.models import Persona
 from elimination_room.models import ShareRoomUser, SharedMovieList
 from .serializer import SharedListEncoder
-from .json_response import SuccessfulCommandResponse, FailedCommandResponse
+from .json_socket_response_models import SuccessfulCommandResponse, FailedCommandResponse
 from .command_requests import request_connect, request_disconnect, request_eliminate, request_initialize, request_elimination_start, request_refresh_list
 
 from django.db.models import Max

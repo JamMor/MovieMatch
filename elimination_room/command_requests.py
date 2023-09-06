@@ -5,7 +5,7 @@ from asgiref.sync import async_to_sync
 from list_builder.models import Persona
 from elimination_room.models import SharedMovieList, SharedMovie, ShareRoomUser
 from .serializer import SharedListEncoder as SharedListJsonEncoder
-from .json_response import SuccessfulCommandResponse, FailedCommandResponse
+from .json_socket_response_models import SuccessfulCommandResponse, FailedCommandResponse
 from .queue_management import assign_generic_nickname, assign_round_order, end_of_queue_position, select_next_eliminating_user
 
 def request_connect(sharecode, persona_uuid):

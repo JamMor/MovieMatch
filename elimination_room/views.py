@@ -10,6 +10,7 @@ from channels.layers import get_channel_layer
 from asgiref.sync import async_to_sync
 from list_builder.persona_assigner import get_or_set_persona
 from list_builder.moviedb_api_caller import add_movies_to_db_from_tmdb_ids
+from movie_match.json_response_models import SuccessJsonClassObject, FailedJsonClassObject
 
 # When Shared List is updated, sends updated list to appropriate channel
 def update_shared_list_channels(sharecode):
@@ -26,7 +27,6 @@ def update_shared_list_channels(sharecode):
 
 #Views
 def new_match(request):
-    response = {"status": "failure"}
     this_persona = get_or_set_persona(request)
     data = json.loads(request.body)
     
@@ -34,35 +34,31 @@ def new_match(request):
     tmdb_ids = data.get("tmdb_ids")
     sharecode = data.get("sharecode", "").upper()
     
-    print(('Sharecode: {sharecode}') if sharecode else "No sharecode.")
     #Gets SharedList if sharecode, or creates new one
     if sharecode:
         try:
             shared_list = SharedMovieList.objects.get(sharecode = sharecode)
         except SharedMovieList.DoesNotExist as err:
             print(err)
-            response.update({"errors": repr(err),"message": "SharedList not found.", "sharecode": sharecode})
-            return JsonResponse(response)
+            return JsonResponse(FailedJsonClassObject(errors=["SharedList not found."]).to_dict())
     else:
         try:
             shared_list = SharedMovieList.objects.create(created_by = this_persona)
         except IntegrityError as err:
             print(err)
-            response.update({"errors": repr(err),"message": "Could not create SharedList.", "sharecode": sharecode})
-            return JsonResponse(response)
+            return JsonResponse(FailedJsonClassObject(errors=["Could not create SharedList."]).to_dict())
 
     try:
         # Create temp_list from tmdb_ids
         all_in_db, ids_in_db, failed_ids = add_movies_to_db_from_tmdb_ids(tmdb_ids)
         print("All in DB!" if all_in_db else f'Failed: {list(failed_ids)}')
         temp_list = TempMovieList.objects.create_from_tmdb_ids(tmdb_ids=ids_in_db, creator=this_persona)
-
+        
         # Add TempList movies to SharedList
         shared_list.add_list_to_shared_list(temp_list)
     except Exception as err:
         print(err)
-        response.update({"errors" : repr(err)})
-        return JsonResponse(response)
+        return JsonResponse(FailedJsonClassObject(errors=[err]).to_dict())
     
     #Push updates to channel users.
     update_shared_list_channels(shared_list.sharecode)
@@ -74,8 +70,7 @@ def new_match(request):
         defaults = {"nickname": nickname}
         )
 
-    response.update({"status": "success", "sharecode": shared_list.sharecode})
-    return JsonResponse(response)
+    return JsonResponse(SuccessJsonClassObject(data={"sharecode": shared_list.sharecode}).to_dict())
 
 def join_match(request, sharecode):
     this_persona = get_or_set_persona(request)

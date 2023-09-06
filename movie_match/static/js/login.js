@@ -6,16 +6,19 @@ function loginHandler(){
     let formData = $(this).serialize()
 
     $.post(formAction, formData, "json")
-        .done(function (data) {
-            console.log(data)
-            if (data['status'] == "success") {
+        .done(function (response) {
+            console.log(response)
+            if (response.status == "success") {
                 console.log("Login succesful!");
                 location.reload();
             }
             else {
                 console.log("Login failure!");
+                console.log(response.form_errors);
+                console.log(response.errors);
+                //Reset any errors.
                 $(".login-form span.error").remove();
-                formErrorHandler(".login-form", data.errors)
+                formErrorHandler(".login-form", response.form_errors)
                 $('#nav-bar .dropdown-trigger').dropdown('recalculateDimensions');
             }
         })

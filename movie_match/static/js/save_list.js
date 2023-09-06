@@ -20,19 +20,21 @@ function saveList ({tmdb_ids, list_name, list_id}) {
     if (list_id) {saveURL += `/${list_id}`}
 
     $.post(saveURL, JSON.stringify({"list_name":list_name, "tmdb_ids": tmdb_ids}),"json")
-            .done(function(data) {
-                console.log(data);
-                if(data['status'] == "success"){
+            .done(function(response) {
+                console.log(response);
+                if(response['status'] == "success"){
                     $('#save-modal').modal('close');
                     saveStatusToast(list_name, "success")
                 }
                 else {
-                    console.log(data['status'])
+                    console.log(response['status'])
+                    console.log(response['errors'])
                     saveStatusToast(list_name, "error")
                 }
-                console.log(data["nextUrl"])
-                if (data["nextUrl"]){
-                    window.location.href = data["nextUrl"];
+                // if there is a nextUrl, redirect to it
+                const nextUrl = response.data?.nextUrl ?? null
+                if (nextUrl){
+                    window.location.href = nextUrl;
                 }
             })
             .fail(function() {

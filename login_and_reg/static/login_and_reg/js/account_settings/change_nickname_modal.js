@@ -18,11 +18,13 @@ function sendChangeNicknameRequest(){
         processData: false,
         contentType: false
     })
-    .done(function(data) {
-        console.log(data);
-        if(data['status'] == "success"){
-            let newNickname = data["data"]["nickname"]
+    .done(function(response) {
+        console.log(response);
+        if(response.status == "success"){
+            let newNickname = response.data["nickname"]
             $('#change-nickname-modal').modal('close');
+            //FLAG Reset old form errors
+            $(`#change-nickname-form span.error`).remove();
             console.log(`Changed nickname to ${newNickname}`)
             // Update nicknames on anywhere on page
             let nicknameElements = document.getElementsByClassName("displayed-nickname");
@@ -33,8 +35,12 @@ function sendChangeNicknameRequest(){
         }
         else {
             console.log("Failed to change.")
-            M.toast({html: `<span><strong class="orange-text text-darken-3">Failed</strong> to change nickname. ${data.errors}</span>`})
-            formErrorHandler("#change-nickname-form", data.errors)
+            console.log(response.errors)
+            console.log(response.form_errors)
+            M.toast({html: `<span><strong class="orange-text text-darken-3">Failed</strong> to change nickname.</span>`})
+            //FLAG Reset old form errors
+            $(`#change-nickname-form span.error`).remove();
+            formErrorHandler("#change-nickname-form", response.form_errors)
         }
     })
     .fail(function() {

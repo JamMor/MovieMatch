@@ -9,6 +9,7 @@ from django.contrib.auth.password_validation import validate_password
 from .forms import RegistrationForm, PersonaForm
 from list_builder.models import Persona
 from list_builder.persona_assigner import get_or_set_persona
+from movie_match.json_response_models import SuccessJsonClassObject, FailedJsonClassObject, FailedFormResponse
 
 def register_view(request):
     if request.method == 'POST':
@@ -34,35 +35,28 @@ def register_view(request):
     return render(request, 'login_and_reg/register.html', {'user_form': user_form, 'persona_form': persona_form})
 
 def login_view(request):
-    if request.method == 'POST':
-        # sentUser = request.POST.get("username")
-        # sentPass = request.POST.get("password")
-        # print(f'Username: {sentUser}, Password: {sentPass}')
+    if not request.method == 'POST':
+        return HttpResponseNotAllowed(['POST'])
 
-        login_form = AuthenticationForm(data=request.POST)
-        # print(f'AuthForm User: {login_form.get_user()}')
-        status = "failure"
-        if login_form.is_valid():
-            user = login_form.get_user()
-            if user is not None:
-                # A backend authenticated the credentials
-                login(request, user)
-                status = "success"
-            else:
-                # No backend authenticated the credentials
-                status = "failure"
+    login_form = AuthenticationForm(data=request.POST)
+
+    if login_form.is_valid():
+        user = login_form.get_user()
+        if user is not None:
+            # A backend authenticated the credentials
+            login(request, user)
+            return JsonResponse(SuccessJsonClassObject().to_dict())
         else:
-            status = "failure"
-            # print(f'AuthForm User: {login_form.get_invalid_login_error()}')
+            # No backend authenticated the credentials
+            pass
+    else:
+        # The form is not valid
+        pass
     
-    response = {"status": status}
-    response.update({"errors" : login_form.errors})
-
-    return JsonResponse(response)
+    return JsonResponse(FailedFormResponse(form_errors=login_form.errors).to_dict())
 
 def logout_view(request):
     logout(request)
-    print("Logout SUCCESS")
     return redirect('list_builder:default_redirect')
 
 # @login_required(redirect_field_name='default_redirect', login_url='list_builder:default_redirect')
@@ -79,63 +73,51 @@ def account_settings_view(request):
 
 @login_required(redirect_field_name='default_redirect', login_url='list_builder:default_redirect')
 def change_nickname_view(request):
+    if not request.method == 'POST':
+        return HttpResponseNotAllowed(['POST'])
+    
     this_persona = get_or_set_persona(request)
-    if request.method == 'POST':
-        json_response = {"status":"error", "message":"An unknown error occurred.", "errors":""} #Default response
-        
-        current_nickname = this_persona.nickname
-        change_nickname_form = PersonaForm(request.POST, instance=this_persona)
-        
-        if change_nickname_form.is_valid():
-            if change_nickname_form.cleaned_data['nickname'] != current_nickname:
-                try:
-                    updated_persona = change_nickname_form.save()
-                    del json_response['errors']
-                    json_response.update({"status":"success", "message":"Nickname changed.", "data": {"nickname":f"{updated_persona.nickname}"}})
-                except Exception as err:
-                    json_response.update({"status":"failure", "message":"Nickname not changed.", "errors":repr(err)})
-            else:
-                json_response.update({"status":"failure", "message":"Nickname not changed.", "errors":"Already the current nickname."})
-        return JsonResponse(json_response)
+    
+    change_nickname_form = PersonaForm(request.POST, instance=this_persona)
+    
+    if change_nickname_form.is_valid():
+        try:
+            updated_persona = change_nickname_form.save()
+            return JsonResponse(SuccessJsonClassObject(message="Nickname changed.", data={"nickname":updated_persona.nickname}).to_dict())
+        except Exception as err:
+            return JsonResponse(FailedJsonClassObject(message="An unknown error occurred.", errors=[err]))
 
-    return HttpResponseNotAllowed(['POST'])
+    return JsonResponse(FailedFormResponse(form_errors=change_nickname_form.errors).to_dict())
 
 @login_required(redirect_field_name='default_redirect', login_url='list_builder:default_redirect')
 def change_password_view(request):
+    if not request.method == 'POST':
+        return HttpResponseNotAllowed(['POST'])
+    
     this_persona = get_or_set_persona(request)
-    if request.method == 'POST':
-        json_response = {"status":"error", "message":"An unknown error occurred.", "errors":""} #Default response
-        print(request.POST)
-        change_password_form = PasswordChangeForm(request.user, request.POST)
-        if change_password_form.is_valid():
-            user = change_password_form.save()
-            update_session_auth_hash(request, user) # Keeps user logged in.
-            del json_response['errors']
-            json_response.update({"status":"success", "message":"Password changed."})
-        else:
-            json_response.update({"status":"failure", "message":"Password not changed.", "errors":change_password_form.errors})
+    
+    change_password_form = PasswordChangeForm(request.user, request.POST)
+    if change_password_form.is_valid():
+        user = change_password_form.save()
+        update_session_auth_hash(request, user) # Keeps user logged in.
+        return JsonResponse(SuccessJsonClassObject(message="Password changed.").to_dict())
+    
+    return JsonResponse(FailedFormResponse(form_errors=change_password_form.errors).to_dict())
 
-        return JsonResponse(json_response)
-
-    return HttpResponseNotAllowed(['POST'])
 
 @login_required(redirect_field_name='default_redirect', login_url='list_builder:default_redirect')
 def delete_account_view(request):
-    if request.method == 'POST':
-        verification_check = request.POST.get('account-delete-verification-check')
-        verification_password = request.POST.get('account-delete-verification-password')
-        json_response = {"status":"error", "message":"An unknown error occurred.", "errors":""}
+    if not request.method == 'POST':
+        return HttpResponseNotAllowed(['POST'])
+    
+    verification_check = request.POST.get('account-delete-verification-check')
+    verification_password = request.POST.get('account-delete-verification-password')
 
-        if verification_check != 'on':
-            json_response.update({"status":"failure", "message":"Account not deleted.", "errors":"Account delete verification check failed."})
-        elif not request.user.check_password(verification_password):
-            json_response.update({"status":"failure", "message":"Account not deleted.", "errors":"Incorrect password."})
-        else:
-            json_response.update({"status":"success", "message":"Account deleted."})
-            del json_response['errors']
-            request.user.delete()
-            logout(request)
-
-        return JsonResponse(json_response)
-
-    return HttpResponseNotAllowed(['POST'])
+    if verification_check != 'on':
+        return JsonResponse(FailedJsonClassObject(errors=["Account delete verification check failed"]).to_dict())
+    elif not request.user.check_password(verification_password):
+        return JsonResponse(FailedJsonClassObject(errors=["Incorrect password"]).to_dict())
+    else:
+        request.user.delete()
+        logout(request)
+        return JsonResponse(SuccessJsonClassObject(message="Account deleted.").to_dict())

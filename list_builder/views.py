@@ -1,7 +1,7 @@
 from random import randint
 from django.db import IntegrityError
 from django.shortcuts import redirect, render
-from django.http import JsonResponse
+from django.http import HttpResponseNotAllowed, JsonResponse
 from django.urls import reverse
 from django.contrib.auth.decorators import login_required
 from django.db.models import Count
@@ -17,6 +17,7 @@ from asgiref.sync import async_to_sync
 from .persona_assigner import get_or_set_persona
 from .moviedb_api_caller import add_movies_to_db_from_tmdb_ids
 from .serializer import MovieListEncoder
+from movie_match.json_response_models import SuccessJsonClassObject, FailedJsonClassObject
 
 # Displays main page
 def index(request):
@@ -48,58 +49,56 @@ def edit(request, list_id):
     return render(request, 'list_builder/list_builder_editor.html', context)
 
 def save(request, list_id = None):
-    response = {"status": "failure"}
+    if not request.method == "POST":
+        return HttpResponseNotAllowed(["POST"])
 
     if not request.user.is_authenticated:
-        response.update({"errors" : "Only logged in users can be saved."})
+        return JsonResponse(FailedJsonClassObject(errors=["Only logged in users can save."]).to_dict())
 
     # If user is authenticated, try adding movies to db and saving list.
-    else:
-        data = json.loads(request.body)
-        list_name = data.get("list_name")
-        tmdb_ids = data.get("tmdb_ids")
+    data = json.loads(request.body)
+    list_name = data.get("list_name")
+    tmdb_ids = data.get("tmdb_ids")
 
-        if not tmdb_ids:
-            response.update({"errors" : "Cannot save empty list."})
+    if not tmdb_ids:
+        return JsonResponse(FailedJsonClassObject(errors=["Cannot save empty list."]).to_dict())
+    
+    try:
+        this_persona = get_or_set_persona(request)
+        all_in_db, ids_in_db, failed_ids = add_movies_to_db_from_tmdb_ids(tmdb_ids)
+        print("All in DB!" if all_in_db else f'Failed: {list(failed_ids)}')
+        response_data = {}
+        # If no list_id provided, then save a new list.
+        if not list_id:
+            saved_list = SavedMovieList.objects.create_from_tmdb_ids(tmdb_ids=ids_in_db, creator=this_persona, list_name=list_name)
+        # If list_id provided, overwrite that list.
         else:
-            try:
-                this_persona = get_or_set_persona(request)
-                all_in_db, ids_in_db, failed_ids = add_movies_to_db_from_tmdb_ids(tmdb_ids)
-                print("All in DB!" if all_in_db else f'Failed: {list(failed_ids)}')
-                # If no list_id provided, then save a new list. If list_id, overwrite old one.
-                if not list_id:
-                    saved_list = SavedMovieList.objects.create_from_tmdb_ids(tmdb_ids=ids_in_db, creator=this_persona, list_name=list_name)
-                else:
-                    # Only gets list if also created by this user.
-                    saved_list = SavedMovieList.objects.get(id=list_id, created_by=this_persona)
-                    new_ids =list(Movie.objects.filter(tmdb_id__in=ids_in_db).values_list("id", flat=True))
-                    saved_list.movies.set(new_ids)
-                    response.update({"nextUrl" : reverse('list_builder:list_manager')})
-                response.update({"status" : "success"})
-            except Exception as err:
-                print(err)
-                response.update({"errors" : repr(err)})
-
-    return JsonResponse(response)
+            # Only gets list if also created by this user.
+            saved_list = SavedMovieList.objects.get(id=list_id, created_by=this_persona)
+            new_ids =list(Movie.objects.filter(tmdb_id__in=ids_in_db).values_list("id", flat=True))
+            saved_list.movies.set(new_ids)
+            response_data = {"nextUrl" : reverse('list_builder:list_manager')}
+        return JsonResponse(SuccessJsonClassObject(data=response_data).to_dict())
+    except Exception as err:
+        print(err)
+        return JsonResponse(FailedJsonClassObject(errors=["An error occured attempting to save the list."]).to_dict())
 
 def delete(request, list_id):
-    response = {"status": "failure"}
+    if not request.method == "DELETE":
+        return HttpResponseNotAllowed(["DELETE"])
 
     if not request.user.is_authenticated:
-        response.update({"errors" : "Only logged in users can delete list."})
+        return JsonResponse(FailedJsonClassObject(errors=["Only logged in users can delete list."]).to_dict())
 
-    else:
-        try:
-            this_persona = get_or_set_persona(request)
-            saved_list = SavedMovieList.objects.get(id = list_id, created_by = this_persona)
-            list_name = saved_list.list_name
-            list_id = saved_list.id
-            deleted_data = saved_list.delete()
-            print("deleted_data:")
-            print(deleted_data)
-            response.update({"status" : "success", "data" : {"list_name" : list_name, "list_id" : list_id}})
-        except Exception as err:
-            print(err)
-            response.update({"errors" : repr(err)})
-
-    return JsonResponse(response)
+    try:
+        this_persona = get_or_set_persona(request)
+        saved_list = SavedMovieList.objects.get(id = list_id, created_by = this_persona)
+        list_name = saved_list.list_name
+        list_id = saved_list.id
+        deleted_data = saved_list.delete()
+        print("deleted_data:")
+        print(deleted_data)
+        return JsonResponse(SuccessJsonClassObject(data={"list_name" : list_name, "list_id" : list_id}).to_dict())
+    except Exception as err:
+        print(err)
+        return JsonResponse(FailedJsonClassObject(errors=["An error occured attempting to delete the list."]).to_dict())

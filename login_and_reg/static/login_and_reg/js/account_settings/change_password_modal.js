@@ -6,6 +6,7 @@ function openChangePasswordModal(){
 }
 
 function sendChangePasswordRequest(){
+    //FLAG Reset old form errors
     $("#change-password-form span.error").remove();
     console.log("Change password request sent.")
     let changePasswordForm = document.querySelector("#change-password-form");
@@ -19,9 +20,9 @@ function sendChangePasswordRequest(){
         processData: false,
         contentType: false
     })
-    .done(function(data) {
-        console.log(data);
-        if(data['status'] == "success"){
+    .done(function(response) {
+        console.log(response);
+        if(response.status == "success"){
             $('#change-password-modal').modal('close');
             changePasswordForm.reset();
             console.log("Password Change Success.")
@@ -30,7 +31,9 @@ function sendChangePasswordRequest(){
         }
         else {
             console.log("Failed to change password.")
-            formErrorHandler("#change-password-form", data.errors)
+            console.log(response.errors)
+            console.log(response.form_errors)
+            formErrorHandler("#change-password-form", response.form_errors)
             changePasswordForm.reset();
             M.toast({html: `<span><strong class="orange-text text-darken-3">Failed</strong> to change password.</span>`})
         }

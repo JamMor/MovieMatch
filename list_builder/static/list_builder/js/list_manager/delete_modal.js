@@ -23,15 +23,15 @@ function sendDeletionRequest(){
         url: `/delete/${thisList.id}`,
         method:"DELETE"
     })
-    .done(function(data) {
-        console.log(data);
-        if(data['status'] == "success"){
+    .done(function(response) {
+        console.log(response);
+        if(response.status == "success"){
             $('#delete-modal').modal('close');
             console.log("Delete Success.")
-            deleteStatusToast(data["data"]["list_name"], "success")
+            deleteStatusToast(response.data.list_name, "success")
             
             // Remove deleted row from DOM
-            let headerRow = $(`#list_${data["data"]["list_id"]}`)
+            let headerRow = $(`#list_${response.data.list_id}`)
             let contentRow = headerRow.next("tr")
             headerRow.remove();
             contentRow.remove()
@@ -39,6 +39,7 @@ function sendDeletionRequest(){
         }
         else {
             console.log("Failed to delete.")
+            console.log(response.errors)
             deleteStatusToast(thisList.name, "error")
         }
 
