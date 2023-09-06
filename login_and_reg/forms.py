@@ -4,7 +4,7 @@ from django.contrib.auth.models import User
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth import password_validation
 from django.forms.utils import ErrorList
-from django.forms import ModelForm
+from django.forms import ModelForm, ValidationError
 from list_builder.models import Persona
 
 
@@ -40,6 +40,12 @@ class PersonaForm(ModelForm):
         help_texts = {
             "nickname": "Optional. 20 characters or fewer."
         }
+
+    def clean_nickname(self):
+        cleaned_nickname = self.cleaned_data.get('nickname')
+        if cleaned_nickname == self.instance.nickname:
+            raise ValidationError("Already the current nickname.")
+        return cleaned_nickname
 
 
 

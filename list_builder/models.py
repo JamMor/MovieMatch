@@ -9,7 +9,7 @@ class Persona(models.Model):
     #FLAG Is is_registered needed? Maybe just test for user_account null
     is_registered = models.BooleanField(default = False)
     user_account = models.OneToOneField(settings.AUTH_USER_MODEL, related_name="persona", on_delete = models.CASCADE, null=True)
-    nickname = models.CharField(max_length=20, null=True, blank=True)
+    nickname = models.CharField(max_length=20, blank=True, default="")
 
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
