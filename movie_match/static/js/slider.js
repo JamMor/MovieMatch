@@ -39,15 +39,36 @@ const mouseDownHandler = function (e) {
 
 function scrollHorizontallyTo(element) {
     const parent = element.parentNode;
-    // If the element is to the left of the current scroll position, scroll to the beginning of element
-    if (parent.scrollLeft > element.offsetLeft) {
-        parent.scrollTo({left:element.offsetLeft, top:0, behavior: 'smooth'});
-    } 
+    const elRect = element.getBoundingClientRect();
+    const parentRect = parent.getBoundingClientRect();
+
+    const computedStyle = getComputedStyle(parent);
+    const parentPaddingRight = parseInt(computedStyle.getPropertyValue('padding-right'), 10);
+    const parentPaddingLeft = parseInt(computedStyle.getPropertyValue('padding-left'), 10);
+
+    console.log('Padding Right:', parentPaddingRight);
+    console.log('Padding Left:', parentPaddingLeft);
+
+    
+    // Get the distance (+/-) from the parent's left edge (current scroll position) to the element's left edge
+    const leftOffset = elRect.left - (parentRect.left + parentPaddingLeft/2)
+    // Get the distance (+/-) from the parent's right edge (current scroll position + width) to the element's right edge
+    const rightOffset = elRect.right - (parentRect.right - parentPaddingRight/2)
+
+    // If the element is to the left of the parent's left edge (current scroll position),
+    // scroll to the beginning of element
+    if (leftOffset < 0) {
+        // Get the distance (+/-) from the parent's left edge to the element's left edge and add to the current scroll position
+        const leftVal = parent.scrollLeft + leftOffset;
+        parent.scrollTo({left:leftVal, top:0, behavior: 'smooth'});
+    }
+
     // If the element is to the right of the rightmost visible area, scroll to the right end of element
-    else if (parent.scrollLeft + parent.offsetWidth < element.offsetLeft + element.offsetWidth) {
-        const leftVal = element.offsetLeft + element.offsetWidth - parent.offsetWidth
+    else if (rightOffset > 0) {
+        // Get the distance (+/-) from the parent's right edge to the element's right edge and add to the current scroll position
+        const rightVal = parent.scrollLeft + rightOffset;
         parent.scrollTo(
-            {left: leftVal, top: 0, behavior: 'smooth'}
+            {left: rightVal, top: 0, behavior: 'smooth'}
         );
     }
 }
