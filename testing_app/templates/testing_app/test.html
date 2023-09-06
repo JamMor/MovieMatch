@@ -1,0 +1,285 @@
+{% extends "base.html" %}
+
+{% block content_block %}
+<main class="container">
+    <h1 class="grey-text text-lighten-2">Debug Mode: 
+        {% if IN_DEBUG %}
+        <span class="cyan-text text-accent-2">True</span>
+        {% else %}
+        <span class="orange-text text-darken-4">False</span>
+        {% endif %}
+    </h1>
+    <div class="switch">
+        <label>
+            Text
+            <input id="icon-text-switch" type="checkbox">
+            <span class="lever"></span>
+            No Text
+        </label>
+    </div>
+    <section id="icons">
+        <div>
+            <h6 class="grey-text text-lighten-2"><i class="left material-icons">tv</i><span>tv</span></h6>
+        </div>
+        <div>
+            <h6 class="grey-text text-lighten-2"><i class="left material-icons">live_tv</i><span>live_tv</span></h6>
+        </div>
+        <div>
+            <h6 class="grey-text text-lighten-2"><i class="left material-icons">movie</i><span>movie</span></h6>
+        </div>
+        <div>
+            <h6 class="grey-text text-lighten-2"><i class="left material-icons">theaters</i><span>theaters</span></h6>
+        </div>
+        <div>
+            <h6 class="grey-text text-lighten-2"><i class="left material-icons">dvr</i><span>dvr</span></h6>
+        </div>
+        <div>
+            <h6 class="grey-text text-lighten-2"><i class="left material-icons">apps</i><span>apps</span></h6>
+        </div>
+        <div>
+            <h6 class="grey-text text-lighten-2"><i class="left material-icons">dashboard</i><span>dashboard</span></h6>
+        </div>
+        <div>
+            <h6 class="grey-text text-lighten-2"><i class="left material-icons">view_module</i><span>view_module</span></h6>
+        </div>
+        <div>
+            <h6 class="grey-text text-lighten-2"><i class="left material-icons">view_compact</i><span>view_compact</span></h6>
+        </div>
+        <div>
+            <h6 class="grey-text text-lighten-2"><i class="left material-icons">video_library</i><span>video_library</span></h6>
+        </div>
+        <div>
+            <h6 class="grey-text text-lighten-2"><i class="left material-icons">view_headline</i><span>view_headline</span></h6>
+        </div>
+        <div>
+            <h6 class="grey-text text-lighten-2"><i class="left material-icons">view_list</i><span>view_list</span></h6>
+        </div>
+        <div>
+            <h6 class="grey-text text-lighten-2"><i class="left material-icons">screen_share</i><span>screen_share</span></h6>
+        </div>
+        <div>
+            <h6 class="grey-text text-lighten-2"><i class="left material-icons">storage</i><span>storage</span></h6>
+        </div>
+        <div>
+            <h6 class="grey-text text-lighten-2"><i class="left material-icons">subscriptions</i><span>subscriptions</span></h6>
+        </div>
+        <div>
+            <h6 class="grey-text text-lighten-2"><i class="left material-icons">add_to_queue</i><span>add_to_queue</span></h6>
+        </div>
+        <div>
+            <h6 class="grey-text text-lighten-2"><i class="left material-icons">queue</i><span>queue</span></h6>
+        </div>
+        <div>
+            <h6 class="grey-text text-lighten-2"><i class="left material-icons">toc</i><span>toc</span></h6>
+        </div>
+        <div>
+            <h6 class="grey-text text-lighten-2"><i class="left material-icons">playlist_add</i><span>playlist_add</span></h6>
+        </div>
+        <div>
+            <h6 class="grey-text text-lighten-2"><i class="left material-icons">playlist_add_check</i><span>playlist_add_check</span></h6>
+        </div>
+        <div>
+            <h6 class="grey-text text-lighten-2"><i class="left material-icons">playlist_play</i><span>playlist_play</span></h6>
+        </div>
+        <div>
+            <h6 class="grey-text text-lighten-2"><i class="left material-icons">account_box</i><span>account_box</span></h6>
+        </div>
+        <div>
+            <h6 class="grey-text text-lighten-2"><i class="left material-icons">account_circle</i><span>account_circle</span></h6>
+        </div>
+        <div>
+            <h6 class="grey-text text-lighten-2"><i class="left material-icons">contacts</i><span>contacts</span></h6>
+        </div>
+        <div>
+            <h6 class="grey-text text-lighten-2"><i class="left material-icons">person</i><span>person</span></h6>
+        </div>
+        <div>
+            <h6 class="grey-text text-lighten-2"><i class="left material-icons">person_outline</i><span>person_outline</span></h6>
+        </div>
+    </section>
+    <section id="fonts" class="white-text">
+        <h4 style="font-family: Audiowide" >Test TESTERONI testanoches.</h4>
+        <h4 style="font-family: 'Black Ops One'" >Test TESTERONI testanoches.</h4>
+        <h4 style="font-family: 'Fira Code'" >Test TESTERONI testanoches.</h4>
+        <h4 style="font-family: 'Michroma'" >Test TESTERONI testanoches.</h4>
+        <h4 style="font-family: 'Montserrat'" >Test TESTERONI testanoches.</h4>
+        <h4 style="font-family: 'Orbitron'" >Test TESTERONI testanoches.</h4>
+        <h4 style="font-family: 'Press Start 2P'" >Test TESTERONI testanoches.</h4>
+        <h4 style="font-family: 'Roboto Mono'" >Test TESTERONI testanoches.</h4>
+        <h4 style="font-family: 'Rubik'" >Test TESTERONI testanoches.</h4>
+    </section>
+    <section id="hue-adj">
+        <form action="#">
+            <p class="range-field">
+                <input id="cyan-inp" class="neon-cyan" type="text" >
+                <input class="neon-cyan" type="range" id="cyan-adj" list="hue-chart" min="0" max="360" />
+                <datalist id="hue-chart">
+                    <option value="0" label="R"></option>
+                    <option value="60" label="Y"></option>
+                    <option value="120" label="G"></option>
+                    <option value="180" label="C"></option>
+                    <option value="240" label="B"></option>
+                    <option value="300" label="M"></option>
+                    <option value="360" label="R"></option>
+                </datalist>
+            </p>
+        </form>
+        <form action="#">
+            <p class="range-field">
+                <input id="magenta-inp" class="neon-purple" type="text" >
+                <input class="neon-purple" type="range" id="magenta-adj" list="hue-chart2" min="0" max="360" />
+                <datalist id="hue-chart2">
+                    <option value="0" label="R"></option>
+                    <option value="60" label="Y"></option>
+                    <option value="120" label="G"></option>
+                    <option value="180" label="C"></option>
+                    <option value="240" label="B"></option>
+                    <option value="300" label="M"></option>
+                    <option value="360" label="R"></option>
+                </datalist>
+            </p>
+    
+        </form>
+        <form action="#">
+            <p class="range-field">
+                <input id="orange-inp" class="neon-orange" type="text" >
+                <input class="neon-orange" type="range" id="orange-adj" list="hue-chart3" min="0" max="360" />
+                <datalist id="hue-chart3">
+                    <option value="0" label="R"></option>
+                    <option value="60" label="Y"></option>
+                    <option value="120" label="G"></option>
+                    <option value="180" label="C"></option>
+                    <option value="240" label="B"></option>
+                    <option value="300" label="M"></option>
+                    <option value="360" label="R"></option>
+                </datalist>
+            </p>
+        </form>
+    </section>
+    <section id="glow-btns">
+        <div class="bi-col">
+            <div class="center-align neon-cyan neon-unlit2 pseudo-btn-large btn-rounded">
+                Test strip
+            </div>
+            <div class="center-align neon-cyan neon-lit2 pseudo-btn-large btn-rounded">
+                Test strip
+            </div>
+            <div class="center-align neon-purple neon-unlit2 pseudo-btn-large btn-rounded">
+                Test strip
+            </div>
+            <div class="center-align neon-purple neon-lit2 pseudo-btn-large btn-rounded">
+                Test strip
+            </div>
+            <div class="center-align neon-orange neon-unlit2 pseudo-btn-large btn-rounded">
+                Test strip
+            </div>
+            <div class="center-align neon-orange neon-lit2 pseudo-btn-large btn-rounded">
+                Test strip
+            </div>
+            <div class="center-align neon-cyan neon-glow-hover2 pseudo-btn-large btn-rounded">
+                Test strip
+            </div>
+            <div class="center-align neon-purple neon-glow-hover2 pseudo-btn-large btn-rounded">
+                Test strip
+            </div>
+            <div class="center-align neon-orange neon-glow-hover2 pseudo-btn-large btn-rounded">
+                Test strip
+            </div>
+            <div class="center-align neon-cyan neon-unlit2 pseudo-btn-small btn-rounded">
+                Test strip
+            </div>
+            <div class="center-align neon-cyan neon-lit2 pseudo-btn-small btn-rounded">
+                Test strip
+            </div>
+            <div class="center-align neon-purple neon-unlit2 pseudo-btn-small btn-rounded">
+                Test strip
+            </div>
+            <div class="center-align neon-purple neon-lit2 pseudo-btn-small btn-rounded">
+                Test strip
+            </div>
+            <div class="center-align neon-orange neon-unlit2 pseudo-btn-small btn-rounded">
+                Test strip
+            </div>
+            <div class="center-align neon-orange neon-lit2 pseudo-btn-small btn-rounded">
+                Test strip
+            </div>
+            <div class="center-align neon-cyan neon-glow-hover2 pseudo-btn-small btn-rounded">
+                Test strip
+            </div>
+            <div class="center-align neon-purple neon-glow-hover2 pseudo-btn-small btn-rounded">
+                Test strip
+            </div>
+            <div class="center-align neon-orange neon-glow-hover2 pseudo-btn-small btn-rounded">
+                Test strip
+            </div>
+        </div>
+        <div class="bi-col">
+            <div class="center-align neon-cyan neon-unlit pseudo-btn-large btn-rounded">
+                Test strip
+            </div>
+            <div class="center-align neon-cyan neon-lit pseudo-btn-large btn-rounded">
+                Test strip
+            </div>
+            <div class="center-align neon-purple neon-unlit pseudo-btn-large btn-rounded">
+                Test strip
+            </div>
+            <div class="center-align neon-purple neon-lit pseudo-btn-large btn-rounded">
+                Test strip
+            </div>
+            <div class="center-align neon-orange neon-unlit pseudo-btn-large btn-rounded">
+                Test strip
+            </div>
+            <div class="center-align neon-orange neon-lit pseudo-btn-large btn-rounded">
+                Test strip
+            </div>
+            <div class="center-align neon-cyan neon-glow-hover pseudo-btn-large btn-rounded">
+                Test strip
+            </div>
+            <div class="center-align neon-purple neon-glow-hover pseudo-btn-large btn-rounded">
+                Test strip
+            </div>
+            <div class="center-align neon-orange neon-glow-hover pseudo-btn-large btn-rounded">
+                Test strip
+            </div>
+            <div class="center-align neon-cyan neon-unlit pseudo-btn-small btn-rounded">
+                Test strip
+            </div>
+            <div class="center-align neon-cyan neon-lit pseudo-btn-small btn-rounded">
+                Test strip
+            </div>
+            <div class="center-align neon-purple neon-unlit pseudo-btn-small btn-rounded">
+                Test strip
+            </div>
+            <div class="center-align neon-purple neon-lit pseudo-btn-small btn-rounded">
+                Test strip
+            </div>
+            <div class="center-align neon-orange neon-unlit pseudo-btn-small btn-rounded">
+                Test strip
+            </div>
+            <div class="center-align neon-orange neon-lit pseudo-btn-small btn-rounded">
+                Test strip
+            </div>
+            <div class="center-align neon-cyan neon-glow-hover pseudo-btn-small btn-rounded">
+                Test strip
+            </div>
+            <div class="center-align neon-purple neon-glow-hover pseudo-btn-small btn-rounded">
+                Test strip
+            </div>
+            <div class="center-align neon-orange neon-glow-hover pseudo-btn-small btn-rounded">
+                Test strip
+            </div>
+        </div>
+    </section>
+    <section id="card-btns">
+        <div class="movie-list bi-col"></div>
+        <div class="movie-list bi-col"></div>
+    </section>
+</main>
+{% endblock %}
+
+{% load static %}
+{% block script_block %}
+    {{ block.super }}
+    <script type="module" src="{% static 'testing_app/js/index.js' %}"></script>
+    <link rel="stylesheet" type="text/css" href="{% static 'testing_app/css/testing.css' %}">
+{% endblock %}

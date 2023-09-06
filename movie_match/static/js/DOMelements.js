@@ -11,24 +11,24 @@ const CardButton = (type) => {
     let color = ''; let customClass = ''; let icon = '';
     switch(type){
         case 'add':
-            color = "blue darken-2"
+            color = "neon-cyan neon-glow-hover"
             customClass = "add-btn"
             icon = "add"
             break;
         case 'remove':
-            color = "orange darken-3"
+            color = "neon-orange neon-glow-hover"
             customClass = "remove-btn"
             icon = "remove"
             break;
         case 'info':
-            color = "purple accent-2"
+            color = "neon-purple neon-glow-hover"
             customClass = "activator"
             icon = "info_outline"
             break;
         default:
             console.log("Error: Button type unrecognized.");
     }
-    return `<a class="btn card-btn waves-effect waves-light ${color} ${customClass}"><i class="material-icons">${icon}</i></a>`
+    return `<btn class="btn card-btn waves-effect waves-light ${color} ${customClass}"><i class="material-icons">${icon}</i></btn>`
 }
 
 

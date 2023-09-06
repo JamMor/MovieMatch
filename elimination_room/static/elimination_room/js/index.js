@@ -3,7 +3,8 @@ import * as SendCommands from "./send-commands.js";
 import * as MaterializeComponents from "./materialize-inits.js";
 import {createMatchSocket} from "./sockets.js";
 import * as CopyToClipBoard from "./sharecode_copy.js";
-import { newSave } from "/static/js/save_list.js";
+import { newSave, disabledSave } from "/static/js/save_list.js";
+import * as UserSlider from "/static/js/slider.js"
 
 //Elimination Room Entry Point
 $(document).ready(function() {
@@ -12,4 +13,6 @@ $(document).ready(function() {
     SendCommands.init(matchSocket);
     CopyToClipBoard.init();
     newSave();
+    disabledSave();
+    UserSlider.init();
 });

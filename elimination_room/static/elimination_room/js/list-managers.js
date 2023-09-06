@@ -26,7 +26,7 @@ function verifyUserListDOMSync(sourceDict){
     //Confirming DOM and user list are in sync FLAG
     const domUsers = $('#user_list div').map(function() {
         const thisUuid = this.id.split("_")[1];
-        const thisPosition = parseInt($(this).data('position'));
+        const thisPosition = parseInt($(this).attr('data-position'));
         const thisNickname = $(this).text().trim();
         return {"uuid": thisUuid, "position": thisPosition, "nickname": thisNickname} ;
         })
@@ -100,19 +100,19 @@ const UserListManager = {
     addUserToDom : (uuid, user) => {
         const { nickname, position } = user;
         //Other users are fuschia, this user is blue
-        const color = user_uuid == uuid ? "neon-blue" : "neon-fuschia"
+        const color = user_uuid == uuid ? "neon-cyan" : "neon-purple"
         
         const userContainer = $('#user_list')
         let insertBeforePosition = userContainer.children().length
 
         userContainer.children().each(function(index){
-            let element_position = parseInt($(this).data('position'))
+            let element_position = parseInt($(this).attr('data-position'));
             if (element_position > position){
                 insertBeforePosition = index
                 return false
             }
         })
-        const userDomHTML = `<div id='user_${uuid}' class="chip ${color} inactive" data-position="${position}">
+        const userDomHTML = `<div id='user_${uuid}' class="chip ${color} neon-unlit dimmed" data-position="${position}">
             ${nickname}
         </div>`
         if (insertBeforePosition < userContainer.children().length){
@@ -129,25 +129,26 @@ const UserListManager = {
     },
 
     //Reorders users in DOM based on the current user dict and a list of the uuids to reorder
-    reorderUsersInDom : (uuids, user_list) => {
+    reorderUsersInDom : (uuids, source_user_list) => {
         
         // Get current user elements
         const userContainer = $('#user_list')
         const userElements = userContainer.children()
 
-        // Get sorted list of uuids
-        const sortedUUIDs = uuids.sort((a, b) => user_list[a].position - user_list[b].position)
-
-        // Insertion sort user elements and update data-position
-        userElements.each(function(elementIndex){
-            const elementUUID = $(this).attr('id').split("_")[1]
-            $(this).data('position', user_list[elementUUID].position)
-            const newIndex = sortedUUIDs.indexOf(elementUUID)
-            if (newIndex != elementIndex){
-                $(this).insertBefore(userElements.eq(newIndex))
-            }
+        // Update data-position attribute of each user element
+        uuids.forEach((uuid) => {
+            $(`#user_${uuid}`).attr('data-position', source_user_list[uuid].position);
         })
+
+        function sortByDataPosition(a, b){
+            return parseInt($(a).attr('data-position')) - parseInt($(b).attr('data-position'))
+        }
+
+        // Sort user elements by data-position, and append back to userContainer 
+        // (which will move them to the correct position without cloning or reinserting)
+        userElements.sort(sortByDataPosition).appendTo(userContainer);
     },
+
     //Syncs the DOM with changes from the old user list to the new one
     syncUserList : (old_list, updated_list) => {
         let old_uuids = new Set(Object.keys(old_list))

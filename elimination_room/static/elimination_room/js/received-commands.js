@@ -1,6 +1,7 @@
 import { MovieListManager, UserListManager } from "./list-managers.js";
 import { SharedMovie, DetailedMovie } from "/static/js/constructors.js";
 import { MovieInfoModal } from "/static/js/DOMelements.js";
+import { scrollHorizontallyTo } from "/static/js/slider.js";
 
 //These are the functions that are called when a succesful socket command is 
 // received from the server
@@ -21,7 +22,7 @@ function commandEliminate(commandData) {
         toastClass = "cyan-text text-accent-2"
         nickname = "YOU"
     }
-    const toastHtml = `<span><strong class=${toastClass}>${nickname} </strong>&nbsp;eliminated&nbsp;<strong class="orange-text text-darken-3"> ${eliminated_movie.title}</strong></span>`
+    const toastHtml = `<span><strong class="${toastClass}">${nickname} </strong>&nbsp;eliminated&nbsp;<strong class="orange-text text-darken-3"> ${eliminated_movie.title}</strong></span>`
     M.toast({html: toastHtml})
     
     if (commandData.hasOwnProperty("updated_positions")){
@@ -61,6 +62,7 @@ function commandFinalized(finalSharedId = null) {
             console.log("AJAX error")
         })
 
+    setUserTurn(null);
     setStatusBar("final");
     elimination_active = false;
     current_eliminating_uuid = null;
@@ -184,22 +186,22 @@ function setStatusBar(status){
     // Map of status bar text, css, and flanking icons
     const statusMap = {
         "start": {
-            "styleClass": "status-start waves-effect waves-light neon-blue-hover btn-large btn-rounded",
+            "styleClass": "status-start waves-effect waves-light neon-cyan neon-glow-hover btn-large btn-rounded",
             "icons": "cast",
             "statusText": "Start Matching"
         },
         "waiting": {
-            "styleClass": "status-waiting neon-blue inactive btn-large btn-rounded",
+            "styleClass": "status-waiting neon-cyan neon-unlit btn-large btn-rounded",
             "icons": "cast",
             "statusText": "Waiting for matching to begin..."
         },
         "eliminating": {
-            "styleClass": "status-eliminating neon-blue active btn-large btn-rounded",
+            "styleClass": "status-eliminating neon-cyan neon-lit dimmed btn-small btn-rounded",
             "icons": "cast_connected",
             "statusText": "Elimination Activated!"
         },
         "final": {
-            "styleClass": "status-final waves-effect waves-light neon-fuschia active btn-large btn-rounded",
+            "styleClass": "status-final waves-effect waves-light neon-purple neon-lit btn-large btn-rounded",
             "icons": "movie",
             "statusText": "Open final movie info"
         }
@@ -225,14 +227,22 @@ function isFinalSelected(movieList){
 }
 
 //Set active user turn
-function setUserTurn(turnUUID){
+function setUserTurn(turnUUID = null){
+    const activatedClass = "neon-lit";
+    const inactivatedClass = "neon-unlit";
     
     //Remove any active classes
-    $(`#user_list div.active`).removeClass('active').addClass('inactive');
+    $(`#user_list div.${activatedClass}`).removeClass(activatedClass).addClass(inactivatedClass);
     
-    //Set current user turn to true and add active class
+    // If no next user, return with no active class set
+    if(turnUUID == null){
+        return
+    }
+
+    //Set current user turn to true and add active class, then scroll user into view
     current_eliminating_uuid = turnUUID;
-    $(`#user_${turnUUID}`).addClass('active').removeClass('inactive');
+    $(`#user_${turnUUID}`).addClass(activatedClass).removeClass(inactivatedClass);
+    scrollHorizontallyTo($(`#user_${turnUUID}`).get(0));
 
     //Toast new user turn
     const toastName = (turnUUID != user_uuid) 

@@ -55,10 +55,5 @@
 
     {% block script_block %}
         {{ block.super }}
-        <script type='text/javascript' >
-        </script>
-        <script type="module" src="{% static 'list_builder/js/list_manager/slider.js'%}"></script>
-        <script type="module" src="{% static 'list_builder/js/list_manager/table-collapse.js'%}"></script>
-        <script type="module" src="{% static 'list_builder/js/list_manager/delete_modal.js'%}"></script>
         <script type="module" src="{% static 'list_builder/js/list_manager/index.js'%}"></script>
     {% endblock %}

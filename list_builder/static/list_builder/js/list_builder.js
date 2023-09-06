@@ -1,4 +1,5 @@
 import { MovieCard } from "/static/js/DOMelements.js";
+import { disableSearchAddButtons, enableSearchAddButtons } from "./search_bar.js";
 
 const movie_list_prefix ="movie";
 
@@ -48,21 +49,23 @@ function clearMovieList(){
 // Attach handlers to DOM elements
 const init = () => {
     //Handler to add movie to list and dom
-    $('.carousel').on("click", "a.add-btn", function () {
+    $('.carousel').on("click", "btn.add-btn", function () {
         //Get movie ID from parent Card ID
         let thisMovieId = $(this).closest('div.card').attr('id')
             .split("_")[1];
         console.log(`Adding movie id: ${thisMovieId}`);
         addMovieToDOM(thisMovieId);
+        disableSearchAddButtons(thisMovieId)
     })
 
     //Handler to remove movie from list and dom
-    $('#movie_list').on("click", "a.remove-btn", function () {
+    $('#movie_list').on("click", "btn.remove-btn", function () {
         //Get movie ID from parent Card ID
         let thisMovieTmdbId = $(this).closest('div.card').attr('id')
             .split("_")[1];
         console.log(`Removing movie id ${thisMovieTmdbId}`);
         removeMovieFromDOM(thisMovieTmdbId);
+        enableSearchAddButtons(thisMovieTmdbId);
     })
 
     // Button to clear current movie list FLAG: Is used?

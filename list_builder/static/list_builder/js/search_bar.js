@@ -25,6 +25,25 @@ function delay(fn, ms) {
     }
 }
 
+function existingMovieCheck(list1, list2){
+    let id_list1 = list1.map(movie => movie.tmdb_id);
+    let id_list2 = list2.map(movie => movie.tmdb_id);
+    return id_list1.filter(x => id_list2.includes(x));
+}
+
+function disableSearchAddButtons(...tmdb_ids){
+    tmdb_ids.forEach(tmdb_id => {
+        $(`#${search_prefix}_${tmdb_id} .add-btn`)
+            .addClass("disabled-btn");
+    })
+}
+function enableSearchAddButtons(...tmdb_ids){
+    tmdb_ids.forEach(tmdb_id => {
+        $(`#${search_prefix}_${tmdb_id} .add-btn`)
+            .removeClass("disabled-btn");
+    })
+}
+
 function updateSearchResultsDOM(data){
     console.log(data);
     //If no search results
@@ -55,6 +74,9 @@ function updateSearchResultsDOM(data){
                     numVisible: 10,
                     noWrap: true
                 })
+                .promise().done(function () {
+                    disableSearchAddButtons(...existingMovieCheck(movie_list, search_results));
+                });
         })
 }
 
@@ -109,4 +131,4 @@ const init = () => {
 
 }
 
-export { init }
+export { init, disableSearchAddButtons, enableSearchAddButtons }

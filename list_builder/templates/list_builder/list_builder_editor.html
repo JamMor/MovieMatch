@@ -3,7 +3,7 @@
 
     {% block list_builder_subheading %}
         <div class="center-align">
-            <div class="btn-large btn-rounded neon-fuschia inactive">{{ saved_list.list_name }}</div>
+            <div class="btn-large btn-rounded neon-purple neon-unlit">{{ saved_list.list_name }}</div>
         </div>
     {% endblock %}
 
@@ -14,7 +14,7 @@
                 <div class="nav-wrapper">
                     <ul>
                         <li class="waves-effect waves-light">
-                            <a class="modal-trigger indigo-text text-darken-4" href="#save-modal">
+                            <a id="open-save-btn" class="modal-trigger indigo-text text-darken-4" href="#save-modal">
                                 <i class="material-icons left indigo-text text-darken-4">save</i>Save
                             </a>
                         </li>
@@ -39,7 +39,5 @@
             var savedListId = '{{saved_list.id}}';
             var savedListName = '{{saved_list.list_name}}';
         </script>
-        <script type="module" src="{% static 'list_builder/js/list_editor/list_editor.js'%}"></script>
-        <script type="module" src="{% static 'js/save_list.js'%}"></script>
         <script type="module" src="{% static 'list_builder/js/list_editor/index.js'%}"></script>
     {% endblock %}
