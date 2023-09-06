@@ -796,7 +796,9 @@ footer.sharecode i{
 }
 
 /* Disabled Save Button Class */
-.fixed-action-btn.toolbar ul li a.disabled-btn {
+.fixed-action-btn.toolbar ul li a.disabled-btn,
+a.disabled-btn,
+a.disabled-btn:hover {
     background-color: #878787;
     filter: grayscale(100%);
 }
