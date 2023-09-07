@@ -22,7 +22,7 @@ const CardButton = (type) => {
             break;
         case 'info':
             color = "neon-purple neon-glow-hover"
-            customClass = "activator"
+            customClass = "activator info-btn"
             icon = "info_outline"
             break;
         default:
@@ -61,7 +61,7 @@ const MovieCard = (
     card_css_class += is_eliminated ? " eliminated" : "";
 
     return `
-        <div id='${id_prefix}_${card_id}' class="card sticky-action grey darken-4 ${card_css_class}">
+        <div id='${id_prefix}_${card_id}' class="movie-card card sticky-action grey darken-4 ${card_css_class}">
             <div class="card-image">
                 <img src='${fullPosterURL}'>
                 <span class="card-title">${title}<br />${releaseYear}</span>
