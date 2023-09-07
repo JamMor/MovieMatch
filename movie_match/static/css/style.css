@@ -345,25 +345,25 @@ header nav a.brand-logo {
     line-height: normal;
 }
 
-nav .login-form input {
+#nav-login-form input {
     border-bottom: 1px solid var(--grey_darken-2);
 }
 
 /* Vertical Login Form */
-#login-form form {
+#nav-login-form {
     padding: 0px 1rem;
     padding-bottom: 1rem;
     height: auto;
     display:flex;
     flex-direction: column;
 }
-#login-form form button {
+#nav-login-form button {
     align-self: flex-end;
 }
 /* ---------------------- */
 
 /* Horizontal Login Form */
-/* #login-form form {
+/* #nav-login-form {
     padding: 0px 1rem;
     height: 100%;
     display:flex;
@@ -372,13 +372,13 @@ nav .login-form input {
 } */
 /* ---------------------- */
 
-#login-form div.input-field {
+#nav-login-form div.input-field {
     margin-top: 1rem;
     margin-bottom: 1rem;
     min-width: 250px;
 }
 
-#login-form form div {
+#nav-login-form div {
     height: auto;
 }
 
@@ -432,7 +432,7 @@ nav .login-form input {
 }
 
 /* -----------------------SideLoginForm----------------------- */
-#login-form-sidenav form {
+#side-login-form {
     border-left: none;
     border-right: none;
     clip-path: inset(-50px 0px -50px 0px);
@@ -441,7 +441,7 @@ nav .login-form input {
     flex-direction: column;
 }
 
-#login-form-sidenav form button {
+#side-login-form button {
     align-self: flex-end;
 }
 
@@ -796,9 +796,8 @@ footer.sharecode i{
 }
 
 /* Disabled Save Button Class */
-.fixed-action-btn.toolbar ul li a.disabled-btn,
-a.disabled-btn,
-a.disabled-btn:hover {
+#open-save-btn.disabled-btn,
+#open-save-btn.disabled-btn:hover {
     background-color: #878787;
     filter: grayscale(100%);
 }
