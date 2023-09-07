@@ -1,11 +1,17 @@
+const formId = "account-delete-form";
+const $modal = $("#account-delete-modal");
+const $modalOpenBtn = $("#account-delete-btn");
+const $form = $("#account-delete-form");
+const $submitBtn = $("#account-delete-confirm");
+
 function openDeleteAccountModal() {
-    $(`#account-delete-modal`).modal();
-    $(`#account-delete-modal`).modal('open');
+    $modal.modal();
+    $modal.modal('open');
 }
 
 function sendDeleteAccountRequest() {
     console.log("Delete request sent.")
-    let deleteForm = document.querySelector("#account-delete-form");
+    let deleteForm = document.querySelector(`#${formId}`);
     const deleteFormData = new FormData(deleteForm);
     $.ajax({
         url: `settings/delete-account`,
@@ -16,16 +22,16 @@ function sendDeleteAccountRequest() {
         processData: false,
         contentType: false
     })
-    .done(function(data) {
-        console.log(data);
-        if(data['status'] == "success"){
-            $('#account-delete-modal').modal('close');
+    .done(function(response) {
+        console.log(response);
+        if(response.status == "success"){
+            $modal.modal('close');
             console.log("Account Deletion Success.")
             window.location.replace(`/`);
         }
         else {
             console.log("Failed to delete.")
-            M.toast({html: `<span><strong class="orange-text text-darken-3">Failed</strong> to delete account. ${data.errors}</span>`})
+            M.toast({html: `<span><strong class="orange-text text-darken-3">Failed</strong> to delete account. ${response.errors}</span>`})
         }
 
     })
@@ -37,12 +43,12 @@ function sendDeleteAccountRequest() {
 
 const init = () => {
     //Initializes then calls account deletion modal
-    $("#account-delete-btn").on("click", function(){
+    $modalOpenBtn.on("click", function(){
         openDeleteAccountModal();
     })
 
     //Sends delete request to server.
-    $("#account-delete-confirm").on("click", function(e){
+    $submitBtn.on("click", function(e){
         e.preventDefault();
         sendDeleteAccountRequest();
     })

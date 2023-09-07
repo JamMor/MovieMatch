@@ -2,18 +2,28 @@ import { Movie } from "/static/js/constructors.js";
 import { MovieCard } from "/static/js/DOMelements.js";
 
 const api_key = "f4f5f258379baf10796e1d3aeb5add05";
+
 const search_prefix ="query";
+const disabledBtnClass = "disabled-btn";
+const addBtnClass = "add-btn";
+
+const $searchContainer = $("#search-container");
+const $searchInput = $("#moviesearch-input");
+const $searchResults = $("#search-results");
+const $clearSearch = $("#search-close");
+const $movieList = $("#movie_list");
+const $searchCardFromTmdbId = (tmdb_id) => $(`#${search_prefix}_${tmdb_id}`);
 
 const searchDelayTime = 1000;
 const minSearchQueryLength = 2;
 
 function activateSearch(){
-    $("div.carousel").fadeIn(100);
-    $("#movie_list").fadeTo(500, 0.1)
+    $searchResults.fadeIn(100);
+    $movieList.fadeTo(500, 0.1)
 }
 function deactivateSearch(){
-    $("div.carousel").fadeOut(100);
-    $("#movie_list").fadeTo(500, 1);
+    $searchResults.fadeOut(100);
+    $movieList.fadeTo(500, 1);
 }
 
 //Delay wrapper function (to limit ajax queries when typing)
@@ -33,14 +43,14 @@ function existingMovieCheck(list1, list2){
 
 function disableSearchAddButtons(...tmdb_ids){
     tmdb_ids.forEach(tmdb_id => {
-        $(`#${search_prefix}_${tmdb_id} .add-btn`)
-            .addClass("disabled-btn");
+        $searchCardFromTmdbId(tmdb_id).find(`.${addBtnClass}`)
+            .addClass(disabledBtnClass);
     })
 }
 function enableSearchAddButtons(...tmdb_ids){
     tmdb_ids.forEach(tmdb_id => {
-        $(`#${search_prefix}_${tmdb_id} .add-btn`)
-            .removeClass("disabled-btn");
+        $searchCardFromTmdbId(tmdb_id).find(`.${addBtnClass}`)
+            .removeClass(disabledBtnClass);
     })
 }
 
@@ -48,17 +58,17 @@ function updateSearchResultsDOM(data){
     console.log(data);
     //If no search results
     if (data.results.length == 0) {
-        $("div.carousel")
+        $searchResults
             /* Gets the initial rendered height from DOM (scrollHeight) 
                 and animates. Callback sets height to auto. */
-            .animate({ height: $('div.carousel').get(0).scrollHeight }, 200, function () {
+            .animate({ height: $searchResults.get(0).scrollHeight }, 200, function () {
                 $(this).height('auto');
             })
             .html('<h6 class="center-align grey-text text-lighten-2">No results</h6>')
         return
     }
 
-    $("div.carousel")
+    $searchResults
         .animate({ height: "400px" }, 200)
         .promise().done(function () {
             $(this)
@@ -90,13 +100,13 @@ function searchMovies(searchQuery) {
             });
     }
     else if (searchQuery.length == 0) {
-        $("div.carousel").animate({ height: "0px" }, 150).html("")
+        $searchResults.animate({ height: "0px" }, 150).html("")
     }
 }
 
 function clearSearchResults(){
-    $("#moviesearch-input").val('');
-    $("div.carousel").animate({height: "0px"}, 150).html("");
+    $searchInput.val('');
+    $searchResults.animate({height: "0px"}, 150).html("");
 }
 
 // Attach handlers to DOM elements
@@ -108,24 +118,26 @@ const init = () => {
     })
 
     //Dim movie list when searching
-    $("#moviesearch-input").focus(activateSearch)
+    $searchInput.focus(activateSearch)
+
+    //Deactivate search when clicking outide of the area
     $(document).click(function(event){
         let clickedTarget = $(event.target);
         // If user clicks outside of search container
-        if (!clickedTarget.closest("#search-container").length){
+        if (!clickedTarget.closest($searchContainer).length){
             deactivateSearch();
         }
     })
 
     //Custom autocomplete jquery ajax to materialize carousel feature
-    $('#moviesearch-input').on("input", delay(function () {
+    $searchInput.on("input", delay(function () {
         const searchQuery = this.value;
         searchMovies(searchQuery);
     }, searchDelayTime));
 
     
     // Clear search results
-    $("#search-close").click(function() {
+    $clearSearch.click(function() {
         clearSearchResults();
     });
 

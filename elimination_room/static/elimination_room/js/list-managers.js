@@ -1,11 +1,23 @@
 import { MovieCard } from "/static/js/DOMelements.js";
 
+
+const $movieList = $("#movie_list");
+const get$movieCards = () => $movieList.children(".movie-card");
 const share_list_prefix = "shared";
+const $movieCardFromTmdbId = (tmdbId) => $(`#${share_list_prefix}_${tmdbId}`);
+const tmdbIdFromMovieCardDOMId = (domId) => domId.split("_")[1];
+
+const $userList = $("#user_list");
+const userDOMIdFromUuid = (uuid) => `user_${uuid}`;
+const $userElementFromUuid = (uuid) => $(`#user_${uuid}`);
+const uuidFromUserDOMId = (domId) => domId.split("_")[1];
+const get$userElements = () => $userList.children(".chip");
 
 function verifyMovieListDOMSync(sourceList){
+    let $movieCards = get$movieCards();
     //Confirming DOM and movie list are in sync FLAG
-    let domTmdbIds = $('#movie_list div').map(function() {
-        return this.id.split("_")[1];
+    let domTmdbIds = $movieCards.map(function() {
+        return tmdbIdFromMovieCardDOMId(this.id);
         })
         .get()
         
@@ -23,9 +35,10 @@ function verifyMovieListDOMSync(sourceList){
 }
 
 function verifyUserListDOMSync(sourceDict){
+    let $userElements = get$userElements();
     //Confirming DOM and user list are in sync FLAG
-    const domUsers = $('#user_list div').map(function() {
-        const thisUuid = this.id.split("_")[1];
+    const domUsers = $userElements.map(function() {
+        const thisUuid = uuidFromUserDOMId(this.id);
         const thisPosition = parseInt($(this).attr('data-position'));
         const thisNickname = $(this).text().trim();
         return {"uuid": thisUuid, "position": thisPosition, "nickname": thisNickname} ;
@@ -84,10 +97,9 @@ const MovieListManager = {
         else {added_movie_list = new_list}
         
         added_movie_list.forEach((movie) => {
-            $("#movie_list")
-                .append(
-                    MovieCard(share_list_prefix, movie.tmdb_id, movie, ["remove", "info"])
-                );
+            $movieList.append(
+                MovieCard(share_list_prefix, movie.tmdb_id, movie, ["remove", "info"])
+            );
         })
 
         console.log("Updated Movie List.");
@@ -102,51 +114,47 @@ const UserListManager = {
         //Other users are fuschia, this user is blue
         const color = user_uuid == uuid ? "neon-cyan" : "neon-purple"
         
-        const userContainer = $('#user_list')
-        let insertBeforePosition = userContainer.children().length
+        let $userElements = get$userElements();
+        let insertBeforePosition = $userElements.length
 
-        userContainer.children().each(function(index){
+        $userElements.each(function(index){
             let element_position = parseInt($(this).attr('data-position'));
             if (element_position > position){
                 insertBeforePosition = index
                 return false
             }
         })
-        const userDomHTML = `<div id='user_${uuid}' class="chip ${color} neon-unlit dimmed" data-position="${position}">
+        const userDomHTML = `<div id='${userDOMIdFromUuid(uuid)}' class="chip ${color} neon-unlit dimmed" data-position="${position}">
             ${nickname}
         </div>`
-        if (insertBeforePosition < userContainer.children().length){
-            userContainer.children().eq(insertBeforePosition).before(userDomHTML);
+        if (insertBeforePosition < $userElements.length){
+            $userElements.eq(insertBeforePosition).before(userDomHTML);
         }
         else {
-            userContainer.append(userDomHTML);
+            $userList.append(userDomHTML);
         }
     },
 
     //Removes user from DOM
     removeUserFromDom : (uuid) => {
-        $(`#user_${uuid}`).remove()
+        $userElementFromUuid(uuid).remove()
     },
 
     //Reorders users in DOM based on the current user dict and a list of the uuids to reorder
     reorderUsersInDom : (uuids, source_user_list) => {
-        
-        // Get current user elements
-        const userContainer = $('#user_list')
-        const userElements = userContainer.children()
-
         // Update data-position attribute of each user element
         uuids.forEach((uuid) => {
-            $(`#user_${uuid}`).attr('data-position', source_user_list[uuid].position);
+            $userElementFromUuid(uuid).attr('data-position', source_user_list[uuid].position);
         })
 
         function sortByDataPosition(a, b){
             return parseInt($(a).attr('data-position')) - parseInt($(b).attr('data-position'))
         }
 
-        // Sort user elements by data-position, and append back to userContainer 
+        let $userElements = get$userElements();
+        // Sort user elements by data-position, and append back to $userList 
         // (which will move them to the correct position without cloning or reinserting)
-        userElements.sort(sortByDataPosition).appendTo(userContainer);
+        $userElements.sort(sortByDataPosition).appendTo($userList);
     },
 
     //Syncs the DOM with changes from the old user list to the new one

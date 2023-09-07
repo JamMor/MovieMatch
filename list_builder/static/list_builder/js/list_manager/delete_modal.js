@@ -1,16 +1,24 @@
+const $modal = $("#delete-modal");
+const $modalOpenBtns = $(".delete-list-btn");
+const $submitBtn = $("#delete-list-confirm");
+const $headerRowElementFromListId = (listId) => $(`#list_${listId}`);
+const listIdFromHeaderRowDOMId = (headerRowDOMId) => headerRowDOMId.split("_")[1];
+const $listNameForModal = $("#list-name-delete");
+
 let thisList = {};
 function displayDeleteModal(listName){
-    $("#list-name-delete")
+    $listNameForModal
         .text(listName)
-    $(`#delete-modal`).modal();
-    $(`#delete-modal`).modal('open');
+    $modal.modal();
+    $modal.modal('open');
 }
 
 function handleDeleteRequest(){
     //Get list name and id from DOM
-    let thisRow = $(this).parents("tr")
-    thisList.id = thisRow.attr("id").split("_")[1];
-    thisList.name = thisRow
+    let $thisRow = $(this).parents("tr")
+    let thisRowId = $thisRow.attr("id");
+    thisList.id = listIdFromHeaderRowDOMId(thisRowId);
+    thisList.name = $thisRow
         .children(".list-name-td")
         .children("span")
         .text()
@@ -26,15 +34,15 @@ function sendDeletionRequest(){
     .done(function(response) {
         console.log(response);
         if(response.status == "success"){
-            $('#delete-modal').modal('close');
+            $modal.modal('close');
             console.log("Delete Success.")
             deleteStatusToast(response.data.list_name, "success")
             
             // Remove deleted row from DOM
-            let headerRow = $(`#list_${response.data.list_id}`)
-            let contentRow = headerRow.next("tr")
-            headerRow.remove();
-            contentRow.remove()
+            let $headerRow = $headerRowElementFromListId(response.data.list_id)
+            let $contentRow = $headerRow.next("tr")
+            $headerRow.remove();
+            $contentRow.remove()
 
         }
         else {
@@ -73,12 +81,12 @@ function deleteStatusToast(listName, status){
 
 const init = () => {
     //Gets list id, and generates then calls delete modal
-    $(".delete-list-btn").on("click", function(){
+    $modalOpenBtns.on("click", function(){
         handleDeleteRequest.call(this);
     })
     
     //Sends delete request to server. List ID as URL parameter
-    $("#delete-list-confirm").on("click", function(e){
+    $submitBtn.on("click", function(e){
         e.preventDefault();
         sendDeletionRequest();    
     })

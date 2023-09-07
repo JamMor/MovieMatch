@@ -4,6 +4,7 @@ import { MovieCard } from "/static/js/DOMelements.js";
 const movie_list_prefix ="movie";
 const importedList = JSON.parse(
     document.getElementById('imported-movie-data').textContent);
+const $movieList = $("#movie_list");
 
 //Adds movies to list and DOM from script data source
 function addMoviesToList(...movies) {
@@ -25,7 +26,7 @@ function addMoviesToList(...movies) {
         }
     })
 
-    $("#movie_list").append(DOMstring);
+    $movieList.append(DOMstring);
 }
 
 const init = () => {

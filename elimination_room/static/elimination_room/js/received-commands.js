@@ -6,6 +6,17 @@ import { scrollHorizontallyTo } from "/static/js/slider.js";
 //These are the functions that are called when a succesful socket command is 
 // received from the server
 
+const eliminatedClass = "eliminated";
+const finalModalId = "final_modal";
+
+const $movieList = $("#movie_list");
+const $statusBtn = $("#status-btn");
+const $userList = $("#user_list");
+const $userElementFromUuid = (uuid) => $(`#user_${uuid}`);
+const shared_movie_prefix = "shared";
+const $movieElementFromTmdbId = (tmdbId) => $(`#${shared_movie_prefix}_${tmdbId}`);
+const $finalModal = $("#final_modal");
+
 // Eliminate Movie
 function commandEliminate(commandData) {
     const {shared_movie_id, eliminating_uuid, next_eliminating_uuid = null} = commandData
@@ -13,7 +24,7 @@ function commandEliminate(commandData) {
     const eliminated_movie = movie_list.find(movie => movie.shared_movie_id == shared_movie_id)
 
     eliminated_movie.is_eliminated == true;
-    $(`#shared_${eliminated_movie.tmdb_id}`).addClass('eliminated')
+    $movieElementFromTmdbId(eliminated_movie.tmdb_id).addClass(eliminatedClass)
     console.log("Eliminated movie")
 
     let toastClass = "purple-text text-accent-2"
@@ -56,7 +67,7 @@ function commandFinalized(finalSharedId = null) {
         .done(returnInfo => {
             console.log(returnInfo)
             let finalMovieInfo = new DetailedMovie(returnInfo ?? finalMovie)
-            openMoreInfoModal(finalMovieInfo, "final_modal")
+            openMoreInfoModal(finalMovieInfo, finalModalId)
         })
         .fail(function(){
             console.log("AJAX error")
@@ -145,10 +156,10 @@ function commandSyncRoom(commandData) {
 function commandRefreshMovieList(commandData) {
     user_list = {};
     movie_list= [];
-    $('#user_list').html("");
-    $('#movie_list').html("");
+    $userList.html("");
+    $movieList.html("");
 
-    $('#final_modal').modal('close');
+    $finalModal.modal('close');
 
     commandSyncRoom(commandData)
 }
@@ -214,9 +225,9 @@ function setStatusBar(status){
     let {styleClass, icons, statusText} = statusMap[status];
 
     // Edit DOM
-    $('#status-btn').removeClass().addClass(styleClass);
-    $('#status-btn i').html(icons);
-    $('#status-btn span').html(statusText);
+    $statusBtn.removeClass().addClass(styleClass);
+    $statusBtn.find("i").html(icons);
+    $statusBtn.find("span").html(statusText);
 }
 
 //Check if final movie
@@ -232,7 +243,7 @@ function setUserTurn(turnUUID = null){
     const inactivatedClass = "neon-unlit";
     
     //Remove any active classes
-    $(`#user_list div.${activatedClass}`).removeClass(activatedClass).addClass(inactivatedClass);
+    $userList.find(`div.${activatedClass}`).removeClass(activatedClass).addClass(inactivatedClass);
     
     // If no next user, return with no active class set
     if(turnUUID == null){
@@ -241,8 +252,8 @@ function setUserTurn(turnUUID = null){
 
     //Set current user turn to true and add active class, then scroll user into view
     current_eliminating_uuid = turnUUID;
-    $(`#user_${turnUUID}`).addClass(activatedClass).removeClass(inactivatedClass);
-    scrollHorizontallyTo($(`#user_${turnUUID}`).get(0));
+    $userElementFromUuid(turnUUID).addClass(activatedClass).removeClass(inactivatedClass);
+    scrollHorizontallyTo($userElementFromUuid(turnUUID).get(0));
 
     //Toast new user turn
     const toastName = (turnUUID != user_uuid) 
@@ -256,7 +267,7 @@ function setUserTurn(turnUUID = null){
             ? "Waiting on YOUR turn..."
             : `Waiting on ${user_list[turnUUID].nickname}'s turn...`
 
-    $('#status-btn span').html(statusText);
+    $statusBtn.find("span").html(statusText);
 }
 
 function getMoreMovieInfo(movieId){

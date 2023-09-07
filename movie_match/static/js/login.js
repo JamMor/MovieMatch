@@ -1,5 +1,12 @@
 import { formErrorHandler } from "/static/js/form_functions.js";
 
+const loginFormClass = "login-form";
+
+const $allLoginForms = $(".login-form");
+const $navLoginForm = $("#nav-login-form");
+const $sideLoginForm = $("#side-login-form");
+const $navLoginDropdown = $('#nav-bar .dropdown-trigger');
+
 function loginHandler(){
    
     let formAction = $(this).attr('action')
@@ -17,9 +24,9 @@ function loginHandler(){
                 console.log(response.form_errors);
                 console.log(response.errors);
                 //Reset any errors.
-                $(".login-form span.error").remove();
-                formErrorHandler(".login-form", response.form_errors)
-                $('#nav-bar .dropdown-trigger').dropdown('recalculateDimensions');
+                $allLoginForms.find("span.error").remove();
+                formErrorHandler(`.${loginFormClass}`, response.form_errors)
+                $navLoginDropdown.dropdown('recalculateDimensions');
             }
         })
         .fail(function () {
@@ -31,13 +38,13 @@ function loginHandler(){
 
 const init = () => {
     //Login Submission AJAX
-    $(".login-form").on("submit", function (event) {
+    $allLoginForms.on("submit", function (event) {
         event.preventDefault()
         loginHandler.call(this)
     })
     
     //Allows user to tab through dropdown form fields without dropdown closing
-    $('nav .login-form').on('keydown', function(event) {
+    $navLoginForm.on('keydown', function(event) {
         event.stopPropagation();
     });
 }

@@ -1,3 +1,12 @@
+const movieCardClass = "movie-card"
+const removeBtnClass = "remove-btn"
+const startEliminationClass = "status-start"
+const refreshBtnId = "refresh-btn"
+
+const $movieList = $("#movie_list");
+const $finalModal = $("#final_modal");
+const $statusBar = $("#status_bar");
+
 function sendEliminate(matchSocket){
     //Validate
     if(!elimination_active){
@@ -10,7 +19,7 @@ function sendEliminate(matchSocket){
     }
 
     //Get tmdb_id from parent Card ID
-    let tmdb_id = $(this).closest('div.card').attr('id')
+    let tmdb_id = $(this).closest(`.${movieCardClass}`).attr('id')
         .split("_")[1];
     //Get shared_movie_ID
     let {shared_movie_id} = movie_list.find(movie => movie.tmdb_id == tmdb_id)
@@ -41,17 +50,17 @@ function sendRefresh(matchSocket){
 
 const init = (matchSocket) => {
     //Send which movie to eliminate on click
-    $('#movie_list').on('click', 'btn.remove-btn' , function() {
+    $movieList.on('click', `.${removeBtnClass}` , function() {
         sendEliminate.call(this, matchSocket)
     });
 
     //Send start eliminating command
-    $('#status_bar').on('click', '.status-start' , function() {
+    $statusBar.on('click', `.${startEliminationClass}` , function() {
         sendStartElimination(matchSocket)
     });
 
     //Send Refresh Share List command
-    $('#final_modal').on('click', '#refresh-btn' , function() {
+    $finalModal.on('click', `#${refreshBtnId}` , function() {
         sendRefresh(matchSocket)
     });
 }

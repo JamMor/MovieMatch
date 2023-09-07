@@ -1,13 +1,25 @@
 import {applyTooltips, formErrorHandler} from "/static/js/form_functions.js";
 
+
+const formId = "change-nickname-form";
+//Every on screen element that displays the user's nickname has this class
+const nicknameTagsClass = "displayed-nickname";
+
+const $modal = $("#change-nickname-modal");
+const $modalOpenBtn = $("#change-nickname-btn");
+const $form = $("#change-nickname-form");
+const $submitBtn = $("#change-nickname-confirm");
+//Every on screen element that displays the user's nickname has this class
+const $nicknameTags = $(".displayed-nickname");
+
 function openChangeNicknameModal(){
-    $(`#change-nickname-modal`).modal();
-    $(`#change-nickname-modal`).modal('open');
+    $modal.modal();
+    $modal.modal('open');
 }
 
 function sendChangeNicknameRequest(){
     console.log("Change request sent.")
-    let changeForm = document.querySelector("#change-nickname-form");
+    let changeForm = document.querySelector(`#${formId}`);
     const changeFormData = new FormData(changeForm);
     $.ajax({
         url: `/settings/change-nickname`,
@@ -22,12 +34,12 @@ function sendChangeNicknameRequest(){
         console.log(response);
         if(response.status == "success"){
             let newNickname = response.data["nickname"]
-            $('#change-nickname-modal').modal('close');
+            $modal.modal('close');
             //FLAG Reset old form errors
-            $(`#change-nickname-form span.error`).remove();
+            $form.find("span.error").remove();
             console.log(`Changed nickname to ${newNickname}`)
             // Update nicknames on anywhere on page
-            let nicknameElements = document.getElementsByClassName("displayed-nickname");
+            let nicknameElements = document.getElementsByClassName(nicknameTagsClass);
             for (let i = 0; i < nicknameElements.length; i++) {
                 nicknameElements[i].innerText = newNickname;
             }
@@ -39,8 +51,8 @@ function sendChangeNicknameRequest(){
             console.log(response.form_errors)
             M.toast({html: `<span><strong class="orange-text text-darken-3">Failed</strong> to change nickname.</span>`})
             //FLAG Reset old form errors
-            $(`#change-nickname-form span.error`).remove();
-            formErrorHandler("#change-nickname-form", response.form_errors)
+            $form.find("span.error").remove();
+            formErrorHandler(`#${formId}`, response.form_errors)
         }
     })
     .fail(function() {
@@ -53,12 +65,12 @@ const init = () => {
     applyTooltips()
 
     //Initializes then calls change nickname modal
-    $("#change-nickname-btn").on("click", function(){
+    $modalOpenBtn.on("click", function(){
         openChangeNicknameModal();
     })
 
     //Sends change nickname request to server.
-    $("#change-nickname-confirm").on("click", function(e){
+    $submitBtn.on("click", function(e){
         e.preventDefault();
         sendChangeNicknameRequest();
     })

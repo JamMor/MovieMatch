@@ -1,15 +1,21 @@
 import {applyTooltips, formErrorHandler} from "/static/js/form_functions.js";
 
+const formId = "change-password-form";
+const $modal = $("#change-password-modal");
+const $modalOpenBtn = $("#change-password-btn");
+const $form = $("#change-password-form");
+const $submitBtn = $("#change-password-confirm");
+
 function openChangePasswordModal(){
-    $(`#change-password-modal`).modal();
-    $(`#change-password-modal`).modal('open');
+    $modal.modal();
+    $modal.modal('open');
 }
 
 function sendChangePasswordRequest(){
     //FLAG Reset old form errors
-    $("#change-password-form span.error").remove();
+    $form.find("span.error").remove();
     console.log("Change password request sent.")
-    let changePasswordForm = document.querySelector("#change-password-form");
+    let changePasswordForm = document.querySelector(`#${formId}`);
     const changePasswordFormData = new FormData(changePasswordForm);
     $.ajax({
         url: `settings/change-password`,
@@ -23,7 +29,7 @@ function sendChangePasswordRequest(){
     .done(function(response) {
         console.log(response);
         if(response.status == "success"){
-            $('#change-password-modal').modal('close');
+            $modal.modal('close');
             changePasswordForm.reset();
             console.log("Password Change Success.")
             M.toast({html: `<span><strong class="cyan-text text-accent-2">Successfully</strong> changed password!</span>`})
@@ -33,7 +39,7 @@ function sendChangePasswordRequest(){
             console.log("Failed to change password.")
             console.log(response.errors)
             console.log(response.form_errors)
-            formErrorHandler("#change-password-form", response.form_errors)
+            formErrorHandler(`#${formId}`, response.form_errors)
             changePasswordForm.reset();
             M.toast({html: `<span><strong class="orange-text text-darken-3">Failed</strong> to change password.</span>`})
         }
@@ -50,12 +56,12 @@ const init = () => {
     applyTooltips()
 
     //Initializes then calls change password modal
-    $("#change-password-btn").on("click", function(){
+    $modalOpenBtn.on("click", function(){
         openChangePasswordModal();
     })
 
     //Sends change password request to server.
-    $("#change-password-confirm").on("click", function(e){
+    $submitBtn.on("click", function(e){
         e.preventDefault();
         sendChangePasswordRequest();
     })

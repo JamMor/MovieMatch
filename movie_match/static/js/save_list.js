@@ -1,5 +1,12 @@
 // Save List
 
+const $modal = $("#save-modal");
+const $submitBtn = $("#save-list-confirm");
+//This is for disabled save buttons if user is not logged in.
+const $disabledBtn = $("#open-save-btn.disabled-btn");
+//This is the ID of the list-name field in the editor save modal.
+const $savedListNameField = $("#list-name");
+
 /**
  * Saves current movies to list in DB.
  * @param {object} input - An anonymous object that is destructured
@@ -22,13 +29,13 @@ function saveList ({tmdb_ids, list_name, list_id}) {
     $.post(saveURL, JSON.stringify({"list_name":list_name, "tmdb_ids": tmdb_ids}),"json")
             .done(function(response) {
                 console.log(response);
-                if(response['status'] == "success"){
-                    $('#save-modal').modal('close');
+                if(response.status == "success"){
+                    $modal.modal('close');
                     saveStatusToast(list_name, "success")
                 }
                 else {
-                    console.log(response['status'])
-                    console.log(response['errors'])
+                    console.log(response.status)
+                    console.log(response.errors)
                     saveStatusToast(list_name, "error")
                 }
                 // if there is a nextUrl, redirect to it
@@ -74,7 +81,7 @@ function handleEditorSave(){
         "list_id": savedListId})
 }
 function handleNewSave(){
-    let list_name = $("#list-name").val();
+    let list_name = $savedListNameField.val();
     let tmdb_ids = movie_list.map(movie => movie.tmdb_id)
 
     saveList({
@@ -84,14 +91,14 @@ function handleNewSave(){
 }
 
 function init(saveHandler){
-    $("#save-list-confirm").click(function (e){
+    $submitBtn.click(function (e){
         e.preventDefault();
         saveHandler();
     })
 }
 
 function disabledSave(){
-    $("#open-save-btn.disabled-btn").click(function (e){
+    $disabledBtn.click(function (e){
         e.preventDefault();
         M.toast({html: `<span><strong  class="orange-text text-darken-3">Must be logged in to save list.</strong></span>`});
     })

@@ -1,3 +1,7 @@
+const $nicknameInput = $("#nickname");
+const $sharecodeInput = $("#sharecode");
+const $submitBtn = $("#share-btn");
+
 function validateSharecode(sharecode) {
     if (!/^$|^[23456789ABCDEFGHJKLMNPQRSTUVWXYZ]{8}$/.test(sharecode)) {
         console.log("Invalid Sharecode format.")
@@ -7,8 +11,8 @@ function validateSharecode(sharecode) {
 }
 
 function submitEliminationList() {
-    let sharecode = $("#sharecode").val().toUpperCase();
-    let nickname = $("#nickname").val();
+    let sharecode = $sharecodeInput.val().toUpperCase();
+    let nickname = $nicknameInput.val();
 
     if (!validateSharecode(sharecode)) {
         //FLAG Toast error
@@ -42,7 +46,7 @@ function submitEliminationList() {
 
 const init = () => {
     // POSTs name, movie list, and sharecode(if any)
-    $("#share-btn").click(function () {
+    $submitBtn.click(function () {
         submitEliminationList();
     })
 }
