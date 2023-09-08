@@ -45,10 +45,6 @@ function scrollHorizontallyTo(element) {
     const computedStyle = getComputedStyle(parent);
     const parentPaddingRight = parseInt(computedStyle.getPropertyValue('padding-right'), 10);
     const parentPaddingLeft = parseInt(computedStyle.getPropertyValue('padding-left'), 10);
-
-    console.log('Padding Right:', parentPaddingRight);
-    console.log('Padding Left:', parentPaddingLeft);
-
     
     // Get the distance (+/-) from the parent's left edge (current scroll position) to the element's left edge
     const leftOffset = elRect.left - (parentRect.left + parentPaddingLeft/2)

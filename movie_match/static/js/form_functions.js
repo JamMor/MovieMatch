@@ -2,6 +2,7 @@
 //and applies them to the appropriate form fields
 function applyTooltips(){
     $('form script').each(function () {
+        // Script Ids are in the format "help_${field_element_id}"
         let thisId = $(this).attr("id").slice(5)
         let thisValue = JSON.parse($(this).text());
         $(`#${thisId}`).siblings("i").tooltip({
