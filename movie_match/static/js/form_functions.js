@@ -30,4 +30,8 @@ function formErrorHandler(formSelector, errorDict){
     }
 }
 
-export {applyTooltips, formErrorHandler}
+function resetFormErrors($jQueryFormObj){
+    $jQueryFormObj.find("span.error").remove();
+}
+
+export {applyTooltips, formErrorHandler, resetFormErrors}
