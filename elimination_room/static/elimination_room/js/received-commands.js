@@ -272,8 +272,7 @@ function setUserTurn(turnUUID = null){
 
 function getMoreMovieInfo(movieId){
     //Ajax for more movie detail w/ watch provider data
-    const api_key = "f4f5f258379baf10796e1d3aeb5add05";
-    return $.get(`https://api.themoviedb.org/3/movie/${movieId}?api_key=${api_key}&language=en-US&append_to_response=watch/providers`,
+    return $.get(resourcePath.moreMovieInfoUrl(movieId),
         "json")
 }
 

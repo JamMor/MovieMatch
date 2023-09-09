@@ -18,7 +18,7 @@ function sendChangePasswordRequest(){
     let changePasswordForm = document.querySelector(`#${formId}`);
     const changePasswordFormData = new FormData(changePasswordForm);
     $.ajax({
-        url: `settings/change-password`,
+        url: urlPath.changePassword,
         method:"POST",
         data: changePasswordFormData,
         // processData and contentType needed to properly send formData

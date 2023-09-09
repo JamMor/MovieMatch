@@ -22,7 +22,7 @@ function sendChangeNicknameRequest(){
     let changeForm = document.querySelector(`#${formId}`);
     const changeFormData = new FormData(changeForm);
     $.ajax({
-        url: `/settings/change-nickname`,
+        url: urlPath.changeNickname,
         method:"POST",
         data: changeFormData,
         // processData and contentType needed to properly send formData

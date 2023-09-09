@@ -1,7 +1,17 @@
 {% load static %}
 <script type="text/javascript">
-    var DJ_STATIC_FILES = {
-        "placeholder_path": "{% static 'images/movie_placeholder.png' %}",
-        "image_prefix": "https://image.tmdb.org/t/p/"
+    const api_key = "f4f5f258379baf10796e1d3aeb5add05";
+
+    var resourcePath = {
+        "placeholderPath": "{% static 'images/movie_placeholder.png' %}",
+        "imagePrefix": "https://image.tmdb.org/t/p/",
+        "imageSizes": {
+            "small": "w92",
+            "medium": "w185",
+            "large": "w500",
+            "original": "original"
+        },
+        "movieSearchUrl": (searchQuery) => `https://api.themoviedb.org/3/search/movie?api_key=${api_key}&query=${searchQuery}`,
+        "moreMovieInfoUrl": (movieId) => `https://api.themoviedb.org/3/movie/${movieId}?api_key=${api_key}&language=en-US&append_to_response=watch/providers`
         };
 </script>

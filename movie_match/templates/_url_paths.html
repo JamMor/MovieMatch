@@ -1,10 +1,11 @@
+<!-- //This contains a list of internal urls that are used in the javascript files. -->
 <script type="text/javascript">
     var urlPath = {
         "defaultRedirect" : "{% url 'list_builder:default_redirect' %}",
         //list_builder
         "listCreator" : "{% url 'list_builder:list_builder' %}",
         "listManager" : "{% url 'list_builder:list_manager' %}",
-        "saveURL" : (list_id = "") => {
+        "saveList" : (list_id = "") => {
             let saveURL = "/save"
             if (list_id) {saveURL += `/${list_id}`}
             return saveURL
@@ -35,8 +36,8 @@
         "login" : "{% url 'login_and_reg:login' %}",
         "logout" : "{% url 'login_and_reg:logout' %}",
         "accountSettings" : "{% url 'login_and_reg:settings' %}",
-        "change_nickname" : "{% url 'login_and_reg:change_nickname' %}",
-        "change_password" : "{% url 'login_and_reg:change_password' %}",
-        "delete_account" : "{% url 'login_and_reg:delete_account' %}",
+        "changeNickname" : "{% url 'login_and_reg:change_nickname' %}",
+        "changePassword" : "{% url 'login_and_reg:change_password' %}",
+        "deleteAccount" : "{% url 'login_and_reg:delete_account' %}",
     };
 </script>

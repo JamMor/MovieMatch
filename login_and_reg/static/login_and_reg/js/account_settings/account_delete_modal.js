@@ -14,7 +14,7 @@ function sendDeleteAccountRequest() {
     let deleteForm = document.querySelector(`#${formId}`);
     const deleteFormData = new FormData(deleteForm);
     $.ajax({
-        url: `settings/delete-account`,
+        url: urlPath.deleteAccount,
         method:"POST",
         data: deleteFormData,
         // processData and contentType needed to properly send formData

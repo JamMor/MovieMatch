@@ -21,12 +21,10 @@ function saveList ({tmdb_ids, list_name, list_id}) {
         return
     }
 
-    let saveURL = "/save"
     // if there is a list ID, save will append to url to update a list
     // else save will create a new list
-    if (list_id) {saveURL += `/${list_id}`}
 
-    $.post(saveURL, JSON.stringify({"list_name":list_name, "tmdb_ids": tmdb_ids}),"json")
+    $.post(urlPath.saveList(list_id), JSON.stringify({"list_name":list_name, "tmdb_ids": tmdb_ids}),"json")
             .done(function(response) {
                 console.log(response);
                 if(response.status == "success"){

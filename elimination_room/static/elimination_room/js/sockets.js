@@ -1,8 +1,5 @@
 import * as Received from "./received-commands.js";
 
-const api_key = "f4f5f258379baf10796e1d3aeb5add05";
-const image_link = "https://image.tmdb.org/t/p/";
-
 const shareCode = $('#sharecode').text();
 const initialRetryTime = 2000;
 const maxRetryInterval = 10;

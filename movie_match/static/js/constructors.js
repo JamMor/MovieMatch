@@ -24,8 +24,8 @@ const Movie = class Movie{
     }
 
     get fullPosterURL(){
-        const image_prefix = "https://image.tmdb.org/t/p/";
-        const placeholder_link = DJ_STATIC_FILES.placeholder_path;
+        const image_prefix = resourcePath.imagePrefix;
+        const placeholder_link = resourcePath.placeholderPath;
         return (this.poster_path == null)
             ? `${placeholder_link}`
             : `${image_prefix}w342${this.poster_path}`

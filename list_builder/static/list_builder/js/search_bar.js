@@ -1,8 +1,6 @@
 import { Movie } from "/static/js/constructors.js";
 import { MovieCard } from "/static/js/DOMelements.js";
 
-const api_key = "f4f5f258379baf10796e1d3aeb5add05";
-
 const search_prefix ="query";
 const disabledBtnClass = "disabled-btn";
 const addBtnClass = "add-btn";
@@ -93,7 +91,7 @@ function updateSearchResultsDOM(data){
 function searchMovies(searchQuery) {
     if (searchQuery.length >= minSearchQueryLength) {
         console.log(searchQuery)
-        $.get(`https://api.themoviedb.org/3/search/movie?api_key=${api_key}&query=${searchQuery}`, "json")
+        $.get(resourcePath.movieSearchUrl(searchQuery), "json")
             .done(updateSearchResultsDOM)
             .fail(function () {
                 console.log("AJAX error");

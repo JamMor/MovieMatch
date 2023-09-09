@@ -22,7 +22,7 @@ function submitEliminationList() {
 
     let tmdb_ids = movie_list.map(movie => movie.tmdb_id)
     
-    $.post("match/", JSON.stringify(
+    $.post(urlPath.shareSubmit, JSON.stringify(
         {
             "sharecode": sharecode,
             "nickname": nickname,
@@ -33,7 +33,7 @@ function submitEliminationList() {
             console.log(response);
 
             if (response.status == "success") {
-                window.location.href = `/match/${response.data.sharecode}`;
+                window.location.href = urlPath.eliminationRoom(response.data.sharecode);
             }
             else {
                 console.log(response.status)

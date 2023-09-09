@@ -28,7 +28,7 @@ function handleDeleteRequest(){
 
 function sendDeletionRequest(){
     $.ajax({
-        url: `/delete/${thisList.id}`,
+        url: urlPath.deleteList(thisList.id),
         method:"DELETE"
     })
     .done(function(response) {
