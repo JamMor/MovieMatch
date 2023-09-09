@@ -1,0 +1,42 @@
+<script type="text/javascript">
+    var urlPath = {
+        "defaultRedirect" : "{% url 'list_builder:default_redirect' %}",
+        //list_builder
+        "listCreator" : "{% url 'list_builder:list_builder' %}",
+        "listManager" : "{% url 'list_builder:list_manager' %}",
+        "saveURL" : (list_id = "") => {
+            let saveURL = "/save"
+            if (list_id) {saveURL += `/${list_id}`}
+            return saveURL
+        },
+        "listEditor" : (list_id) => {
+            let editUrl = "/edit"
+            return `${editUrl}/${list_id}`
+        },
+        "deleteList" : (list_id) => {
+            let deleteListUrl = "/delete"
+            return `${deleteListUrl}/${list_id}`
+        },
+        //elimination_room
+        "shareSubmit" : "{% url 'elimination_room:share_submit' %}",
+        "eliminationRoom" : (sharecode) => {
+            let baseUrl = "/match"
+            return `${baseUrl}/${sharecode}`
+        },
+        "webSocketURL" : (shareCode = "") => {
+            let webSocketProtocol = "{% if IN_DEBUG %}ws://{% else %}wss://{% endif %}"
+            let baseURL = window.location.host
+            let socketRootURL = "ws/match"
+    
+            return `${webSocketProtocol}${baseURL}/${socketRootURL}/${shareCode}/`
+        },
+        //login_and_reg
+        "register" : "{% url 'login_and_reg:register' %}",
+        "login" : "{% url 'login_and_reg:login' %}",
+        "logout" : "{% url 'login_and_reg:logout' %}",
+        "accountSettings" : "{% url 'login_and_reg:settings' %}",
+        "change_nickname" : "{% url 'login_and_reg:change_nickname' %}",
+        "change_password" : "{% url 'login_and_reg:change_password' %}",
+        "delete_account" : "{% url 'login_and_reg:delete_account' %}",
+    };
+</script>

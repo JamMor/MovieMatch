@@ -92,25 +92,9 @@
     {% endblock %}
     {% block content_block %}{% endblock %}
     {% block script_block %}
-    <script type="text/javascript">
-        var DJ_STATIC_FILES = {
-        "placeholder_path": "{% static 'images/movie_placeholder.png' %}",
-        "image_prefix": "https://image.tmdb.org/t/p/"
-        };
-        var urlPath = {
-            "listCreator" : "{% url 'list_builder:list_builder' %}",
-            "listManager" : "{% url 'list_builder:list_manager' %}",
-            "saveURL" : (list_id = "") => {
-                let saveURL = "{% url 'list_builder:save_list' %}" 
-                if (list_id) {saveURL += `/${list_id}`}
-            },
-            "webSocketURL" : (shareCode = "") => {
-                let webSocketProtocol = "{% if IN_DEBUG %}ws://{% else %}wss://{% endif %}"
-                let baseURL = window.location.host
-                
-                return `${webSocketProtocol}${baseURL}/ws/match/${shareCode}/`
-            }
-        };
+    {% include "_django_data.html" %}
+    {% include "_url_paths.html" %}
+    <script type="text/javascript">        
     </script>
     <script type="module" src="{% static 'js/index.js'%}"></script>
     {% endblock %}
