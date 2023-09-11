@@ -29,7 +29,8 @@ function saveList ({tmdb_ids, list_name, list_id}) {
                 console.log(response);
                 if(response.status == "success"){
                     $modal.modal('close');
-                    saveStatusToast(list_name, "success")
+                    const savedListName = response.data.list_name;
+                    saveStatusToast(savedListName, "success")
                 }
                 else {
                     console.log(response.status)

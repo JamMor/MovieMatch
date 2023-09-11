@@ -78,7 +78,11 @@ class MovieList(models.Model):
         abstract = True
 
 class SavedMovieList(MovieList):
-    list_name = models.CharField(max_length=255, null=True)
+    list_name = models.CharField(max_length=255, blank=True)
+
+    @property
+    def display_name(self):
+        return self.list_name if self.list_name else f'Movie List {self.created_at.strftime("%Y-%m-%d %H:%M")}'
 
 class TempMovieList(MovieList):
     pass

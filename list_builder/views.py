@@ -78,6 +78,7 @@ def save(request, list_id = None):
             new_ids =list(Movie.objects.filter(tmdb_id__in=ids_in_db).values_list("id", flat=True))
             saved_list.movies.set(new_ids)
             response_data = {"nextUrl" : reverse('list_builder:list_manager')}
+        response_data.update({"list_name" : saved_list.display_name})
         return JsonResponse(SuccessJsonClassObject(data=response_data).to_dict())
     except Exception as err:
         print(err)

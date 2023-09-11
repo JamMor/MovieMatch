@@ -17,7 +17,7 @@
                         {% for list in saved_lists %}
                         <tr id="list_{{list.id}}" class="row-collapse-trigger">
                             <td class="list-name-td">
-                                <span class="truncate">{{list.list_name}}</span>
+                                <span class="truncate">{{list.display_name}}</span>
                             </td>
                             <td class="list-count-td">
                                 <span class="new badge cyan accent-2" data-badge-caption="">{{list.movies.count}}</span>
