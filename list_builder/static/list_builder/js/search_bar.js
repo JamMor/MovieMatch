@@ -110,11 +110,6 @@ function clearSearchResults(){
 // Attach handlers to DOM elements
 const init = () => {
 
-    //Prevent normal form behavior for search
-    $('.ajax-form').submit(function(e){
-        e.preventDefault();
-    })
-
     //Dim movie list when searching
     $searchInput.focus(activateSearch)
 
