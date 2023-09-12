@@ -47,6 +47,9 @@ class SharedMovieList(models.Model):
         else:
             print("Sharecode exists. Not renewing.")
             super(SharedMovieList, self).save(*args, **kwargs)
+    
+    def __str__(self):
+        return f'{self.id} - {self.sharecode}'
 
 class SharedMovie(models.Model):
     submitted_by = models.ManyToManyField('list_builder.Persona', related_name="submitted_movies")

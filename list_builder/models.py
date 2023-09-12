@@ -35,6 +35,10 @@ class Persona(models.Model):
         else:
             print("UUID exists. Not renewing.")
             super(Persona, self).save(*args, **kwargs)
+    
+    def __str__(self):
+        # return uuid and nickname if nickname exists
+        return f'{self.uuid} - {self.nickname}' if self.nickname else self.uuid
 
 # Local copy of info from TheMovieDB, https://www.themoviedb.org/
 class Movie(models.Model):
@@ -84,5 +88,9 @@ class SavedMovieList(MovieList):
     def display_name(self):
         return self.list_name if self.list_name else f'Movie List {self.created_at.strftime("%Y-%m-%d %H:%M")}'
 
+    def __str__(self):
+        return self.display_name
+    
 class TempMovieList(MovieList):
-    pass
+    def __str__(self):
+        return f'Temp Movie List {self.created_at.strftime("%Y-%m-%d %H:%M")}'
