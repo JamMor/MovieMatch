@@ -12,6 +12,8 @@ const $clearSearch = $("#search-close");
 const $listActionBtn = $("#list-actions-btn");
 const $movieList = $("#movie_list");
 const $searchCardFromTmdbId = (tmdb_id) => $(`#${search_prefix}_${tmdb_id}`);
+const $addFromList = $("#add-from-list");
+const $clearMovieList = $("#clear-movie-list");
 
 const searchDelayTime = 1000;
 const minSearchQueryLength = 2;
@@ -108,6 +110,24 @@ function clearSearchResults(){
     $searchResults.animate({height: "0px"}, 150).html("");
 }
 
+function addFromListHandler(){
+    $.get("/get/8")
+        .done(function(response) {
+            console.log(response);
+            if (response.status == "success"){
+                console.log("success")
+                console.log(response.data)
+            }
+            else {
+                console.log(response.status)
+                console.log(response.errors)
+            }
+        })
+        .fail(function() {
+            console.log("Server error");
+        });
+}
+
 // Attach handlers to DOM elements
 const init = () => {
 
@@ -138,14 +158,18 @@ const init = () => {
         }
     })
 
-    $("#add-from-list").tooltip({
+    $addFromList.tooltip({
         position: "left",
         html: `<span>Add from saved list...</span>`
     });
-    $("#clear-movie-list").tooltip({
+    $clearMovieList.tooltip({
         position: "left",
         html: `<span>Clear list</span>`
     });
+
+    $addFromList.click(function(){
+        addFromListHandler();
+    })
 
     //Custom autocomplete jquery ajax to materialize carousel feature
     $searchInput.on("input", delay(function () {
