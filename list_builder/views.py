@@ -103,3 +103,15 @@ def delete(request, list_id):
     except Exception as err:
         print(err)
         return JsonResponse(FailedJsonClassObject(errors=["An error occured attempting to delete the list."]).to_dict())
+    
+def get_list(request, list_id):
+    this_persona = get_or_set_persona(request)
+    try:
+        saved_list = SavedMovieList.objects.get(id = list_id, created_by = this_persona)
+    except:
+        return JsonResponse(FailedJsonClassObject(errors=["Could not find list."]).to_dict())
+    movie_list = Movie.objects.filter(
+        in_savedmovielists = saved_list).values(
+        'tmdb_id', 'title', 'overview', 'poster_path', 'release_date')
+
+    return JsonResponse(SuccessJsonClassObject(data={"movies" : list(movie_list)}).to_dict())
