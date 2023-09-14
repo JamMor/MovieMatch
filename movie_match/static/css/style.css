@@ -241,6 +241,20 @@ i.suffix {
         0 0 1.8em 0 hsl(var(--hue), 66%, 30%);
 }
 
+/* For floating/fixed action buttons */
+.neon-glow-hover i, 
+.neon-unlit i, 
+.neon-unlit:hover i, 
+#moviesearch-input {
+    color: var(--grey_lighten-2);
+}
+.neon-glow-hover:hover i, 
+.neon-lit i, 
+.neon-lit:hover i, 
+#moviesearch-input:focus i {
+    color: hsl(var(--hue), 66%, 30%);
+}
+
 /* [+] */
 /* ================================Movie Card================================ */
 .card div.card-image span.card-title{
@@ -500,6 +514,21 @@ nav#search-bar {
 }
 #search-bar input:focus {
     color:#000;
+}
+
+#search-bar form {
+    display:flex;
+    gap:10px;
+}
+
+#moviesearch {
+    flex:1;
+}
+
+#list-actions-btn {
+    position:relative;
+    bottom:auto;
+    right:auto;
 }
 
 /* ------------------------------SearchResults------------------------------ */

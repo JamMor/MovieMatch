@@ -9,6 +9,7 @@ const $searchContainer = $("#search-container");
 const $searchInput = $("#moviesearch-input");
 const $searchResults = $("#search-results");
 const $clearSearch = $("#search-close");
+const $listActionBtn = $("#list-actions-btn");
 const $movieList = $("#movie_list");
 const $searchCardFromTmdbId = (tmdb_id) => $(`#${search_prefix}_${tmdb_id}`);
 
@@ -113,14 +114,38 @@ const init = () => {
     //Dim movie list when searching
     $searchInput.focus(activateSearch)
 
-    //Deactivate search when clicking outide of the area
+    //Deactivate open containers when clicking outside of them
     $(document).click(function(event){
         let clickedTarget = $(event.target);
-        // If user clicks outside of search container
+        // Deactivate search if user clicks outside of search container
         if (!clickedTarget.closest($searchContainer).length){
             deactivateSearch();
         }
+        // Deactivate list action button if user clicks outside of it
+        if (!clickedTarget.closest($listActionBtn).length){
+            $listActionBtn.floatingActionButton("close");
+        }
     })
+
+    $listActionBtn.click(function(){
+        //if element has active class
+        if ($(this).hasClass("active")){
+            $movieList.fadeTo(500, 1);
+        }
+        else {
+            $movieList.fadeTo(500, 0.1)
+            $searchResults.fadeOut(100);
+        }
+    })
+
+    $("#add-from-list").tooltip({
+        position: "left",
+        html: `<span>Add from saved list...</span>`
+    });
+    $("#clear-movie-list").tooltip({
+        position: "left",
+        html: `<span>Clear list</span>`
+    });
 
     //Custom autocomplete jquery ajax to materialize carousel feature
     $searchInput.on("input", delay(function () {
