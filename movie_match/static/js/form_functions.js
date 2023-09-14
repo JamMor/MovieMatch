@@ -35,7 +35,6 @@ function resetFormErrors($jQueryFormObj){
 }
 
 function preventDefaultFormClassInit(){
-    console.log("preventDefaultFormClassInit")
     //Prevent normal form behavior for search
     $('.ajax-form').submit(function(e){
         e.preventDefault();
