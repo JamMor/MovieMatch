@@ -39,6 +39,7 @@ def list_manager(request):
 @login_required(redirect_field_name='default_redirect', login_url='list_builder:default_redirect')
 def edit(request, list_id):
     this_persona = get_or_set_persona(request)
+    #FLAG add created_by, rework like get_list?
     saved_list = SavedMovieList.objects.prefetch_related(
                     "movies"
                 ).get(id = list_id)
