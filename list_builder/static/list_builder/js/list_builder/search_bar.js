@@ -1,5 +1,6 @@
 import { Movie } from "/static/js/constructors.js";
 import { MovieCard } from "/static/js/DOMelements.js";
+import { movieList, searchResults } from "./movie_lists.js";
 
 const search_prefix ="query";
 const disabledBtnClass = "disabled-btn";
@@ -37,8 +38,8 @@ function delay(fn, ms) {
 }
 
 function existingMovieCheck(list1, list2){
-    let id_list1 = list1.map(movie => movie.tmdb_id);
-    let id_list2 = list2.map(movie => movie.tmdb_id);
+    let id_list1 = list1.getIds();
+    let id_list2 = list2.getIds();
     return id_list1.filter(x => id_list2.includes(x));
 }
 
@@ -59,6 +60,7 @@ function updateSearchResultsDOM(data){
     console.log(data);
     //If no search results
     if (data.results.length == 0) {
+        searchResults.clearList();
         $searchResults
             /* Gets the initial rendered height from DOM (scrollHeight) 
                 and animates. Callback sets height to auto. */
@@ -68,27 +70,25 @@ function updateSearchResultsDOM(data){
             .html('<h6 class="center-align grey-text text-lighten-2">No results</h6>')
         return
     }
-
+    
+    
     $searchResults
-        .animate({ height: "400px" }, 200)
-        .promise().done(function () {
-            $(this)
-                .html(data.results.map(({ id: tmdb_id, ...rest }) => {
-                    //Renames the movie DB ID to tmdb_id for Movie object creation
-                    let movieObj = new Movie({ tmdb_id, ...rest });
-                    search_results.push(movieObj);
-                    return MovieCard(search_prefix, tmdb_id, movieObj, ["add", "info"], "carousel-item")
-                }).join('')
-                )
-                .carousel({
-                    dist: -50,
-                    numVisible: 10,
-                    noWrap: true
-                })
-                .promise().done(function () {
-                    disableSearchAddButtons(...existingMovieCheck(movie_list, search_results));
-                });
-        })
+    .animate({ height: "400px" }, 200)
+    .promise().done(function () {
+        searchResults.clearList();
+        let renamedResults = data.results.map(({ id, ...rest }) => ({tmdb_id: id, ...rest}));
+        searchResults.bulkAddMoviesToList(...renamedResults);
+
+        $(this)
+            .carousel({
+                dist: -50,
+                numVisible: 10,
+                noWrap: true
+            })
+            .promise().done(function () {
+            disableSearchAddButtons(...existingMovieCheck(movieList, searchResults));
+        });
+    })
 }
 
 function searchMovies(searchQuery) {
@@ -101,13 +101,15 @@ function searchMovies(searchQuery) {
             });
     }
     else if (searchQuery.length == 0) {
-        $searchResults.animate({ height: "0px" }, 150).html("")
+        searchResults.clearList();
+        $searchResults.animate({ height: "0px" }, 150);
     }
 }
 
 function clearSearchResults(){
     $searchInput.val('');
-    $searchResults.animate({height: "0px"}, 150).html("");
+    searchResults.clearList();
+    $searchResults.animate({height: "0px"}, 150);
 }
 
 function addFromListHandler(){

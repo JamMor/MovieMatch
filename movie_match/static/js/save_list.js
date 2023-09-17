@@ -89,6 +89,43 @@ function handleNewSave(){
     })
 }
 
+function getListName(){
+    let listName;
+    //if field element exists get from field, else if var exists, get from var
+    if($savedListNameField.length){
+        listName = $savedListNameField.val();
+    }
+    else if('savedListName' in window){
+        listName = savedListName;
+    }
+    else{
+        console.log("ERROR: No list name found.")
+    }
+    return listName
+}
+
+function getListId (){
+    if('savedListId' in window){
+        return savedListId
+    }
+    else{
+        console.log("ERROR: No list ID found.")
+        return null
+    }
+}
+
+function handleListSave(movieList){
+    let fields = {
+        "tmdb_ids" : movieList.getIds(),
+        "list_name": getListName() ?? ""
+    }
+    let listId = getListId()
+    if (listId){
+        fields["list_id"] = listId
+    }
+    saveList(fields)
+}
+
 function init(saveHandler){
     $submitBtn.click(function (e){
         e.preventDefault();
@@ -105,5 +142,13 @@ function disabledSave(){
 
 const editorSave = () => init(handleEditorSave);
 const newSave = () => init(handleNewSave);
+const listSave = (movieList) => init();
 
-export {editorSave, newSave, disabledSave}
+function init2(movieList){
+    $submitBtn.click(function (e){
+        e.preventDefault();
+        handleListSave(movieList);
+    })
+}
+
+export {editorSave, newSave, listSave, init2, disabledSave}
