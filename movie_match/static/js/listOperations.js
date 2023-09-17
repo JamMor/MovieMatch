@@ -29,6 +29,21 @@ class MovieList {
         return domId.split("_")[1];
     }
 
+    getIds() {
+        return this.movies.map(movie => movie.tmdb_id);
+    }
+
+    getDomIds() {
+        return this.get$movieCards().map(function($element) {
+            return this.tmdbIdFromMovieCardDOMId($element.attr('id'));
+            }, this)
+            .get()
+    }
+
+    getMovieByTmdbId(tmdb_id) {
+        return this.movies.find(movie => movie.tmdb_id == tmdb_id);
+    }
+
     bulkAddMoviesToList(...moviesToAdd) {
         let currentTmdbIdsSet = new Set(this.movies.map(movie => movie.tmdb_id));
 
@@ -67,8 +82,9 @@ class MovieList {
     removeMovieFromListById(tmdb_id) {
         // Find and remove from list
         let movieIndex = this.movies.findIndex(movie => movie.tmdb_id == tmdb_id);
+        let removedMovie = null;
         if (movieIndex != -1){
-            let removedMovie = this.movies.splice(movieIndex, 1);
+            removedMovie = this.movies.splice(movieIndex, 1);
         }
         else{
             console.log("ERROR: Movie not found in list.")
@@ -81,7 +97,7 @@ class MovieList {
         return removedMovie;
     }
 
-    syncMovieLists(newList){
+    syncLists(newList){
         const currentTmdbIds = new Set(this.movies.map(movie => movie.tmdb_id))
         const newTmdbIds = new Set(newList.map(movie => movie.tmdb_id))
 
@@ -96,12 +112,12 @@ class MovieList {
         this.bulkAddMoviesToList(...addedMovieList)
     }
 
-    clearMovieList() {
+    clearList() {
         this.movies = [];
         this.$listDomContainer.empty();
     }
 
-    verifyMovieListDOMSync(){
+    verifyListDOMSync(){
         const $movieCards = this.get$movieCards();
         //Confirming DOM and movie list are in sync FLAG
         const domTmdbIds = $movieCards.map(function($element) {
@@ -129,7 +145,7 @@ class SearchResultsList extends MovieList {
     prefix = "query"
 
     getCardHtml(movie) {
-        return MovieCard(this.prefix, movie.tmdb_id, movie, ["add", "info"])
+        return MovieCard(this.prefix, movie.tmdb_id, movie, ["add", "info"], "carousel-item")
     }
 }
 
