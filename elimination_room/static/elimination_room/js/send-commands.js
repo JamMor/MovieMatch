@@ -6,6 +6,7 @@ const refreshBtnId = "refresh-btn"
 const $movieList = $("#movie_list");
 const $finalModal = $("#final_modal");
 const $statusBar = $("#status_bar");
+import { movieList } from "./movie_lists.js";
 
 function sendEliminate(matchSocket){
     //Validate
@@ -19,20 +20,20 @@ function sendEliminate(matchSocket){
     }
 
     //Get tmdb_id from parent Card ID
-    let tmdb_id = $(this).closest(`.${movieCardClass}`).attr('id')
-        .split("_")[1];
+    const domId = $(this).closest(`.${movieCardClass}`).attr('id');
+    const tmdbId = movieList.tmdbIdFromMovieCardDOMId(domId)
     //Get shared_movie_ID
-    let {shared_movie_id} = movie_list.find(movie => movie.tmdb_id == tmdb_id)
+    const movie = movieList.getMovieByTmdbId(tmdbId);
 
     matchSocket.send(JSON.stringify({
         'command' : 'eliminate',
-        'shared_movie_id' : shared_movie_id
+        'shared_movie_id' : movie.shared_movie_id
     }))
 }
 
 function sendStartElimination(matchSocket){
     //Validate
-    if(movie_list.length < 2){
+    if(movieList.movies.length < 2){
         console.log("Must have at least 2 movies to begin elimination.")
         return
     }

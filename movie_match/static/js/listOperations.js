@@ -29,6 +29,10 @@ class MovieList {
         return domId.split("_")[1];
     }
 
+    domIdFromTmdbId(tmdb_id) {
+        return `${this.prefix}_${tmdb_id}`;
+    }
+
     getIds() {
         return this.movies.map(movie => movie.tmdb_id);
     }
@@ -88,10 +92,11 @@ class MovieList {
         }
         else{
             console.log("ERROR: Movie not found in list.")
+            return false;
         }
 
         // Remove from DOM
-        const cardId = `${this.prefix}_${tmdb_id}`
+        const cardId = this.domIdFromTmdbId(tmdb_id);
         $(`#${cardId}`).remove();
 
         return removedMovie;
@@ -154,6 +159,7 @@ class SharedMovieList extends MovieList {
         super($listDomContainer, movies);
     }
     prefix = "shared"
+    eliminatedClass = "eliminated";
 
     convertToMovieClass(movie) {
         if (!(movie instanceof SharedMovie)) {
@@ -166,6 +172,31 @@ class SharedMovieList extends MovieList {
 
     getCardHtml(movie) {
         return MovieCard(this.prefix, movie.tmdb_id, movie, ["remove", "info"])
+    }
+
+    getMovieBySharedId(shared_movie_id) {
+        return this.movies.find(movie => movie.shared_movie_id == shared_movie_id);
+    }
+
+    eliminateMovieBySharedId(shared_movie_id) {
+        const eliminatedMovie = this.getMovieBySharedId(shared_movie_id);
+        eliminatedMovie.eliminated = true;
+        $(`#${this.domIdFromTmdbId(eliminatedMovie.tmdb_id)}`).addClass(this.eliminatedClass);
+        return eliminatedMovie;
+    }
+
+    isFinalSelected() {
+        return this.movies.filter(movie => movie.eliminated == false).length == 1;
+    }
+
+    getFinalMovie() {
+        if(!this.isFinalSelected()){
+            console.log("ERROR: More than one movie remaining.")
+            return false;
+        }
+        else{
+            return this.movies.find(movie => movie.eliminated == false);
+        }
     }
 }
 

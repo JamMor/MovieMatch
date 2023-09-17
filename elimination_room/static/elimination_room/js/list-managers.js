@@ -1,38 +1,29 @@
-import { MovieCard } from "/static/js/DOMelements.js";
-
-
-const $movieList = $("#movie_list");
-const get$movieCards = () => $movieList.children(".movie-card");
-const share_list_prefix = "shared";
-const $movieCardFromTmdbId = (tmdbId) => $(`#${share_list_prefix}_${tmdbId}`);
-const tmdbIdFromMovieCardDOMId = (domId) => domId.split("_")[1];
-
 const $userList = $("#user_list");
 const userDOMIdFromUuid = (uuid) => `user_${uuid}`;
 const $userElementFromUuid = (uuid) => $(`#user_${uuid}`);
 const uuidFromUserDOMId = (domId) => domId.split("_")[1];
 const get$userElements = () => $userList.children(".chip");
 
-function verifyMovieListDOMSync(sourceList){
-    let $movieCards = get$movieCards();
-    //Confirming DOM and movie list are in sync FLAG
-    let domTmdbIds = $movieCards.map(function() {
-        return tmdbIdFromMovieCardDOMId(this.id);
-        })
-        .get()
+// function verifyMovieListDOMSync(sourceList){
+//     let $movieCards = get$movieCards();
+//     //Confirming DOM and movie list are in sync FLAG
+//     let domTmdbIds = $movieCards.map(function() {
+//         return tmdbIdFromMovieCardDOMId(this.id);
+//         })
+//         .get()
         
-    let sourceTmdbIds = new Set(sourceList.map(x => x.shared_tmdb_id))
-    let list_verified = false;
-    if(domTmdbIds.length == sourceList.length){
-        for(let tmdbId of domTmdbIds){
-            if(!sourceTmdbIds.has(tmdbId)){
-                break;
-            }
-        }
-        list_verified = true;
-    }
-    console.log(`DOM and movie_list are${list_verified ? "" : " NOT"} in sync.`)
-}
+//     let sourceTmdbIds = new Set(sourceList.map(x => x.shared_tmdb_id))
+//     let list_verified = false;
+//     if(domTmdbIds.length == sourceList.length){
+//         for(let tmdbId of domTmdbIds){
+//             if(!sourceTmdbIds.has(tmdbId)){
+//                 break;
+//             }
+//         }
+//         list_verified = true;
+//     }
+//     console.log(`DOM and movie_list are${list_verified ? "" : " NOT"} in sync.`)
+// }
 
 function verifyUserListDOMSync(sourceDict){
     let $userElements = get$userElements();
@@ -81,31 +72,31 @@ function verifyUserListDOMSync(sourceDict){
 
 }
 
-const MovieListManager = {
+// const MovieListManager = {
     
-    //Adds new movies into DOM when a shared list is updated.
-    syncMovieList : (current_list, new_list) => {
-        let added_movie_list;
-        if (current_list.length > 0){
-            // Filter movies from updated list that aren't already in old list
-            //FLAG maybe just compare sets of ID's
-            added_movie_list = new_list
-                .filter(new_movie => !current_list
-                    .some(current_movie => (current_movie.tmdb_id == new_movie.tmdb_id)))
-        }
-        //If no movies in list yet, all are to be added
-        else {added_movie_list = new_list}
+//     //Adds new movies into DOM when a shared list is updated.
+//     syncMovieList : (current_list, new_list) => {
+//         let added_movie_list;
+//         if (current_list.length > 0){
+//             // Filter movies from updated list that aren't already in old list
+//             //FLAG maybe just compare sets of ID's
+//             added_movie_list = new_list
+//                 .filter(new_movie => !current_list
+//                     .some(current_movie => (current_movie.tmdb_id == new_movie.tmdb_id)))
+//         }
+//         //If no movies in list yet, all are to be added
+//         else {added_movie_list = new_list}
         
-        added_movie_list.forEach((movie) => {
-            $movieList.append(
-                MovieCard(share_list_prefix, movie.tmdb_id, movie, ["remove", "info"])
-            );
-        })
+//         added_movie_list.forEach((movie) => {
+//             $movieList.append(
+//                 MovieCard(share_list_prefix, movie.tmdb_id, movie, ["remove", "info"])
+//             );
+//         })
 
-        console.log("Updated Movie List.");
-        verifyMovieListDOMSync(new_list);
-    }
-}
+//         console.log("Updated Movie List.");
+//         verifyMovieListDOMSync(new_list);
+//     }
+// }
 
 const UserListManager = {
     //Adds user to DOM
@@ -207,4 +198,4 @@ const UserListManager = {
     }
 }
 
-export { MovieListManager, UserListManager }
+export { UserListManager }

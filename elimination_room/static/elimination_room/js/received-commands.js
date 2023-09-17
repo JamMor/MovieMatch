@@ -1,31 +1,24 @@
-import { MovieListManager, UserListManager } from "./list-managers.js";
-import { SharedMovie, DetailedMovie } from "/static/js/constructors.js";
+import { movieList } from "./movie_lists.js";
+import { UserListManager } from "./list-managers.js";
+import { DetailedMovie } from "/static/js/constructors.js";
 import { MovieInfoModal } from "/static/js/DOMelements.js";
 import { scrollHorizontallyTo } from "/static/js/slider.js";
 
 //These are the functions that are called when a succesful socket command is 
 // received from the server
 
-const eliminatedClass = "eliminated";
 const finalModalId = "final_modal";
 
-const $movieList = $("#movie_list");
 const $statusBtn = $("#status-btn");
 const $userList = $("#user_list");
 const $userElementFromUuid = (uuid) => $(`#user_${uuid}`);
-const shared_movie_prefix = "shared";
-const $movieElementFromTmdbId = (tmdbId) => $(`#${shared_movie_prefix}_${tmdbId}`);
 const $finalModal = $("#final_modal");
 
 // Eliminate Movie
 function commandEliminate(commandData) {
     const {shared_movie_id, eliminating_uuid, next_eliminating_uuid = null} = commandData
 
-    const eliminated_movie = movie_list.find(movie => movie.shared_movie_id == shared_movie_id)
-
-    eliminated_movie.is_eliminated == true;
-    $movieElementFromTmdbId(eliminated_movie.tmdb_id).addClass(eliminatedClass)
-    console.log("Eliminated movie")
+    const eliminated_movie = movieList.eliminateMovieBySharedId(shared_movie_id);
 
     let toastClass = "purple-text text-accent-2"
     let nickname = user_list[eliminating_uuid]['nickname']
@@ -55,11 +48,11 @@ function commandFinalized(finalSharedId = null) {
     let finalMovie;
     // If ID given, find the movie via ID
     if (finalSharedId !== null){
-        finalMovie = movie_list.find(movie => movie.shared_movie_id == finalSharedId);
+        finalMovie = movieList.getMovieBySharedId(finalSharedId);
     }
     // If no ID, find the movie that is not eliminated
     else {
-        finalMovie = movie_list.find(movie => movie.is_eliminated == false);
+        finalMovie = movieList.getFinalMovie();
     }
     console.log(`${finalMovie.title} is the final choice!`)
     
@@ -125,19 +118,15 @@ function commandSyncRoom(commandData) {
         is_active,
         eliminating_uuid = null
     } = commandData.share_list
-    received_movie_list = received_movie_list.map(movie => 
-            new SharedMovie(movie)
-        )
 
-    MovieListManager.syncMovieList(movie_list, received_movie_list)
-    movie_list = received_movie_list
+    movieList.syncLists(received_movie_list);
     
     UserListManager.syncUserList(user_list, received_user_list)
     user_list = received_user_list
 
     elimination_active = is_active;
 
-    if(isFinalSelected(movie_list)){
+    if(movieList.isFinalSelected()){
         commandFinalized();
     }
     else if(elimination_active){
@@ -155,9 +144,8 @@ function commandSyncRoom(commandData) {
 // Refreshes Movie List
 function commandRefreshMovieList(commandData) {
     user_list = {};
-    movie_list= [];
     $userList.html("");
-    $movieList.html("");
+    movieList.clearList();
 
     $finalModal.modal('close');
 
@@ -228,13 +216,6 @@ function setStatusBar(status){
     $statusBtn.removeClass().addClass(styleClass);
     $statusBtn.find("i").html(icons);
     $statusBtn.find("span").html(statusText);
-}
-
-//Check if final movie
-function isFinalSelected(movieList){
-    const eliminatedCount = movieList
-        .reduce((prev, curr) => prev + curr.is_eliminated, 0)
-    return movieList.length - eliminatedCount == 1
 }
 
 //Set active user turn
