@@ -1,3 +1,5 @@
+import { movieList } from "../movie_lists.js";
+
 const $nicknameInput = $("#nickname");
 const $sharecodeInput = $("#sharecode");
 const $submitBtn = $("#share-btn");
@@ -20,7 +22,7 @@ function submitEliminationList() {
     }
 
 
-    let tmdb_ids = movie_list.map(movie => movie.tmdb_id)
+    let tmdb_ids = movieList.getIds();
     
     $.post(urlPath.shareSubmit, JSON.stringify(
         {
