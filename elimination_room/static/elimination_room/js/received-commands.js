@@ -1,5 +1,4 @@
-import { movieList } from "./movie_lists.js";
-import { UserListManager } from "./list-managers.js";
+import { movieList, userList } from "./movie_lists.js";
 import { DetailedMovie } from "/static/js/constructors.js";
 import { MovieInfoModal } from "/static/js/DOMelements.js";
 import { scrollHorizontallyTo } from "/static/js/slider.js";
@@ -11,7 +10,6 @@ const finalModalId = "final_modal";
 
 const $statusBtn = $("#status-btn");
 const $userList = $("#user_list");
-const $userElementFromUuid = (uuid) => $(`#user_${uuid}`);
 const $finalModal = $("#final_modal");
 
 // Eliminate Movie
@@ -21,7 +19,7 @@ function commandEliminate(commandData) {
     const eliminated_movie = movieList.eliminateMovieBySharedId(shared_movie_id);
 
     let toastClass = "purple-text text-accent-2"
-    let nickname = user_list[eliminating_uuid]['nickname']
+    let nickname = userList.getUserByUuidFlat(eliminating_uuid)['nickname']
     if(eliminating_uuid == user_uuid){
         toastClass = "cyan-text text-accent-2"
         nickname = "YOU"
@@ -30,8 +28,7 @@ function commandEliminate(commandData) {
     M.toast({html: toastHtml})
     
     if (commandData.hasOwnProperty("updated_positions")){
-        UserListManager.syncUserList(user_list, commandData.updated_positions);
-        user_list = commandData.updated_positions;
+        userList.syncLists(commandData.updated_positions);
     }
 
     if(next_eliminating_uuid != null){
@@ -76,25 +73,17 @@ function commandFinalized(finalSharedId = null) {
 function commandConnected(commandData) {
     const {uuid:connected_uuid, nickname, position} = commandData
     console.log("Connected User: " + connected_uuid);
-    if(user_list.hasOwnProperty(connected_uuid)){
-        console.log(`User ${connected_uuid} is already in list.`)
-    }
-    else{
-        user_list[connected_uuid] = {"position": position, "nickname": nickname};
-        UserListManager.addUserToDom(connected_uuid, {"position": position, "nickname": nickname});
-        console.log(`${nickname} has joined the room. UUID: ${connected_uuid}`)
-        if(connected_uuid != user_uuid){
-            const toastHtml = `<span><strong class="purple-text text-accent-2">${nickname} </strong>&nbsp;has connected.</span>`
-            M.toast({html: toastHtml})
-        }
+    const added = userList.addUserToListFlat({"uuid": connected_uuid, "position": position, "nickname": nickname});
+    if(added && connected_uuid != user_uuid){
+        const toastHtml = `<span><strong class="purple-text text-accent-2">${nickname} </strong>&nbsp;has connected.</span>`
+        M.toast({html: toastHtml})
     }
 }
 
 // Disconnect User
 function commandDisconnected(commandData) {
     if (commandData.hasOwnProperty("updated_positions")){
-        UserListManager.syncUserList(user_list, commandData.updated_positions);
-        user_list = commandData.updated_positions;
+        userList.syncLists(commandData.updated_positions);
     }
     if (commandData.hasOwnProperty("next_eliminating_uuid")){
         setUserTurn(commandData.next_eliminating_uuid)
@@ -102,12 +91,11 @@ function commandDisconnected(commandData) {
 
     const disconnected_uuid = commandData.disconnected_uuid;
     console.log('Disconnected UUID: ' + disconnected_uuid)
-    UserListManager.removeUserFromDom(disconnected_uuid);
-    if(disconnected_uuid != user_uuid){
-        const toastHtml = `<span><strong class="purple-text text-accent-2">${user_list[disconnected_uuid]['nickname']} </strong>&nbsp;has disconnected.</span>`
+    const removedUser = userList.removeUserFromListByUuid(disconnected_uuid);
+    if(removedUser != null && disconnected_uuid != user_uuid){
+        const toastHtml = `<span><strong class="purple-text text-accent-2">${removedUser.nickname} </strong>&nbsp;has disconnected.</span>`
         M.toast({html: toastHtml})
     }
-    delete user_list[disconnected_uuid];
 }
 
 //Initialize/Update Share Room
@@ -121,8 +109,7 @@ function commandSyncRoom(commandData) {
 
     movieList.syncLists(received_movie_list);
     
-    UserListManager.syncUserList(user_list, received_user_list)
-    user_list = received_user_list
+    userList.syncLists(received_user_list);
 
     elimination_active = is_active;
 
@@ -143,8 +130,7 @@ function commandSyncRoom(commandData) {
 
 // Refreshes Movie List
 function commandRefreshMovieList(commandData) {
-    user_list = {};
-    $userList.html("");
+    userList.clearList();
     movieList.clearList();
 
     $finalModal.modal('close');
@@ -156,8 +142,7 @@ function commandRefreshMovieList(commandData) {
 function commandStartElimination(commandData) {
     const {eliminating_uuid, updated_positions} = commandData;    
     
-    UserListManager.syncUserList(user_list, updated_positions);
-    user_list = updated_positions;
+    userList.syncLists(updated_positions);
 
     elimination_active = true;
 
@@ -233,12 +218,14 @@ function setUserTurn(turnUUID = null){
 
     //Set current user turn to true and add active class, then scroll user into view
     current_eliminating_uuid = turnUUID;
-    $userElementFromUuid(turnUUID).addClass(activatedClass).removeClass(inactivatedClass);
-    scrollHorizontallyTo($userElementFromUuid(turnUUID).get(0));
+    const $userElement = $(`#${userList.domIdFromUuid(turnUUID)}`);
+    $userElement.addClass(activatedClass).removeClass(inactivatedClass);
+    scrollHorizontallyTo($userElement.get(0));
 
     //Toast new user turn
+    const eliminatingUser = userList.getUserByUuidFlat(turnUUID);
     const toastName = (turnUUID != user_uuid) 
-        ? `<strong class="purple-text text-accent-2">${user_list[turnUUID]['nickname']}</strong>'s` 
+        ? `<strong class="purple-text text-accent-2">${eliminatingUser.nickname}</strong>'s` 
         : '<strong class="cyan-text text-accent-2">YOUR</strong>'
     const toastHtml = `<span>${toastName}&nbsp;turn.</span>`
     M.toast({html: toastHtml})
@@ -246,7 +233,7 @@ function setUserTurn(turnUUID = null){
     //Put username in status bar
     const statusText = (turnUUID == user_uuid)
             ? "Waiting on YOUR turn..."
-            : `Waiting on ${user_list[turnUUID].nickname}'s turn...`
+            : `Waiting on ${eliminatingUser.nickname}'s turn...`
 
     $statusBtn.find("span").html(statusText);
 }
