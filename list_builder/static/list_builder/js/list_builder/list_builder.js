@@ -61,7 +61,7 @@ const init = () => {
     $searchResults.on("click", `.${addBtnClass}`, function () {
         //Get movie ID from parent Card ID
         let cardId = $(this).closest(`.${movieCardClass}`).attr('id')
-        let thisMovieTmdbId = tmdbIdFromDOMId(cardId);
+        let thisMovieTmdbId = this.movieList.tmdbIdFromMovieCardDOMId(cardId);
         console.log(`Adding movie id: ${thisMovieTmdbId}`);
         // addMovieToDOM(thisMovieTmdbId);
         let searchMovie = searchResults.getMovieByTmdbId(thisMovieTmdbId);
@@ -76,7 +76,7 @@ const init = () => {
     $movieList.on("click", `.${removeBtnClass}`, function () {
         //Get movie ID from parent Card ID
         let cardId = $(this).closest(`.${movieCardClass}`).attr('id')
-        let thisMovieTmdbId = tmdbIdFromDOMId(cardId);
+        let thisMovieTmdbId = this.movieList.tmdbIdFromMovieCardDOMId(cardId);
         console.log(`Removing movie id ${thisMovieTmdbId}`);
         // removeMovieFromDOM(thisMovieTmdbId);
         movieList.removeMovieFromListById(thisMovieTmdbId);

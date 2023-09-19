@@ -100,7 +100,8 @@ class UserList {
     }
 
     addUserToListFlat({uuid,nickname,position}) {
-        if (this.users.hasOwnProperty(uuid)){
+        const user = this.getUserByUuidFlat(uuid);
+        if (user != null){
             console.log(`ERROR: User ${uuid} already in list.`)
             return false;
         }
@@ -119,8 +120,8 @@ class UserList {
     }
 
     removeUserFromListByUuid(uuid) {
-        if (this.users.hasOwnProperty(uuid)){
-            const removedUser = this.getUserByUuidFlat(uuid);
+        const removedUser = this.getUserByUuidFlat(uuid);
+        if (removedUser != null){
             delete this.users[uuid];
             $(`#${this.domIdFromUuid(uuid)}`).remove();
             return removedUser;
@@ -196,15 +197,16 @@ class UserList {
         const sourceLength = this.getUuids().length;
         if(domUsers.length == sourceLength){
             for(let domUser of domUsers){
-                if(!this.users.hasOwnProperty(domUser.uuid)){
+                const user = this.getUserByUuidFlat(domUser.uuid);
+                if(user == null){
                     errorMessage = errorMessages.missing_uuid;
                     break;
                 }
-                if(this.users[domUser.uuid].position != domUser.position){
+                if(user.position != domUser.position){
                     errorMessage = errorMessages.position;
                     break;
                 }
-                if(this.users[domUser.uuid].nickname != domUser.nickname){
+                if(user.nickname != domUser.nickname){
                     errorMessage = errorMessages.nickname;
                     break;
                 }

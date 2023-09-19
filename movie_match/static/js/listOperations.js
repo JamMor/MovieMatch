@@ -48,8 +48,12 @@ class MovieList {
         return this.movies.find(movie => movie.tmdb_id == tmdb_id);
     }
 
+    getNumberOfMovies() {
+        return this.movies.length;
+    }
+
     bulkAddMoviesToList(...moviesToAdd) {
-        let currentTmdbIdsSet = new Set(this.movies.map(movie => movie.tmdb_id));
+        let currentTmdbIdsSet = new Set(this.getIds());
 
         let DOMstring = "";
 
@@ -72,11 +76,10 @@ class MovieList {
     }
 
     addMovieToList(movieToAdd) {
-        for (let i = 0; i < this.movies.length; i++) {
-            if (this.movies[i].tmdb_id == movieToAdd.tmdb_id) {
-                console.log("ERROR: Already added.")
-                return false;
-            }
+        const movie = this.getMovieByTmdbId(movieToAdd.tmdb_id);
+        if(movie != undefined){
+            console.log("ERROR: Already added.")
+            return false;
         }
         let movieObject = this.convertToMovieClass(movieToAdd);
         this.movies.push(movieObject);
@@ -85,25 +88,25 @@ class MovieList {
 
     removeMovieFromListById(tmdb_id) {
         // Find and remove from list
-        let movieIndex = this.movies.findIndex(movie => movie.tmdb_id == tmdb_id);
-        let removedMovie = null;
-        if (movieIndex != -1){
-            removedMovie = this.movies.splice(movieIndex, 1);
-        }
-        else{
+        const movieIndex = this.movies.findIndex(movie => movie.tmdb_id == tmdb_id);
+        
+        if (movieIndex == -1){
             console.log("ERROR: Movie not found in list.")
-            return false;
+            return null;
+        }
+        else {
+            const removedMovie = this.movies.splice(movieIndex, 1);
+            // Remove from DOM
+            const cardId = this.domIdFromTmdbId(tmdb_id);
+            $(`#${cardId}`).remove();
+    
+            return removedMovie;
         }
 
-        // Remove from DOM
-        const cardId = this.domIdFromTmdbId(tmdb_id);
-        $(`#${cardId}`).remove();
-
-        return removedMovie;
     }
 
     syncLists(newList){
-        const currentTmdbIds = new Set(this.movies.map(movie => movie.tmdb_id))
+        const currentTmdbIds = new Set(this.getIds())
         const newTmdbIds = new Set(newList.map(movie => movie.tmdb_id))
 
         //Get the removed movies
@@ -130,10 +133,10 @@ class MovieList {
             }, this)
             .get()
             
-        const sourceTmdbIdSet = new Set(this.movies.map(x => x.tmdb_id))
+        const thisTmdbIdSet = new Set(this.getIds());
         let listVerified = false;
-        if(domTmdbIds.length === sourceTmdbIdSet.size){
-            if(domTmdbIds.every(tmdbId => sourceTmdbIdSet.has(tmdbId))){
+        if(domTmdbIds.length === thisTmdbIdSet.size){
+            if(domTmdbIds.every(tmdbId => thisTmdbIdSet.has(tmdbId))){
                 listVerified = true;
             }
         }

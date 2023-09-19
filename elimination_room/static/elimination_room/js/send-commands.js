@@ -33,7 +33,7 @@ function sendEliminate(matchSocket){
 
 function sendStartElimination(matchSocket){
     //Validate
-    if(movieList.movies.length < 2){
+    if(movieList.getNumberOfMovies() < 2){
         console.log("Must have at least 2 movies to begin elimination.")
         return
     }
