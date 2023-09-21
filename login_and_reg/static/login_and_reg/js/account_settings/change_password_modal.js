@@ -15,7 +15,7 @@ function sendChangePasswordRequest(){
     //FLAG Reset old form errors
     $form.find("span.error").remove();
     console.log("Change password request sent.")
-    let changePasswordForm = document.querySelector(`#${formId}`);
+    const changePasswordForm = document.querySelector(`#${formId}`);
     const changePasswordFormData = new FormData(changePasswordForm);
     $.ajax({
         url: urlPath.changePassword,

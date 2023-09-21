@@ -71,29 +71,40 @@ function saveStatusToast (listName, status) {
     M.toast({html: `<span>${message}&nbsp;<strong class=${classColor}>${displayName}</strong></span>`})
 }
 
-function handleEditorSave(){
-    let tmdb_ids = movie_list.map(movie => movie.tmdb_id)
-
-    saveList({
-        "tmdb_ids" : tmdb_ids, 
-        "list_name" : savedListName, 
-        "list_id": savedListId})
-}
-function handleNewSave(){
-    let list_name = $savedListNameField.val();
-    let tmdb_ids = movie_list.map(movie => movie.tmdb_id)
-
-    saveList({
-        "tmdb_ids" : tmdb_ids, 
-        "list_name":list_name
-    })
+function getListName(){
+    let listName;
+    //if field element exists get from field, else if var exists, get from var
+    if($savedListNameField.length){
+        listName = $savedListNameField.val();
+    }
+    else if('savedListName' in window){
+        listName = savedListName;
+    }
+    else{
+        console.log("ERROR: No list name found.")
+    }
+    return listName
 }
 
-function init(saveHandler){
-    $submitBtn.click(function (e){
-        e.preventDefault();
-        saveHandler();
-    })
+function getListId (){
+    if('savedListId' in window){
+        return savedListId
+    }
+    else{
+        return null
+    }
+}
+
+function saveHandler(movieList){
+    let fields = {
+        "tmdb_ids" : movieList.getIds(),
+        "list_name": getListName() ?? ""
+    }
+    const listId = getListId()
+    if (listId){
+        fields["list_id"] = listId
+    }
+    saveList(fields)
 }
 
 function disabledSave(){
@@ -103,7 +114,11 @@ function disabledSave(){
     })
 }
 
-const editorSave = () => init(handleEditorSave);
-const newSave = () => init(handleNewSave);
+function init(movieList){
+    $submitBtn.click(function (e){
+        e.preventDefault();
+        saveHandler(movieList);
+    })
+}
 
-export {editorSave, newSave, disabledSave}
+export { init as saveInit, disabledSave }

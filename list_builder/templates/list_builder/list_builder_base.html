@@ -37,9 +37,5 @@
 
     {% block script_block %}
         {{ block.super }}
-        <script type='text/javascript' >
-            var movie_list = [];
-            var search_results = [];
-        </script>
-        <script type="module" src="{% static 'list_builder/js/index.js'%}"></script>
+        <script type="module" src="{% static 'list_builder/js/list_builder/index.js'%}"></script>
     {% endblock %}

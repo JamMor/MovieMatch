@@ -55,7 +55,7 @@ const MovieCard = (
 ) => {
 
     //Button options
-    let button_elem = buttonArray.map(button => CardButton(button)).join('');
+    const button_elem = buttonArray.map(button => CardButton(button)).join('');
 
     //Append Elimination css class for match cards
     card_css_class += is_eliminated ? " eliminated" : "";
@@ -138,4 +138,16 @@ const MovieInfoModal = (
     `
 };
 
-export { MovieCard, MovieInfoModal }
+const UserChipColors = {
+    "self": "neon-cyan",
+    "other": "neon-purple"
+}
+
+const UserChip = (prefix, {uuid, nickname, position}, isSelf) => {
+    const color = isSelf ? UserChipColors.self : UserChipColors.other
+    return `<div id='${prefix}_${uuid}' class="chip ${color} neon-unlit dimmed" data-position="${position}">
+            ${nickname}
+        </div>`
+}
+
+export { MovieCard, MovieInfoModal, UserChip }
