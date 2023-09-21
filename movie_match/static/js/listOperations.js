@@ -21,6 +21,10 @@ class MovieList {
         return MovieCard(this.prefix, movie.tmdb_id, movie, ["remove", "info"])
     }
 
+    get$movieCardFromTmdbId(tmdb_id) {
+        return $(`#${this.domIdFromTmdbId(tmdb_id)}`);
+    }
+
     get$movieCards() {
         return this.$listDomContainer.children(".movie-card");
     }
@@ -97,8 +101,7 @@ class MovieList {
         else {
             const removedMovie = this.movies.splice(movieIndex, 1);
             // Remove from DOM
-            const cardId = this.domIdFromTmdbId(tmdb_id);
-            $(`#${cardId}`).remove();
+            this.get$movieCardFromTmdbId(tmdb_id).remove();
     
             return removedMovie;
         }
@@ -151,10 +154,29 @@ class SearchResultsList extends MovieList {
         super($listDomContainer, movies);
     }
     prefix = "query"
+    addBtnClass = "add-btn";
+    disabledBtnClass = "disabled";
 
     getCardHtml(movie) {
         return MovieCard(this.prefix, movie.tmdb_id, movie, ["add", "info"], "carousel-item")
     }
+
+    disableAddBtns(...tmdb_ids) {
+        tmdb_ids.forEach(tmdb_id => {
+            const $searchCard = this.get$movieCardFromTmdbId(tmdb_id);
+            $searchCard.find(`.${this.addBtnClass}`)
+                .addClass(this.disabledBtnClass);
+        })
+    }
+
+    enableAddBtns(...tmdb_ids) {
+        tmdb_ids.forEach(tmdb_id => {
+            const $searchCard = this.get$movieCardFromTmdbId(tmdb_id);
+            $searchCard.find(`.${this.addBtnClass}`)
+                .removeClass(this.disabledBtnClass);
+        })
+    }
+
 }
 
 class SharedMovieList extends MovieList {
@@ -184,7 +206,7 @@ class SharedMovieList extends MovieList {
     eliminateMovieBySharedId(shared_movie_id) {
         const eliminatedMovie = this.getMovieBySharedId(shared_movie_id);
         eliminatedMovie.eliminated = true;
-        $(`#${this.domIdFromTmdbId(eliminatedMovie.tmdb_id)}`).addClass(this.eliminatedClass);
+        this.get$movieCardFromTmdbId(eliminatedMovie.tmdb_id).addClass(this.eliminatedClass);
         return eliminatedMovie;
     }
 

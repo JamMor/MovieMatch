@@ -1,14 +1,12 @@
 import { movieList, searchResults } from "./movie_lists.js";
 
-const disabledBtnClass = "disabled-btn";
-const addBtnClass = "add-btn";
+const $searchResultsDiv = searchResults.$listDomContainer;
+const $movieListDiv = movieList.$listDomContainer;
 
 const $searchContainer = $("#search-container");
 const $searchInput = $("#moviesearch-input");
-const $searchResults = $("#search-results");
 const $clearSearch = $("#search-close");
 const $listActionBtn = $("#list-actions-btn");
-const $movieList = $("#movie_list");
 const $addFromList = $("#add-from-list");
 const $clearMovieList = $("#clear-movie-list");
 
@@ -16,12 +14,12 @@ const searchDelayTime = 1000;
 const minSearchQueryLength = 2;
 
 function activateSearch(){
-    $searchResults.fadeIn(100);
-    $movieList.fadeTo(500, 0.1)
+    $searchResultsDiv.fadeIn(100);
+    $movieListDiv.fadeTo(500, 0.1)
 }
 function deactivateSearch(){
-    $searchResults.fadeOut(100);
-    $movieList.fadeTo(500, 1);
+    $searchResultsDiv.fadeOut(100);
+    $movieListDiv.fadeTo(500, 1);
 }
 
 //Delay wrapper function (to limit ajax queries when typing)
@@ -39,30 +37,15 @@ function existingMovieCheck(list1, list2){
     return idList1.filter(x => idList2.includes(x));
 }
 
-function disableSearchAddButtons(...tmdb_ids){
-    tmdb_ids.forEach(tmdb_id => {
-        $searchCard = $(`#${searchResults.domIdFromTmdbId(tmdb_id)}`)
-        $searchCard.find(`.${addBtnClass}`)
-            .addClass(disabledBtnClass);
-    })
-}
-function enableSearchAddButtons(...tmdb_ids){
-    tmdb_ids.forEach(tmdb_id => {
-        $searchCard = $(`#${searchResults.domIdFromTmdbId(tmdb_id)}`)
-        $searchCard.find(`.${addBtnClass}`)
-            .removeClass(disabledBtnClass);
-    })
-}
-
 function updateSearchResultsDOM(data){
     console.log(data);
     //If no search results
     if (data.results.length == 0) {
         searchResults.clearList();
-        $searchResults
+        $searchResultsDiv
             /* Gets the initial rendered height from DOM (scrollHeight) 
                 and animates. Callback sets height to auto. */
-            .animate({ height: $searchResults.get(0).scrollHeight }, 200, function () {
+            .animate({ height: $searchResultsDiv.get(0).scrollHeight }, 200, function () {
                 $(this).height('auto');
             })
             .html('<h6 class="center-align grey-text text-lighten-2">No results</h6>')
@@ -70,22 +53,23 @@ function updateSearchResultsDOM(data){
     }
     
     
-    $searchResults
-    .animate({ height: "400px" }, 200)
-    .promise().done(function () {
-        searchResults.clearList();
-        const renamedResults = data.results.map(({ id, ...rest }) => ({tmdb_id: id, ...rest}));
-        searchResults.bulkAddMoviesToList(...renamedResults);
+    $searchResultsDiv
+        .animate({ height: "400px" }, 200)
+        .promise().done(function () {
+            searchResults.clearList();
+            const renamedResults = data.results.map(({ id, ...rest }) => ({tmdb_id: id, ...rest}));
+            searchResults.bulkAddMoviesToList(...renamedResults);
 
-        $(this)
-            .carousel({
-                dist: -50,
-                numVisible: 10,
-                noWrap: true
-            })
-            .promise().done(function () {
-            disableSearchAddButtons(...existingMovieCheck(movieList, searchResults));
-        });
+            $(this)
+                .carousel({
+                    dist: -50,
+                    numVisible: 10,
+                    noWrap: true
+                })
+                .promise().done(function () {
+                    const alreadyAddedIds = existingMovieCheck(movieList, searchResults);
+                    searchResults.disableAddBtns(...alreadyAddedIds);
+                });
     })
 }
 
@@ -100,14 +84,14 @@ function searchMovies(searchQuery) {
     }
     else if (searchQuery.length == 0) {
         searchResults.clearList();
-        $searchResults.animate({ height: "0px" }, 150);
+        $searchResultsDiv.animate({ height: "0px" }, 150);
     }
 }
 
 function clearSearchResults(){
     $searchInput.val('');
     searchResults.clearList();
-    $searchResults.animate({height: "0px"}, 150);
+    $searchResultsDiv.animate({height: "0px"}, 150);
 }
 
 function addFromListHandler(){
@@ -150,11 +134,11 @@ const init = () => {
     $listActionBtn.click(function(){
         //if element has active class
         if ($(this).hasClass("active")){
-            $movieList.fadeTo(500, 1);
+            $movieListDiv.fadeTo(500, 1);
         }
         else {
-            $movieList.fadeTo(500, 0.1)
-            $searchResults.fadeOut(100);
+            $movieListDiv.fadeTo(500, 0.1)
+            $searchResultsDiv.fadeOut(100);
         }
     })
 
@@ -185,4 +169,4 @@ const init = () => {
 
 }
 
-export { init, disableSearchAddButtons, enableSearchAddButtons }
+export { init }

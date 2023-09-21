@@ -7,6 +7,9 @@ class UserList {
         this.users = users;
     }
     prefix = "user";
+
+    activeClass = "neon-lit";
+    inactiveClass = "neon-unlit";
     
     isSelf(uuid){
         return uuid == this.selfUUID;
@@ -34,8 +37,22 @@ class UserList {
         return UserChip(this.prefix, {uuid,nickname,position}, this.isSelf(uuid))
     }
 
+    get$userChipFromUuid(uuid) {
+        return $(`#${this.domIdFromUuid(uuid)}`);
+    }
+
     get$userChips() {
         return this.$listDomContainer.children(".chip");
+    }
+
+    deactivateUsers() {
+        this.get$userChips().removeClass(this.activeClass).addClass(this.inactiveClass);
+    }
+
+    activateUser(uuid) {
+        const $activatedUser = this.get$userChipFromUuid(uuid);
+        $activatedUser.removeClass(this.inactiveClass).addClass(this.activeClass);
+        return $activatedUser;
     }
 
     uuidFromUserChipDomId(domId) {
@@ -61,14 +78,15 @@ class UserList {
         let changePosition = false;
         let changeNickname = false;
         const originalUser = this.getUserByUuidFlat(uuid);
+        const $userChip = this.get$userChipFromUuid(uuid);
         if (originalUser.position != position){
             originalUser.position = position;
-            $(`#${this.domIdFromUuid(uuid)}`).attr('data-position', position);
+            $userChip.attr('data-position', position);
             changePosition = true;
         }
         if (originalUser.nickname != nickname){
             originalUser.nickname = nickname;
-            $(`#${this.domIdFromUuid(uuid)}`).text(nickname);
+            $userChip.text(nickname);
             changeNickname = true;
         }
 
@@ -123,7 +141,7 @@ class UserList {
         const removedUser = this.getUserByUuidFlat(uuid);
         if (removedUser != null){
             delete this.users[uuid];
-            $(`#${this.domIdFromUuid(uuid)}`).remove();
+            this.get$userChipFromUuid(uuid).remove();
             return removedUser;
         }
         else{

@@ -9,7 +9,6 @@ import { scrollHorizontallyTo } from "/static/js/slider.js";
 const finalModalId = "final_modal";
 
 const $statusBtn = $("#status-btn");
-const $userList = $("#user_list");
 const $finalModal = $("#final_modal");
 
 // Eliminate Movie
@@ -204,13 +203,10 @@ function setStatusBar(status){
 }
 
 //Set active user turn
-function setUserTurn(turnUUID = null){
-    const activatedClass = "neon-lit";
-    const inactivatedClass = "neon-unlit";
-    
+function setUserTurn(turnUUID = null){    
     //Remove any active classes
-    $userList.find(`div.${activatedClass}`).removeClass(activatedClass).addClass(inactivatedClass);
-    
+    userList.deactivateUsers();
+
     // If no next user, return with no active class set
     if(turnUUID == null){
         return
@@ -218,9 +214,8 @@ function setUserTurn(turnUUID = null){
 
     //Set current user turn to true and add active class, then scroll user into view
     current_eliminating_uuid = turnUUID;
-    const $userElement = $(`#${userList.domIdFromUuid(turnUUID)}`);
-    $userElement.addClass(activatedClass).removeClass(inactivatedClass);
-    scrollHorizontallyTo($userElement.get(0));
+    const $activatedUser = userList.activateUser(turnUUID);
+    scrollHorizontallyTo($activatedUser.get(0));
 
     //Toast new user turn
     const eliminatingUser = userList.getUserByUuidFlat(turnUUID);
