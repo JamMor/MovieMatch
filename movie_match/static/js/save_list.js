@@ -71,24 +71,6 @@ function saveStatusToast (listName, status) {
     M.toast({html: `<span>${message}&nbsp;<strong class=${classColor}>${displayName}</strong></span>`})
 }
 
-function handleEditorSave(){
-    const tmdb_ids = movie_list.map(movie => movie.tmdb_id)
-
-    saveList({
-        "tmdb_ids" : tmdb_ids, 
-        "list_name" : savedListName, 
-        "list_id": savedListId})
-}
-function handleNewSave(){
-    const list_name = $savedListNameField.val();
-    const tmdb_ids = movie_list.map(movie => movie.tmdb_id)
-
-    saveList({
-        "tmdb_ids" : tmdb_ids, 
-        "list_name":list_name
-    })
-}
-
 function getListName(){
     let listName;
     //if field element exists get from field, else if var exists, get from var
@@ -109,12 +91,11 @@ function getListId (){
         return savedListId
     }
     else{
-        console.log("ERROR: No list ID found.")
         return null
     }
 }
 
-function handleListSave(movieList){
+function saveHandler(movieList){
     let fields = {
         "tmdb_ids" : movieList.getIds(),
         "list_name": getListName() ?? ""
@@ -126,13 +107,6 @@ function handleListSave(movieList){
     saveList(fields)
 }
 
-function init(saveHandler){
-    $submitBtn.click(function (e){
-        e.preventDefault();
-        saveHandler();
-    })
-}
-
 function disabledSave(){
     $disabledBtn.click(function (e){
         e.preventDefault();
@@ -140,15 +114,11 @@ function disabledSave(){
     })
 }
 
-const editorSave = () => init(handleEditorSave);
-const newSave = () => init(handleNewSave);
-const listSave = (movieList) => init();
-
-function init2(movieList){
+function init(movieList){
     $submitBtn.click(function (e){
         e.preventDefault();
-        handleListSave(movieList);
+        saveHandler(movieList);
     })
 }
 
-export {editorSave, newSave, listSave, init2, disabledSave}
+export { init as saveInit, disabledSave }
