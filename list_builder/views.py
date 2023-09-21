@@ -113,3 +113,40 @@ def get_list(request, list_id):
         'tmdb_id', 'title', 'overview', 'poster_path', 'release_date')
 
     return JsonResponse(SuccessJsonClassObject(data={"movies" : list(movie_list)}).to_dict())
+
+@login_required(redirect_field_name='default_redirect', login_url='list_builder:default_redirect')
+def get_list_overview(request, page_num = 1):
+    this_persona = get_or_set_persona(request)
+
+    items_per_page = 10
+    startIndex = (page_num - 1) * items_per_page
+    endIndex = startIndex + items_per_page
+    
+    #Count of all saved movie lists created by this user.
+    num_saved_lists = SavedMovieList.objects.filter(
+        created_by = this_persona
+        ).count()
+    
+    #Get saved lists created by this user with the titles of their movies.
+    movie_prefetch = Prefetch('movies', queryset=Movie.objects.only('title'), to_attr='movie_titles')
+    saved_lists = SavedMovieList.objects.filter(
+        created_by = this_persona
+        ).only('list_name').prefetch_related(movie_prefetch)[startIndex:endIndex]
+    
+    data = {
+        "page_number" : page_num,
+        "items_per_page" : items_per_page,
+        "total_count" : num_saved_lists
+    }
+
+    lists = {}
+    for saved_list in saved_lists:
+        lists[saved_list.id] = {
+            "list_id": saved_list.id,
+            "list_name": saved_list.display_name,
+            "movies": [movie.title for movie in saved_list.movie_titles]
+        }
+
+    data.update({"lists" : lists})
+    
+    return JsonResponse(SuccessJsonClassObject(data=data).to_dict())
