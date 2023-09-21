@@ -150,4 +150,22 @@ const UserChip = (prefix, {uuid, nickname, position}, isSelf) => {
         </div>`
 }
 
-export { MovieCard, MovieInfoModal, UserChip }
+const ListModalItem = (list_id, list_name, list_movies) => {
+    return `
+    <li>
+        <div id="row_${list_id}" class="collection-item avatar collapsible-header">
+            <i class="material-icons circle">toc</i>
+            <p>${list_name}</p>
+            <a id="select_${list_id}" href="#!" class="secondary-content select-list">
+                <i class="material-icons">playlist_add
+                </i>
+            </a>
+        </div>
+        <div class="collapsible-body">
+            <ul>
+                ${list_movies.map(movie => `<li>${movie}</li>`).join('')}
+            </ul>
+        </div>
+    </li>
+    `
+}
