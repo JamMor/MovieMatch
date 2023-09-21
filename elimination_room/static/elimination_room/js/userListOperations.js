@@ -68,9 +68,10 @@ class UserList {
     }
 
     getDomIds() {
-        return this.get$userChips().map(function($chip) {
+        return this.get$userChips().map(function(index, userElement) {
+            const $chip = $(userElement);
             return this.uuidFromUserChipDomId($chip.attr('id'));
-            }, this)
+            })
             .get()
     }
 
@@ -90,7 +91,7 @@ class UserList {
             changeNickname = true;
         }
 
-        return {"position:": changePosition, "nickname": changeNickname}
+        return {"position": changePosition, "nickname": changeNickname}
     }
 
     addUserToOrderedDOM(chipHtml, position) {
@@ -196,14 +197,15 @@ class UserList {
     verifyUserListDOMSync(){
         const $userElements = this.get$userChips();
         //Confirming DOM and user list are in sync FLAG
-        const domUsers = $userElements.map(function() {
-            const thisUuid = this.uuidFromUserChipDomId(this.id);
-            const thisPosition = parseInt($(this).attr('data-position'));
-            const thisNickname = $(this).text().trim();
+        const domUsers = $userElements.map((index, userElement) => {
+            const $chip = $(userElement);
+            const thisUuid = this.uuidFromUserChipDomId($chip.attr('id'));
+            const thisPosition = parseInt($chip.attr('data-position'));
+            const thisNickname = $chip.text().trim();
             return {"uuid": thisUuid, "position": thisPosition, "nickname": thisNickname} ;
             })
             .get()
-    
+            
         let errorMessage;
         const errorMessages = {
             "length": "DOM and user list are not the same length.",
@@ -238,6 +240,8 @@ class UserList {
         if (errorMessage){
             console.log(errorMessage)
         }
+        
+        return !errorMessage;
     }
 }
 

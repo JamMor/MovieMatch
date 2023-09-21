@@ -41,10 +41,11 @@ class MovieList {
         return this.movies.map(movie => movie.tmdb_id);
     }
 
-    getDomIds() {
-        return this.get$movieCards().map(function($element) {
-            return this.tmdbIdFromMovieCardDOMId($element.attr('id'));
-            }, this)
+    getDomTmbdIds() {
+        return this.get$movieCards().map((index, movieElement) => {
+            const $card = $(movieElement);
+            return this.tmdbIdFromMovieCardDOMId($card.attr('id'));
+            })
             .get()
     }
 
@@ -129,23 +130,31 @@ class MovieList {
     }
 
     verifyListDOMSync(){
-        const $movieCards = this.get$movieCards();
-        //Confirming DOM and movie list are in sync FLAG
-        const domTmdbIds = $movieCards.map(function($element) {
-            return this.tmdbIdFromMovieCardDOMId($element.attr('id'));
-            }, this)
-            .get()
-            
+        //Confirming DOM and movie list
+        const domTmdbIds = this.getDomTmbdIds();
         const thisTmdbIdSet = new Set(this.getIds());
-        let listVerified = false;
+        
+        let errorMessage;
+        const errorMessages = {
+            "length": "DOM and movie list are not the same length.",
+            "missing_tmdb": "DOM has a movie that is not in user list."
+        }
+
         if(domTmdbIds.length === thisTmdbIdSet.size){
-            if(domTmdbIds.every(tmdbId => thisTmdbIdSet.has(tmdbId))){
-                listVerified = true;
+            if(domTmdbIds.every(domTmdbId => thisTmdbIdSet.has(domTmdbId))){
+                errorMessage = errorMessages.missing_tmdb
             }
         }
-        console.log(`DOM and movie_list are${listVerified ? "" : " NOT"} in sync.`)
-        
-        return listVerified;
+        else {
+            errorMessage = errorMessages.length
+        }
+
+
+        console.log(`DOM and movie list are${errorMessage ? " NOT" : ""} in sync.`)
+        if (errorMessage){
+            console.log(errorMessage)
+        }
+        return !errorMessage;
     }
 }
 
@@ -155,7 +164,7 @@ class SearchResultsList extends MovieList {
     }
     prefix = "query"
     addBtnClass = "add-btn";
-    disabledBtnClass = "disabled";
+    disabledBtnClass = "disabled-btn";
 
     getCardHtml(movie) {
         return MovieCard(this.prefix, movie.tmdb_id, movie, ["add", "info"], "carousel-item")
