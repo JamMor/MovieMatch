@@ -1,8 +1,5 @@
-import { Movie } from "/static/js/constructors.js";
-import { MovieCard } from "/static/js/DOMelements.js";
 import { movieList, searchResults } from "./movie_lists.js";
 
-const search_prefix ="query";
 const disabledBtnClass = "disabled-btn";
 const addBtnClass = "add-btn";
 
@@ -12,7 +9,6 @@ const $searchResults = $("#search-results");
 const $clearSearch = $("#search-close");
 const $listActionBtn = $("#list-actions-btn");
 const $movieList = $("#movie_list");
-const $searchCardFromTmdbId = (tmdb_id) => $(`#${search_prefix}_${tmdb_id}`);
 const $addFromList = $("#add-from-list");
 const $clearMovieList = $("#clear-movie-list");
 
@@ -38,20 +34,22 @@ function delay(fn, ms) {
 }
 
 function existingMovieCheck(list1, list2){
-    let id_list1 = list1.getIds();
-    let id_list2 = list2.getIds();
-    return id_list1.filter(x => id_list2.includes(x));
+    const idList1 = list1.getIds();
+    const idList2 = list2.getIds();
+    return idList1.filter(x => idList2.includes(x));
 }
 
 function disableSearchAddButtons(...tmdb_ids){
     tmdb_ids.forEach(tmdb_id => {
-        $searchCardFromTmdbId(tmdb_id).find(`.${addBtnClass}`)
+        $searchCard = $(`#${searchResults.domIdFromTmdbId(tmdb_id)}`)
+        $searchCard.find(`.${addBtnClass}`)
             .addClass(disabledBtnClass);
     })
 }
 function enableSearchAddButtons(...tmdb_ids){
     tmdb_ids.forEach(tmdb_id => {
-        $searchCardFromTmdbId(tmdb_id).find(`.${addBtnClass}`)
+        $searchCard = $(`#${searchResults.domIdFromTmdbId(tmdb_id)}`)
+        $searchCard.find(`.${addBtnClass}`)
             .removeClass(disabledBtnClass);
     })
 }
@@ -76,7 +74,7 @@ function updateSearchResultsDOM(data){
     .animate({ height: "400px" }, 200)
     .promise().done(function () {
         searchResults.clearList();
-        let renamedResults = data.results.map(({ id, ...rest }) => ({tmdb_id: id, ...rest}));
+        const renamedResults = data.results.map(({ id, ...rest }) => ({tmdb_id: id, ...rest}));
         searchResults.bulkAddMoviesToList(...renamedResults);
 
         $(this)

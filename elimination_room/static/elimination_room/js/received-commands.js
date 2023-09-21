@@ -56,7 +56,7 @@ function commandFinalized(finalSharedId = null) {
     getMoreMovieInfo(finalMovie.tmdb_id)
         .done(returnInfo => {
             console.log(returnInfo)
-            let finalMovieInfo = new DetailedMovie(returnInfo ?? finalMovie)
+            const finalMovieInfo = new DetailedMovie(returnInfo ?? finalMovie)
             openMoreInfoModal(finalMovieInfo, finalModalId)
         })
         .fail(function(){
@@ -100,7 +100,7 @@ function commandDisconnected(commandData) {
 
 //Initialize/Update Share Room
 function commandSyncRoom(commandData) {
-    let {
+    const {
         movie_list:received_movie_list, 
         active_user_dict:received_user_list,
         is_active,
@@ -195,7 +195,7 @@ function setStatusBar(status){
         status = "start"
     }
 
-    let {styleClass, icons, statusText} = statusMap[status];
+    const {styleClass, icons, statusText} = statusMap[status];
 
     // Edit DOM
     $statusBtn.removeClass().addClass(styleClass);

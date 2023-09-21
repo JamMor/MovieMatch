@@ -1,3 +1,5 @@
+import { movieList } from "./movie_lists.js";
+
 const movieCardClass = "movie-card"
 const removeBtnClass = "remove-btn"
 const startEliminationClass = "status-start"
@@ -6,7 +8,6 @@ const refreshBtnId = "refresh-btn"
 const $movieList = $("#movie_list");
 const $finalModal = $("#final_modal");
 const $statusBar = $("#status_bar");
-import { movieList } from "./movie_lists.js";
 
 function sendEliminate(matchSocket){
     //Validate

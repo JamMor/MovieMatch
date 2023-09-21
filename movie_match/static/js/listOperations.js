@@ -53,7 +53,7 @@ class MovieList {
     }
 
     bulkAddMoviesToList(...moviesToAdd) {
-        let currentTmdbIdsSet = new Set(this.getIds());
+        const currentTmdbIdsSet = new Set(this.getIds());
 
         let DOMstring = "";
 
@@ -61,7 +61,7 @@ class MovieList {
         moviesToAdd.forEach(movieToAdd => {
             //Only adds movies not already in list
             if (!currentTmdbIdsSet.has(movieToAdd.tmdb_id)){
-                let movieObject = this.convertToMovieClass(movieToAdd);
+                const movieObject = this.convertToMovieClass(movieToAdd);
                 this.movies.push(movieObject)
                 
                 DOMstring += this.getCardHtml(movieObject)
@@ -81,7 +81,7 @@ class MovieList {
             console.log("ERROR: Already added.")
             return false;
         }
-        let movieObject = this.convertToMovieClass(movieToAdd);
+        const movieObject = this.convertToMovieClass(movieToAdd);
         this.movies.push(movieObject);
         this.$listDomContainer.append(this.getCardHtml(movieObject));
     }

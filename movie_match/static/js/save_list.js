@@ -72,7 +72,7 @@ function saveStatusToast (listName, status) {
 }
 
 function handleEditorSave(){
-    let tmdb_ids = movie_list.map(movie => movie.tmdb_id)
+    const tmdb_ids = movie_list.map(movie => movie.tmdb_id)
 
     saveList({
         "tmdb_ids" : tmdb_ids, 
@@ -80,8 +80,8 @@ function handleEditorSave(){
         "list_id": savedListId})
 }
 function handleNewSave(){
-    let list_name = $savedListNameField.val();
-    let tmdb_ids = movie_list.map(movie => movie.tmdb_id)
+    const list_name = $savedListNameField.val();
+    const tmdb_ids = movie_list.map(movie => movie.tmdb_id)
 
     saveList({
         "tmdb_ids" : tmdb_ids, 
@@ -119,7 +119,7 @@ function handleListSave(movieList){
         "tmdb_ids" : movieList.getIds(),
         "list_name": getListName() ?? ""
     }
-    let listId = getListId()
+    const listId = getListId()
     if (listId){
         fields["list_id"] = listId
     }

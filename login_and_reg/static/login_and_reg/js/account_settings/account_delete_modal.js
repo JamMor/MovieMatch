@@ -11,7 +11,7 @@ function openDeleteAccountModal() {
 
 function sendDeleteAccountRequest() {
     console.log("Delete request sent.")
-    let deleteForm = document.querySelector(`#${formId}`);
+    const deleteForm = document.querySelector(`#${formId}`);
     const deleteFormData = new FormData(deleteForm);
     $.ajax({
         url: urlPath.deleteAccount,

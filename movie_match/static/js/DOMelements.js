@@ -55,7 +55,7 @@ const MovieCard = (
 ) => {
 
     //Button options
-    let button_elem = buttonArray.map(button => CardButton(button)).join('');
+    const button_elem = buttonArray.map(button => CardButton(button)).join('');
 
     //Append Elimination css class for match cards
     card_css_class += is_eliminated ? " eliminated" : "";
