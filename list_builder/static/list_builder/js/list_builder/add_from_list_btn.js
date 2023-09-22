@@ -21,7 +21,7 @@ let selectedLists = [];
 let filter = "name";
 
 function addToList(listId) {
-    $.get(`/get/${listId}`)
+    $.get(urlPath.getList(listId))
         .done(function (response) {
             console.log(response);
             if (response.status == "success") {
@@ -78,7 +78,7 @@ function getLists(pageNumber){
     if (pageNumber == undefined){
         pageNumber = 1;
     }
-    $.get(`/get-overview/${pageNumber}`)
+    $.get(urlPath.getListsOverview(pageNumber))
         .done(function(response) {
             console.log(response);
             if (response.status == "success"){

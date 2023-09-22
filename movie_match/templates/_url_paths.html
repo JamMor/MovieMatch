@@ -18,6 +18,14 @@
             let deleteListUrl = "/delete"
             return `${deleteListUrl}/${list_id}`
         },
+        "getList" : (list_id) => {
+            let getListUrl = "/get"
+            return `${getListUrl}/${list_id}`
+        },
+        "getListsOverview" : (pageNumber) => {
+            let getListsOverviewUrl = "/get-overview"
+            return `${getListsOverviewUrl}/${pageNumber}`
+        },
         //elimination_room
         "shareSubmit" : "{% url 'elimination_room:share_submit' %}",
         "eliminationRoom" : (sharecode) => {

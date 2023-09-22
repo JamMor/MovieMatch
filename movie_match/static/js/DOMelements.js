@@ -172,7 +172,6 @@ const ListModalItem = (list_id, list_name, list_movies) => {
 
 
 const PaginatorPages = (currentPage, totalItemCount, itemsPerPage) => {
-    const pageUrl = (page) => `/get-overview/${page}`
     const totalPages = Math.ceil(totalItemCount / itemsPerPage);
     const maxPagesShown = 5;
 
@@ -196,15 +195,23 @@ const PaginatorPages = (currentPage, totalItemCount, itemsPerPage) => {
     
     let pagesHtml = '';
     for (let i = pageStart; i <= pageEnd; i++){
-        pagesHtml += `<li class="${i == currentPage ? 'active' : 'waves-effect'}"><a class="list-page" href="${pageUrl(i)}">${i}</a></li>`
+        pagesHtml += `<li class="${i == currentPage ? 'active' : 'waves-effect'}"><a class="list-page" href="${urlPath.getListsOverview(i)}">${i}</a></li>`
     }
-    const bufferPage = `<li class="waves-effect"><a href="#!">...</a></li>`
+    const morePagesIndicator = `<li class="waves-effect">...</li>`
     let fullHtml = `
-            <li class="${currentPage == 1 ? 'disabled' : 'waves-effect'}"><a class="list-page" href="${currentPage == 1 ? "#!" : pageUrl(currentPage-1)}"><i class="material-icons">chevron_left</i></a></li>
-            ${pageStart > 1 ? bufferPage : ''}
+            <li class="${currentPage == 1 ? 'disabled' : 'waves-effect'}">
+                <a class="list-page" href="${currentPage == 1 ? "#!" : urlPath.getListsOverview(currentPage-1)}">
+                    <i class="material-icons">chevron_left</i>
+                </a>
+            </li>
+            ${pageStart > 1 ? morePagesIndicator : ''}
             ${pagesHtml}
-            ${pageEnd < totalPages ? bufferPage : ''}
-            <li class="${currentPage == totalPages ? 'disabled' : 'waves-effect'}"><a class="list-page" href="${currentPage == totalPages ? "#!" : pageUrl(currentPage+1)}"><i class="material-icons">chevron_right</i></a></li>
+            ${pageEnd < totalPages ? morePagesIndicator : ''}
+            <li class="${currentPage == totalPages ? 'disabled' : 'waves-effect'}">
+                <a class="list-page" href="${currentPage == totalPages ? "#!" : urlPath.getListsOverview(currentPage + 1)}">
+                    <i class="material-icons">chevron_right</i>
+                </a>
+            </li>
     `
     return fullHtml;
 }
