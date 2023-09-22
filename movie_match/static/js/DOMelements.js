@@ -169,3 +169,44 @@ const ListModalItem = (list_id, list_name, list_movies) => {
     </li>
     `
 }
+
+
+const PaginatorPages = (currentPage, totalItemCount, itemsPerPage) => {
+    const pageUrl = (page) => `/get-overview/${page}`
+    const totalPages = Math.ceil(totalItemCount / itemsPerPage);
+    const maxPagesShown = 5;
+
+    const pageOffset = Math.floor(maxPagesShown / 2);
+    
+    
+    let pageStart;
+    let pageEnd;
+    if (currentPage <= maxPagesShown - pageOffset){
+        pageStart = 1;
+        pageEnd = maxPagesShown;
+    }
+    else if (currentPage >= totalPages - pageOffset){
+        pageStart = totalPages - maxPagesShown + 1;
+        pageEnd = totalPages;
+    }
+    else {
+        pageStart = currentPage - pageOffset;
+        pageEnd = currentPage + pageOffset;
+    }
+    
+    let pagesHtml = '';
+    for (let i = pageStart; i <= pageEnd; i++){
+        pagesHtml += `<li class="${i == currentPage ? 'active' : 'waves-effect'}"><a class="list-page" href="${pageUrl(i)}">${i}</a></li>`
+    }
+    const bufferPage = `<li class="waves-effect"><a href="#!">...</a></li>`
+    let fullHtml = `
+            <li class="${currentPage == 1 ? 'disabled' : 'waves-effect'}"><a class="list-page" href="${currentPage == 1 ? "#!" : pageUrl(currentPage-1)}"><i class="material-icons">chevron_left</i></a></li>
+            ${pageStart > 1 ? bufferPage : ''}
+            ${pagesHtml}
+            ${pageEnd < totalPages ? bufferPage : ''}
+            <li class="${currentPage == totalPages ? 'disabled' : 'waves-effect'}"><a class="list-page" href="${currentPage == totalPages ? "#!" : pageUrl(currentPage+1)}"><i class="material-icons">chevron_right</i></a></li>
+    `
+    return fullHtml;
+}
+
+export { MovieCard, MovieInfoModal, UserChip, ListModalItem, PaginatorPages }
