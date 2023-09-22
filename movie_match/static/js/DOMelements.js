@@ -180,7 +180,11 @@ const PaginatorPages = (currentPage, totalItemCount, itemsPerPage) => {
     
     let pageStart;
     let pageEnd;
-    if (currentPage <= maxPagesShown - pageOffset){
+    if (totalPages <= maxPagesShown){
+        pageStart = 1;
+        pageEnd = totalPages;
+    }
+    else if (currentPage <= maxPagesShown - pageOffset){
         pageStart = 1;
         pageEnd = maxPagesShown;
     }
