@@ -150,14 +150,19 @@ const UserChip = (prefix, {uuid, nickname, position}, isSelf) => {
         </div>`
 }
 
-const ListModalItem = (list_id, list_name, list_movies) => {
+const ListModalItem = (list_id, list_name, list_movies, selected) => {
+    const selectedRowClass = "selected";
+    const selectedListIcon = "playlist_add_check";
+    const uneselectedListIcon = "playlist_add";
+
     return `
     <li>
-        <div id="row_${list_id}" class="collection-item avatar collapsible-header">
+        <div id="row_${list_id}" class="collection-item avatar collapsible-header ${selected ? selectedRowClass : ''}">
             <i class="material-icons circle">toc</i>
             <p>${list_name}</p>
             <a id="select_${list_id}" href="#!" class="secondary-content select-list">
-                <i class="material-icons">playlist_add
+                <i class="material-icons">
+                ${selected ? selectedListIcon : uneselectedListIcon}
                 </i>
             </a>
         </div>

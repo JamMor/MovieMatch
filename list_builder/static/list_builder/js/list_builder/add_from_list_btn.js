@@ -60,21 +60,15 @@ function updateListModal(data){
     $listContainer.empty();
     for (const list_id in data.lists){
         const { list_name, movies } = data.lists[list_id];
-        $listContainer.append(ListModalItem(list_id, list_name, movies));
-    }
-    // Select already selected lists
-    selectedLists.forEach(listId => {
-        selectList(listId);
-    })
+        const selected = selectedLists.includes(list_id);
+        $listContainer.append(ListModalItem(list_id, list_name, movies, selected));
 
     // Update pagination
     $listPages.empty();
     $listPages.append(PaginatorPages(data.page_number, data.total_count, data.items_per_page));
 }
 
-function getLists(pageNumber){
-    selectedLists = [];
-    
+function getLists(pageNumber){    
     if (pageNumber == undefined){
         pageNumber = 1;
     }
@@ -111,6 +105,7 @@ const init = () => {
     })
 
     $addFromListBtn.click(function () {
+        selectedLists = [];
         getLists();
     })
 
