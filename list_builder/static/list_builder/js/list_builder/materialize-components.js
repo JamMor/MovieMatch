@@ -12,7 +12,6 @@ const init = () => {
     // Materialize Modal initialize
     $('.modal').modal();
 
-    $('.collapsible').collapsible();
 }
 
 export { init }

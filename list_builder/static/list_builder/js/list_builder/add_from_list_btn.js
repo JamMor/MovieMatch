@@ -62,6 +62,14 @@ function updateListModal(data){
         const { list_name, movies } = data.lists[list_id];
         const selected = selectedLists.includes(list_id);
         $listContainer.append(ListModalItem(list_id, list_name, movies, selected));
+        $listContainer.find(`a.${selectListBtnClass}`).click(function(e){
+            e.stopPropagation();
+            const listDomId = $(this).attr("id")
+            const listId = getListIdFromBtnDomId(listDomId);
+            selectList(listId);
+            addToList(listId);
+        })
+    }
 
     // Update pagination
     $listPages.empty();
@@ -91,18 +99,22 @@ function getLists(pageNumber){
 }
 
 const init = () => {
+    $('.collapsible').collapsible();
+
     $addFromListBtn.tooltip({
         position: "left",
         html: `<span>Add from saved list...</span>`
     });
 
-    $savedListModal.on("click", `a.${selectListBtnClass}`, function(e){
-        e.stopPropagation();
-        const listDomId = $(this).attr("id")
-        const listId = getListIdFromBtnDomId(listDomId);
-        selectList(listId);
-        addToList(listId);
-    })
+    // // Handler clashing with materialize. Propagation not being stopped 
+    // // before materialize triggers collapsible.
+    // $listContainer.on("click", `a.${selectListBtnClass}`, function(e){
+    //     e.stopPropagation();
+    //     const listDomId = $(this).attr("id")
+    //     const listId = getListIdFromBtnDomId(listDomId);
+    //     selectList(listId);
+    //     addToList(listId);
+    // })
 
     $addFromListBtn.click(function () {
         selectedLists = [];
