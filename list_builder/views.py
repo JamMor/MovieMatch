@@ -143,7 +143,7 @@ def get_list_overview(request, page_num = 1):
     for saved_list in saved_lists:
         lists[saved_list.id] = {
             "list_id": saved_list.id,
-            "list_name": saved_list.display_name,
+            "list_name": saved_list.list_name,
             "movies": [movie.title for movie in saved_list.movie_titles]
         }
 
