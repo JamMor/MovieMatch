@@ -115,8 +115,24 @@ def get_list(request, list_id):
     return JsonResponse(SuccessJsonClassObject(data={"movies" : list(movie_list)}).to_dict())
 
 @login_required(redirect_field_name='default_redirect', login_url='list_builder:default_redirect')
-def get_list_overview(request, page_num = 1):
+def get_list_overview(request):
     this_persona = get_or_set_persona(request)
+
+    #Get page number,and sort parameter from request.
+    page_num = int(request.GET.get("page", 1))
+    sort_param = request.GET.get("sort", "updated-at:desc").split(":")
+    sort_field = sort_param[0]
+    sort_order = sort_param[1]
+
+    order_keys = {
+        "updated-at" : "updated_at",
+        "name" : "list_name",
+        "count" : "movie_count",
+        "created-at" : "created_at"
+    }
+
+    order_field = order_keys.get(sort_field, "updated_at")
+    order_field = f"-{order_field}" if sort_order == "desc" else order_field
 
     items_per_page = 10
     startIndex = (page_num - 1) * items_per_page
@@ -131,7 +147,7 @@ def get_list_overview(request, page_num = 1):
     movie_prefetch = Prefetch('movies', queryset=Movie.objects.only('title'), to_attr='movie_titles')
     saved_lists = SavedMovieList.objects.filter(
         created_by = this_persona
-        ).only('list_name').prefetch_related(movie_prefetch)[startIndex:endIndex]
+        ).annotate(movie_count=Count("movies") ).order_by(order_field).only('list_name').prefetch_related(movie_prefetch)[startIndex:endIndex]
     
     data = {
         "page_number" : page_num,

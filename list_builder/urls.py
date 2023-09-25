@@ -10,6 +10,6 @@ urlpatterns = [
     path('edit/<int:list_id>', views.edit, name="edit_list"),
     path('delete/<int:list_id>', views.delete, name="delete_list"),
     path('get/<int:list_id>', views.get_list, name="get_list"),
-    path('get-overview/<int:page_num>', views.get_list_overview, name="get_list_overview"),
+    path('get-overview/', views.get_list_overview, name="get_list_overview"),
     path('', views.index, name="default_redirect")
 ]
