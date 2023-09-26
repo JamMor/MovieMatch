@@ -22,9 +22,9 @@
             let getListUrl = "/get"
             return `${getListUrl}/${list_id}`
         },
-        "getListsOverview" : (pageNumber) => {
-            let getListsOverviewUrl = "/get-overview"
-            return `${getListsOverviewUrl}/${pageNumber}`
+        "getListsOverview" : (pageNumber=1, field="updated-at", order="desc") => {
+            const baseGetListsOverviewUrl = "/get-overview"
+            return `${baseGetListsOverviewUrl}/?page=${pageNumber}&sort=${field}:${order}`
         },
         //elimination_room
         "shareSubmit" : "{% url 'elimination_room:share_submit' %}",
