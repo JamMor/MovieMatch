@@ -18,7 +18,10 @@ const get$iconFromId = (listId) => $(`#${getBtnDomIdFromListId(listId)} > i`);
 
 
 let selectedLists = [];
-let filter = "name";
+let sortOrder = {
+    "field" : "updated-at",
+    "direction" : "desc",
+}
 
 function addToList(listId) {
     $.get(urlPath.getList(listId))
@@ -54,7 +57,6 @@ function selectList(listId){
     }
 }
 
-
 function updateListModal(data){
     // Replace list items with data
     $listContainer.empty();
@@ -76,11 +78,9 @@ function updateListModal(data){
     $listPages.append(PaginatorPages(data.page_number, data.total_count, data.items_per_page));
 }
 
-function getLists(pageNumber){    
-    if (pageNumber == undefined){
-        pageNumber = 1;
-    }
-    $.get(urlPath.getListsOverview(pageNumber))
+function getLists(pageNumber){
+    const { field, direction } = sortOrder;
+    $.get(urlPath.getListsOverview(pageNumber, field, direction))
         .done(function(response) {
             console.log(response);
             if (response.status == "success"){
