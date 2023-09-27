@@ -1,7 +1,7 @@
 /* Icons */
 #icons {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(150px, max-content));
+    grid-template-columns: repeat(auto-fit, minmax(max-content, 200px));
     grid-gap: 5px;
 }
 
