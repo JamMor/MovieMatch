@@ -135,4 +135,4 @@ const init = () => {
     })
 }
 
-export { init }
+export { init, sortOrder, getLists }
