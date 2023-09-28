@@ -131,7 +131,8 @@ const init = () => {
         if (targetUrl == "#!"){
             return;
         }
-        const pageNumber = targetUrl.split("/").pop();
+        const queryString = new URLSearchParams(targetUrl.split("?")[1])
+        const pageNumber = queryString.get("page");
         getLists(pageNumber);
     })
 }
