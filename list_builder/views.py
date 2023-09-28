@@ -160,6 +160,7 @@ def get_list_overview(request):
         lists[saved_list.id] = {
             "list_id": saved_list.id,
             "list_name": saved_list.list_name,
+            "movie_count": saved_list.movie_count,
             "movies": [movie.title for movie in saved_list.movie_titles]
         }
 
