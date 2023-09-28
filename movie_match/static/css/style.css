@@ -531,6 +531,32 @@ nav#search-bar {
     right:auto;
 }
 
+#saved-lists-modal .header {
+    display:flex;
+}
+
+#saved-lists-modal .header h4 {
+    flex:1 1 auto;
+}
+
+#list-container div {
+    align-items: center;
+}
+
+#list-container .badge {
+    margin:5px;
+}
+
+#list-container p {
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+
+#list-container .secondary-content {
+    top: auto;
+    position:relative;
+}
+
 /* ------------------------------SearchResults------------------------------ */
 div#search-results {
     height: 0px;
