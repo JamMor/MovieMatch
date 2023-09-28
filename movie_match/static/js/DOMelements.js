@@ -176,7 +176,7 @@ const ListModalItem = (list_id, list_name, list_movies, selected) => {
 }
 
 
-const PaginatorPages = (currentPage, totalItemCount, itemsPerPage) => {
+const PaginatorPages = (currentPage, sortField, sortDirection, totalItemCount, itemsPerPage) => {
     const totalPages = Math.ceil(totalItemCount / itemsPerPage);
     const maxPagesShown = 5;
 
@@ -203,13 +203,14 @@ const PaginatorPages = (currentPage, totalItemCount, itemsPerPage) => {
     }
     
     let pagesHtml = '';
+    const getUrl = urlPath.getListsOverview;
     for (let i = pageStart; i <= pageEnd; i++){
-        pagesHtml += `<li class="${i == currentPage ? 'active' : 'waves-effect'}"><a class="list-page" href="${urlPath.getListsOverview(i)}">${i}</a></li>`
+        pagesHtml += `<li class="${i == currentPage ? 'active' : 'waves-effect'}"><a class="list-page" href="${getUrl(i, sortField, sortDirection)}">${i}</a></li>`
     }
     const morePagesIndicator = `<li class="waves-effect">...</li>`
     let fullHtml = `
             <li class="${currentPage == 1 ? 'disabled' : 'waves-effect'}">
-                <a class="list-page" href="${currentPage == 1 ? "#!" : urlPath.getListsOverview(currentPage-1)}">
+                <a class="list-page" href="${currentPage == 1 ? "#!" : getUrl(currentPage-1, sortField, sortDirection)}">
                     <i class="material-icons">chevron_left</i>
                 </a>
             </li>
@@ -217,7 +218,7 @@ const PaginatorPages = (currentPage, totalItemCount, itemsPerPage) => {
             ${pagesHtml}
             ${pageEnd < totalPages ? morePagesIndicator : ''}
             <li class="${currentPage == totalPages ? 'disabled' : 'waves-effect'}">
-                <a class="list-page" href="${currentPage == totalPages ? "#!" : urlPath.getListsOverview(currentPage + 1)}">
+                <a class="list-page" href="${currentPage == totalPages ? "#!" : getUrl(currentPage + 1, sortField, sortDirection)}">
                     <i class="material-icons">chevron_right</i>
                 </a>
             </li>

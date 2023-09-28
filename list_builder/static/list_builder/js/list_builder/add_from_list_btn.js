@@ -74,8 +74,9 @@ function updateListModal(data){
     }
 
     // Update pagination
+    const { field, direction } = sortOrder;
     $listPages.empty();
-    $listPages.append(PaginatorPages(data.page_number, data.total_count, data.items_per_page));
+    $listPages.append(PaginatorPages(data.page_number, field, direction, data.total_count, data.items_per_page));
 }
 
 function getLists(pageNumber){
