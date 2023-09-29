@@ -75,6 +75,8 @@ def save(request, list_id = None):
             saved_list = SavedMovieList.objects.get(id=list_id, created_by=this_persona)
             new_ids =list(Movie.objects.filter(tmdb_id__in=ids_in_db).values_list("id", flat=True))
             saved_list.movies.set(new_ids)
+            # saved_list.list_name = list_name
+            saved_list.save()
             response_data = {"nextUrl" : reverse('list_builder:list_manager')}
         response_data.update({"list_name" : saved_list.display_name})
         return JsonResponse(SuccessJsonClassObject(data=response_data).to_dict())
@@ -155,15 +157,15 @@ def get_list_overview(request):
         "total_count" : num_saved_lists
     }
 
-    lists = {}
+    ordered_lists = []
     for saved_list in saved_lists:
-        lists[saved_list.id] = {
+        ordered_lists.append({
             "list_id": saved_list.id,
-            "list_name": saved_list.list_name,
+            "list_name": saved_list.display_name,
             "movie_count": saved_list.movie_count,
             "movies": [movie.title for movie in saved_list.movie_titles]
-        }
+        })
 
-    data.update({"lists" : lists})
+    data.update({"lists" : ordered_lists})
     
     return JsonResponse(SuccessJsonClassObject(data=data).to_dict())

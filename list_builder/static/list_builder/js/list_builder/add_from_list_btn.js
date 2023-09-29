@@ -60,8 +60,8 @@ function selectList(listId){
 function updateListModal(data){
     // Replace list items with data
     $listContainer.empty();
-    for (const list_id in data.lists){
-        const { list_name, movies } = data.lists[list_id];
+    data.lists.forEach(list => {
+        const { list_id, list_name, movies } = list;
         const selected = selectedLists.includes(list_id);
         $listContainer.append(ListModalItem(list_id, list_name, movies, selected));
         $listContainer.find(`a.${selectListBtnClass}`).click(function(e){
@@ -71,7 +71,7 @@ function updateListModal(data){
             selectList(listId);
             addToList(listId);
         })
-    }
+    });
 
     // Update pagination
     const { field, direction } = sortOrder;
