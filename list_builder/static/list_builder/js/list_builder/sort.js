@@ -14,8 +14,8 @@ const defaultSortDirection = {
 }
 
 function setActiveSortBtn(field){
-    $sortOptionBtns.removeClass('active');
-    $(`#${domIdFromField(field)}`).addClass('active');
+    $sortOptionBtns.removeClass('neon-lit');
+    $(`#${domIdFromField(field)}`).addClass('neon-lit');
 }
 
 function setSortField(field){
@@ -38,7 +38,8 @@ const init = () => {
     $('#sort-btns .dropdown-trigger').dropdown({
         alignment: 'right',
         closeOnClick: true,
-        direction: 'up',
+        constrainWidth: false,
+        coverTrigger: false,
     });
 
     $sortContainer.on('click', 'a', function(e){

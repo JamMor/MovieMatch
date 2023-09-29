@@ -576,6 +576,14 @@ nav#search-bar {
     position:relative;
 }
 
+#sort-container div {
+    display:flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    align-items: stretch;
+}
+
 /* ------------------------------SearchResults------------------------------ */
 div#search-results {
     height: 0px;
