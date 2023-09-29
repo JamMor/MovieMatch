@@ -157,9 +157,9 @@ const ListModalItem = (list_id, list_name, list_movies, selected) => {
 
     return `
     <li>
-        <div id="row_${list_id}" class="collection-item avatar collapsible-header ${selected ? selectedRowClass : ''}">
-            <i class="material-icons circle">toc</i>
-            <span class="new badge cyan accent-2" data-badge-caption="">${list_movies.length}</span>
+        <div id="row_${list_id}" class="neon-purple neon-glow-hover collection-item avatar collapsible-header ${selected ? selectedRowClass : ''}">
+            <i class="material-icons circle neon-cyan neon-unlit dimmed">toc</i>
+            <span class="new badge purple accent-2 black-text" data-badge-caption="">${list_movies.length}</span>
             <p>${list_name}</p>
             <a id="select_${list_id}" href="#!" class="secondary-content select-list">
                 <i class="material-icons">
