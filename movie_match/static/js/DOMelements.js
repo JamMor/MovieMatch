@@ -177,6 +177,24 @@ const ListModalItem = (list_id, list_name, list_movies, selected) => {
 }
 
 
+const PageItem = (itemClass, displayValue, pageValue, sortField, sortDirection) => {
+    const classMap = {
+        "active": "neon-cyan neon-lit",
+        "inactive": "waves-effect waves-light",
+        "disabled": "disabled"
+    }
+    const linkClass = classMap[itemClass];
+    let href = "#!";
+    if (itemClass != "disabled"){
+        href = urlPath.getListsOverview(pageValue, sortField, sortDirection);
+    }
+    return `
+        <li class="${linkClass}">
+            <a class="list-page" href="${href}">${displayValue}</a>
+        </li>
+    `
+}
+
 const PaginatorPages = (currentPage, sortField, sortDirection, totalItemCount, itemsPerPage) => {
     const totalPages = Math.ceil(totalItemCount / itemsPerPage);
     const maxPagesShown = 5;
@@ -204,25 +222,26 @@ const PaginatorPages = (currentPage, sortField, sortDirection, totalItemCount, i
     }
     
     let pagesHtml = '';
-    const getUrl = urlPath.getListsOverview;
     for (let i = pageStart; i <= pageEnd; i++){
-        pagesHtml += `<li class="${i == currentPage ? 'active' : 'waves-effect'}"><a class="list-page" href="${getUrl(i, sortField, sortDirection)}">${i}</a></li>`
+        let pageClass = i == currentPage ? "active" : "inactive";
+        pagesHtml += PageItem(pageClass, i, i, sortField, sortDirection);
     }
-    const morePagesIndicator = `<li class="waves-effect">...</li>`
+
+    const previousClass = currentPage == 1 ? "disabled" : "inactive";
+    const previousIndicator = "<i class='material-icons'>chevron_left</i>"
+    const previousBtn = PageItem(previousClass, previousIndicator, currentPage - 1, sortField, sortDirection);
+    
+    const nextClass = currentPage == totalPages ? "disabled" : "inactive";
+    const nextIndicator = "<i class='material-icons'>chevron_right</i>"
+    const nextBtn = PageItem(nextClass, nextIndicator, currentPage + 1, sortField, sortDirection);
+
+    const morePagesIndicator = `<li>...</li>`
     let fullHtml = `
-            <li class="${currentPage == 1 ? 'disabled' : 'waves-effect'}">
-                <a class="list-page" href="${currentPage == 1 ? "#!" : getUrl(currentPage-1, sortField, sortDirection)}">
-                    <i class="material-icons">chevron_left</i>
-                </a>
-            </li>
+            ${previousBtn}
             ${pageStart > 1 ? morePagesIndicator : ''}
             ${pagesHtml}
             ${pageEnd < totalPages ? morePagesIndicator : ''}
-            <li class="${currentPage == totalPages ? 'disabled' : 'waves-effect'}">
-                <a class="list-page" href="${currentPage == totalPages ? "#!" : getUrl(currentPage + 1, sortField, sortDirection)}">
-                    <i class="material-icons">chevron_right</i>
-                </a>
-            </li>
+            ${nextBtn}
     `
     return fullHtml;
 }

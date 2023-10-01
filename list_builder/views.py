@@ -136,7 +136,7 @@ def get_list_overview(request):
     order_field = order_keys.get(sort_field, "updated_at")
     order_field = f"-{order_field}" if sort_order == "desc" else order_field
 
-    items_per_page = 10
+    items_per_page = 5
     startIndex = (page_num - 1) * items_per_page
     endIndex = startIndex + items_per_page
     

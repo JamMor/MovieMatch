@@ -576,6 +576,21 @@ nav#search-bar {
     position:relative;
 }
 
+#list-pages {
+    text-align: center;
+}
+
+#list-pages li.active {
+    background-color: var(--cyan_accent-2);
+    color: var(--indigo_darken-4);
+}
+#list-pages li:not(.disabled) a {
+    color: var(--blue_darken-2);
+}
+#list-pages li.active a {
+    color: var(--indigo_darken-4);
+}
+
 #sort-container div {
     display:flex;
     flex-direction: column;
