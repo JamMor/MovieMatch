@@ -60,6 +60,7 @@
                         {% include "_login_form.html" with pre_id="nav" %}
                     </div>
                     {% endif %}
+                    <li><a class="modal-trigger" href="#about-modal"><i class="material-icons">help_outline</i></a></li>
                 </ul>
             </div>
         </nav>
@@ -88,8 +89,10 @@
         <li><a href="{% url 'list_builder:list_manager' %}">List Manager</a></li>
         {% endif %}
         <li><a href="#">Recent Lists</a></li>
+        <li><a class="modal-trigger" href="#about-modal"><i class="material-icons">help_outline</i></a></li>
     </ul>
     {% endblock %}
+    {% include "_about_modal.html" %}
     {% block content_block %}{% endblock %}
     {% block script_block %}
     {% include "_resource_paths.html" %}
