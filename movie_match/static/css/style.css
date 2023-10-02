@@ -2,6 +2,7 @@
 =================CSS Subheadings=================
 
 [+] =Materialize colors=
+[+] =Fonts=
 [+] =html (overall)=
 [+] =Cyber Grade (Color Scheme Classes)=
     [-] -Cyber Grade Inputs=
@@ -72,11 +73,20 @@
 }
 
 /* [+] */
+/*====================Fonts====================*/
+:root {
+    --font-fallback: -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Oxygen-Sans,Ubuntu,Cantarell,"Helvetica Neue",sans-serif;
+    --font-basic: 'Montserrat', var(--font-fallback, sans-serif);
+    --font-primary: 'Orbitron', var(--font-fallback, sans-serif);
+    --font-secondary: 'Audiowide', var(--font-fallback, sans-serif);
+}
+
+/* [+] */
 /* =====================html (overall)===================== */
 html {
     height: 100vh;
     background-color: var(--grey_darken-4);
-    font-family: 'Orbitron', sans-serif;
+    font-family: var(--font-basic);
 }
 
 /* [+] */
@@ -337,7 +347,7 @@ header nav {
 
 header nav a {
     color: #000000;
-    font-family: 'Orbitron', sans-serif;
+    font-family: var(--font-primary);
 }
 
 .logo1 {
@@ -358,7 +368,7 @@ header nav a {
 
 header nav a.brand-logo {
     margin: 0 20px;
-    font-family: 'Orbitron', sans-serif;
+    font-family: var(--font-primary);
     font-weight: 400;
 }
 
@@ -438,7 +448,7 @@ header nav a.brand-logo {
 
 #side-menu li>a, #side-menu li>div {
     color: var(--grey_lighten-2);
-    font-family: 'Orbitron', sans-serif;
+    font-family: var(--font-primary);
     background-color: transparent;
 }
 
@@ -478,7 +488,6 @@ header nav a.brand-logo {
     padding:5%;
     font-size: 1.5rem;
     color: var(--grey_lighten-2);
-    font-family: 'Montserrat', sans-serif;
     text-align: center;
 }
 #about-modal img {
@@ -703,8 +712,13 @@ main {
     table-layout: fixed;
     width:100%;
 }
+#list-table th {
+    font-family: var(--font-primary);
+    text-align: center;
+}
 #list-table span.badge{
     color: black;
+    font-family: var(--font-primary);
 }
 #list-name-th {
     min-width: 100px;
@@ -714,7 +728,6 @@ main {
     min-width: 48px;
 }
 #created-date-th {
-    width:180px;
     min-width:100px;    
 }
 #actions-th {
@@ -902,13 +915,8 @@ footer.sharecode i{
 /* [+] */
 /* ======================Materialize ELements======================= */
 .material-tooltip {
-    font-family: -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Oxygen-Sans,Ubuntu,Cantarell,"Helvetica Neue",sans-serif;
     text-align: left;
     list-style-type: disc;
-}
-
-.toast {
-    font-family: -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Oxygen-Sans,Ubuntu,Cantarell,"Helvetica Neue",sans-serif;
 }
 
 /* Disabled Save Button Class */
