@@ -9,8 +9,8 @@ const $navLoginDropdown = $('#nav-bar .dropdown-trigger');
 
 function loginHandler(){
    
-    let formAction = $(this).attr('action')
-    let formData = $(this).serialize()
+    const formAction = $(this).attr('action')
+    const formData = $(this).serialize()
 
     $.post(formAction, formData, "json")
         .done(function (response) {

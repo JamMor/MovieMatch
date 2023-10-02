@@ -19,7 +19,7 @@ function openChangeNicknameModal(){
 
 function sendChangeNicknameRequest(){
     console.log("Change request sent.")
-    let changeForm = document.querySelector(`#${formId}`);
+    const changeForm = document.querySelector(`#${formId}`);
     const changeFormData = new FormData(changeForm);
     $.ajax({
         url: urlPath.changeNickname,
@@ -33,13 +33,13 @@ function sendChangeNicknameRequest(){
     .done(function(response) {
         console.log(response);
         if(response.status == "success"){
-            let newNickname = response.data["nickname"]
+            const newNickname = response.data["nickname"]
             $modal.modal('close');
             //FLAG Reset old form errors
             $form.find("span.error").remove();
             console.log(`Changed nickname to ${newNickname}`)
             // Update nicknames on anywhere on page
-            let nicknameElements = document.getElementsByClassName(nicknameTagsClass);
+            const nicknameElements = document.getElementsByClassName(nicknameTagsClass);
             for (let i = 0; i < nicknameElements.length; i++) {
                 nicknameElements[i].innerText = newNickname;
             }

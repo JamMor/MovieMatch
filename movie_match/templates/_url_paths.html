@@ -6,28 +6,35 @@
         "listCreator" : "{% url 'list_builder:list_builder' %}",
         "listManager" : "{% url 'list_builder:list_manager' %}",
         "saveList" : (list_id = "") => {
-            let saveURL = "/save"
-            if (list_id) {saveURL += `/${list_id}`}
-            return saveURL
+            const baseSaveUrl = "/save"
+            return `${baseSaveUrl}/${list_id}`
         },
         "listEditor" : (list_id) => {
-            let editUrl = "/edit"
-            return `${editUrl}/${list_id}`
+            const baseEditUrl = "/edit"
+            return `${baseEditUrl}/${list_id}`
         },
         "deleteList" : (list_id) => {
-            let deleteListUrl = "/delete"
-            return `${deleteListUrl}/${list_id}`
+            const baseDeleteListUrl = "/delete"
+            return `${baseDeleteListUrl}/${list_id}`
+        },
+        "getList" : (list_id) => {
+            const baseGetListUrl = "/get"
+            return `${baseGetListUrl}/${list_id}`
+        },
+        "getListsOverview" : (pageNumber=1, field="updated-at", order="desc") => {
+            const baseGetListsOverviewUrl = "/get-overview"
+            return `${baseGetListsOverviewUrl}/?page=${pageNumber}&sort=${field}:${order}`
         },
         //elimination_room
         "shareSubmit" : "{% url 'elimination_room:share_submit' %}",
         "eliminationRoom" : (sharecode) => {
-            let baseUrl = "/match"
-            return `${baseUrl}/${sharecode}`
+            const baseEliminationUrl = "/match"
+            return `${baseEliminationUrl}/${sharecode}`
         },
         "webSocketURL" : (shareCode = "") => {
-            let webSocketProtocol = "{% if IN_DEBUG %}ws://{% else %}wss://{% endif %}"
-            let baseURL = window.location.host
-            let socketRootURL = "ws/match"
+            const webSocketProtocol = "{% if IN_DEBUG %}ws://{% else %}wss://{% endif %}"
+            const baseURL = window.location.host
+            const socketRootURL = "ws/match"
     
             return `${webSocketProtocol}${baseURL}/${socketRootURL}/${shareCode}/`
         },

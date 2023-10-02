@@ -15,8 +15,8 @@ function displayDeleteModal(listName){
 
 function handleDeleteRequest(){
     //Get list name and id from DOM
-    let $thisRow = $(this).parents("tr")
-    let thisRowId = $thisRow.attr("id");
+    const $thisRow = $(this).parents("tr")
+    const thisRowId = $thisRow.attr("id");
     thisList.id = listIdFromHeaderRowDOMId(thisRowId);
     thisList.name = $thisRow
         .children(".list-name-td")
@@ -39,8 +39,8 @@ function sendDeletionRequest(){
             deleteStatusToast(response.data.list_name, "success")
             
             // Remove deleted row from DOM
-            let $headerRow = $headerRowElementFromListId(response.data.list_id)
-            let $contentRow = $headerRow.next("tr")
+            const $headerRow = $headerRowElementFromListId(response.data.list_id)
+            const $contentRow = $headerRow.next("tr")
             $headerRow.remove();
             $contentRow.remove()
 

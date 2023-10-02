@@ -1,3 +1,5 @@
+import { movieList } from "../movie_lists.js";
+
 const $nicknameInput = $("#nickname");
 const $sharecodeInput = $("#sharecode");
 const $submitBtn = $("#share-btn");
@@ -11,8 +13,8 @@ function validateSharecode(sharecode) {
 }
 
 function submitEliminationList() {
-    let sharecode = $sharecodeInput.val().toUpperCase();
-    let nickname = $nicknameInput.val();
+    const sharecode = $sharecodeInput.val().toUpperCase();
+    const nickname = $nicknameInput.val();
 
     if (!validateSharecode(sharecode)) {
         //FLAG Toast error
@@ -20,7 +22,7 @@ function submitEliminationList() {
     }
 
 
-    let tmdb_ids = movie_list.map(movie => movie.tmdb_id)
+    const tmdb_ids = movieList.getIds();
     
     $.post(urlPath.shareSubmit, JSON.stringify(
         {

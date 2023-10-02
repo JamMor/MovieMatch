@@ -16,7 +16,6 @@ from channels.layers import get_channel_layer
 from asgiref.sync import async_to_sync
 from .persona_assigner import get_or_set_persona
 from .moviedb_api_caller import add_movies_to_db_from_tmdb_ids
-from .serializer import MovieListEncoder
 from movie_match.json_response_models import SuccessJsonClassObject, FailedJsonClassObject
 
 # Displays main page
@@ -39,13 +38,12 @@ def list_manager(request):
 @login_required(redirect_field_name='default_redirect', login_url='list_builder:default_redirect')
 def edit(request, list_id):
     this_persona = get_or_set_persona(request)
-    saved_list = SavedMovieList.objects.prefetch_related(
-                    "movies"
-                ).get(id = list_id)
+    saved_list = SavedMovieList.objects.get(id = list_id, created_by = this_persona)
+    movie_list = Movie.objects.filter(
+        in_savedmovielists = saved_list).values(
+        'tmdb_id', 'title', 'overview', 'poster_path', 'release_date')
     
-    movie_list = MovieListEncoder(saved_list.movies.all())
-
-    context = {"saved_list" : saved_list, "movie_list" : movie_list}
+    context = {"saved_list" : saved_list, "movie_list" : list(movie_list)}
     return render(request, 'list_builder/list_builder_editor.html', context)
 
 def save(request, list_id = None):
@@ -77,6 +75,8 @@ def save(request, list_id = None):
             saved_list = SavedMovieList.objects.get(id=list_id, created_by=this_persona)
             new_ids =list(Movie.objects.filter(tmdb_id__in=ids_in_db).values_list("id", flat=True))
             saved_list.movies.set(new_ids)
+            # saved_list.list_name = list_name
+            saved_list.save()
             response_data = {"nextUrl" : reverse('list_builder:list_manager')}
         response_data.update({"list_name" : saved_list.display_name})
         return JsonResponse(SuccessJsonClassObject(data=response_data).to_dict())
@@ -103,3 +103,69 @@ def delete(request, list_id):
     except Exception as err:
         print(err)
         return JsonResponse(FailedJsonClassObject(errors=["An error occured attempting to delete the list."]).to_dict())
+    
+def get_list(request, list_id):
+    this_persona = get_or_set_persona(request)
+    try:
+        saved_list = SavedMovieList.objects.get(id = list_id, created_by = this_persona)
+    except:
+        return JsonResponse(FailedJsonClassObject(errors=["Could not find list."]).to_dict())
+    movie_list = Movie.objects.filter(
+        in_savedmovielists = saved_list).values(
+        'tmdb_id', 'title', 'overview', 'poster_path', 'release_date')
+
+    return JsonResponse(SuccessJsonClassObject(data={"movies" : list(movie_list)}).to_dict())
+
+@login_required(redirect_field_name='default_redirect', login_url='list_builder:default_redirect')
+def get_list_overview(request):
+    this_persona = get_or_set_persona(request)
+
+    #Get page number,and sort parameter from request.
+    page_num = int(request.GET.get("page", 1))
+    sort_param = request.GET.get("sort", "updated-at:desc").split(":")
+    sort_field = sort_param[0]
+    sort_order = sort_param[1]
+
+    order_keys = {
+        "updated-at" : "updated_at",
+        "name" : "list_name",
+        "count" : "movie_count",
+        "created-at" : "created_at"
+    }
+
+    order_field = order_keys.get(sort_field, "updated_at")
+    order_field = f"-{order_field}" if sort_order == "desc" else order_field
+
+    items_per_page = 10
+    startIndex = (page_num - 1) * items_per_page
+    endIndex = startIndex + items_per_page
+    
+    #Count of all saved movie lists created by this user.
+    num_saved_lists = SavedMovieList.objects.filter(
+        created_by = this_persona
+        ).count()
+    
+    #Get saved lists created by this user with the titles of their movies.
+    movie_prefetch = Prefetch('movies', queryset=Movie.objects.only('title'), to_attr='movie_titles')
+    saved_lists = SavedMovieList.objects.filter(
+        created_by = this_persona
+        ).annotate(movie_count=Count("movies") ).order_by(order_field).only('list_name').prefetch_related(movie_prefetch)[startIndex:endIndex]
+    
+    data = {
+        "page_number" : page_num,
+        "items_per_page" : items_per_page,
+        "total_count" : num_saved_lists
+    }
+
+    ordered_lists = []
+    for saved_list in saved_lists:
+        ordered_lists.append({
+            "list_id": saved_list.id,
+            "list_name": saved_list.display_name,
+            "movie_count": saved_list.movie_count,
+            "movies": [movie.title for movie in saved_list.movie_titles]
+        })
+
+    data.update({"lists" : ordered_lists})
+    
+    return JsonResponse(SuccessJsonClassObject(data=data).to_dict())

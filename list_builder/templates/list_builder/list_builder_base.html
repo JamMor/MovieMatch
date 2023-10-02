@@ -13,6 +13,15 @@
                                     <label class="label-icon" for="moviesearch-input"><i class="material-icons">theaters</i></label>
                                     <i id="search-close" class="material-icons">close</i>
                                 </div>
+                                <div id="list-actions-btn" class="fixed-action-btn">
+                                    <a class="btn-floating btn-large neon-purple neon-glow-hover">
+                                        <i class="large material-icons">more_vert</i>
+                                    </a>
+                                    <ul>
+                                        <li><a id="clear-movie-list" class="btn-floating neon-orange neon-glow-hover"><i class="material-icons">close</i></a></li>
+                                        <li><a id="add-from-list" class="btn-floating neon-cyan neon-glow-hover modal-trigger" href="#saved-lists-modal"><i class="material-icons">playlist_add</i></a></li>
+                                    </ul>
+                                </div>
                             </form>
                         </div>
                     </nav>
@@ -24,13 +33,11 @@
             </div>
         </main>
 
+        {% include "list_builder/_add_from.html"%}
+
     {% endblock %}
 
     {% block script_block %}
         {{ block.super }}
-        <script type='text/javascript' >
-            var movie_list = [];
-            var search_results = [];
-        </script>
-        <script type="module" src="{% static 'list_builder/js/index.js'%}"></script>
+        <script type="module" src="{% static 'list_builder/js/list_builder/index.js'%}"></script>
     {% endblock %}

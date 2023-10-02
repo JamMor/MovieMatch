@@ -192,6 +192,13 @@ i.suffix {
     border-radius: 10px;
 }
 
+.neon-glow-hover.collection-item {
+    background-color: unset;
+}
+.neon-glow-hover.collection-item.avatar i.circle {
+    background-color: unset;
+    color:unset;
+}
 
 .neon-orange {
     --hue:27;
@@ -217,7 +224,8 @@ i.suffix {
 .neon-glow-hover:hover, 
 .neon-lit, 
 .neon-lit:hover, 
-#moviesearch-input:focus {
+#moviesearch-input:focus,
+li.active .neon-glow-hover {
     color: hsl(var(--hue), 66%, 30%);
     background-color: #ffffff;
     box-shadow: 
@@ -239,6 +247,20 @@ i.suffix {
         0 0 0.3em 0 hsl(var(--hue), 100%, 55%),
         0 0 1.2em 0 hsl(var(--hue), 79%, 46%),
         0 0 1.8em 0 hsl(var(--hue), 66%, 30%);
+}
+
+/* For floating/fixed action buttons */
+.neon-glow-hover i, 
+.neon-unlit i, 
+.neon-unlit:hover i, 
+#moviesearch-input {
+    color: var(--grey_lighten-2);
+}
+.neon-glow-hover:hover i, 
+.neon-lit i, 
+.neon-lit:hover i, 
+#moviesearch-input:focus i {
+    color: hsl(var(--hue), 66%, 30%);
 }
 
 /* [+] */
@@ -500,6 +522,66 @@ nav#search-bar {
 }
 #search-bar input:focus {
     color:#000;
+}
+
+#search-bar form {
+    display:flex;
+    gap:10px;
+}
+
+#moviesearch {
+    flex:1;
+}
+
+#list-actions-btn {
+    position:relative;
+    bottom:auto;
+    right:auto;
+}
+
+#saved-lists-modal .header {
+    display:flex;
+}
+
+#saved-lists-modal .header h4 {
+    flex:1 1 auto;
+}
+
+#list-container {
+    border:none;
+}
+
+#list-container .collection-item {
+    align-items: center;
+    border-color:var(--grey_darken-2);
+}
+
+#list-container .collapsible-body {
+    color: var(--grey_lighten-2);
+    border-color:var(--grey_darken-2);
+}
+
+#list-container .badge {
+    margin:5px;
+}
+
+#list-container p {
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    flex:1;
+}
+
+#list-container .secondary-content {
+    top: auto;
+    position:relative;
+}
+
+#sort-container div {
+    display:flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    align-items: stretch;
 }
 
 /* ------------------------------SearchResults------------------------------ */

@@ -3,7 +3,7 @@
 
     {% block list_builder_subheading %}
         <div class="center-align">
-            <div class="btn-large btn-rounded neon-purple neon-unlit">{{ saved_list.list_name }}</div>
+            <div class="btn-large btn-rounded neon-purple neon-unlit">{{ saved_list.display_name }}</div>
         </div>
     {% endblock %}
 
@@ -39,5 +39,5 @@
             var savedListId = '{{saved_list.id}}';
             var savedListName = '{{saved_list.list_name}}';
         </script>
-        <script type="module" src="{% static 'list_builder/js/list_editor/index.js'%}"></script>
+        <script type="module" src="{% static 'list_builder/js/list_builder/list_editor/index.js'%}"></script>
     {% endblock %}

@@ -55,7 +55,7 @@ const MovieCard = (
 ) => {
 
     //Button options
-    let button_elem = buttonArray.map(button => CardButton(button)).join('');
+    const button_elem = buttonArray.map(button => CardButton(button)).join('');
 
     //Append Elimination css class for match cards
     card_css_class += is_eliminated ? " eliminated" : "";
@@ -138,4 +138,93 @@ const MovieInfoModal = (
     `
 };
 
-export { MovieCard, MovieInfoModal }
+const UserChipColors = {
+    "self": "neon-cyan",
+    "other": "neon-purple"
+}
+
+const UserChip = (prefix, {uuid, nickname, position}, isSelf) => {
+    const color = isSelf ? UserChipColors.self : UserChipColors.other
+    return `<div id='${prefix}_${uuid}' class="chip ${color} neon-unlit dimmed" data-position="${position}">
+            ${nickname}
+        </div>`
+}
+
+const ListModalItem = (list_id, list_name, list_movies, selected) => {
+    const selectedRowClass = "selected";
+    const selectedListIcon = "playlist_add_check";
+    const uneselectedListIcon = "playlist_add";
+
+    return `
+    <li>
+        <div id="row_${list_id}" class="neon-purple neon-glow-hover collection-item avatar collapsible-header ${selected ? selectedRowClass : ''}">
+            <i class="material-icons circle neon-cyan neon-unlit dimmed">toc</i>
+            <span class="new badge purple accent-2 black-text" data-badge-caption="">${list_movies.length}</span>
+            <p>${list_name}</p>
+            <a id="select_${list_id}" href="#!" class="secondary-content select-list">
+                <i class="material-icons">
+                ${selected ? selectedListIcon : uneselectedListIcon}
+                </i>
+            </a>
+        </div>
+        <div class="collapsible-body">
+            <ul>
+                ${list_movies.map(movie => `<li>${movie}</li>`).join('')}
+            </ul>
+        </div>
+    </li>
+    `
+}
+
+
+const PaginatorPages = (currentPage, sortField, sortDirection, totalItemCount, itemsPerPage) => {
+    const totalPages = Math.ceil(totalItemCount / itemsPerPage);
+    const maxPagesShown = 5;
+
+    const pageOffset = Math.floor(maxPagesShown / 2);
+    
+    
+    let pageStart;
+    let pageEnd;
+    if (totalPages <= maxPagesShown){
+        pageStart = 1;
+        pageEnd = totalPages;
+    }
+    else if (currentPage <= maxPagesShown - pageOffset){
+        pageStart = 1;
+        pageEnd = maxPagesShown;
+    }
+    else if (currentPage >= totalPages - pageOffset){
+        pageStart = totalPages - maxPagesShown + 1;
+        pageEnd = totalPages;
+    }
+    else {
+        pageStart = currentPage - pageOffset;
+        pageEnd = currentPage + pageOffset;
+    }
+    
+    let pagesHtml = '';
+    const getUrl = urlPath.getListsOverview;
+    for (let i = pageStart; i <= pageEnd; i++){
+        pagesHtml += `<li class="${i == currentPage ? 'active' : 'waves-effect'}"><a class="list-page" href="${getUrl(i, sortField, sortDirection)}">${i}</a></li>`
+    }
+    const morePagesIndicator = `<li class="waves-effect">...</li>`
+    let fullHtml = `
+            <li class="${currentPage == 1 ? 'disabled' : 'waves-effect'}">
+                <a class="list-page" href="${currentPage == 1 ? "#!" : getUrl(currentPage-1, sortField, sortDirection)}">
+                    <i class="material-icons">chevron_left</i>
+                </a>
+            </li>
+            ${pageStart > 1 ? morePagesIndicator : ''}
+            ${pagesHtml}
+            ${pageEnd < totalPages ? morePagesIndicator : ''}
+            <li class="${currentPage == totalPages ? 'disabled' : 'waves-effect'}">
+                <a class="list-page" href="${currentPage == totalPages ? "#!" : getUrl(currentPage + 1, sortField, sortDirection)}">
+                    <i class="material-icons">chevron_right</i>
+                </a>
+            </li>
+    `
+    return fullHtml;
+}
+
+export { MovieCard, MovieInfoModal, UserChip, ListModalItem, PaginatorPages }

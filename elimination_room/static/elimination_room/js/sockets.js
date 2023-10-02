@@ -10,7 +10,7 @@ const retryTime = () => (1.65**retryAttempts)*initialRetryTime;
 // let matchSocket = null;
 
 function createMatchSocket(){
-    let matchSocket = new WebSocket(
+    const matchSocket = new WebSocket(
         urlPath.webSocketURL(shareCode)
     );
 
@@ -29,8 +29,8 @@ function createMatchSocket(){
     //Receive messages
     matchSocket.onmessage = function(e) {
         console.log(e);
-        let responseData = JSON.parse(e.data);
-        let receivedCommand = responseData.command;
+        const responseData = JSON.parse(e.data);
+        const receivedCommand = responseData.command;
 
         // Failed command
         if(responseData.status != 'success'){
