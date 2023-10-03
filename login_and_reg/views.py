@@ -5,12 +5,15 @@ from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login, logout, update_session_auth_hash
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm, PasswordChangeForm
 from django.contrib.auth.decorators import login_required
+from django.views.decorators.http import require_GET, require_POST, require_http_methods
+from movie_match.custom_decorators import login_required_json
 from django.contrib.auth.password_validation import validate_password
 from .forms import RegistrationForm, PersonaForm
 from list_builder.models import Persona
 from list_builder.persona_assigner import get_or_set_persona
 from movie_match.json_response_models import SuccessJsonClassObject, FailedJsonClassObject, FailedFormResponse
 
+@require_http_methods(['GET', 'POST'])
 def register_view(request):
     if request.method == 'POST':
         user_form = RegistrationForm(request.POST, prefix='user')
@@ -34,10 +37,8 @@ def register_view(request):
         persona_form = PersonaForm(prefix='persona')
     return render(request, 'login_and_reg/register.html', {'user_form': user_form, 'persona_form': persona_form})
 
+@require_POST
 def login_view(request):
-    if not request.method == 'POST':
-        return HttpResponseNotAllowed(['POST'])
-
     login_form = AuthenticationForm(data=request.POST)
 
     if login_form.is_valid():
@@ -55,12 +56,13 @@ def login_view(request):
     
     return JsonResponse(FailedFormResponse(form_errors=login_form.errors).to_dict())
 
+@require_POST
+@login_required_json(error_msg = "Only logged in users can logout.")
 def logout_view(request):
     logout(request)
     return redirect('list_builder:default_redirect')
 
-# @login_required(redirect_field_name='default_redirect', login_url='list_builder:default_redirect')
-
+@require_GET
 @login_required(redirect_field_name='default_redirect', login_url='list_builder:default_redirect')
 def account_settings_view(request):
     this_persona = get_or_set_persona(request)
@@ -71,11 +73,9 @@ def account_settings_view(request):
     }
     return render(request, 'login_and_reg/account_settings.html', context)
 
-@login_required(redirect_field_name='default_redirect', login_url='list_builder:default_redirect')
-def change_nickname_view(request):
-    if not request.method == 'POST':
-        return HttpResponseNotAllowed(['POST'])
-    
+@require_POST
+@login_required_json(error_msg = "Only logged in users can change their nickname.")
+def change_nickname_view(request):    
     this_persona = get_or_set_persona(request)
     
     change_nickname_form = PersonaForm(request.POST, instance=this_persona)
@@ -89,11 +89,9 @@ def change_nickname_view(request):
 
     return JsonResponse(FailedFormResponse(form_errors=change_nickname_form.errors).to_dict())
 
-@login_required(redirect_field_name='default_redirect', login_url='list_builder:default_redirect')
-def change_password_view(request):
-    if not request.method == 'POST':
-        return HttpResponseNotAllowed(['POST'])
-    
+@require_POST
+@login_required_json(error_msg = "Only logged in users can change their password.")
+def change_password_view(request):    
     this_persona = get_or_set_persona(request)
     
     change_password_form = PasswordChangeForm(request.user, request.POST)
@@ -105,11 +103,9 @@ def change_password_view(request):
     return JsonResponse(FailedFormResponse(form_errors=change_password_form.errors).to_dict())
 
 
-@login_required(redirect_field_name='default_redirect', login_url='list_builder:default_redirect')
-def delete_account_view(request):
-    if not request.method == 'POST':
-        return HttpResponseNotAllowed(['POST'])
-    
+@require_POST
+@login_required_json(error_msg = "Only logged in users can delete their account.")
+def delete_account_view(request):    
     verification_check = request.POST.get('account-delete-verification-check')
     verification_password = request.POST.get('account-delete-verification-password')
 

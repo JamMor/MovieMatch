@@ -1,6 +1,7 @@
 from random import randint
 from django.db import IntegrityError
 from django.shortcuts import redirect, render
+from django.views.decorators.http import require_GET, require_POST
 from django.http import JsonResponse
 from django.urls import reverse
 from list_builder.models import Persona, Movie, TempMovieList
@@ -26,6 +27,7 @@ def update_shared_list_channels(sharecode):
     print("New ShareList information sent.")
 
 #Views
+@require_POST
 def new_match(request):
     this_persona = get_or_set_persona(request)
     data = json.loads(request.body)
@@ -72,6 +74,7 @@ def new_match(request):
 
     return JsonResponse(SuccessJsonClassObject(data={"sharecode": shared_list.sharecode}).to_dict())
 
+@require_GET
 def join_match(request, sharecode):
     this_persona = get_or_set_persona(request)
     #Tests to see if sharecode is exists

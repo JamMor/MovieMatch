@@ -313,6 +313,22 @@
         <div class="movie-list bi-col"></div>
         <div class="movie-list bi-col"></div>
     </section>
+    <section id="test-requests">
+        <h4 class="grey-text text-lighten-2">
+            User is
+            {% if not user.is_authenticated %}
+            <span class="orange-text text-darken-4">NOT</span>
+            {% endif %}
+            logged in.
+        </h4>
+        <div>
+            <button id="request_save_get" class="btn-rounded btn-large neon-cyan neon-glow-hover">Save - Get</button>
+            <button id="request_save_post" class="btn-rounded btn-large neon-cyan neon-glow-hover">Save - Post</button>
+            <button id="request_delete_get" class="btn-rounded btn-large neon-cyan neon-glow-hover">Delete - Get</button>
+            <button id="request_delete_post" class="btn-rounded btn-large neon-cyan neon-glow-hover">Delete - Post</button>
+            <button id="request_delete_delete" class="btn-rounded btn-large neon-cyan neon-glow-hover">Delete - Delete</button>
+        </div>
+    </section>
 </main>
 {% endblock %}
 

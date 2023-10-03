@@ -206,3 +206,8 @@ div.custom-style btn.activator {
         inset 0 0 5px 0 hsl(var(--hue), 66%, 30%),
         0 0 5px 0 hsl(var(--hue), 79%, 46%); */
 }
+
+#test-requests div {
+    display: grid;
+    gap:10px;
+}

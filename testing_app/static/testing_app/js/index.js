@@ -106,7 +106,27 @@ function cardInit() {
         $(this).addClass("dimmed");
     })
 }
-	
+
+const saveData = JSON.stringify({
+    "list_name":"", 
+    "tmdb_ids": [679, 348, 8077, 8078]
+})
+const deleteListId = 99
+function testRequest(url, method, data = null) {
+    $.ajax({
+        url: url,
+        method:method,
+        data: data
+    })
+    .done(function(response) {
+        console.log(response);
+        M.toast({html: response.status})
+    })
+    .fail(function() {
+        console.error( "Failed to send test request.");
+        M.toast({html: "Failed to send test request."})
+    })
+}
 
 $(document).ready(function () {
     setInitInputValues();
@@ -126,4 +146,21 @@ $(document).ready(function () {
     });
 
     cardInit();
+
+    $("#test-requests").on("click", "button", function(){
+        console.log("click")
+        const domID = $(this).attr("id");
+        const idData = domID.split("_");
+        const idView = idData[1];
+        const method = idData[2];
+        let url;
+        if (idView == "save"){
+            url = urlPath.saveList();
+            testRequest(url, method, saveData);
+        }
+        if (idView == "delete"){
+            url = urlPath.deleteList(deleteListId);
+            testRequest(url, method);
+        }
+    })
 });

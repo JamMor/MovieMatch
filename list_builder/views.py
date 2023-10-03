@@ -4,6 +4,8 @@ from django.shortcuts import redirect, render
 from django.http import HttpResponseNotAllowed, JsonResponse
 from django.urls import reverse
 from django.contrib.auth.decorators import login_required
+from django.views.decorators.http import require_GET, require_POST, require_http_methods
+from movie_match.custom_decorators import login_required_json
 from django.db.models import Count
 from django.db.models import Prefetch
 from django.core import serializers
@@ -19,10 +21,12 @@ from .moviedb_api_caller import add_movies_to_db_from_tmdb_ids
 from movie_match.json_response_models import SuccessJsonClassObject, FailedJsonClassObject
 
 # Displays main page
+@require_GET
 def index(request):
     this_persona = get_or_set_persona(request)
     return render(request, 'list_builder/list_builder_creator.html')
 
+@require_GET
 @login_required(redirect_field_name='default_redirect', login_url='list_builder:default_redirect')
 def list_manager(request):
     this_persona = get_or_set_persona(request)
@@ -35,6 +39,7 @@ def list_manager(request):
     }
     return render(request, 'list_builder/list_manager.html', context)
 
+@require_GET
 @login_required(redirect_field_name='default_redirect', login_url='list_builder:default_redirect')
 def edit(request, list_id):
     this_persona = get_or_set_persona(request)
@@ -46,10 +51,9 @@ def edit(request, list_id):
     context = {"saved_list" : saved_list, "movie_list" : list(movie_list)}
     return render(request, 'list_builder/list_builder_editor.html', context)
 
+@require_POST
+@login_required_json(error_msg = "Only logged in users can save.")
 def save(request, list_id = None):
-    if not request.method == "POST":
-        return HttpResponseNotAllowed(["POST"])
-
     if not request.user.is_authenticated:
         return JsonResponse(FailedJsonClassObject(errors=["Only logged in users can save."]).to_dict())
 
@@ -84,10 +88,9 @@ def save(request, list_id = None):
         print(err)
         return JsonResponse(FailedJsonClassObject(errors=["An error occured attempting to save the list."]).to_dict())
 
+@require_http_methods(["DELETE"])
+@login_required_json()
 def delete(request, list_id):
-    if not request.method == "DELETE":
-        return HttpResponseNotAllowed(["DELETE"])
-
     if not request.user.is_authenticated:
         return JsonResponse(FailedJsonClassObject(errors=["Only logged in users can delete list."]).to_dict())
 
@@ -104,6 +107,8 @@ def delete(request, list_id):
         print(err)
         return JsonResponse(FailedJsonClassObject(errors=["An error occured attempting to delete the list."]).to_dict())
     
+@require_GET
+@login_required_json()   
 def get_list(request, list_id):
     this_persona = get_or_set_persona(request)
     try:
@@ -116,7 +121,8 @@ def get_list(request, list_id):
 
     return JsonResponse(SuccessJsonClassObject(data={"movies" : list(movie_list)}).to_dict())
 
-@login_required(redirect_field_name='default_redirect', login_url='list_builder:default_redirect')
+@require_GET
+@login_required_json()
 def get_list_overview(request):
     this_persona = get_or_set_persona(request)
 
