@@ -22,6 +22,8 @@
     [-] -Search=
         -SearchBar-
         -SearchResults-
+    [-] -ListActionBtns=
+        -SavedListsModal-
     [-] -List Creator=
         -ShareModal-
     [-] -List Editor=
@@ -31,6 +33,7 @@
     [-] -Slider Rows=
 [+] =Elimination Room=
     [-] -UserList=
+    [-] -StatusBar=
     [-] -MovieList=
     [-] -FinalModal=
     [-] -ShareCodeFooter=
@@ -69,6 +72,8 @@
     --base-mid:hsl(var(--hue), 79%, 46%);
     --base-dark:hsl(var(--hue), 66%, 30%);
     --base-bright:hsl(var(--hue), 100%, 55%);
+
+    --solid-backglass: #2f2f2f;
 
 }
 
@@ -238,7 +243,7 @@ i.suffix {
 #moviesearch-input:focus,
 li.active .neon-glow-hover {
     color: hsl(var(--hue), 66%, 30%);
-    background-color: #ffffff;
+    background-color: #ffffff !important;
     box-shadow: 
     inset 0 0 1em 0 hsl(var(--hue), 79%, 46%),
     inset 0 0 0.3em 0 hsl(var(--hue), 66%, 30%),
@@ -251,7 +256,7 @@ li.active .neon-glow-hover {
 .neon-lit.dimmed, 
 .neon-lit.dimmed:hover {
     color: hsl(var(--hue), 66%, 30%);
-    background-color: #ffffff;
+    background-color: #ffffff !important;
     box-shadow: 
     inset 0 0 1em 0 hsl(var(--hue), 79%, 46%),
     inset 0 0 0.3em 0 hsl(var(--hue), 66%, 30%),
@@ -537,7 +542,9 @@ header nav a.brand-logo {
 /* ----------------------------------Search================================= */
 div#search-container {
     margin-bottom: 2rem;
-    position:relative;
+    position:sticky;
+    top:20px;
+    z-index: 3;
 }
 /* --------------------------------SearchBar-------------------------------- */
 #search-bar, #search-bar input {
@@ -547,6 +554,10 @@ div#search-container {
 
 nav#search-bar {
     position:relative;
+    background-color: transparent;
+}
+#search-bar input {
+    background-color: var(--solid-backglass);
 }
 #search-bar input:focus {
     color:#000;
@@ -561,12 +572,19 @@ nav#search-bar {
     flex:1;
 }
 
+/* [-] */
+/* ----------------------------------ListActionBtns================================= */
 #list-actions-btn {
     position:relative;
     bottom:auto;
     right:auto;
 }
 
+#list-actions-btn a {
+    background-color: var(--solid-backglass);
+}
+
+/* --------------------------------SavedListsModal-------------------------------- */
 #saved-lists-modal .header {
     display:flex;
 }
@@ -633,7 +651,7 @@ div#search-results {
     max-height: 400px;
     position: absolute;
     top:64px;
-    z-index: 3;
+    z-index: 4;
     user-select: none;
 }
 
@@ -840,6 +858,14 @@ td.collabsible-row .slider-x.content-collapsed {
 #user_list.slider-x div {
     white-space: nowrap;
     text-align: center;
+}
+
+/* [-] */
+/* ---------------------StatusBar===================== */
+#status_bar {
+    position:sticky;
+    top: 20px;
+    z-index: 3;
 }
 
 /* [-] */
