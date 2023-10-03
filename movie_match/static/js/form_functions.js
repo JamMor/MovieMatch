@@ -13,25 +13,25 @@ function applyTooltips(){
 
 //Parses dictionary of form errors for each field and applies them in a span
 //where appropriate. (For AJAX form submissions)
-function formErrorHandler(formSelector, errorDict){
+function formErrorHandler($form, errorDict){
     for(const field of Object.keys(errorDict)){
         if(field == "__all__"){
             for(let errorMsg of errorDict[field]){
-                $(formSelector)
+                $form
                     .prepend(`<span class="error center">${errorMsg}</span>`)
             }
         }
         else {
             for(let errorMsg of errorDict[field]){
-                $(`${formSelector} input[name=${field}] ~ label`)
+                $form.find(`input[name=${field}] ~ label`)
                     .after(`<span class="error">${errorMsg}</span>`)
             }
         }
     }
 }
 
-function resetFormErrors($jQueryFormObj){
-    $jQueryFormObj.find("span.error").remove();
+function resetFormErrors($form){
+    $form.find("span.error").remove();
 }
 
 function preventDefaultFormClassInit(){

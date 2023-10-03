@@ -1,6 +1,5 @@
-import { formErrorHandler } from "/static/js/form_functions.js";
-
-const loginFormClass = "login-form";
+import { resetFormErrors } from "/static/js/form_functions.js";
+import { ajaxErrorHandler } from "/static/js/ajaxErrorHandler.js";
 
 const $allLoginForms = $(".login-form");
 const $navLoginForm = $("#nav-login-form");
@@ -8,11 +7,19 @@ const $sideLoginForm = $("#side-login-form");
 const $navLoginDropdown = $('#nav-bar .dropdown-trigger');
 
 function loginHandler(){
-   
-    const formAction = $(this).attr('action')
-    const formData = $(this).serialize()
+    resetFormErrors($allLoginForms);
+    const loginForm = this;
+    const loginFormData = new FormData(loginForm);
 
-    $.post(formAction, formData, "json")
+    $.ajax({
+        url: loginForm.action,
+        method:loginForm.method,
+        data: loginFormData,
+        // processData and contentType needed to properly send formData
+        // jQuery tries to make it a string
+        processData: false,
+        contentType: false
+    })
         .done(function (response) {
             console.log(response)
             if (response.status == "success") {
@@ -21,17 +28,13 @@ function loginHandler(){
             }
             else {
                 console.log("Login failure!");
-                console.log(response.form_errors);
-                console.log(response.errors);
-                //Reset any errors.
-                $allLoginForms.find("span.error").remove();
-                formErrorHandler(`.${loginFormClass}`, response.form_errors)
+                ajaxErrorHandler(response, $allLoginForms)
                 $navLoginDropdown.dropdown('recalculateDimensions');
             }
         })
         .fail(function () {
             //FLAG error toast
-            console.log("Failed to send login.");
+            console.error("Failed to send login.");
         })
 }
 

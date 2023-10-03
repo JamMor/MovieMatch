@@ -1,9 +1,11 @@
-import {applyTooltips, formErrorHandler} from "/static/js/form_functions.js";
+import {applyTooltips, resetFormErrors} from "/static/js/form_functions.js";
+import { ajaxErrorHandler } from "/static/js/ajaxErrorHandler.js";
 
-const formId = "change-password-form";
+const formId = "";
+const changePasswordForm = document.querySelector("#change-password-form");
 const $modal = $("#change-password-modal");
 const $modalOpenBtn = $("#change-password-btn");
-const $form = $("#change-password-form");
+const $form = $(changePasswordForm);
 const $submitBtn = $("#change-password-confirm");
 
 function openChangePasswordModal(){
@@ -12,14 +14,11 @@ function openChangePasswordModal(){
 }
 
 function sendChangePasswordRequest(){
-    //FLAG Reset old form errors
-    $form.find("span.error").remove();
-    console.log("Change password request sent.")
-    const changePasswordForm = document.querySelector(`#${formId}`);
+    resetFormErrors($form);
     const changePasswordFormData = new FormData(changePasswordForm);
     $.ajax({
-        url: urlPath.changePassword,
-        method:"POST",
+        url: changePasswordForm.action,
+        method:changePasswordForm.method,
         data: changePasswordFormData,
         // processData and contentType needed to properly send formData
         // jQuery tries to make it a string
@@ -37,16 +36,14 @@ function sendChangePasswordRequest(){
         }
         else {
             console.log("Failed to change password.")
-            console.log(response.errors)
-            console.log(response.form_errors)
-            formErrorHandler(`#${formId}`, response.form_errors)
+            ajaxErrorHandler(response, $form)
             changePasswordForm.reset();
             M.toast({html: `<span><strong class="orange-text text-darken-3">Failed</strong> to change password.</span>`})
         }
 
     })
     .fail(function() {
-        console.log( "Failed to send change password request.");
+        console.error( "Failed to send change password request.");
         M.toast({html: `<span><strong class="orange-text text-darken-3">Failed</strong> to send change password request.</span>`})
     })
 }

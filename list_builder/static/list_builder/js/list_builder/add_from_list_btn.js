@@ -1,5 +1,6 @@
 import { ListModalItem, PaginatorPages } from "/static/js/DOMelements.js";
 import { movieList } from "./movie_lists.js";
+import { ajaxErrorHandler } from "/static/js/ajaxErrorHandler.js";
 
 const $savedListModal = $("#saved-lists-modal");
 const $addFromListBtn = $("#add-from-list");
@@ -8,13 +9,12 @@ const $listPages = $("#list-pages");
 const selectedRowClass = "selected";
 const selectListBtnClass = "select-list";
 const selectedListIcon = "playlist_add_check";
-const uneselectedListIcon = "playlist_add";
+const unselectedListIcon = "playlist_add";
 const pageLinkClass = "list-page"
-const get$selectListBtns = () => $(`.${selectListBtnClass}`);
+
 const getListIdFromBtnDomId = (domId) => domId.split("_")[1];
 const getBtnDomIdFromListId = (listId) => `select_${listId}`;
 const getRowDomIdFromListId = (listId) => `row_${listId}`;
-const get$iconFromId = (listId) => $(`#${getBtnDomIdFromListId(listId)} > i`);
 
 
 let selectedLists = [];
@@ -26,19 +26,15 @@ let sortOrder = {
 function addToList(listId) {
     $.get(urlPath.getList(listId))
         .done(function (response) {
-            console.log(response);
             if (response.status == "success") {
-                console.log("success")
-                console.log(response.data)
                 movieList.bulkAddMoviesToList(...response.data.movies);
             }
             else {
-                console.log(response.status)
-                console.log(response.errors)
+                ajaxErrorHandler(response);
             }
         })
         .fail(function () {
-            console.log("Server error");
+            console.error("Unknown error.");
         });
 }
 
@@ -83,19 +79,15 @@ function getLists(pageNumber){
     const { field, direction } = sortOrder;
     $.get(urlPath.getListsOverview(pageNumber, field, direction))
         .done(function(response) {
-            console.log(response);
             if (response.status == "success"){
-                console.log("success")
-                console.log(response.data)
                 updateListModal(response.data);
             }
             else {
-                console.log(response.status)
-                console.log(response.errors)
+                ajaxErrorHandler(response);
             }
         })
         .fail(function() {
-            console.log("Server error");
+            console.error("Unknown error.");
         });
 }
 
@@ -122,6 +114,7 @@ const init = () => {
         getLists();
     })
 
+    // Handler for pagination links
     $savedListModal.on("click", `a.${pageLinkClass}`, function(e){
         e.preventDefault();
         if ($(this).parent().hasClass("active")){

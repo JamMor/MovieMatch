@@ -1,7 +1,9 @@
-const formId = "account-delete-form";
+import { ajaxErrorHandler } from "/static/js/ajaxErrorHandler.js";
+
+const deleteForm = document.querySelector("#account-delete-form");
 const $modal = $("#account-delete-modal");
 const $modalOpenBtn = $("#account-delete-btn");
-const $form = $("#account-delete-form");
+const $form = $(deleteForm);
 const $submitBtn = $("#account-delete-confirm");
 
 function openDeleteAccountModal() {
@@ -9,13 +11,11 @@ function openDeleteAccountModal() {
     $modal.modal('open');
 }
 
-function sendDeleteAccountRequest() {
-    console.log("Delete request sent.")
-    const deleteForm = document.querySelector(`#${formId}`);
+function sendDeleteAccountRequest() {    
     const deleteFormData = new FormData(deleteForm);
     $.ajax({
-        url: urlPath.deleteAccount,
-        method:"POST",
+        url: deleteForm.action,
+        method:deleteForm.method,
         data: deleteFormData,
         // processData and contentType needed to properly send formData
         // jQuery tries to make it a string
@@ -31,12 +31,13 @@ function sendDeleteAccountRequest() {
         }
         else {
             console.log("Failed to delete.")
+            ajaxErrorHandler(response, $form)
             M.toast({html: `<span><strong class="orange-text text-darken-3">Failed</strong> to delete account. ${response.errors}</span>`})
         }
 
     })
     .fail(function() {
-        console.log( "Failed to send delete request." );
+        console.error( "Failed to send delete request." );
         M.toast({html: `<span><strong class="orange-text text-darken-3">Failed</strong> to send delete request.</span>`})
     })
 }

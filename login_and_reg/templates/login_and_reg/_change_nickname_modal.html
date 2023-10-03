@@ -5,7 +5,7 @@
                 , <span class="displayed-nickname cyan-text text-accent-2">{{nickname}}</span>
             {% endif %}
             ?</h5>
-        <form action="#" id="change-nickname-form">
+        <form id="change-nickname-form" action="{% url 'login_and_reg:change_nickname' %}" method="post">
             {% csrf_token %}
             {% include "form_template.html" with form=change_nickname_form %}
         </form>

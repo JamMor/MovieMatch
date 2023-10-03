@@ -1,4 +1,5 @@
 import { movieList } from "../movie_lists.js";
+import { ajaxErrorHandler } from "/static/js/ajaxErrorHandler.js";
 
 const $nicknameInput = $("#nickname");
 const $sharecodeInput = $("#sharecode");
@@ -32,17 +33,15 @@ function submitEliminationList() {
         }
     ), "json")
         .done(function (response) {
-            console.log(response);
-
             if (response.status == "success") {
                 window.location.href = urlPath.eliminationRoom(response.data.sharecode);
             }
             else {
-                console.log(response.status)
+                ajaxErrorHandler(response);
             }
         })
         .fail(function () {
-            console.log("ERROR: Failed to send movie list.");
+            console.error("Failed to send movie list.");
         })
 }
 

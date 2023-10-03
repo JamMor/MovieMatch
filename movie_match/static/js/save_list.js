@@ -1,3 +1,4 @@
+import { ajaxErrorHandler } from "/static/js/ajaxErrorHandler.js";
 // Save List
 
 const $modal = $("#save-modal");
@@ -33,8 +34,7 @@ function saveList ({tmdb_ids, list_name, list_id}) {
                     saveStatusToast(savedListName, "success")
                 }
                 else {
-                    console.log(response.status)
-                    console.log(response.errors)
+                    ajaxErrorHandler(response);
                     saveStatusToast(list_name, "error")
                 }
                 // if there is a nextUrl, redirect to it
@@ -44,7 +44,7 @@ function saveList ({tmdb_ids, list_name, list_id}) {
                 }
             })
             .fail(function() {
-                console.log( "Failed to send movie list." );
+                console.error( "Failed to send movie list." );
                 saveStatusToast(list_name, "fail-send")
             })
 }

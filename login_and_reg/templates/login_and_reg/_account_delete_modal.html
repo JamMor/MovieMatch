@@ -1,7 +1,7 @@
 <div id="account-delete-modal" class="modal cyber-grade">
     <div class="modal-content pink-text text-darken-2">
         <h5>Are you sure you want to <span id="list-name-delete" class="orange-text text-darken-3">delete</span> your account?</h5>
-        <form action="#" id="account-delete-form">
+        <form id="account-delete-form" action="{% url 'login_and_reg:delete_account' %}" method="post">
             <div class="input-field">
                 <input id="account-delete-verification-password" name="account-delete-verification-password" class="center-align" type="password">
                 <label for="account-delete-verification-password">Password</label>
