@@ -69,6 +69,14 @@ function selectList(listId){
     }
 }
 
+function addToListHandler(e){
+    e.stopPropagation();
+    const listDomId = $(this).attr("id")
+    const listId = getListIdFromBtnDomId(listDomId);
+    selectList(listId);
+    addToList(listId);
+}
+
 function updateListModal(data){
     // Replace list items with data
     $listContainer.empty();
@@ -76,14 +84,9 @@ function updateListModal(data){
         const { list_id, list_name, movies } = list;
         const selected = selectedLists.includes(list_id);
         $listContainer.append(ListModalItem(list_id, list_name, movies, selected));
-        $listContainer.find(`a.${selectListBtnClass}`).click(function(e){
-            e.stopPropagation();
-            const listDomId = $(this).attr("id")
-            const listId = getListIdFromBtnDomId(listDomId);
-            selectList(listId);
-            addToList(listId);
-        })
-    });
+    })
+
+    $listContainer.find(`a.${selectListBtnClass}`).click(addToListHandler);
 
     // Update pagination
     const { field, direction } = sortOrder;

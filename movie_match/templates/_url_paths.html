@@ -7,6 +7,9 @@
         "listManager" : "{% url 'list_builder:list_manager' %}",
         "saveList" : (list_id = "") => {
             const baseSaveUrl = "/save"
+            if (list_id == "") {
+                return baseSaveUrl
+            }
             return `${baseSaveUrl}/${list_id}`
         },
         "listEditor" : (list_id) => {
