@@ -285,6 +285,10 @@ li.active .neon-glow-hover {
     text-shadow: -2px -2px 0 #000, 2px -2px 0 #000, -2px 2px 0 #000, 2px 2px 0 #000;
 }
 
+.card .card-image img {
+    aspect-ratio: 2/3;
+}
+
 .card-btn {
     color: hsl(var(--hue), 79%, 86%);
     border: 2px solid hsl(var(--hue), 79%, 86%);
@@ -496,8 +500,9 @@ header nav a.brand-logo {
     text-align: center;
 }
 #about-modal img {
+    display: block;
     max-width: 500px;
-    margin: 1em 0px;
+    margin: 1em auto;
 }
 
 /* [+] */

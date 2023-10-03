@@ -41,10 +41,9 @@
                 </a>
                 <a href="#" data-target="side-menu" class="sidenav-trigger"><i class="material-icons">menu</i></a>
                 <ul class="right hide-on-med-and-down">
-                    <li><a href="{% url 'list_builder:list_builder' %}">List Builder</a></li>
-                    <li><a href="#">Recent Lists</a></li>
+                    <li><a href="{% url 'list_builder:list_builder' %}">New List</a></li>
                     {% if user.is_authenticated %}
-                    <li><a href="{% url 'list_builder:list_manager' %}">List Manager</a></li>
+                    <li><a href="{% url 'list_builder:list_manager' %}">Manage Lists</a></li>
                     <li><a class="user-name dropdown-trigger" href="#" data-target="logged-in-options"><i class="material-icons left">account_circle</i>{{user.username}}<i class="material-icons right">arrow_drop_down</i></a></li>
                     <div id="logged-in-options" class="dropdown-content">
                         <div class="cyber-grade">
@@ -84,11 +83,10 @@
         </li>
         {% endif %}
         <div class="divider"></div>
-        <li><a href="{% url 'list_builder:list_builder' %}">List Builder</a></li>
+        <li><a href="{% url 'list_builder:list_builder' %}">New List</a></li>
         {% if user.is_authenticated %}
-        <li><a href="{% url 'list_builder:list_manager' %}">List Manager</a></li>
+        <li><a href="{% url 'list_builder:list_manager' %}">Manage Lists</a></li>
         {% endif %}
-        <li><a href="#">Recent Lists</a></li>
         <li><a class="modal-trigger" href="#about-modal"><i class="material-icons">help_outline</i></a></li>
     </ul>
     {% endblock %}

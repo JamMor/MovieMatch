@@ -32,12 +32,6 @@ const init = () => {
         movieList.removeMovieFromListById(thisMovieTmdbId);
         searchResults.enableAddBtns(thisMovieTmdbId);
     })
-
-    // Button to clear current movie list FLAG: Is used?
-    $("#clear").click(function (){
-        // clearMovieList();
-        movieList.clearList();
-    })
 }
 
 export { init }

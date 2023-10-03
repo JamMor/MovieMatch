@@ -54,10 +54,6 @@ def edit(request, list_id):
 @require_POST
 @login_required_json(error_msg = "Only logged in users can save.")
 def save(request, list_id = None):
-    if not request.user.is_authenticated:
-        return JsonResponse(FailedJsonClassObject(errors=["Only logged in users can save."]).to_dict())
-
-    # If user is authenticated, try adding movies to db and saving list.
     data = json.loads(request.body)
     list_name = data.get("list_name")
     tmdb_ids = data.get("tmdb_ids")
@@ -91,9 +87,6 @@ def save(request, list_id = None):
 @require_http_methods(["DELETE"])
 @login_required_json()
 def delete(request, list_id):
-    if not request.user.is_authenticated:
-        return JsonResponse(FailedJsonClassObject(errors=["Only logged in users can delete list."]).to_dict())
-
     try:
         this_persona = get_or_set_persona(request)
         saved_list = SavedMovieList.objects.get(id = list_id, created_by = this_persona)
