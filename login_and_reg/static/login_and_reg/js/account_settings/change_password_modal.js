@@ -1,7 +1,6 @@
 import {applyTooltips, resetFormErrors} from "/static/js/form_functions.js";
 import { ajaxErrorHandler } from "/static/js/ajaxErrorHandler.js";
 
-const formId = "";
 const changePasswordForm = document.querySelector("#change-password-form");
 const $modal = $("#change-password-modal");
 const $modalOpenBtn = $("#change-password-btn");
@@ -31,23 +30,35 @@ function sendChangePasswordRequest(){
             $modal.modal('close');
             changePasswordForm.reset();
             console.log("Password Change Success.")
-            M.toast({html: `<span><strong class="cyan-text text-accent-2">Successfully</strong> changed password!</span>`})
+            changePasswordStatusToast("success");
             // window.location.replace(`/`); //Redirects to home page
         }
         else {
             console.log("Failed to change password.")
             ajaxErrorHandler(response, $form)
             changePasswordForm.reset();
-            M.toast({html: `<span><strong class="orange-text text-darken-3">Failed</strong> to change password.</span>`})
+            changePasswordStatusToast("error");
         }
 
     })
     .fail(function() {
-        console.error( "Failed to send change password request.");
-        M.toast({html: `<span><strong class="orange-text text-darken-3">Failed</strong> to send change password request.</span>`})
+        console.error( "Request failure: change password.");
+        changePasswordStatusToast("fail");
     })
 }
 
+function changePasswordStatusToast(status) {
+    const statusMessages = {
+        "success" : `<strong class="cyan-text text-accent-2">Successfully</strong> changed password!`,
+        "error" : `<strong class="orange-text text-darken-3">Failed</strong> to change password.`,
+        "fail" : `<strong class="orange-text text-darken-3">Request failure.</strong>.`,
+        "unknown" : `<strong class="orange-text text-darken-3">Unknown error.</strong>.`
+    }
+    
+    const message = statusMessages[status] || statusMessages["unknown"]
+    
+    M.toast({html: `<span>${message}</span>`})
+}
 
 const init = () => {
     applyTooltips()

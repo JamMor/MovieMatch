@@ -18,7 +18,7 @@ function submitEliminationList() {
     const nickname = $nicknameInput.val();
 
     if (!validateSharecode(sharecode)) {
-        //FLAG Toast error
+        submitEliminationStatusToast("invalid-sharecode");
         return
     }
 
@@ -38,11 +38,26 @@ function submitEliminationList() {
             }
             else {
                 ajaxErrorHandler(response);
+                submitEliminationStatusToast("error");
             }
         })
         .fail(function () {
-            console.error("Failed to send movie list.");
+            console.error("Request failure: share list.");
+            submitEliminationStatusToast("fail");
         })
+}
+
+function submitEliminationStatusToast(status) {
+    const statusMessages = {
+        "invalid-sharecode" : `<strong class="orange-text text-darken-3">Invalid sharecode.</strong>`,
+        "error" : `<strong class="orange-text text-darken-3">Failed</strong> to delete account.`,
+        "fail" : `<strong class="orange-text text-darken-3">Request failure.</strong>.`,
+        "unknown" : `<strong class="orange-text text-darken-3">Unknown error.</strong>.`
+    }
+    
+    const message = statusMessages[status] || statusMessages["unknown"]
+    
+    M.toast({html: `<span>${message}</span>`})
 }
 
 const init = () => {

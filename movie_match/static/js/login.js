@@ -30,14 +30,26 @@ function loginHandler(){
                 console.log("Login failure!");
                 ajaxErrorHandler(response, $allLoginForms)
                 $navLoginDropdown.dropdown('recalculateDimensions');
+                loginStatusToast("error");
             }
         })
         .fail(function () {
-            //FLAG error toast
-            console.error("Failed to send login.");
+            console.error("Request failure: login.");
+            loginStatusToast("fail");
         })
 }
 
+function loginStatusToast(status) {
+    const statusMessages = {
+        "error" : `<strong class="orange-text text-darken-3">Failed</strong> to login.`,
+        "fail" : `<strong class="orange-text text-darken-3">Request failure.</strong>.`,
+        "unknown" : `<strong class="orange-text text-darken-3">Unknown error.</strong>.`
+    }
+    
+    const message = statusMessages[status] || statusMessages["unknown"]
+    
+    M.toast({html: `<span>${message}</span>`})
+}
 
 const init = () => {
     //Login Submission AJAX

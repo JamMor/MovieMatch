@@ -59,7 +59,8 @@ function commandFinalized(finalSharedId = null) {
             openMoreInfoModal(finalMovieInfo, finalModalId)
         })
         .fail(function(){
-            console.log("AJAX error")
+            console.error("Request failure: get more movie info");
+            M.toast({html: `<span><strong class="orange-text text-darken-3">Request failure.</strong></span>`})
         })
 
     setUserTurn(null);

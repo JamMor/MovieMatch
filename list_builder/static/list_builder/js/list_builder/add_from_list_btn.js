@@ -28,14 +28,30 @@ function addToList(listId) {
         .done(function (response) {
             if (response.status == "success") {
                 movieList.bulkAddMoviesToList(...response.data.movies);
+                addToListStatusToast("success", response.data.list_name);
             }
             else {
                 ajaxErrorHandler(response);
+                addToListStatusToast("error");
             }
         })
         .fail(function () {
-            console.error("Unknown error.");
+            console.error("Request failure: get list data");
+            addToListStatusToast("fail");
         });
+}
+
+function addToListStatusToast(status, listName = "") {
+    const statusMessages = {
+        "success": `Added <strong class="cyan-text text-accent-2">${listName}</strong> to list.`,
+        "error": `<strong class="orange-text text-darken-3">Failed</strong> to add to list.`,
+        "fail": `<strong class="orange-text text-darken-3">Request failure.</strong>.`,
+        "unknown": `<strong class="orange-text text-darken-3">Unknown error.</strong>.`
+    }
+
+    const message = statusMessages[status] || statusMessages["unknown"]
+
+    M.toast({ html: `<span>${message}</span>` })
 }
 
 function selectList(listId){
@@ -84,11 +100,25 @@ function getLists(pageNumber){
             }
             else {
                 ajaxErrorHandler(response);
+                getListsStatusToast("error");
             }
         })
         .fail(function() {
-            console.error("Unknown error.");
+            console.error("Request failure: get lists overview.");
+            getListsStatusToast("fail");
         });
+}
+
+function getListsStatusToast(status) {
+    const statusMessages = {
+        "error": `<strong class="orange-text text-darken-3">Failed</strong> to retrieve lists.`,
+        "fail": `<strong class="orange-text text-darken-3">Request failure.</strong>.`,
+        "unknown": `<strong class="orange-text text-darken-3">Unknown error.</strong>.`
+    }
+
+    const message = statusMessages[status] || statusMessages["unknown"]
+
+    M.toast({ html: `<span>${message}</span>` })
 }
 
 const init = () => {

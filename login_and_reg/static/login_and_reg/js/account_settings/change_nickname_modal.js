@@ -40,17 +40,37 @@ function sendChangeNicknameRequest(){
             for (let i = 0; i < nicknameElements.length; i++) {
                 nicknameElements[i].innerText = newNickname;
             }
-            M.toast({html: `<span>Changed nickname to <strong class="cyan-text text-accent-2">${newNickname}</strong>!</span>`})
+            if(newNickname == ""){
+                changeNicknameStatusToast("blank");
+            }
+            else {
+                changeNicknameStatusToast("success", newNickname);
+            }
         }
         else {
-            M.toast({html: `<span><strong class="orange-text text-darken-3">Failed</strong> to change nickname.</span>`})
+            console.log("Failed to change nickname.")
             ajaxErrorHandler(response, $form)
+            changeNicknameStatusToast("error")
         }
     })
     .fail(function() {
-        console.error( "Failed to send change request." );
-        M.toast({html: `<span><strong class="orange-text text-darken-3">Failed</strong> to send change nickname request.</span>`})
+        console.error( "Request failure: change nickname." );
+        changeNicknameStatusToast("fail");
     })
+}
+
+function changeNicknameStatusToast(status, nickname = "") {
+    const statusMessages = {
+        "success" : `Changed nickname to <strong class="cyan-text text-accent-2">${nickname}</strong>!`,
+        "blank" : `Reset nickname to <strong class="purple-text text-accent-2">blank</strong>.`,
+        "error" : `<strong class="orange-text text-darken-3">Failed</strong> to change nickname.`,
+        "fail" : `<strong class="orange-text text-darken-3">Request failure.</strong>.`,
+        "unknown" : `<strong class="orange-text text-darken-3">Unknown error.</strong>.`
+    }
+    
+    const message = statusMessages[status] || statusMessages["unknown"]
+    
+    M.toast({html: `<span>${message}</span>`})
 }
 
 const init = () => {

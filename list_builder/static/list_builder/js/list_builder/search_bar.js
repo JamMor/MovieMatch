@@ -76,8 +76,9 @@ function searchMovies(searchQuery) {
         console.log(searchQuery)
         $.get(resourcePath.movieSearchUrl(searchQuery), "json")
             .done(updateSearchResultsDOM)
-            .fail(function () {
-                console.log("AJAX error");
+            .fail(function (response) {
+                console.error("Request failure: search movies");
+                console.error(response);
             });
     }
     else if (searchQuery.length == 0) {

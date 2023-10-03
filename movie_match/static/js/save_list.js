@@ -18,7 +18,7 @@ const $savedListNameField = $("#list-name");
 function saveList ({tmdb_ids, list_name, list_id}) {
     if(tmdb_ids.length == 0){
         console.log("Cannot save empty list.")
-        saveStatusToast(list_name, "empty")
+        saveStatusToast(list_name, "empty");
         return
     }
 
@@ -31,11 +31,11 @@ function saveList ({tmdb_ids, list_name, list_id}) {
                 if(response.status == "success"){
                     $modal.modal('close');
                     const savedListName = response.data.list_name;
-                    saveStatusToast(savedListName, "success")
+                    saveStatusToast(savedListName, "success");
                 }
                 else {
                     ajaxErrorHandler(response);
-                    saveStatusToast(list_name, "error")
+                    saveStatusToast(list_name, "error");
                 }
                 // if there is a nextUrl, redirect to it
                 const nextUrl = response.data?.nextUrl ?? null
@@ -44,31 +44,32 @@ function saveList ({tmdb_ids, list_name, list_id}) {
                 }
             })
             .fail(function() {
-                console.error( "Failed to send movie list." );
-                saveStatusToast(list_name, "fail-send")
+                console.error( "Request failure: save list." );
+                saveStatusToast(list_name, "fail");
             })
 }
 
 /**
  * Displays notification on save status operation. (Materialize Toast)
  * @param {string} listName - Name of list succesfully saved, or name given for failed save.
- * @param {string} status - success/error/empty/fail-send. Status of save list operation.
+ * @param {string} status - success/error/empty/fail. Status of save list operation.
  */
 function saveStatusToast (listName, status) {
     const statusMessages = {
         "success" : "Saved list to",
         "error" : "Could not save",
         "empty" : "Cannot save empty list",
-        "fail-send" : "Failed to send"
+        "fail" : "Request failure",
+        "unknown" : "Unknown error"
     }
     
-    const message = statusMessages[status] || "Unknown status"
+    const message = statusMessages[status] || statusMessages["unknown"]
     
     // Truncate list name if too long.
     const displayName = (listName.length > 10) ? `${listName.slice(0,9)}...` : listName;
     const classColor = (status == "success") ? "cyan-text text-accent-2" : "orange-text text-darken-3"
     
-    M.toast({html: `<span>${message}&nbsp;<strong class=${classColor}>${displayName}</strong></span>`})
+    M.toast({html: `<span>${message}&nbsp;<strong class=${classColor}>${displayName}</strong></span>`});
 }
 
 function getListName(){

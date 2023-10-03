@@ -32,14 +32,31 @@ function sendDeleteAccountRequest() {
         else {
             console.log("Failed to delete.")
             ajaxErrorHandler(response, $form)
-            M.toast({html: `<span><strong class="orange-text text-darken-3">Failed</strong> to delete account. ${response.errors}</span>`})
+            let extraMessage;
+            if(response.errors.length > 0){
+                extraMessage = response.errors[0]
+            }
+            deleteAccountStatusToast("error", extraMessage);
         }
 
     })
     .fail(function() {
-        console.error( "Failed to send delete request." );
-        M.toast({html: `<span><strong class="orange-text text-darken-3">Failed</strong> to send delete request.</span>`})
+        console.error( "Request failure: delete account." );
+        deleteAccountStatusToast("fail");
     })
+}
+
+function deleteAccountStatusToast(status, extraMessage = "") {
+    const statusMessages = {
+        "success" : `Account <strong className="cyan-text text-accent-2">successfully</strong> deleted!`,
+        "error" : `<strong class="orange-text text-darken-3">Failed</strong> to delete account. ${extraMessage}`,
+        "fail" : `<strong class="orange-text text-darken-3">Request failure.</strong>.`,
+        "unknown" : `<strong class="orange-text text-darken-3">Unknown error.</strong>.`
+    }
+    
+    const message = statusMessages[status] || statusMessages["unknown"]
+    
+    M.toast({html: `<span>${message}</span>`})
 }
 
 const init = () => {

@@ -119,7 +119,7 @@ def get_list(request, list_id):
         in_savedmovielists = saved_list).values(
         'tmdb_id', 'title', 'overview', 'poster_path', 'release_date')
 
-    return JsonResponse(SuccessJsonClassObject(data={"movies" : list(movie_list)}).to_dict())
+    return JsonResponse(SuccessJsonClassObject(data={"list_name":saved_list.display_name, "movies" : list(movie_list)}).to_dict())
 
 @require_GET
 @login_required_json()

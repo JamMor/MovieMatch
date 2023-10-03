@@ -53,7 +53,7 @@ function sendDeletionRequest(){
 
     })
     .fail(function() {
-        console.log( "Failed to send delete request." );
+        console.error( "Request failure: delete list." );
         deleteStatusToast(thisList.name, "fail-send")
     })
 }
@@ -73,7 +73,7 @@ function deleteStatusToast(listName, status){
     }
     else if(status == "fail-send"){
         toast.class = "orange-text text-darken-3"
-        toast.text = "Failed to request delete of"
+        toast.text = "Request failed to delete"
     }
 
     M.toast({html: `<span>${toast.text}&nbsp;<strong class=${toast.class}>${toast.name}</strong></span>`})
