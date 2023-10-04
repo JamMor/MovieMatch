@@ -150,7 +150,7 @@ const init = () => {
     // Handler for pagination links
     $savedListModal.on("click", `a.${pageLinkClass}`, function(e){
         e.preventDefault();
-        if ($(this).parent().hasClass("active")){
+        if ($(this).parent().hasClass("neon-lit")){
             return;
         }
         const targetUrl = $(this).attr("href")
