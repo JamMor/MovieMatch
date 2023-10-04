@@ -1,6 +1,6 @@
 <div id="save-modal" class="modal cyber-grade">
     <div class="modal-content">
-        <form action="#" class="ajax-form">
+        <form id="save-form" action="{% url 'list_builder:save_list' %}" method="POST">
             <div class="input-field">
                 <input id="list-name" name="list-name" class="center-align" type="text">
                 <label for="list-name">List Name</label>
@@ -8,7 +8,7 @@
         </form>
     </div>
     <div class="modal-footer">
-        <a id="save-list-confirm" href="#" class="neon-cyan neon-glow-hover waves-effect waves-light btn-large btn-rounded"><i class="material-icons left">save</i>Save</a>
-        <a href="#!" class="modal-close orange-text text-darken-3 waves-effect waves-dark btn-flat"><i class="material-icons left orange-text text-darken-3">close</i>Cancel</a>
+        <button id="save-list-confirm" form="save-form" class="neon-cyan neon-glow-hover waves-effect waves-light btn-large btn-rounded"><i class="material-icons left">save</i>Save</button>
+        <button class="modal-close orange-text text-darken-3 waves-effect waves-dark btn-flat"><i class="material-icons left orange-text text-darken-3">close</i>Cancel</button>
     </div>
 </div>

@@ -34,13 +34,5 @@ function resetFormErrors($form){
     $form.find("span.error").remove();
 }
 
-function preventDefaultFormClassInit(){
-    //Prevent normal form behavior for search
-    $('.ajax-form').submit(function(e){
-        e.preventDefault();
-    })
-}
 
-
-
-export {applyTooltips, formErrorHandler, resetFormErrors, preventDefaultFormClassInit}
+export {applyTooltips, formErrorHandler, resetFormErrors}

@@ -4,7 +4,8 @@ const $searchResultsDiv = searchResults.$listDomContainer;
 const $movieListDiv = movieList.$listDomContainer;
 
 const $searchContainer = $("#search-container");
-const $searchInput = $("#moviesearch-input");
+const $searchForm = $("#search-form");
+const $searchInput = $("#search-input");
 const $clearSearch = $("#search-close");
 const $listActionBtn = $("#list-actions-btn");
 
@@ -95,6 +96,9 @@ function clearSearchResults(){
 
 // Attach handlers to DOM elements
 const init = () => {
+    $searchForm.submit(function(e){
+        e.preventDefault();
+    })
 
     //Dim movie list when searching
     $searchInput.focus(activateSearch)

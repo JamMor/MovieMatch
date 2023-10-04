@@ -2,7 +2,6 @@ import * as csrfSetToken from "./csrf-token.js"
 import * as LoginComponent from "./login.js"
 import * as About from "./about.js"
 import * as MaterializeComponents from "./materialize-components.js"
-import { preventDefaultFormClassInit } from "./form_functions.js";
 
 //Entry point for base site
 $(document).ready(function() {
@@ -10,5 +9,4 @@ $(document).ready(function() {
     LoginComponent.init();
     About.init();
     MaterializeComponents.init();
-    preventDefaultFormClassInit();
 });

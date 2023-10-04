@@ -62,7 +62,8 @@ function submitEliminationStatusToast(status) {
 
 const init = () => {
     // POSTs name, movie list, and sharecode(if any)
-    $submitBtn.click(function () {
+    $submitBtn.click(function (e) {
+        e.preventDefault();
         submitEliminationList();
     })
 }

@@ -28,7 +28,7 @@
             </nav>
         </div>
 
-        {% include "list_builder/editor_save_modal.html"%}
+        {% include "list_builder/editor_save_modal.html" with list_id=saved_list.id %}
 
     {% endblock %}
 
