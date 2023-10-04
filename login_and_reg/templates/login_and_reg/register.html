@@ -2,7 +2,7 @@
 
 {% block content_block %}
     <main class="container">
-        <form id="registration-form" class ="cyber-grade" action="{% url 'login_and_reg:register' %}" method="post">
+        <form id="registration-form" class ="cyber-grade" action="{% url 'login_and_reg:register' %}" method="POST">
             {% csrf_token %}
             {% include "form_template.html" with form=user_form %}
             {% include "form_template.html" with form=persona_form %}

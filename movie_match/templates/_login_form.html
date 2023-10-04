@@ -1,6 +1,6 @@
 {% load prefixer %}
 
-<form id="{{'-login-form'|prefix:pre_id}}" class="cyber-grade login-form" action="{% url 'login_and_reg:login' %}" method="post">
+<form id="{{'-login-form'|prefix:pre_id}}" class="cyber-grade login-form" action="{% url 'login_and_reg:login' %}" method="POST">
     {% csrf_token %}
     <div class="input-field">
         {% with username_id="-username"|prefix:pre_id %}

@@ -1,3 +1,5 @@
+import { ajaxErrorHandler } from "/static/js/ajaxErrorHandler.js";
+
 const $modal = $("#delete-modal");
 const $modalOpenBtns = $(".delete-list-btn");
 const $submitBtn = $("#delete-list-confirm");
@@ -47,7 +49,7 @@ function sendDeletionRequest(){
         }
         else {
             console.log("Failed to delete.")
-            console.log(response.errors)
+            ajaxErrorHandler(response);
             deleteStatusToast(thisList.name, "error")
         }
 

@@ -50,7 +50,7 @@ function submitEliminationList() {
 function submitEliminationStatusToast(status) {
     const statusMessages = {
         "invalid-sharecode" : `<strong class="orange-text text-darken-3">Invalid sharecode.</strong>`,
-        "error" : `<strong class="orange-text text-darken-3">Failed</strong> to delete account.`,
+        "error" : `<strong class="orange-text text-darken-3">Failed</strong> to share list.`,
         "fail" : `<strong class="orange-text text-darken-3">Request failure.</strong>.`,
         "unknown" : `<strong class="orange-text text-darken-3">Unknown error.</strong>.`
     }

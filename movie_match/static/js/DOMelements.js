@@ -28,7 +28,7 @@ const CardButton = (type) => {
         default:
             console.log("Error: Button type unrecognized.");
     }
-    return `<btn class="btn card-btn waves-effect waves-light ${color} ${customClass}"><i class="material-icons">${icon}</i></btn>`
+    return `<button type="button" class="btn card-btn waves-effect waves-light ${color} ${customClass}"><i class="material-icons">${icon}</i></button>`
 }
 
 
