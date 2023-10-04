@@ -37,6 +37,7 @@ ALLOWED_HOSTS = [] if not any(env_hosts) else env_hosts
 
 INSTALLED_APPS = [
     'channels',
+    'compressor',
     'login_and_reg',
     'list_builder',
     'elimination_room',
@@ -168,6 +169,14 @@ STATICFILES_DIRS = [
 
 env_static = str(os.getenv('CONTAINER_STATIC_DIRECTORY', 'staticfiles/'))
 STATIC_ROOT =  BASE_DIR / env_static
+
+STATICFILES_FINDERS = [
+    # defaults
+    'django.contrib.staticfiles.finders.FileSystemFinder',
+    'django.contrib.staticfiles.finders.AppDirectoriesFinder',
+    # django-compressor
+    'compressor.finders.CompressorFinder',
+]
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.0/ref/settings/#default-auto-field
