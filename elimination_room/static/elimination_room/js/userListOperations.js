@@ -1,4 +1,4 @@
-import { UserChip } from "/static/js/DOMelements.js";
+import { UserChip } from "/static/js/shared/DOMelements.js";
 
 class UserList {
     constructor($listDomContainer, selfUUID, users = {}){

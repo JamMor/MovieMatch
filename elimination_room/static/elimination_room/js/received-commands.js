@@ -1,7 +1,7 @@
 import { movieList, userList } from "./movie_lists.js";
-import { DetailedMovie } from "/static/js/constructors.js";
-import { MovieInfoModal } from "/static/js/DOMelements.js";
-import { scrollHorizontallyTo } from "/static/js/slider.js";
+import { DetailedMovie } from "/static/js/shared/constructors.js";
+import { MovieInfoModal } from "/static/js/shared/DOMelements.js";
+import { scrollHorizontallyTo } from "/static/js/shared/slider.js";
 
 //These are the functions that are called when a succesful socket command is 
 // received from the server

@@ -1,5 +1,5 @@
 import { movieList } from "../movie_lists.js";
-import { ajaxErrorHandler } from "/static/js/ajaxErrorHandler.js";
+import { ajaxErrorHandler } from "/static/js/shared/ajaxErrorHandler.js";
 
 const $nicknameInput = $("#nickname");
 const $sharecodeInput = $("#sharecode");

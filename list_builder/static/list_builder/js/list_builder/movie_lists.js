@@ -1,4 +1,4 @@
-import { MovieList, SearchResultsList } from "/static/js/listOperations.js";
+import { MovieList, SearchResultsList } from "/static/js/shared/listOperations.js";
 
 const $movieListDom = $("#movie_list");
 const movieListInit = [];

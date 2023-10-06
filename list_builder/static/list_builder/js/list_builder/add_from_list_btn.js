@@ -1,6 +1,6 @@
-import { ListModalItem, PaginatorPages } from "/static/js/DOMelements.js";
+import { ListModalItem, PaginatorPages } from "/static/js/shared/DOMelements.js";
 import { movieList } from "./movie_lists.js";
-import { ajaxErrorHandler } from "/static/js/ajaxErrorHandler.js";
+import { ajaxErrorHandler } from "/static/js/shared/ajaxErrorHandler.js";
 
 const $savedListModal = $("#saved-lists-modal");
 const $addFromListBtn = $("#add-from-list");
