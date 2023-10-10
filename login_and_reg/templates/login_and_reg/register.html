@@ -1,4 +1,6 @@
 {% extends "base.html" %}
+{% load static %}
+{% load bundled_url %}
 
 {% block content_block %}
     <main class="container">
@@ -11,7 +13,12 @@
     </main>
 {% endblock %}
 {% block script_block %}
+    {% with script_url='login_and_reg/js/registration/index.js' %}
+    {% if IN_DEBUG %}
     {{ block.super }}
-    {% load static %}
-    <script type="module" src="{% static 'login_and_reg/js/registration/index.js'%}"></script>
+    <script type="module" src="{% static script_url %}"></script>
+    {% else %}
+    <script type="module" src="{% bundled script_url %}"></script>
+    {% endif %}
+    {% endwith %}
 {% endblock %}

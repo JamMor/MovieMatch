@@ -165,6 +165,7 @@ USE_TZ = True
 STATIC_URL = '/static/'
 STATICFILES_DIRS = [
     BASE_DIR / "movie_match/static", 
+    BASE_DIR / "dist", 
 ]
 
 env_static = str(os.getenv('CONTAINER_STATIC_DIRECTORY', 'staticfiles/'))

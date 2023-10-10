@@ -92,9 +92,10 @@
     {% endblock %}
     {% include "_about_modal.html" %}
     {% block content_block %}{% endblock %}
-    {% block script_block %}
+    
     {% include "_resource_paths.html" %}
     {% include "_url_paths.html" %}
+    {% block script_block %}
     <script type="module" src="{% static 'js/base/index.js'%}"></script>
     {% endblock %}
 </body>
