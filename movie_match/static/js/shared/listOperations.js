@@ -214,13 +214,13 @@ class SharedMovieList extends MovieList {
 
     eliminateMovieBySharedId(shared_movie_id) {
         const eliminatedMovie = this.getMovieBySharedId(shared_movie_id);
-        eliminatedMovie.eliminated = true;
+        eliminatedMovie.is_eliminated = true;
         this.get$movieCardFromTmdbId(eliminatedMovie.tmdb_id).addClass(this.eliminatedClass);
         return eliminatedMovie;
     }
 
     isFinalSelected() {
-        return this.movies.filter(movie => movie.eliminated == false).length == 1;
+        return this.movies.filter(movie => movie.is_eliminated == false).length == 1;
     }
 
     getFinalMovie() {
@@ -229,7 +229,7 @@ class SharedMovieList extends MovieList {
             return false;
         }
         else{
-            return this.movies.find(movie => movie.eliminated == false);
+            return this.movies.find(movie => movie.is_eliminated == false);
         }
     }
 }
