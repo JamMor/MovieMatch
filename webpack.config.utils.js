@@ -4,34 +4,40 @@ const glob = require('glob');
 const fs = require('fs');
 
 /**
- * Returns an object containing the directory paths and file paths of all index.js files in the specified directory.
- * @param {string} relSrcDir - The relative path of the directory to search for index.js files.
- * @returns {Object} - An object containing the directory paths and file paths of all index.js files.
+ * Returns an object mapping the static directory paths to the file paths of every 
+ * index.js file in the specified directory.
+ * @param {string} srcDir - The path of the directory to search for index.js files.
+ * @returns {Object} - An object mapping the directory paths to file paths of all index.js files.
  */
-function getIndexFiles(relSrcDir) {
+function getIndexFiles(srcDir) {
     const indexMap = {};
     const indexFilePaths = glob.sync(
-        `${relSrcDir}/**/index.js`,
+        `${srcDir}/**/index.js`,
         {
             posix: true,
             dotRelative: true,
-            ignore: 'bundled_assets/**',
-            windowsPathsNoEscape: true
         }
     );
 
-    indexFilePaths.forEach((file) => {
-        const dirPath = path.dirname(file).replace('./staticfiles/', '');
-        indexMap[dirPath] = file;
+    const staticRoot = "/static"
+    indexFilePaths.forEach((filePath) => {
+        let dirPath = path.dirname(filePath);
+        // Remove the static root from the path
+        let subDirIndex = dirPath.indexOf(staticRoot);
+        if (subDirIndex != -1) {
+            dirPath = dirPath.slice(subDirIndex + staticRoot.length);
+        }
+        indexMap[dirPath] = filePath;
     });
+
     return indexMap;
 }
 
 /**
- * Flattens nested entrypoints into bundles for each branch, returning a map of 
- * bundle names to an array of every ancestor index plus the shared JS.
+ * Flattens nested entrypoints into bundles for each branch, mapping the name of the
+ * terminal entrypoint to an array of every entrypoint in the branch.
  * @param {Object} entryPoints - An object containing entry points as key-value pairs.
- * @returns {Object} - A map of bundle names to an array of every ancestor index plus the shared JS.
+ * @returns {Object} - An object mapping the name of the terminal entrypoint to an array of every entrypoint in the branch.
  */
 function getBundleMap(entryPoints) {
     /**
@@ -61,19 +67,28 @@ function getBundleMap(entryPoints) {
 
     for (const key of Object.keys(nodeMap)) {
         const node = nodeMap[key];
-        let parentKey = key;
-        while (parentKey) {
-            parentKey = parentKey.split('/').slice(0, -1).join('/');
-            if (nodeMap.hasOwnProperty(parentKey)) {
-                const parent = nodeMap[parentKey];
-                node.parent = parent;
-                parent.children.push(node);
+        const pathRoot = path.parse(key).root;
+        
+        function isRoot(path){
+            return path == pathRoot || path == "." || path == "/" || path == "";
+        }
+        
+        let dirPath = key;
+        let i = 0;
+        while (!isRoot(dirPath) && i < 100) {
+            dirPath = path.dirname(dirPath);
+            // If a parent node is found from the path...
+            if (nodeMap.hasOwnProperty(dirPath)) {
+                const parentNode = nodeMap[dirPath];
+                node.parent = parentNode;
+                parentNode.children.push(node);
                 break;
             };
+
+            i++
+            if (i >= 100){console.error(`Infinite loop detected on ${key}`)}
         };
     }
-
-    const sharedJsNode = nodeMap['js'];
 
     /**
      * Returns an array of leaf nodes in the node map.
@@ -133,26 +148,21 @@ function getBundleMap(entryPoints) {
     const bundles = {};
     const leaves = getLeafNodes(nodeMap);
     for (const leaf of leaves) {
-        if (leaf === sharedJsNode) {
-            continue;
-        }
         const ancestors = getAncestors(leaf);
         bundles[leaf.name] = ancestors.map(node => node.fullPath);
-        bundles[leaf.name].push(sharedJsNode.fullPath);
     }
     
     return bundles;
 }
 
 /**
- * Returns a map of bundled entrypoints for extended Django templates where the
- * bundle name is the name of the ultimate template and the value is an array
- * of all the js entrypoints for each inherited template (including the overall 
- * shared JS) to be bundled together.
- *
+ * Given a source directory, creates a tree of index.js files, assuming that each
+ * node must be bundled with it's parents to have the complete code. Returns a map
+ * for each leaf node index.js with an array of all the parent index.js it is to 
+ * be bundled with.
  * @returns {Object} A map of Django entry points.
  */
-function getDjangoJSEntryPoints(relSrcDir) {
+function getFlattenedJSEntryPoints(relSrcDir) {
     const indexMap = getIndexFiles(relSrcDir);
     const bundleMap = getBundleMap(indexMap);
 
@@ -165,4 +175,50 @@ function getDjangoJSEntryPoints(relSrcDir) {
     return bundleMap;
 }
 
-module.exports = { getDjangoJSEntryPoints };
+/**
+ * Logs the bundle map to a file and console.
+ * @param {Object} bundleMap - The bundle map object.
+ */
+function bundleMapLogger(bundleMap) {
+    const outputFilename = 'js_leaf_nodes.txt';
+
+    const bundleNames = Object.keys(bundleMap);
+    const textEntries = [];
+    textEntries.push(`Generated ${bundleNames.length} bundles.\n${"=".repeat(40)}`)
+    bundleNames.forEach((bundle) => {
+        textEntries.push(`"${bundle}"\n[ ${bundleMap[bundle].join(', ')} ]`)
+    })
+    const textContent = textEntries.join('\n\n');
+    fs.writeFileSync(outputFilename, textContent);
+}
+
+/**
+ * Returns a map of entrypoints for Django bundles.
+ * @param {string[]} appDirs - An array of django app static JS directories.
+ * @param {string[]} commonDirs - An array of directories containing common JS across all apps.
+ * @returns {Object} - A map of entrypoints for JS bundles.
+ */
+function getDjangoEntrypointBundles (appDirs, commonDirs) {
+    const commonIndexMap = {};
+    commonDirs.forEach(dir => {
+        Object.assign(commonIndexMap, getIndexFiles(dir));
+    })
+    const commonPaths = Object.values(commonIndexMap);
+    
+    // Get the bundled entrypoints from each app and add common entrypoint paths
+    const bundleMap = {};
+    appDirs.forEach(dir => {
+        const appIndexMap = getIndexFiles(dir);
+        const appBundleMap = getBundleMap(appIndexMap);
+        Object.entries(appBundleMap).forEach(([key, value]) => {
+            appBundleMap[key].push(...commonPaths);
+        })
+        Object.assign(bundleMap, appBundleMap);
+    });
+
+    bundleMapLogger(bundleMap);
+
+    return bundleMap;
+}
+
+module.exports = { getDjangoEntrypointBundles };
