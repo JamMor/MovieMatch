@@ -34,5 +34,6 @@ module.exports = {
     output: {
         filename: '[name]/main.bundle.js',
         path: outputDir,
+        clean: true,
     }
 };
