@@ -1,6 +1,7 @@
 // webpack.config.js
 const path = require('path');
 const {getDjangoEntrypointBundles} = require('./webpack.config.utils.js');
+const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 
 // Output directory
 const outputDir = path.resolve(__dirname, 'dist')
@@ -37,5 +38,18 @@ module.exports = {
         filename: '[name]/main.bundle.js',
         path: outputDir,
         clean: true,
-    }
+    },
+    module: {
+        rules: [
+            {
+                test: /\.css$/,
+                use: [MiniCssExtractPlugin.loader, 'css-loader'],
+            },
+        ],
+    },
+    plugins: [
+        new MiniCssExtractPlugin({
+            filename: '[name]/styles.bundle.css',
+        }),
+    ],
 };

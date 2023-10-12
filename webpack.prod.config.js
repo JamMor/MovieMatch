@@ -1,6 +1,7 @@
 const { merge } = require('webpack-merge');
 const common = require('./webpack.config.js');
 const TerserPlugin = require("terser-webpack-plugin");
+const CssMinimizerPlugin = require("css-minimizer-webpack-plugin");
 
 module.exports = merge(common, {
     mode: 'production',
@@ -21,6 +22,9 @@ module.exports = merge(common, {
                     module: true,
                     sourceMap: true,
                 },
+            }),
+            new CssMinimizerPlugin({
+                test: /\.css$/i,
             }),
         ],
     }
