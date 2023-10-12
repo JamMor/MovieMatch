@@ -143,8 +143,8 @@ cython_debug/
 .vscode/* 
 .history
 pyvenv.cfg
-movie_match/static/CSS/materialize.css
-movie_match/static/JS/materialize.js
+materialize.css
+materialize.js
 
 # Node.js
 node_modules/
