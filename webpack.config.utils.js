@@ -1,16 +1,16 @@
-// webpack.config.js
 const path = require('path');
 const glob = require('glob');
 const fs = require('fs');
 
 /**
- * Returns a map of file paths that match the given file pattern, grouped by directory.
+ * Returns an array of file paths that match the given file pattern.
  * @param {string} srcDir - The root directory to search for files.
  * @param {string | string[]} filePattern - The file pattern(s) to match.
- * @returns {Object.<string, string[]>} - A map of directory paths to arrays of matching file paths.
+ * @param {string} [ignoreStr] - A glob pattern of files to ignore.
+ * @returns {string[]} - An array of file paths that match the given file pattern.
  * @throws {Error} - Throws an error if no file pattern is provided.
  */
-function getFileMap(srcDir, filePattern) {
+function getFilePaths(srcDir, filePattern, ignoreStr = undefined) {
     if (!filePattern || !filePattern.length) {
         throw new Error("A file pattern is required.");
     }
@@ -21,24 +21,26 @@ function getFileMap(srcDir, filePattern) {
         ? `{${filePattern.join(',')}}`
         : filePattern[0];
 
-    const fileMap = {};
     const filePaths = glob.sync(
         `${srcDir}/**/${filePatternStr}`,
         {
             posix: true,
             dotRelative: true,
-            ignore: '**/vendor/**',
+            ignore: ignoreStr,
         }
     );
+    return filePaths
+}
 
-    const staticRoot = "/static"
+/**
+ * Returns a map of file paths grouped by their directory path.
+ * @param {string[]} filePaths - An array of file paths.
+ * @returns {Object.<string, string[]>} - A map of file paths grouped by their directory path.
+ */
+function getFileMap(filePaths) {
+    const fileMap = {};
     filePaths.forEach((filePath) => {
         let dirPath = path.dirname(filePath);
-        // Remove the static root from the path
-        let subDirIndex = dirPath.indexOf(staticRoot);
-        if (subDirIndex != -1) {
-            dirPath = dirPath.slice(subDirIndex + staticRoot.length);
-        }
         if (!fileMap.hasOwnProperty(dirPath)){
             fileMap[dirPath] = [];
         }
@@ -191,13 +193,16 @@ function bundleMapLogger(bundleMap) {
 /**
  * Returns a map of bundled entrypoints from each source directory.
  * @param {string[]} srcDirs - An array of source directories.
+ * @param {string | string[]} filePattern - The file pattern(s) to match.
+ * @param {string} [ignoreStr] - A glob pattern of files to ignore.
  * @returns {Object} - A map of bundled entrypoints.
  */
-function getDjangoEntrypointBundles (srcDirs) {    
+function getDjangoEntrypointBundles (srcDirs, filePattern, ignoreStr = undefined) {    
     // Get the bundled entrypoints from each source directory
     const bundleMap = {};
     srcDirs.forEach(dir => {
-        const fileMap = getFileMap(dir,["index.js", "*.css"]);
+        const filePaths = getFilePaths(dir, filePattern, ignoreStr);
+        const fileMap = getFileMap(filePaths);
         const dirBundleMap = getBundleMap(fileMap);
         Object.assign(bundleMap, dirBundleMap);
     });

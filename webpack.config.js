@@ -1,4 +1,3 @@
-// webpack.config.js
 const path = require('path');
 const {getDjangoEntrypointBundles} = require('./webpack.config.utils.js');
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
@@ -28,7 +27,7 @@ staticDirectories.push(projectStaticDir)
 
 module.exports = {
     mode: 'development',
-    entry: getDjangoEntrypointBundles(staticDirectories),
+    entry: getDjangoEntrypointBundles(staticDirectories, ["index.js", "*.css"], '**/vendor/**'),
     resolve: {
         alias: {
             [sharedJsUrl]: path.resolve(__dirname, sharedJsDir)
