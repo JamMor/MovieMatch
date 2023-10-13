@@ -212,4 +212,4 @@ function getDjangoEntrypointBundles (srcDirs, filePattern, ignoreStr = undefined
     return bundleMap;
 }
 
-module.exports = { getDjangoEntrypointBundles };
+module.exports = { getDjangoEntrypointBundles, getFilePaths };
