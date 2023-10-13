@@ -138,7 +138,8 @@ function getBundleMap(entryPoints) {
     /**
      * Returns an array of ancestor nodes for the given node.
      * @param {Node} node - The node to get ancestors for.
-     * @returns {Node[]} - An array of ancestor nodes for the given node.
+     * @returns {Node[]} - An array of ancestor nodes for the given node, ordered 
+     * from leaf to root.
      */
     function getAncestors(node) {
         const ancestors = [];
@@ -163,7 +164,7 @@ function getBundleMap(entryPoints) {
     const bundles = {};
     const leaves = getLeafNodes(nodeMap);
     for (const leaf of leaves) {
-        const ancestors = getAncestors(leaf);
+        const ancestors = getAncestors(leaf).reverse(); // Order from root to leaf
         bundles[leaf.name] = ancestors.flatMap(node => node.filePaths);
     }
     
