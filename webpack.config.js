@@ -1,41 +1,25 @@
 const path = require('path');
 const {getDjangoEntrypointBundles} = require('./webpack.config.utils.js');
+const djangoPaths = require('./webpack.djangopaths.js');
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 
 // Output directory
-const outputDir = path.resolve(__dirname, 'dist')
+const outputDirectory = path.resolve(djangoPaths.projectRoot, 'dist')
 
-// Project wide static directory
-const projectStaticDir = path.join(__dirname, 'movie_match', 'static');
-
-// JS modules shared across several apps are kept in the Project static directory.
-// Other modules import them using their Django static URL, which must be aliased
-// to the shared directory for webpack to find them.
-const sharedJsDir = path.join(projectStaticDir, 'js', 'shared');
-const sharedJsUrl = '/static/js/shared';
-
-// Django apps to bundle
-const installed_apps = [
-    "login_and_reg",
-    "list_builder",
-    "elimination_room",
-]
-const appStaticPath = (appName) => path.join(__dirname, appName, 'static', appName)
-
-const staticDirectories = installed_apps.map(appStaticPath)
-staticDirectories.push(projectStaticDir)
+// All static directories to bundle
+const staticDirectories = djangoPaths.getAllStaticDirectories()
 
 module.exports = {
     mode: 'development',
     entry: getDjangoEntrypointBundles(staticDirectories, ["index.js", "*.css"], '**/vendor/**'),
     resolve: {
         alias: {
-            [sharedJsUrl]: path.resolve(__dirname, sharedJsDir)
+            [djangoPaths.sharedJsUrl]: djangoPaths.sharedJsDir
         },
     },
     output: {
         filename: '[name]/main.bundle.js',
-        path: outputDir,
+        path: outputDirectory,
         clean: true,
     },
     module: {
