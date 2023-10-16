@@ -41,6 +41,8 @@ function getFileMap(filePaths) {
     const fileMap = {};
     filePaths.forEach((filePath) => {
         let dirPath = path.dirname(filePath);
+        // Only use everything after "static/"
+        dirPath = dirPath.split('static/')[1];
         if (!fileMap.hasOwnProperty(dirPath)){
             fileMap[dirPath] = [];
         }
