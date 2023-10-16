@@ -31,17 +31,9 @@
 
         {% include "list_builder/editor_save_modal.html" with list_id=saved_list.id list_name=saved_list.display_name %}
 
+        {{ movie_list|json_script:"imported-movie-data" }}
     {% endblock %}
 
     {% block script_block %}
-        {{ movie_list|json_script:"imported-movie-data" }}
-
-        {% with script_url='list_builder/js/list_builder/list_editor/index.js' %}
-        {% if IN_DEBUG %}
-        {{ block.super }}
-        <script type="module" src="{% static script_url %}"></script>
-        {% else %}
-        <script type="module" src="{% bundled script_url %}"></script>
-        {% endif %}
-        {% endwith %}
+        {% bundle_tag 'list_builder/js/list_builder/list_editor/index.js' block.super %}
     {% endblock %}

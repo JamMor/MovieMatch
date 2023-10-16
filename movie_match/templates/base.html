@@ -1,3 +1,4 @@
+{% load bundled_url %}
 <!DOCTYPE html>
 <html lang="en">
 
@@ -26,7 +27,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Audiowide&family=Black+Ops+One&family=Fira+Code:wght@600&family=Michroma&family=Montserrat&family=Orbitron:wght@400;500;600;700;800;900&family=Press+Start+2P&family=Roboto+Mono&family=Rubik&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <link rel="stylesheet" type="text/css" href="{% static 'css/vendor/materialize.min.css' %}">
-    <link rel="stylesheet" type="text/css" href="{% static 'css/base/style.css' %}">
+    {% bundle_tag 'css/base/style.css' %}
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 </head>
 
@@ -95,8 +96,8 @@
     
     {% include "_resource_paths.html" %}
     {% include "_url_paths.html" %}
+    {% bundle_tag 'js/base/index.js' block.super %}
     {% block script_block %}
-    <script type="module" src="{% static 'js/base/index.js'%}"></script>
     {% endblock %}
 </body>
 
