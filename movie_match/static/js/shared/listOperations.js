@@ -5,6 +5,8 @@ class MovieList {
     constructor($listDomContainer, movies = []){
         this.$listDomContainer = $listDomContainer;
         this.movies = movies;
+        // //Assign a random number to the list name for debugging
+        // this.nameId = Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
     }
     prefix = "movie"
 
@@ -233,5 +235,28 @@ class SharedMovieList extends MovieList {
         }
     }
 }
+
+// function loggingWrapper(Class) {
+//     return new Proxy(Class, {
+//       construct(target, args) {
+//         const instance = new target(...args); // Pass constructor arguments
+//         return new Proxy(instance, {
+//           get(obj, propKey) {
+//             if (typeof obj[propKey] === 'function') {
+//               return function (...methodArgs) {
+//                 console.log(`Calling ${obj.nameId}.${propKey} with arguments: `, methodArgs);
+//                 return obj[propKey].apply(obj, methodArgs);
+//               };
+//             }
+//             return obj[propKey];
+//           },
+//         });
+//       },
+//     });
+//   }
+
+// const wrappedMovieList = loggingWrapper(MovieList);
+// const wrappedSearchResultsList = loggingWrapper(SearchResultsList);
+// const wrappedSharedMovieList = loggingWrapper(SharedMovieList);
 
 export { MovieList, SearchResultsList, SharedMovieList }
