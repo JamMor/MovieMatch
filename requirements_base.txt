@@ -11,6 +11,4 @@ python-dotenv==0.20.0       # for loading .env variables
 
 psycopg2==2.9.3             # for PostgreSQL database connection
 
-django-compressor==4.4      # for compressing and minimizing js and css
-
 # autopep8==1.7.0             # for formatting
