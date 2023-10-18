@@ -1,5 +1,6 @@
     {% extends "list_builder/list_builder_base.html" %}
     {% load static %}
+    {% load bundled_url %}
 
     {% block list_builder_subheading %}
         <div class="center-align">
@@ -28,16 +29,11 @@
             </nav>
         </div>
 
-        {% include "list_builder/editor_save_modal.html" with list_id=saved_list.id %}
+        {% include "list_builder/editor_save_modal.html" with list_id=saved_list.id list_name=saved_list.display_name %}
 
+        {{ movie_list|json_script:"imported-movie-data" }}
     {% endblock %}
 
     {% block script_block %}
-        {{ block.super }}
-        {{ movie_list|json_script:"imported-movie-data" }}
-        <script type='text/javascript' >
-            var savedListId = '{{saved_list.id}}';
-            var savedListName = '{{saved_list.list_name}}';
-        </script>
-        <script type="module" src="{% static 'list_builder/js/list_builder/list_editor/index.js'%}"></script>
+        {% bundle_tag 'list_builder/js/list_builder/list_editor/index.js' block.super %}
     {% endblock %}

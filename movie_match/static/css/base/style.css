@@ -240,8 +240,7 @@ i.suffix {
 .neon-glow-hover:hover, 
 .neon-lit, 
 .neon-lit:hover, 
-#search-input:focus,
-li.active .neon-glow-hover {
+#search-input:focus {
     color: hsl(var(--hue), 66%, 30%);
     background-color: #ffffff !important;
     box-shadow: 
@@ -625,15 +624,8 @@ div#search-container {
     text-align: center;
 }
 
-#list-pages li.active {
-    background-color: var(--cyan_accent-2);
-    color: var(--indigo_darken-4);
-}
 #list-pages li:not(.disabled) a {
     color: var(--blue_darken-2);
-}
-#list-pages li.active a {
-    color: var(--indigo_darken-4);
 }
 
 #sort-container div {

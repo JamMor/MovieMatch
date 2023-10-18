@@ -1,4 +1,4 @@
-import { ajaxErrorHandler } from "/static/js/ajaxErrorHandler.js";
+import { ajaxErrorHandler } from "/static/js/shared/ajaxErrorHandler.js";
 
 const $modal = $("#delete-modal");
 const $modalOpenBtns = $(".delete-list-btn");

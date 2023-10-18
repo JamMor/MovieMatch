@@ -56,7 +56,7 @@ def login_view(request):
     
     return JsonResponse(FailedFormResponse(form_errors=login_form.errors).to_dict())
 
-@require_POST
+@require_GET
 @login_required_json(error_msg = "Only logged in users can logout.")
 def logout_view(request):
     logout(request)

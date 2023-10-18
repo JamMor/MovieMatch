@@ -1,5 +1,6 @@
     {% extends "list_builder/list_builder_base.html" %}
     {% load static %}
+    {% load bundled_url %}
 
     {% block content_block %}
         {{ block.super }}
@@ -20,6 +21,5 @@
     {% endblock %}
 
     {% block script_block %}
-        {{ block.super }}
-        <script type="module" src="{% static 'list_builder/js/list_builder/list_creator/index.js'%}"></script>
+        {% bundle_tag 'list_builder/js/list_builder/list_creator/index.js' block.super %}
     {% endblock %}

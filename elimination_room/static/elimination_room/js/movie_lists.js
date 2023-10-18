@@ -1,4 +1,4 @@
-import { SharedMovieList } from "/static/js/listOperations.js";
+import { SharedMovieList } from "/static/js/shared/listOperations.js";
 import { UserList } from "./userListOperations.js";
 
 const $movieListDom = $("#movie_list");

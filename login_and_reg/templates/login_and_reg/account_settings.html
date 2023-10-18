@@ -1,4 +1,6 @@
 {% extends "base.html" %}
+{% load static %}
+{% load bundled_url %}
 
 {% block content_block %}
     <main class="container">
@@ -20,10 +22,5 @@
 
 {% endblock %}
 {% block script_block %}
-    {% load static %}
-    {{ block.super }}
-    <script type="module" src="{% static 'login_and_reg/js/account_settings/index.js'%}"></script>
-    <script type="module" src="{% static 'login_and_reg/js/account_settings/account_delete_modal.js'%}"></script>
-    <script type="module" src="{% static 'login_and_reg/js/account_settings/change_nickname_modal.js'%}"></script>
-    <script type="module" src="{% static 'login_and_reg/js/account_settings/change_password_modal.js'%}"></script>
+    {% bundle_tag 'login_and_reg/js/account_settings/index.js' block.super %}
 {% endblock %}

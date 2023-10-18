@@ -5,7 +5,7 @@ import * as Sort from "./sort.js";
 import * as ClearList from "./clear_list_btn.js";
 import * as MaterializeComponents from "./materialize-components.js";
 import { movieList } from "./movie_lists.js";
-import { saveInit } from "/static/js/save_list.js";
+import { saveInit } from "/static/js/shared/save_list.js";
 
 $(document).ready(function(){
     saveInit(movieList);

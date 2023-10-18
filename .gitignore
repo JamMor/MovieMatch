@@ -143,5 +143,22 @@ cython_debug/
 .vscode/* 
 .history
 pyvenv.cfg
-movie_match/static/CSS/materialize.css
-movie_match/static/JS/materialize.js
+
+# Unminified Vendor Files
+materialize.css
+materialize.js
+
+# Django Static Directory
+staticfiles/
+
+# Node.js
+node_modules/
+
+# Webpack Logs
+/compilation-stats.json
+/compilation-stats.*.json
+
+/webpack_bundles.txt
+/webpack_bundles.*.txt
+
+/purged-css.json

@@ -1,4 +1,4 @@
-import { ajaxErrorHandler } from "/static/js/ajaxErrorHandler.js";
+import { ajaxErrorHandler } from "/static/js/shared/ajaxErrorHandler.js";
 
 const deleteForm = document.querySelector("#account-delete-form");
 const $modal = $("#account-delete-modal");

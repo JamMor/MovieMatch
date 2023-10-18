@@ -1,5 +1,5 @@
-import { resetFormErrors } from "/static/js/form_functions.js";
-import { ajaxErrorHandler } from "/static/js/ajaxErrorHandler.js";
+import { resetFormErrors } from "/static/js/shared/form_functions.js";
+import { ajaxErrorHandler } from "/static/js/shared/ajaxErrorHandler.js";
 
 const $allLoginForms = $(".login-form");
 const $navLoginForm = $("#nav-login-form");

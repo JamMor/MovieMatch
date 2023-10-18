@@ -1,5 +1,6 @@
 {% extends "base.html" %}
 {% load static %}
+{% load bundled_url %}
 
 {% block page_subtitle %} - Room {{sharecode}}{% endblock %}
 
@@ -43,11 +44,10 @@
 {% endblock %}
 
 {% block script_block %}
-    {{ block.super }}
     <script type='text/javascript' > 
         var user_uuid = "{{uuid}}"
         var elimination_active = false;
         var current_eliminating_uuid = null;
     </script>
-    <script type="module" src="{% static 'elimination_room/js/index.js'%}"></script>
+    {% bundle_tag 'elimination_room/js/index.js' block.super %}
 {% endblock %}\

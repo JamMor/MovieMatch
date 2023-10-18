@@ -1,4 +1,6 @@
 {% extends "base.html" %}
+{% load static %}
+{% load bundled_url %}
 
 {% block content_block %}
     <main class="container">
@@ -11,7 +13,5 @@
     </main>
 {% endblock %}
 {% block script_block %}
-    {{ block.super }}
-    {% load static %}
-    <script type="module" src="{% static 'login_and_reg/js/registration/index.js'%}"></script>
+    {% bundle_tag 'login_and_reg/js/registration/index.js' block.super %}
 {% endblock %}

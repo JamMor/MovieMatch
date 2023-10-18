@@ -1,3 +1,4 @@
+{% load bundled_url %}
 <!DOCTYPE html>
 <html lang="en">
 
@@ -20,13 +21,13 @@
     <title>MovieMatch{% block page_subtitle %}{% endblock %}</title>
     <!-- Scripts -->
     <script src="https://ajax.aspnetcdn.com/ajax/jQuery/jquery-3.6.0.js"></script>
-    <script src="{% static 'js/materialize.min.js'%}"></script>
+    <script src="{% static 'js/vendor/materialize.min.js'%}"></script>
     <!-- CSS Stylesheets -->
     <!-- <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700;800;900&display=swap" rel="stylesheet"> -->
     <link href="https://fonts.googleapis.com/css2?family=Audiowide&family=Black+Ops+One&family=Fira+Code:wght@600&family=Michroma&family=Montserrat&family=Orbitron:wght@400;500;600;700;800;900&family=Press+Start+2P&family=Roboto+Mono&family=Rubik&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-    <link rel="stylesheet" type="text/css" href="{% static 'css/materialize.min.css' %}">
-    <link rel="stylesheet" type="text/css" href="{% static 'css/style.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'css/vendor/materialize.min.css' %}">
+    {% bundle_tag 'css/base/style.css' %}
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 </head>
 
@@ -92,12 +93,11 @@
     {% endblock %}
     {% include "_about_modal.html" %}
     {% block content_block %}{% endblock %}
-    {% block script_block %}
+    
     {% include "_resource_paths.html" %}
     {% include "_url_paths.html" %}
-    <script type="text/javascript">        
-    </script>
-    <script type="module" src="{% static 'js/index.js'%}"></script>
+    {% bundle_tag 'js/base/index.js' block.super %}
+    {% block script_block %}
     {% endblock %}
 </body>
 

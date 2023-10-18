@@ -1,5 +1,5 @@
-import {applyTooltips, resetFormErrors} from "/static/js/form_functions.js";
-import { ajaxErrorHandler } from "/static/js/ajaxErrorHandler.js";
+import {applyTooltips, resetFormErrors} from "/static/js/shared/form_functions.js";
+import { ajaxErrorHandler } from "/static/js/shared/ajaxErrorHandler.js";
 
 
 const changeForm = document.querySelector("#change-nickname-form");

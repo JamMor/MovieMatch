@@ -1,5 +1,6 @@
     {% extends "base.html" %}
     {% load static %}
+    {% load bundled_url %}
 
     {% block content_block %}
         <main>
@@ -54,6 +55,5 @@
     {% endblock %}
 
     {% block script_block %}
-        {{ block.super }}
-        <script type="module" src="{% static 'list_builder/js/list_manager/index.js'%}"></script>
+        {% bundle_tag 'list_builder/js/list_manager/index.js' block.super %}
     {% endblock %}

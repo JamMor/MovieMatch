@@ -1,12 +1,12 @@
-import { ajaxErrorHandler } from "/static/js/ajaxErrorHandler.js";
+import { ajaxErrorHandler } from "/static/js/shared/ajaxErrorHandler.js";
 // Save List
 
 const $modal = $("#save-modal");
+const $form = $("#save-form");
+const $savedListNameInput = $("#list-name");
 const $submitBtn = $("#save-list-confirm");
 //This is for disabled save buttons if user is not logged in.
 const $disabledBtn = $("#open-save-btn.disabled-btn");
-//This is the ID of the list-name field in the editor save modal.
-const $savedListNameField = $("#list-name");
 
 /**
  * Saves current movies to list in DB.
@@ -73,27 +73,14 @@ function saveStatusToast (listName, status) {
 }
 
 function getListName(){
-    let listName;
-    //if field element exists get from field, else if var exists, get from var
-    if($savedListNameField.length){
-        listName = $savedListNameField.val();
-    }
-    else if('savedListName' in window){
-        listName = savedListName;
-    }
-    else{
-        console.log("ERROR: No list name found.")
-    }
-    return listName
+    return $savedListNameInput.val() ?? "";
 }
 
 function getListId (){
-    if('savedListId' in window){
-        return savedListId
-    }
-    else{
-        return null
-    }
+    // Get the action of $form
+    const formAction = $form.attr("action")
+    // Gets the list id from the action url, or null if none
+    return formAction.split("/")?.[2] ?? null
 }
 
 function saveHandler(movieList){
