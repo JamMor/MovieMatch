@@ -6,6 +6,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="author" content="James Morgan" />
     <!-- GoogleFonts Preconnect -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -19,6 +20,7 @@
     <meta name="msapplication-TileColor" content="#da532c">
     <meta name="theme-color" content="#090909">
     <title>MovieMatch{% block page_subtitle %}{% endblock %}</title>
+    {% block meta_description_block %}{% endblock %}
     <!-- Scripts -->
     <script src="https://ajax.aspnetcdn.com/ajax/jQuery/jquery-3.6.0.js"></script>
     <script src="{% static 'js/vendor/materialize.min.js'%}"></script>
@@ -28,7 +30,6 @@
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <link rel="stylesheet" type="text/css" href="{% static 'css/vendor/materialize.min.css' %}">
     {% bundle_tag 'css/base/style.css' %}
-    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 </head>
 
 <body>

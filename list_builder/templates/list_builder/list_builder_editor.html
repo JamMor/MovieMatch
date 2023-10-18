@@ -2,6 +2,15 @@
     {% load static %}
     {% load bundled_url %}
 
+    {% block page_subtitle %} - Edit {{ saved_list.display_name }}{% endblock %}
+    {% block meta_description_block %}
+    <meta 
+        name="description" 
+        content="Edit your MovieMatch movie list: Easily edit, add, or remove movies 
+        to keep your collection up-to-date and personalized to your preferences."
+    >
+    {% endblock %}
+
     {% block list_builder_subheading %}
         <div class="center-align">
             <div class="btn-large btn-rounded neon-purple neon-unlit">{{ saved_list.display_name }}</div>

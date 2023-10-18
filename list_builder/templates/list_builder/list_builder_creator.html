@@ -2,6 +2,16 @@
     {% load static %}
     {% load bundled_url %}
 
+    {% block meta_description_block %}
+    <meta 
+        name="description" 
+        content="Discover MovieMatch: End movie night indecision with MovieMatch's 
+        turn based elimination. All you have to do is choose the one you DON'T want. 
+        Join friends to create and share custom movie lists, and narrow them down 
+        together to find the perfect pick—or at least one good enough for tonight."
+    >
+    {% endblock %}
+
     {% block content_block %}
         {{ block.super }}
         <div id="list-save-share-btn" class="fixed-action-btn toolbar">

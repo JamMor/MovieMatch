@@ -65,6 +65,12 @@ const DetailedMovie = class DetailedMovie extends Movie{
         this.rent = rent;
     }
 
+    // round vote average string to at most two decimal places
+    get roundedScore(){
+        let score = parseFloat(this.vote_average)
+        return score.toFixed(2);
+    }
+
     get formattedRuntime(){
         let runtime_hours = Math.floor(this.runtime/60);
         runtime_hours = runtime_hours > 0 ? `${runtime_hours} hr, ` : ''

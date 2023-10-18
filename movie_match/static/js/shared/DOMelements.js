@@ -63,7 +63,7 @@ const MovieCard = (
     return `
         <div id='${id_prefix}_${card_id}' class="movie-card card sticky-action grey darken-4 ${card_css_class}">
             <div class="card-image">
-                <img src='${fullPosterURL}'>
+                <img src='${fullPosterURL}' alt='Poster for ${title}'>
                 <span class="card-title">${title}<br />${releaseYear}</span>
             </div>
             <div class="card-action">
@@ -96,13 +96,13 @@ const ProviderList = (providers) => {
 //the 'More Info' modal
 const MovieInfoModal = ( 
         {tmdb_id, title, release_date, overview, fullPosterURL,
-        genres, formattedRuntime, vote_average, stream, rent}
+        genres, formattedRuntime, roundedScore, stream, rent}
     ) => {
 
     return    `
         <div class="row">
             <div class="col s12 m6">
-                <img class="poster" src='${fullPosterURL}'>
+                <img class="poster" src='${fullPosterURL}' alt='Poster for ${title}'>
             </div>
             <div class="col s12 m6">
                 <h4>${title}</h4>
@@ -110,7 +110,7 @@ const MovieInfoModal = (
                     <h6>${release_date}</h6>
                     <h6">${formattedRuntime}</h6>
                 </span>
-                <h5>TMDb Rating: ${vote_average}/10 <i class="material-icons">grade</i></h5>
+                <h5>TMDb Rating: ${roundedScore}/10 <i class="material-icons">grade</i></h5>
                 <p>${genres.map(genre => genre.name).join(", ")}</p>
                 <p>${overview}</p>
             </div>

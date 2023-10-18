@@ -2,6 +2,15 @@
 {% load static %}
 {% load bundled_url %}
 
+{% block page_subtitle %} - Register New Account{% endblock %}
+{% block meta_description_block %}
+<meta 
+    name="description" 
+    content="Join MovieMatch: Register to save your lists, lists from friends, 
+    and shared lists. Infinitely more convenient than having to start from scratch every time."
+>
+{% endblock %}
+
 {% block content_block %}
     <main class="container">
         <form id="registration-form" class ="cyber-grade" action="{% url 'login_and_reg:register' %}" method="POST">

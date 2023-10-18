@@ -2,6 +2,15 @@
     {% load static %}
     {% load bundled_url %}
 
+    {% block page_subtitle %} - Manage Saved Lists{% endblock %}
+    {% block meta_description_block %}
+    <meta 
+        name="description" 
+        content="Effortlessly manage your MovieMatch movie lists: Delete, edit, 
+        and get quick overviews. Carefully curate your collections with ease."
+    >
+    {% endblock %}
+
     {% block content_block %}
         <main>
             <div class="container">
@@ -37,7 +46,7 @@
                                     {% for movie in list.movies.all %}
                                     <div id="list_{{list.id}}_{{movie.tmdb_id}}" class="card grey darken-4">
                                         <div class="card-image">
-                                            <img loading="lazy" src="https://image.tmdb.org/t/p/w342{{movie.poster_path}}">
+                                            <img loading="lazy" src="https://image.tmdb.org/t/p/w342{{movie.poster_path}}" alt="Poster for {{movie.title}}">
                                         </div>
                                     </div>
                                     {% endfor %}
