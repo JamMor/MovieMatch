@@ -63,7 +63,7 @@ const MovieCard = (
     return `
         <div id='${id_prefix}_${card_id}' class="movie-card card sticky-action grey darken-4 ${card_css_class}">
             <div class="card-image">
-                <img src='${fullPosterURL}' alt='Poster for ${title}'>
+                <img src='${fullPosterURL}' alt='Poster for ${title}' onerror="this.src='${resourcePath.placeholderPath}'">
                 <span class="card-title">${title}<br />${releaseYear}</span>
             </div>
             <div class="card-action">
@@ -102,7 +102,7 @@ const MovieInfoModal = (
     return    `
         <div class="row">
             <div class="col s12 m6">
-                <img class="poster" src='${fullPosterURL}' alt='Poster for ${title}'>
+                <img class="poster" src='${fullPosterURL}' alt='Poster for ${title}' onerror="this.src='${resourcePath.placeholderPath}'">
             </div>
             <div class="col s12 m6">
                 <h4>${title}</h4>

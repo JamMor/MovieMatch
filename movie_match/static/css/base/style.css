@@ -282,6 +282,9 @@ i.suffix {
 /* ================================Movie Card================================ */
 .card div.card-image span.card-title{
     text-shadow: -2px -2px 0 #000, 2px -2px 0 #000, -2px 2px 0 #000, 2px 2px 0 #000;
+    height:100%;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 .card .card-image img {
@@ -457,7 +460,10 @@ header nav a.brand-logo {
 #side-menu li>a, #side-menu li>div {
     color: var(--grey_lighten-2);
     font-family: var(--font-primary);
-    background-color: transparent;
+}
+
+.light-highight li>a:hover {
+    background-color: rgba(255, 255, 255, 0.1);
 }
 
 #side-menu li>a i {
@@ -611,13 +617,14 @@ div#search-container {
 
 #list-container p {
     white-space: nowrap;
+    overflow: hidden;
     text-overflow: ellipsis;
     flex:1;
 }
 
 #list-container .secondary-content {
     top: auto;
-    position:relative;
+    position:static;
 }
 
 #list-pages {
