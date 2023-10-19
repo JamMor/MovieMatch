@@ -1,4 +1,5 @@
 import { UserChip } from "/static/js/shared/DOMelements.js";
+import { unescapeHtml } from "/static/js/shared/htmlEscaping.js";
 
 class UserList {
     constructor($listDomContainer, selfUUID, users = {}){
@@ -201,7 +202,7 @@ class UserList {
             const $chip = $(userElement);
             const thisUuid = this.uuidFromUserChipDomId($chip.attr('id'));
             const thisPosition = parseInt($chip.attr('data-position'));
-            const thisNickname = $chip.text().trim();
+            const thisNickname = unescapeHtml($chip.text().trim());
             return {"uuid": thisUuid, "position": thisPosition, "nickname": thisNickname} ;
             })
             .get()

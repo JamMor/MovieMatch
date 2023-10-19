@@ -1,7 +1,4 @@
-/**
- * Constructor namespace.
- * @namespace domElements
- */
+import { escapeHtml } from "/static/js/shared/htmlEscaping.js";
 
 //DOM Element Constructors
 
@@ -60,20 +57,26 @@ const MovieCard = (
     //Append Elimination css class for match cards
     card_css_class += is_eliminated ? " eliminated" : "";
 
+    //Escape html chars
+    const escapedTitle = escapeHtml(title);
+    const escapedOverview = escapeHtml(overview);
+    const escapedReleaseYear = escapeHtml(releaseYear);
+    const escapedFullPosterURL = encodeURI(fullPosterURL);
+
     return `
         <div id='${id_prefix}_${card_id}' class="movie-card card sticky-action grey darken-4 ${card_css_class}">
             <div class="card-image">
-                <img src='${fullPosterURL}' alt='Poster for ${title}' onerror="this.src='${resourcePath.placeholderPath}'">
-                <span class="card-title">${title}<br />${releaseYear}</span>
+                <img src='${escapedFullPosterURL}' alt='Poster for ${escapedTitle}' onerror="this.src='${resourcePath.placeholderPath}'">
+                <span class="card-title">${escapedTitle}<br />${escapedReleaseYear}</span>
             </div>
             <div class="card-action">
                 ${button_elem}
             </div>
             <div class="card-reveal">
                 <span class="card-title grey-text text-darken-4"><i class="material-icons right">close</i></span>
-                <span class="card-title grey-text text-darken-4">${title}</span>
-                <span class="grey-text text-darken-4">${releaseYear}</span>
-                <p>${overview}</p>
+                <span class="card-title grey-text text-darken-4">${escapedTitle}</span>
+                <span class="grey-text text-darken-4">${escapedReleaseYear}</span>
+                <p>${escapedOverview}</p>
             </div>
         </div>
     `
@@ -86,8 +89,8 @@ const ProviderList = (providers) => {
         return `<li class="center-align provider-empty"><em>Not available at this time.</em></li>`
     }
     return providers.map(prv => 
-        `<li class="tooltipped" data-position="bottom" data-tooltip="${prv.provider_name}">
-            <img src="${resourcePath.imagePrefix}w45${prv.logo_path}" alt="${prv.provider_name}">
+        `<li class="tooltipped" data-position="bottom" data-tooltip="${escapeHtml(prv.provider_name)}">
+            <img src="${resourcePath.imagePrefix}w45${encodeURI(prv.logo_path)}" alt="${escapeHtml(prv.provider_name)}">
         </li>`
         ).join('');
 }
@@ -99,20 +102,29 @@ const MovieInfoModal = (
         genres, formattedRuntime, roundedScore, stream, rent}
     ) => {
 
+    //Escape html chars
+    const escapedTitle = escapeHtml(title);
+    const escapedOverview = escapeHtml(overview);
+    const escapedReleaseDate = escapeHtml(release_date);
+    const escapedGenreNames = genres.map(genre => escapeHtml(genre.name));
+    const escapedFormattedRuntime = escapeHtml(formattedRuntime);
+    const escapedFullPosterURL = encodeURI(fullPosterURL);
+    const escapedRoundedScore = escapeHtml(roundedScore);
+
     return    `
         <div class="row">
             <div class="col s12 m6">
-                <img class="poster" src='${fullPosterURL}' alt='Poster for ${title}' onerror="this.src='${resourcePath.placeholderPath}'">
+                <img class="poster" src='${escapedFullPosterURL}' alt='Poster for ${escapedTitle}' onerror="this.src='${resourcePath.placeholderPath}'">
             </div>
             <div class="col s12 m6">
-                <h4>${title}</h4>
+                <h4>${escapedTitle}</h4>
                 <span>
-                    <h6>${release_date}</h6>
-                    <h6">${formattedRuntime}</h6>
+                    <h6>${escapedReleaseDate}</h6>
+                    <h6">${escapedFormattedRuntime}</h6>
                 </span>
-                <h5>TMDb Rating: ${roundedScore}/10 <i class="material-icons">grade</i></h5>
-                <p>${genres.map(genre => genre.name).join(", ")}</p>
-                <p>${overview}</p>
+                <h5>TMDb Rating: ${escapedRoundedScore}/10 <i class="material-icons">grade</i></h5>
+                <p>${escapedGenreNames.join(", ")}</p>
+                <p>${escapedOverview}</p>
             </div>
         </div>
         <div class="row">
@@ -146,7 +158,7 @@ const UserChipColors = {
 const UserChip = (prefix, {uuid, nickname, position}, isSelf) => {
     const color = isSelf ? UserChipColors.self : UserChipColors.other
     return `<div id='${prefix}_${uuid}' class="chip ${color} neon-unlit dimmed" data-position="${position}">
-            ${nickname}
+            ${escapeHtml(nickname)}
         </div>`
 }
 
@@ -160,7 +172,7 @@ const ListModalItem = (list_id, list_name, list_movies, selected) => {
         <div id="row_${list_id}" class="neon-purple neon-glow-hover collection-item avatar collapsible-header ${selected ? selectedRowClass : ''}">
             <i class="material-icons circle neon-cyan neon-unlit dimmed">toc</i>
             <span class="new badge purple accent-2 black-text" data-badge-caption="">${list_movies.length}</span>
-            <p>${list_name}</p>
+            <p>${escapeHtml(list_name)}</p>
             <a id="select_${list_id}" href="#!" class="secondary-content select-list">
                 <i class="material-icons">
                 ${selected ? selectedListIcon : uneselectedListIcon}
@@ -169,7 +181,7 @@ const ListModalItem = (list_id, list_name, list_movies, selected) => {
         </div>
         <div class="collapsible-body">
             <ul>
-                ${list_movies.map(movie => `<li>${movie}</li>`).join('')}
+                ${list_movies.map(movieTitle => `<li>${escapeHtml(movieTitle)}</li>`).join('')}
             </ul>
         </div>
     </li>

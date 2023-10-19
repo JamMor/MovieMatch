@@ -2,6 +2,7 @@ import { movieList, userList } from "./movie_lists.js";
 import { DetailedMovie } from "/static/js/shared/constructors.js";
 import { MovieInfoModal } from "/static/js/shared/DOMelements.js";
 import { scrollHorizontallyTo } from "/static/js/shared/slider.js";
+import { escapeHtml } from "/static/js/shared/htmlEscaping.js";
 
 //These are the functions that are called when a succesful socket command is 
 // received from the server
@@ -23,7 +24,7 @@ function commandEliminate(commandData) {
         toastClass = "cyan-text text-accent-2"
         nickname = "YOU"
     }
-    const toastHtml = `<span><strong class="${toastClass}">${nickname} </strong>&nbsp;eliminated&nbsp;<strong class="orange-text text-darken-3"> ${eliminated_movie.title}</strong></span>`
+    const toastHtml = `<span><strong class="${toastClass}">${escapeHtml(nickname)} </strong>&nbsp;eliminated&nbsp;<strong class="orange-text text-darken-3"> ${eliminated_movie.title}</strong></span>`
     M.toast({html: toastHtml})
     
     if (commandData.hasOwnProperty("updated_positions")){
@@ -75,7 +76,7 @@ function commandConnected(commandData) {
     console.log("Connected User: " + connected_uuid);
     const added = userList.addUserToListFlat({"uuid": connected_uuid, "position": position, "nickname": nickname});
     if(added && connected_uuid != user_uuid){
-        const toastHtml = `<span><strong class="purple-text text-accent-2">${nickname} </strong>&nbsp;has connected.</span>`
+        const toastHtml = `<span><strong class="purple-text text-accent-2">${escapeHtml(nickname)} </strong>&nbsp;has connected.</span>`
         M.toast({html: toastHtml})
     }
 }
@@ -93,7 +94,7 @@ function commandDisconnected(commandData) {
     console.log('Disconnected UUID: ' + disconnected_uuid)
     const removedUser = userList.removeUserFromListByUuid(disconnected_uuid);
     if(removedUser != null && disconnected_uuid != user_uuid){
-        const toastHtml = `<span><strong class="purple-text text-accent-2">${removedUser.nickname} </strong>&nbsp;has disconnected.</span>`
+        const toastHtml = `<span><strong class="purple-text text-accent-2">${escapeHtml(removedUser.nickname)} </strong>&nbsp;has disconnected.</span>`
         M.toast({html: toastHtml})
     }
 }
@@ -199,8 +200,8 @@ function setStatusBar(status){
 
     // Edit DOM
     $statusBtn.removeClass().addClass(styleClass);
-    $statusBtn.find("i").html(icons);
-    $statusBtn.find("span").html(statusText);
+    $statusBtn.find("i").text(icons);
+    $statusBtn.find("span").text(statusText);
 }
 
 //Set active user turn
@@ -221,7 +222,7 @@ function setUserTurn(turnUUID = null){
     //Toast new user turn
     const eliminatingUser = userList.getUserByUuidFlat(turnUUID);
     const toastName = (turnUUID != user_uuid) 
-        ? `<strong class="purple-text text-accent-2">${eliminatingUser.nickname}</strong>'s` 
+        ? `<strong class="purple-text text-accent-2">${escapeHtml(eliminatingUser.nickname)}</strong>'s` 
         : '<strong class="cyan-text text-accent-2">YOUR</strong>'
     const toastHtml = `<span>${toastName}&nbsp;turn.</span>`
     M.toast({html: toastHtml})
@@ -229,9 +230,9 @@ function setUserTurn(turnUUID = null){
     //Put username in status bar
     const statusText = (turnUUID == user_uuid)
             ? "Waiting on YOUR turn..."
-            : `Waiting on ${eliminatingUser.nickname}'s turn...`
+            : `Waiting on ${escapeHtml(eliminatingUser.nickname)}'s turn...`
 
-    $statusBtn.find("span").html(statusText);
+    $statusBtn.find("span").text(statusText);
 }
 
 function getMoreMovieInfo(movieId){

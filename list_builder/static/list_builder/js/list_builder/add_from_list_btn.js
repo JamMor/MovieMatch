@@ -1,6 +1,7 @@
 import { ListModalItem, PaginatorPages } from "/static/js/shared/DOMelements.js";
 import { movieList } from "./movie_lists.js";
 import { ajaxErrorHandler } from "/static/js/shared/ajaxErrorHandler.js";
+import { escapeHtml } from "/static/js/shared/htmlEscaping.js";
 
 const $savedListModal = $("#saved-lists-modal");
 const $addFromListBtn = $("#add-from-list");
@@ -43,7 +44,7 @@ function addToList(listId) {
 
 function addToListStatusToast(status, listName = "") {
     const statusMessages = {
-        "success": `Added <strong class="cyan-text text-accent-2">${listName}</strong> to list.`,
+        "success": `Added <strong class="cyan-text text-accent-2">${escapeHtml(listName)}</strong> to list.`,
         "error": `<strong class="orange-text text-darken-3">Failed</strong> to add to list.`,
         "fail": `<strong class="orange-text text-darken-3">Request failure.</strong>.`,
         "unknown": `<strong class="orange-text text-darken-3">Unknown error.</strong>.`

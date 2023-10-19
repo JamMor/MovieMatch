@@ -1,5 +1,6 @@
 import {applyTooltips, resetFormErrors} from "/static/js/shared/form_functions.js";
 import { ajaxErrorHandler } from "/static/js/shared/ajaxErrorHandler.js";
+import { escapeHtml } from "/static/js/shared/htmlEscaping.js";
 
 
 const changeForm = document.querySelector("#change-nickname-form");
@@ -60,8 +61,9 @@ function sendChangeNicknameRequest(){
 }
 
 function changeNicknameStatusToast(status, nickname = "") {
+    const escapedNickname = escapeHtml(nickname);
     const statusMessages = {
-        "success" : `Changed nickname to <strong class="cyan-text text-accent-2">${nickname}</strong>!`,
+        "success" : `Changed nickname to <strong class="cyan-text text-accent-2">${escapedNickname}</strong>!`,
         "blank" : `Reset nickname to <strong class="purple-text text-accent-2">blank</strong>.`,
         "error" : `<strong class="orange-text text-darken-3">Failed</strong> to change nickname.`,
         "fail" : `<strong class="orange-text text-darken-3">Request failure.</strong>.`,

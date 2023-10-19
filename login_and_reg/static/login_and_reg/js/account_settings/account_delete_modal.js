@@ -1,4 +1,5 @@
 import { ajaxErrorHandler } from "/static/js/shared/ajaxErrorHandler.js";
+import { escapeHtml } from "/static/js/shared/htmlEscaping.js";
 
 const deleteForm = document.querySelector("#account-delete-form");
 const $modal = $("#account-delete-modal");
@@ -49,7 +50,7 @@ function sendDeleteAccountRequest() {
 function deleteAccountStatusToast(status, extraMessage = "") {
     const statusMessages = {
         "success" : `Account <strong className="cyan-text text-accent-2">successfully</strong> deleted!`,
-        "error" : `<strong class="orange-text text-darken-3">Failed</strong> to delete account. ${extraMessage}`,
+        "error" : `<strong class="orange-text text-darken-3">Failed</strong> to delete account. ${escapeHtml(extraMessage)}`,
         "fail" : `<strong class="orange-text text-darken-3">Request failure.</strong>.`,
         "unknown" : `<strong class="orange-text text-darken-3">Unknown error.</strong>.`
     }

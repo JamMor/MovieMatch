@@ -1,4 +1,5 @@
 import { ajaxErrorHandler } from "/static/js/shared/ajaxErrorHandler.js";
+import { escapeHtml } from "/static/js/shared/htmlEscaping.js";
 
 const $modal = $("#delete-modal");
 const $modalOpenBtns = $(".delete-list-btn");
@@ -78,7 +79,7 @@ function deleteStatusToast(listName, status){
         toast.text = "Request failed to delete"
     }
 
-    M.toast({html: `<span>${toast.text}&nbsp;<strong class=${toast.class}>${toast.name}</strong></span>`})
+    M.toast({html: `<span>${toast.text}&nbsp;<strong class=${toast.class}>${escapeHtml(toast.name)}</strong></span>`})
 }
 
 const init = () => {

@@ -1,4 +1,5 @@
 import { ajaxErrorHandler } from "/static/js/shared/ajaxErrorHandler.js";
+import { escapeHtml } from "/static/js/shared/htmlEscaping.js";
 // Save List
 
 const $modal = $("#save-modal");
@@ -69,7 +70,7 @@ function saveStatusToast (listName, status) {
     const displayName = (listName.length > 10) ? `${listName.slice(0,9)}...` : listName;
     const classColor = (status == "success") ? "cyan-text text-accent-2" : "orange-text text-darken-3"
     
-    M.toast({html: `<span>${message}&nbsp;<strong class=${classColor}>${displayName}</strong></span>`});
+    M.toast({html: `<span>${message}&nbsp;<strong class=${classColor}>${escapeHtml(displayName)}</strong></span>`});
 }
 
 function getListName(){
