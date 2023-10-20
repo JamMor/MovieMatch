@@ -81,6 +81,14 @@ function addToListHandler(e){
 function updateListModal(data){
     // Replace list items with data
     $listContainer.empty();
+    if (data.lists.length == 0) {
+        const emptyListLine = `
+            <li><div class="neon-orange neon-unlit collection-item center-align">
+                <p><em>No saved lists.</em></p>
+            </div></li>
+        `
+        $listContainer.append(emptyListLine);
+    }
     data.lists.forEach(list => {
         const { list_id, list_name, movies } = list;
         const selected = selectedLists.includes(list_id);

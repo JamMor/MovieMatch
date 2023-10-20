@@ -53,6 +53,12 @@
                                 </div>
                             </td>
                         </tr>
+                        {% empty %}
+                        <tr class="neon-orange neon-unlit">
+                            <td class="center-align" colspan="4">
+                                <em>No saved lists.</em>
+                            </td>
+                        </tr>
                         {% endfor %}
                     </tbody>
                 </table>

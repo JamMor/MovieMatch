@@ -1,6 +1,7 @@
 import { ajaxErrorHandler } from "/static/js/shared/ajaxErrorHandler.js";
 import { escapeHtml } from "/static/js/shared/htmlEscaping.js";
 
+const $tableBody = $("#list-table tbody")
 const $modal = $("#delete-modal");
 const $modalOpenBtns = $(".delete-list-btn");
 const $submitBtn = $("#delete-list-confirm");
@@ -29,6 +30,21 @@ function handleDeleteRequest(){
     displayDeleteModal(thisList.name)
 }
 
+
+function isTableEmpty(){
+    return $tableBody.children().length == 0;
+}
+function addEmptyTableRow(){
+    const emptyRow = `
+        <tr class="neon-orange neon-unlit">
+            <td class="center-align" colspan="4">
+                <em>No saved lists.</em>
+            </td>
+        </tr>
+    `
+    $tableBody.append(emptyRow);
+}
+
 function sendDeletionRequest(){
     $.ajax({
         url: urlPath.deleteList(thisList.id),
@@ -47,6 +63,10 @@ function sendDeletionRequest(){
             $headerRow.remove();
             $contentRow.remove()
 
+            // If table is empty, add empty row
+            if (isTableEmpty()){
+                addEmptyTableRow();
+            }
         }
         else {
             console.log("Failed to delete.")
