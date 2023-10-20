@@ -75,7 +75,10 @@ function updateSearchResultsDOM(data){
 function searchMovies(searchQuery) {
     if (searchQuery.length >= minSearchQueryLength) {
         console.log(searchQuery)
-        $.get(resourcePath.movieSearchUrl(searchQuery), "json")
+        $.get({
+            url: resourcePath.movieSearchUrl(searchQuery),
+            dataType: "json"
+        })
             .done(updateSearchResultsDOM)
             .fail(function (response) {
                 console.error("Request failure: search movies");

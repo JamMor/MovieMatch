@@ -12,39 +12,39 @@ function openDeleteAccountModal() {
     $modal.modal('open');
 }
 
-function sendDeleteAccountRequest() {    
+function sendDeleteAccountRequest() {
     const deleteFormData = new FormData(deleteForm);
     $.ajax({
         url: deleteForm.action,
-        method:deleteForm.method,
+        method: deleteForm.method,
         data: deleteFormData,
         // processData and contentType needed to properly send formData
         // jQuery tries to make it a string
         processData: false,
-        contentType: false
+        contentType: false,
+        dataType: "json",
     })
-    .done(function(response) {
-        console.log(response);
-        if(response.status == "success"){
-            $modal.modal('close');
-            console.log("Account Deletion Success.")
-            window.location.replace(`/`);
-        }
-        else {
-            console.log("Failed to delete.")
-            ajaxErrorHandler(response, $form)
-            let extraMessage;
-            if(response.errors.length > 0){
-                extraMessage = response.errors[0]
+        .done(function (response) {
+            console.log(response);
+            if (response.status == "success") {
+                $modal.modal('close');
+                console.log("Account Deletion Success.")
+                window.location.replace(`/`);
             }
-            deleteAccountStatusToast("error", extraMessage);
-        }
-
-    })
-    .fail(function() {
-        console.error( "Request failure: delete account." );
-        deleteAccountStatusToast("fail");
-    })
+            else {
+                console.log("Failed to delete.")
+                ajaxErrorHandler(response, $form)
+                let extraMessage;
+                if (response.errors.length > 0) {
+                    extraMessage = response.errors[0]
+                }
+                deleteAccountStatusToast("error", extraMessage);
+            }
+        })
+        .fail(function () {
+            console.error("Request failure: delete account.");
+            deleteAccountStatusToast("fail");
+        })
 }
 
 function deleteAccountStatusToast(status, extraMessage = "") {

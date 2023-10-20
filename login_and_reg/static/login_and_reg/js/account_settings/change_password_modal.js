@@ -12,39 +12,39 @@ function openChangePasswordModal(){
     $modal.modal('open');
 }
 
-function sendChangePasswordRequest(){
+function sendChangePasswordRequest() {
     resetFormErrors($form);
     const changePasswordFormData = new FormData(changePasswordForm);
     $.ajax({
         url: changePasswordForm.action,
-        method:changePasswordForm.method,
+        method: changePasswordForm.method,
         data: changePasswordFormData,
         // processData and contentType needed to properly send formData
         // jQuery tries to make it a string
         processData: false,
-        contentType: false
+        contentType: false,
+        dataType: "json",
     })
-    .done(function(response) {
-        console.log(response);
-        if(response.status == "success"){
-            $modal.modal('close');
-            changePasswordForm.reset();
-            console.log("Password Change Success.")
-            changePasswordStatusToast("success");
-            // window.location.replace(`/`); //Redirects to home page
-        }
-        else {
-            console.log("Failed to change password.")
-            ajaxErrorHandler(response, $form)
-            changePasswordForm.reset();
-            changePasswordStatusToast("error");
-        }
-
-    })
-    .fail(function() {
-        console.error( "Request failure: change password.");
-        changePasswordStatusToast("fail");
-    })
+        .done(function (response) {
+            console.log(response);
+            if (response.status == "success") {
+                $modal.modal('close');
+                changePasswordForm.reset();
+                console.log("Password Change Success.")
+                changePasswordStatusToast("success");
+                // window.location.replace(`/`); //Redirects to home page
+            }
+            else {
+                console.log("Failed to change password.")
+                ajaxErrorHandler(response, $form)
+                changePasswordForm.reset();
+                changePasswordStatusToast("error");
+            }
+        })
+        .fail(function () {
+            console.error("Request failure: change password.");
+            changePasswordStatusToast("fail");
+        })
 }
 
 function changePasswordStatusToast(status) {

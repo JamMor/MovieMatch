@@ -45,40 +45,40 @@ function addEmptyTableRow(){
     $tableBody.append(emptyRow);
 }
 
-function sendDeletionRequest(){
+function sendDeletionRequest() {
     $.ajax({
         url: urlPath.deleteList(thisList.id),
-        method:"DELETE"
+        method: "DELETE",
+        dataType: "json",
     })
-    .done(function(response) {
-        console.log(response);
-        if(response.status == "success"){
-            $modal.modal('close');
-            console.log("Delete Success.")
-            deleteStatusToast(response.data.list_name, "success")
-            
-            // Remove deleted row from DOM
-            const $headerRow = $headerRowElementFromListId(response.data.list_id)
-            const $contentRow = $headerRow.next("tr")
-            $headerRow.remove();
-            $contentRow.remove()
+        .done(function (response) {
+            console.log(response);
+            if (response.status == "success") {
+                $modal.modal('close');
+                console.log("Delete Success.")
+                deleteStatusToast(response.data.list_name, "success")
 
-            // If table is empty, add empty row
-            if (isTableEmpty()){
-                addEmptyTableRow();
+                // Remove deleted row from DOM
+                const $headerRow = $headerRowElementFromListId(response.data.list_id)
+                const $contentRow = $headerRow.next("tr")
+                $headerRow.remove();
+                $contentRow.remove()
+
+                // If table is empty, add empty row
+                if (isTableEmpty()) {
+                    addEmptyTableRow();
+                }
             }
-        }
-        else {
-            console.log("Failed to delete.")
-            ajaxErrorHandler(response);
-            deleteStatusToast(thisList.name, "error")
-        }
-
-    })
-    .fail(function() {
-        console.error( "Request failure: delete list." );
-        deleteStatusToast(thisList.name, "fail-send")
-    })
+            else {
+                console.log("Failed to delete.")
+                ajaxErrorHandler(response);
+                deleteStatusToast(thisList.name, "error")
+            }
+        })
+        .fail(function () {
+            console.error("Request failure: delete list.");
+            deleteStatusToast(thisList.name, "fail-send")
+        })
 }
 
 //Sends appropriate notification for list delete

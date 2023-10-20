@@ -25,7 +25,10 @@ let sortOrder = {
 }
 
 function addToList(listId) {
-    $.get(urlPath.getList(listId))
+    $.get({
+        url: urlPath.getList(listId),
+        dataType: "json"
+    })
         .done(function (response) {
             if (response.status == "success") {
                 movieList.bulkAddMoviesToList(...response.data.movies);
@@ -105,7 +108,10 @@ function updateListModal(data){
 
 function getLists(pageNumber){
     const { field, direction } = sortOrder;
-    $.get(urlPath.getListsOverview(pageNumber, field, direction))
+    $.get({
+        url: urlPath.getListsOverview(pageNumber, field, direction),
+        dataType: "json"
+    })
         .done(function(response) {
             if (response.status == "success"){
                 updateListModal(response.data);

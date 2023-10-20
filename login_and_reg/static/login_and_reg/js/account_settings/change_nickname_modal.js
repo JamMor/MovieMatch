@@ -17,47 +17,48 @@ function openChangeNicknameModal(){
     $modal.modal('open');
 }
 
-function sendChangeNicknameRequest(){
+function sendChangeNicknameRequest() {
     resetFormErrors($form);
     const changeFormData = new FormData(changeForm);
     $.ajax({
         url: changeForm.action,
-        method:changeForm.method,
+        method: changeForm.method,
         data: changeFormData,
         // processData and contentType needed to properly send formData
         // jQuery tries to make it a string
         processData: false,
-        contentType: false
+        contentType: false,
+        dataType: "json",
     })
-    .done(function(response) {
-        console.log(response);
-        if(response.status == "success"){
-            const newNickname = response.data["nickname"]
-            $modal.modal('close');
+        .done(function (response) {
+            console.log(response);
+            if (response.status == "success") {
+                const newNickname = response.data["nickname"]
+                $modal.modal('close');
 
-            console.log(`Changed nickname to ${newNickname}`)
-            // Update nicknames on anywhere on page
-            const nicknameElements = document.getElementsByClassName(nicknameTagsClass);
-            for (let i = 0; i < nicknameElements.length; i++) {
-                nicknameElements[i].innerText = newNickname;
-            }
-            if(newNickname == ""){
-                changeNicknameStatusToast("blank");
+                console.log(`Changed nickname to ${newNickname}`)
+                // Update nicknames on anywhere on page
+                const nicknameElements = document.getElementsByClassName(nicknameTagsClass);
+                for (let i = 0; i < nicknameElements.length; i++) {
+                    nicknameElements[i].innerText = newNickname;
+                }
+                if (newNickname == "") {
+                    changeNicknameStatusToast("blank");
+                }
+                else {
+                    changeNicknameStatusToast("success", newNickname);
+                }
             }
             else {
-                changeNicknameStatusToast("success", newNickname);
+                console.log("Failed to change nickname.")
+                ajaxErrorHandler(response, $form)
+                changeNicknameStatusToast("error")
             }
-        }
-        else {
-            console.log("Failed to change nickname.")
-            ajaxErrorHandler(response, $form)
-            changeNicknameStatusToast("error")
-        }
-    })
-    .fail(function() {
-        console.error( "Request failure: change nickname." );
-        changeNicknameStatusToast("fail");
-    })
+        })
+        .fail(function () {
+            console.error("Request failure: change nickname.");
+            changeNicknameStatusToast("fail");
+        })
 }
 
 function changeNicknameStatusToast(status, nickname = "") {

@@ -26,28 +26,32 @@ function saveList ({tmdb_ids, list_name, list_id}) {
     // if there is a list ID, save will append to url to update a list
     // else save will create a new list
 
-    $.post(urlPath.saveList(list_id), JSON.stringify({"list_name":list_name, "tmdb_ids": tmdb_ids}),"json")
-            .done(function(response) {
-                console.log(response);
-                if(response.status == "success"){
-                    $modal.modal('close');
-                    const savedListName = response.data.list_name;
-                    saveStatusToast(savedListName, "success");
-                }
-                else {
-                    ajaxErrorHandler(response);
-                    saveStatusToast(list_name, "error");
-                }
-                // if there is a nextUrl, redirect to it
-                const nextUrl = response.data?.nextUrl ?? null
-                if (nextUrl){
-                    window.location.href = nextUrl;
-                }
-            })
-            .fail(function() {
-                console.error( "Request failure: save list." );
-                saveStatusToast(list_name, "fail");
-            })
+    $.post({
+        url: urlPath.saveList(list_id),
+        data: JSON.stringify({ "list_name": list_name, "tmdb_ids": tmdb_ids }),
+        dataType: "json"
+    })
+        .done(function (response) {
+            console.log(response);
+            if (response.status == "success") {
+                $modal.modal('close');
+                const savedListName = response.data.list_name;
+                saveStatusToast(savedListName, "success");
+            }
+            else {
+                ajaxErrorHandler(response);
+                saveStatusToast(list_name, "error");
+            }
+            // if there is a nextUrl, redirect to it
+            const nextUrl = response.data?.nextUrl ?? null
+            if (nextUrl) {
+                window.location.href = nextUrl;
+            }
+        })
+        .fail(function () {
+            console.error("Request failure: save list.");
+            saveStatusToast(list_name, "fail");
+        })
 }
 
 /**

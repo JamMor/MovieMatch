@@ -25,13 +25,15 @@ function submitEliminationList() {
 
     const tmdb_ids = movieList.getIds();
     
-    $.post(urlPath.shareSubmit, JSON.stringify(
-        {
+    $.post({
+        url: urlPath.shareSubmit,
+        data: JSON.stringify({
             "sharecode": sharecode,
             "nickname": nickname,
             "tmdb_ids": tmdb_ids
-        }
-    ), "json")
+        }),
+        dataType: "json"
+    })
         .done(function (response) {
             if (response.status == "success") {
                 window.location.href = urlPath.eliminationRoom(response.data.sharecode);

@@ -237,8 +237,10 @@ function setUserTurn(turnUUID = null){
 
 function getMoreMovieInfo(movieId){
     //Ajax for more movie detail w/ watch provider data
-    return $.get(resourcePath.moreMovieInfoUrl(movieId),
-        "json")
+    return $.get({
+        url: resourcePath.moreMovieInfoUrl(movieId),
+        dataType: "json",
+    })
 }
 
 //Sets a movie-info modal content, initializes, and opens

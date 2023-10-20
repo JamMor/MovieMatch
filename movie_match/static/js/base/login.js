@@ -6,22 +6,22 @@ const $navLoginForm = $("#nav-login-form");
 const $sideLoginForm = $("#side-login-form");
 const $navLoginDropdown = $('#nav-bar .dropdown-trigger');
 
-function loginHandler(){
+function loginHandler() {
     resetFormErrors($allLoginForms);
     const loginForm = this;
     const loginFormData = new FormData(loginForm);
 
     $.ajax({
         url: loginForm.action,
-        method:loginForm.method,
+        method: loginForm.method,
         data: loginFormData,
         // processData and contentType needed to properly send formData
         // jQuery tries to make it a string
         processData: false,
-        contentType: false
+        contentType: false,
+        dataType: "json",
     })
         .done(function (response) {
-            console.log(response)
             if (response.status == "success") {
                 console.log("Login succesful!");
                 location.reload();
