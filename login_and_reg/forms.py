@@ -20,10 +20,6 @@ class RegistrationForm(UserCreationForm):
         self.fields['password1'].widget.attrs['class'] = 'validate'
         self.fields['password2'].widget.attrs['class'] = 'validate'
         
-        # self.fields['username'].help_text = ['Required. 150 characters or fewer. Letters, digits and @/./+/-/_ only.']
-        # self.fields['password1'].help_text = password_validation.password_validators_help_texts()
-        # self.fields['password2'].help_text = ["Enter the same password as before, for verification."]
-
     def is_valid(self):
          result = super().is_valid()
          # loop on *all* fields if key '__all__' found else only on errors:
@@ -37,9 +33,11 @@ class PersonaForm(ModelForm):
     class Meta:
         model = Persona
         fields = ['nickname']
-        help_texts = {
-            "nickname": "Optional. 20 characters or fewer."
-        }
+
+    def __init__(self, *args, **kwargs):
+        super(PersonaForm, self).__init__(*args, **kwargs)
+
+        self.fields['nickname'].widget.attrs['class'] = 'validate'
 
     def clean_nickname(self):
         cleaned_nickname = self.cleaned_data.get('nickname')
@@ -47,13 +45,9 @@ class PersonaForm(ModelForm):
             raise ValidationError("Already the current nickname.")
         return cleaned_nickname
 
-
-
-# class SpanErrorList(ErrorList):
-#     def __str__(self):
-#         return self.as_divs()
-
-#     def as_divs(self):
-#         if not self:
-#             return ''
-#         return '<div class="errorlist">%s</div>' % ''.join(['<div class="error">%s</div>' % e for e in self])
+    def is_valid(self):
+        result = super().is_valid()
+        if 'nickname' in self.errors:
+            attrs = self.fields['nickname'].widget.attrs
+            attrs.update({'class': attrs.get('class', '') + ' invalid'})
+        return result

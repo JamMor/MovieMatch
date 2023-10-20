@@ -18,7 +18,9 @@ def register_view(request):
     if request.method == 'POST':
         user_form = RegistrationForm(request.POST, prefix='user')
         persona_form = PersonaForm(request.POST, prefix='persona')
-        if user_form.is_valid() and persona_form.is_valid():
+        user_form_valid = user_form.is_valid()
+        persona_form_valid = persona_form.is_valid()
+        if user_form_valid and persona_form_valid:
             user = user_form.save()
             persona = persona_form.save(commit=False)
             persona.user_account = user
