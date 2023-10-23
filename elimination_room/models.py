@@ -6,7 +6,7 @@ from django.db.models import Q
 from list_builder.models import user_input_validator
 
 class SharedMovieList(models.Model):
-    sharecode = models.CharField(max_length=255, unique=True)
+    sharecode = models.CharField(max_length=8, unique=True)
     created_by = models.ForeignKey('list_builder.Persona', related_name="created_shared_lists", on_delete = models.CASCADE, null=True)
     contributors = models.ManyToManyField('list_builder.Persona', related_name="shared_lists")
     created_at = models.DateTimeField(auto_now_add=True)
