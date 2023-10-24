@@ -39,12 +39,6 @@ class PersonaForm(ModelForm):
 
         self.fields['nickname'].widget.attrs['class'] = 'validate'
 
-    def clean_nickname(self):
-        cleaned_nickname = self.cleaned_data.get('nickname')
-        if cleaned_nickname == self.instance.nickname:
-            raise ValidationError("Already the current nickname.")
-        return cleaned_nickname
-
     def is_valid(self):
         result = super().is_valid()
         if 'nickname' in self.errors:
