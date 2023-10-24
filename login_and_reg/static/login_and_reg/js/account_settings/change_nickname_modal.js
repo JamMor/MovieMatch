@@ -65,7 +65,7 @@ function changeNicknameStatusToast(status, nickname = "") {
     const escapedNickname = escapeHtml(nickname);
     const statusMessages = {
         "success" : `Changed nickname to <strong class="cyan-text text-accent-2">${escapedNickname}</strong>!`,
-        "blank" : `Reset nickname to <strong class="purple-text text-accent-2">blank</strong>.`,
+        "blank" : `Removed nickname.`,
         "error" : `<strong class="orange-text text-darken-3">Failed</strong> to change nickname.`,
         "fail" : `<strong class="orange-text text-darken-3">Request failure.</strong>.`,
         "unknown" : `<strong class="orange-text text-darken-3">Unknown error.</strong>.`
