@@ -19,12 +19,17 @@ from asgiref.sync import async_to_sync
 from .persona_assigner import get_or_set_persona
 from .moviedb_api_caller import add_movies_to_db_from_tmdb_ids
 from movie_match.json_response_models import SuccessJsonClassObject, FailedJsonClassObject
+from elimination_room.forms import SharecodeForm, ShareRoomUserForm
 
 # Displays main page
 @require_GET
 def index(request):
     this_persona = get_or_set_persona(request)
-    return render(request, 'list_builder/list_builder_creator.html')
+    context = {
+        'shareroomuser_form' : ShareRoomUserForm(prefix="share"),
+        'sharecode_form' : SharecodeForm(prefix="share")
+    }
+    return render(request, 'list_builder/list_builder_creator.html', context)
 
 @require_GET
 @login_required(redirect_field_name='default_redirect', login_url='list_builder:default_redirect')
