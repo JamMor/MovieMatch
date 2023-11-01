@@ -80,4 +80,14 @@ class FailedFormResponse(FailedJsonClassObject):
         if field in self.form_errors:
             del self.form_errors[field]
 
-    
+    def combine_form_errors(self, form_error_dict: dict[str, list[str]], prefix: str = None):
+        """
+        Combines the form_errors property with another dictionary of errors.
+
+        :param form_error_dict: A dictionary of errors to combine with the form_errors property.
+        :param prefix: A prefix to add to the field names of the form_error_dict dictionary.
+        """
+        for field, errors in form_error_dict.items():
+            if prefix and field != '__all__':
+                field = f'{prefix}-{field}'
+            self.add_to_field_errors(field, *errors)
