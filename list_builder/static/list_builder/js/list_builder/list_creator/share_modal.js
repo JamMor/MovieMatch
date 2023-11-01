@@ -6,7 +6,7 @@ const $form = $(shareForm);
 const $submitBtn = $("#share-btn");
 
 function validateSharecode(sharecode) {
-    if (!/^$|^[23456789ABCDEFGHJKLMNPQRSTUVWXYZ]{8}$/.test(sharecode)) {
+    if (!/^$|^[2-9a-hj-np-zA-HJ-NP-Z]{8}$/.test(sharecode)) {
         console.log("Invalid Sharecode format.")
         return false
     }
