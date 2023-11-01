@@ -1,8 +1,8 @@
 import { movieList } from "../movie_lists.js";
 import { ajaxErrorHandler } from "/static/js/shared/ajaxErrorHandler.js";
 
-const $nicknameInput = $("#nickname");
-const $sharecodeInput = $("#sharecode");
+const shareForm = document.querySelector("#share-list-form");
+const $form = $(shareForm);
 const $submitBtn = $("#share-btn");
 
 function validateSharecode(sharecode) {
@@ -14,32 +14,35 @@ function validateSharecode(sharecode) {
 }
 
 function submitEliminationList() {
-    const sharecode = $sharecodeInput.val().toUpperCase();
-    const nickname = $nicknameInput.val();
+    const shareFormData = new FormData(shareForm);
+    const sharecode = shareFormData.get("share-sharecode");
 
     if (!validateSharecode(sharecode)) {
         submitEliminationStatusToast("invalid-sharecode");
+        // ajaxErrorHandler(response, $form)
         return
     }
 
 
     const tmdb_ids = movieList.getIds();
-    
-    $.post({
-        url: urlPath.shareSubmit,
-        data: JSON.stringify({
-            "sharecode": sharecode,
-            "nickname": nickname,
-            "tmdb_ids": tmdb_ids
-        }),
-        dataType: "json"
+    shareFormData.append("tmdb_ids", JSON.stringify(tmdb_ids));
+
+    $.ajax({
+        url: shareForm.action,
+        method: shareForm.method,
+        data: shareFormData,
+        // processData and contentType needed to properly send formData
+        // jQuery tries to make it a string
+        processData: false,
+        contentType: false,
+        dataType: "json",
     })
         .done(function (response) {
             if (response.status == "success") {
                 window.location.href = urlPath.eliminationRoom(response.data.sharecode);
             }
             else {
-                ajaxErrorHandler(response);
+                ajaxErrorHandler(response, $form)
                 submitEliminationStatusToast("error");
             }
         })

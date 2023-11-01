@@ -56,3 +56,16 @@ class ShareRoomUserForm(ModelForm):
             attrs = self.fields['nickname'].widget.attrs
             attrs.update({'class': attrs.get('class', '') + ' invalid'})
         return result
+    
+
+class MovieTmdbIdsForm(forms.Form):
+    tmdb_ids = forms.JSONField(
+        required=False
+    )
+
+    def clean_tmdb_ids(self):
+        tmdb_ids = self.cleaned_data['tmdb_ids']
+        for tmdb_id in tmdb_ids:
+            if not isinstance(tmdb_id, int):
+                raise ValidationError(f"Invalid movie id: {tmdb_id}")
+        return tmdb_ids
