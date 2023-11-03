@@ -1,5 +1,6 @@
 import { movieList } from "../movie_lists.js";
 import { ajaxErrorHandler } from "/static/js/shared/ajaxErrorHandler.js";
+import {applyTooltips, resetFormErrors} from "/static/js/shared/form_functions.js";
 
 const shareForm = document.querySelector("#share-list-form");
 const $form = $(shareForm);
@@ -14,6 +15,7 @@ function validateSharecode(sharecode) {
 }
 
 function submitEliminationList() {
+    resetFormErrors($form)
     const shareFormData = new FormData(shareForm);
     const sharecode = shareFormData.get("share-sharecode");
 
@@ -66,6 +68,8 @@ function submitEliminationStatusToast(status) {
 }
 
 const init = () => {
+    applyTooltips()
+
     // POSTs name, movie list, and sharecode(if any)
     $submitBtn.click(function (e) {
         e.preventDefault();
