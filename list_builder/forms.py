@@ -1,4 +1,5 @@
-from django.forms import ModelForm
+from django import forms
+from django.forms import ModelForm, ValidationError
 from .models import SavedMovieList
 
 
@@ -25,3 +26,16 @@ class HiddenListNameForm(SavedMovieListForm):
     class Meta(SavedMovieListForm.Meta):
         widgets = {'list_name': forms.HiddenInput()}
 
+
+
+class MovieTmdbIdsForm(forms.Form):
+    tmdb_ids = forms.JSONField(
+        error_messages={'required': 'Cannot save an empty list.'},
+    )
+
+    def clean_tmdb_ids(self):
+        tmdb_ids = self.cleaned_data['tmdb_ids']
+        for tmdb_id in tmdb_ids:
+            if not isinstance(tmdb_id, int):
+                raise ValidationError(f"Invalid movie id: {tmdb_id}")
+        return tmdb_ids
