@@ -2,7 +2,8 @@
     <div class="modal-content pink-text text-darken-2">
         <form id="save-form" action="{% url 'list_builder:save_list' list_id=list_id %}" method="POST">
             <h5 class="flow-text center-align">Do you want to save these changes?</h5>
-            <input id="list-name" name="list-name" class="center-align" type="text" hidden value="{{list_name}}">
+            {% csrf_token %}
+            {% include "form_template.html" with form=hidden_list_name_form %}
         </form>
     </div>
     <div class="modal-footer">

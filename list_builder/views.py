@@ -20,7 +20,7 @@ from .persona_assigner import get_or_set_persona
 from .moviedb_api_caller import add_movies_to_db_from_tmdb_ids
 from movie_match.json_response_models import SuccessJsonClassObject, FailedJsonClassObject
 from elimination_room.forms import SharecodeForm, ShareRoomUserForm
-from .forms import SavedMovieListForm
+from .forms import SavedMovieListForm, HiddenListNameForm
 
 # Displays main page
 @require_GET
@@ -55,7 +55,12 @@ def edit(request, list_id):
         in_savedmovielists = saved_list).values(
         'tmdb_id', 'title', 'overview', 'poster_path', 'release_date')
     
-    context = {"saved_list" : saved_list, "movie_list" : list(movie_list)}
+    context = {
+        "saved_list" : saved_list, 
+        "movie_list" : list(movie_list),
+        'change_list_name_form' : SavedMovieListForm(prefix="change", initial={"list_name" : saved_list.list_name}),
+        'hidden_list_name_form' : HiddenListNameForm(prefix="save", initial={"list_name" : saved_list.list_name}),
+    }
     return render(request, 'list_builder/list_builder_editor.html', context)
 
 @require_POST

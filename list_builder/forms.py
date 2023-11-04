@@ -20,3 +20,9 @@ class SavedMovieListForm(ModelForm):
             attrs = self.fields[x].widget.attrs
             attrs.update({'class': attrs.get('class', '') + ' invalid'})
         return result
+
+
+class HiddenListNameForm(SavedMovieListForm):
+    class Meta(SavedMovieListForm.Meta):
+        widgets = {'list_name': forms.HiddenInput()}
+
