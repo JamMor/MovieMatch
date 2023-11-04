@@ -699,10 +699,10 @@ main {
 }
 
 /* -----------------------------List Name Button------------------------------ */
-#editor-nickname {
+#open-list-name-btn {
     height: auto;
     text-transform: unset;
-    display:flex;
+    display:inline-flex;
     width: max-content;
     align-items: center;
     gap: 20px;

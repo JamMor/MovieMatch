@@ -13,8 +13,8 @@
 
     {% block list_builder_subheading %}
         <div class="center-align">
-            <button data-target="change-list-name-modal" class="modal-trigger btn-large btn-rounded neon-purple neon-glow-hover">
-                {{ saved_list.display_name }}
+            <button id="open-list-name-btn" data-target="change-list-name-modal" class="modal-trigger btn-large btn-rounded neon-purple neon-glow-hover">
+                <span>{{ saved_list.display_name }}</span>
                 <i class="material-icons right">edit</i>
             </button>
         </div>
