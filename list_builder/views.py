@@ -20,6 +20,7 @@ from .persona_assigner import get_or_set_persona
 from .moviedb_api_caller import add_movies_to_db_from_tmdb_ids
 from movie_match.json_response_models import SuccessJsonClassObject, FailedJsonClassObject
 from elimination_room.forms import SharecodeForm, ShareRoomUserForm
+from .forms import SavedMovieListForm
 
 # Displays main page
 @require_GET
@@ -27,7 +28,8 @@ def index(request):
     this_persona = get_or_set_persona(request)
     context = {
         'shareroomuser_form' : ShareRoomUserForm(prefix="share"),
-        'sharecode_form' : SharecodeForm(prefix="share")
+        'sharecode_form' : SharecodeForm(prefix="share"),
+        'savedmovielist_form' : SavedMovieListForm(prefix="save"),
     }
     return render(request, 'list_builder/list_builder_creator.html', context)
 

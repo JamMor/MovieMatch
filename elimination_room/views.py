@@ -13,6 +13,7 @@ from list_builder.persona_assigner import get_or_set_persona
 from list_builder.moviedb_api_caller import add_movies_to_db_from_tmdb_ids
 from movie_match.json_response_models import SuccessJsonClassObject, FailedJsonClassObject, FailedFormResponse
 from .forms import SharecodeForm, ShareRoomUserForm, MovieTmdbIdsForm
+from list_builder.forms import SavedMovieListForm
 
 # When Shared List is updated, sends updated list to appropriate channel
 def update_shared_list_channels(sharecode):
@@ -104,9 +105,10 @@ def join_match(request, sharecode):
     #Tests to see if sharecode is exists
     if SharedMovieList.objects.filter(sharecode = sharecode).exists():
         context = {
-            'sharecode' : sharecode,
-            'uuid' : this_persona.uuid
-            }
+            'sharecode': sharecode,
+            'uuid': this_persona.uuid,
+            'savedmovielist_form': SavedMovieListForm(prefix="save"),
+        }
         return render(request, 'elimination_room/match.html', context)
     else:
         return redirect(reverse('list_builder:default_redirect'))
