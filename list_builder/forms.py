@@ -11,7 +11,6 @@ class SavedMovieListForm(ModelForm):
         super(SavedMovieListForm, self).__init__(*args, **kwargs)
 
         self.fields['list_name'].widget.attrs['class'] = 'validate center-align'
-        self.fields['list_name'].widget.attrs['pattern'] = '^$|^[2-9a-hj-np-zA-HJ-NP-Z]{8}$'
 
     def is_valid(self):
         result = super().is_valid()
