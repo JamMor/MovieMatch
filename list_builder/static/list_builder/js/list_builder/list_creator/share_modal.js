@@ -1,27 +1,33 @@
 import { movieList } from "../movie_lists.js";
 import { ajaxErrorHandler } from "/static/js/shared/ajaxErrorHandler.js";
 import {applyTooltips, resetFormErrors} from "/static/js/shared/form_functions.js";
+import { validateSharecode, validateUserInput } from "/static/js/shared/regexValidators.js";
 
 const shareForm = document.querySelector("#share-list-form");
 const $form = $(shareForm);
 const $submitBtn = $("#share-btn");
+const sharecodeKey = "share-sharecode";
+const shareNicknameKey = "share-nickname";
 
-function validateSharecode(sharecode) {
-    if (!/^$|^[2-9a-hj-np-zA-HJ-NP-Z]{8}$/.test(sharecode)) {
-        console.log("Invalid Sharecode format.")
-        return false
-    }
-    return true
-}
 
 function submitEliminationList() {
     resetFormErrors($form)
     const shareFormData = new FormData(shareForm);
     const sharecode = shareFormData.get("share-sharecode");
+    const nickname = shareFormData.get("share-nickname");
 
-    if (!validateSharecode(sharecode)) {
-        submitEliminationStatusToast("invalid-sharecode");
-        // ajaxErrorHandler(response, $form)
+    const sharecodeValidation = validateSharecode(sharecode);
+    const nicknameValidation = validateUserInput(nickname);
+    if (!sharecodeValidation.isValid || !nicknameValidation.isValid) {
+        if (!nicknameValidation.isValid) {
+            submitEliminationStatusToast("invalid-nickname");
+            ajaxErrorHandler({ form_errors: { [shareNicknameKey]: [nicknameValidation.errorMsg] } }, $form)
+        }
+        if (!sharecodeValidation.isValid) {
+            submitEliminationStatusToast("invalid-sharecode");
+            ajaxErrorHandler({ form_errors: { [sharecodeKey]: [sharecodeValidation.errorMsg] } }, $form)
+        }
+        submitEliminationStatusToast("error");
         return
     }
 
@@ -57,6 +63,7 @@ function submitEliminationList() {
 function submitEliminationStatusToast(status) {
     const statusMessages = {
         "invalid-sharecode" : `<strong class="orange-text text-darken-3">Invalid sharecode.</strong>`,
+        "invalid-nickname" : `<strong class="orange-text text-darken-3">Invalid nickname.</strong>`,
         "error" : `<strong class="orange-text text-darken-3">Failed</strong> to share list.`,
         "fail" : `<strong class="orange-text text-darken-3">Request failure.</strong>.`,
         "unknown" : `<strong class="orange-text text-darken-3">Unknown error.</strong>.`

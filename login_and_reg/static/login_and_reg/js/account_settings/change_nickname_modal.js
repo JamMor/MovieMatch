@@ -1,6 +1,7 @@
 import {applyTooltips, resetFormErrors} from "/static/js/shared/form_functions.js";
 import { ajaxErrorHandler } from "/static/js/shared/ajaxErrorHandler.js";
 import { escapeHtml } from "/static/js/shared/htmlEscaping.js";
+import { validateUserInput } from "/static/js/shared/regexValidators.js";
 
 
 const changeForm = document.querySelector("#change-nickname-form");
@@ -11,6 +12,7 @@ const $modal = $("#change-nickname-modal");
 const $modalOpenBtn = $("#change-nickname-btn");
 const $form = $(changeForm);
 const $submitBtn = $("#change-nickname-confirm");
+const nicknameKey = "nickname";
 
 function openChangeNicknameModal(){
     $modal.modal();
@@ -20,6 +22,15 @@ function openChangeNicknameModal(){
 function sendChangeNicknameRequest() {
     resetFormErrors($form);
     const changeFormData = new FormData(changeForm);
+    const nickname = changeFormData.get(nicknameKey);
+
+    const nicknameValidation = validateUserInput(nickname);
+    if (!nicknameValidation.isValid) {
+        ajaxErrorHandler({ form_errors: { [nicknameKey]: [nicknameValidation.errorMsg] } }, $form)
+        changeNicknameStatusToast("error")
+        return
+    }
+
     $.ajax({
         url: changeForm.action,
         method: changeForm.method,

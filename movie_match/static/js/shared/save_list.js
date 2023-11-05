@@ -1,6 +1,7 @@
 import { ajaxErrorHandler } from "/static/js/shared/ajaxErrorHandler.js";
 import {applyTooltips, resetFormErrors} from "/static/js/shared/form_functions.js";
 import { escapeHtml } from "/static/js/shared/htmlEscaping.js";
+import { validateUserInput } from "/static/js/shared/regexValidators.js";
 // Save List
 
 const saveForm = document.querySelector("#save-form");
@@ -12,22 +13,16 @@ const $submitBtn = $("#save-list-confirm");
 //This is for disabled save buttons if user is not logged in.
 const $disabledBtn = $("#open-save-btn.disabled-btn");
 
-function validateListName(listName) {
-    if (!/^[\w,.!:"' $&()+-]+$/u.test(listName)) {
-        console.log("Invalid list name.")
-        return false
-    }
-    return true
-}
 
 function submitSaveList(movieList) {
     resetFormErrors($form)
     const saveFormData = new FormData(saveForm);
     const listName = saveFormData.get(listNameKey);
 
-    if (!validateListName(listName)) {
-        const errorMsg = "Name can only contain letters, numbers, spaces, basic punctuation: ,/./!/:/\"/'/$/&/+/-/() characters."
-        ajaxErrorHandler({ form_errors: { [listNameKey]: [errorMsg] } }, $form)
+    const listNameValidation = validateUserInput(listName);
+    if (!listNameValidation.isValid) {
+        ajaxErrorHandler({ form_errors: { [listNameKey]: [listNameValidation.errorMsg] } }, $form)
+        saveStatusToast(listName, "error");
         return
     }
 

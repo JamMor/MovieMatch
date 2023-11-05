@@ -1,5 +1,6 @@
 import { applyTooltips, resetFormErrors } from "/static/js/shared/form_functions.js";
 import { ajaxErrorHandler } from "/static/js/shared/ajaxErrorHandler.js";
+import { validateUserInput } from "/static/js/shared/regexValidators.js";
 
 const changeListNameForm = document.querySelector("#change-list-name-form");
 const $form = $(changeListNameForm);
@@ -11,13 +12,6 @@ const $btnListNameSpan = $modalOpenBtn.find("span");
 const $modal = $("#change-list-name-modal");
 const $submitBtn = $("#change-list-name-confirm");
 
-function validateListName(listName) {
-    if (!/^[\w,.!:"' $&()+-]+$/u.test(listName)) {
-        console.log("Invalid list name.")
-        return false
-    }
-    return true
-}
 
 function changeListName() {
     resetFormErrors($form);
@@ -25,9 +19,9 @@ function changeListName() {
     const listNameFormData = new FormData(changeListNameForm);
     const listName = listNameFormData.get(listNameKey);
 
-    if (!validateListName(listName)) {
-        const errorMsg = "Name can only contain letters, numbers, spaces, basic punctuation: ,/./!/:/\"/'/$/&/+/-/() characters."
-        ajaxErrorHandler({ form_errors: { [listNameKey]: [errorMsg] } }, $form)
+    const listNameValidation = validateUserInput(listName);
+    if (!listNameValidation.isValid) {
+        ajaxErrorHandler({ form_errors: { [listNameKey]: [listNameValidation.errorMsg] } }, $form)
         return
     }
 
