@@ -18,13 +18,20 @@ from channels.layers import get_channel_layer
 from asgiref.sync import async_to_sync
 from .persona_assigner import get_or_set_persona
 from .moviedb_api_caller import add_movies_to_db_from_tmdb_ids
-from movie_match.json_response_models import SuccessJsonClassObject, FailedJsonClassObject
+from movie_match.json_response_models import SuccessJsonClassObject, FailedJsonClassObject, FailedFormResponse
+from elimination_room.forms import SharecodeForm, ShareRoomUserForm
+from .forms import SavedMovieListForm, HiddenListNameForm, MovieTmdbIdsForm
 
 # Displays main page
 @require_GET
 def index(request):
     this_persona = get_or_set_persona(request)
-    return render(request, 'list_builder/list_builder_creator.html')
+    context = {
+        'shareroomuser_form' : ShareRoomUserForm(prefix="share"),
+        'sharecode_form' : SharecodeForm(prefix="share"),
+        'savedmovielist_form' : SavedMovieListForm(prefix="save"),
+    }
+    return render(request, 'list_builder/list_builder_creator.html', context)
 
 @require_GET
 @login_required(redirect_field_name='default_redirect', login_url='list_builder:default_redirect')
@@ -48,19 +55,40 @@ def edit(request, list_id):
         in_savedmovielists = saved_list).values(
         'tmdb_id', 'title', 'overview', 'poster_path', 'release_date')
     
-    context = {"saved_list" : saved_list, "movie_list" : list(movie_list)}
+    context = {
+        "saved_list" : saved_list, 
+        "movie_list" : list(movie_list),
+        'change_list_name_form' : SavedMovieListForm(prefix="change", initial={"list_name" : saved_list.list_name}),
+        'hidden_list_name_form' : HiddenListNameForm(prefix="save", initial={"list_name" : saved_list.list_name}),
+    }
     return render(request, 'list_builder/list_builder_editor.html', context)
 
 @require_POST
 @login_required_json(error_msg = "Only logged in users can save.")
 def save(request, list_id = None):
-    data = json.loads(request.body)
-    list_name = data.get("list_name")
-    tmdb_ids = data.get("tmdb_ids")
+    savedmovielist_form = SavedMovieListForm(request.POST, prefix="save")
+    movie_tmdb_ids_form = MovieTmdbIdsForm(request.POST)
 
-    if not tmdb_ids:
-        return JsonResponse(FailedJsonClassObject(errors=["Cannot save empty list."]).to_dict())
-    
+    savedmovielist_form.is_valid()
+    movie_tmdb_ids_form.is_valid()
+
+    if not (savedmovielist_form.is_valid() and movie_tmdb_ids_form.is_valid()):
+        failed_form = FailedFormResponse()
+        for form in [savedmovielist_form]:
+            if not form.is_valid():
+                failed_form.combine_form_errors(
+                    form_error_dict=form.errors,
+                    prefix=form.prefix
+                )
+        # Assign any movie id errors as non-field errors
+        if not movie_tmdb_ids_form.is_valid():
+            for error in movie_tmdb_ids_form.errors.values():
+                failed_form.add_to_field_errors('__all__', error)
+        return JsonResponse(failed_form.to_dict())
+
+    list_name = savedmovielist_form.cleaned_data['list_name']
+    tmdb_ids = movie_tmdb_ids_form.cleaned_data['tmdb_ids']
+
     try:
         this_persona = get_or_set_persona(request)
         all_in_db, ids_in_db, failed_ids = add_movies_to_db_from_tmdb_ids(tmdb_ids)
@@ -75,14 +103,16 @@ def save(request, list_id = None):
             saved_list = SavedMovieList.objects.get(id=list_id, created_by=this_persona)
             new_ids =list(Movie.objects.filter(tmdb_id__in=ids_in_db).values_list("id", flat=True))
             saved_list.movies.set(new_ids)
-            # saved_list.list_name = list_name
+            if saved_list.list_name != list_name:
+                saved_list.list_name = list_name
             saved_list.save()
             response_data = {"nextUrl" : reverse('list_builder:list_manager')}
         response_data.update({"list_name" : saved_list.display_name})
         return JsonResponse(SuccessJsonClassObject(data=response_data).to_dict())
     except Exception as err:
         print(err)
-        return JsonResponse(FailedJsonClassObject(errors=["An error occured attempting to save the list."]).to_dict())
+        savedmovielist_form.add_error(None, 'Server error: Could not save your list.')
+        return JsonResponse(FailedFormResponse(form_errors=savedmovielist_form.errors).to_dict())
 
 @require_http_methods(["DELETE"])
 @login_required_json()

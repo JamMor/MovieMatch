@@ -82,6 +82,9 @@ def change_nickname_view(request):
     
     change_nickname_form = PersonaForm(request.POST, instance=this_persona)
     
+    if not change_nickname_form.has_changed():
+        change_nickname_form.add_error('nickname', 'Already the current nickname.')
+    
     if change_nickname_form.is_valid():
         try:
             updated_persona = change_nickname_form.save()

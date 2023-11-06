@@ -1,46 +1,58 @@
 import { ajaxErrorHandler } from "/static/js/shared/ajaxErrorHandler.js";
+import {applyTooltips, resetFormErrors} from "/static/js/shared/form_functions.js";
 import { escapeHtml } from "/static/js/shared/htmlEscaping.js";
+import { validateUserInput } from "/static/js/shared/regexValidators.js";
 // Save List
 
+const saveForm = document.querySelector("#save-form");
+const $form = $(saveForm);
+const listNameKey = "save-list_name";
 const $modal = $("#save-modal");
-const $form = $("#save-form");
-const $savedListNameInput = $("#list-name");
 const $submitBtn = $("#save-list-confirm");
+
 //This is for disabled save buttons if user is not logged in.
 const $disabledBtn = $("#open-save-btn.disabled-btn");
 
-/**
- * Saves current movies to list in DB.
- * @param {object} input - An anonymous object that is destructured
- * @param {number[]} input.tmdb_ids - List of at least 1 tmdb mov.ie IDs
- * @param {string} input.list_name - Name of list to be saved as.
- * @param {number} input.list_id - ID of list to save if modifying existing list.
- */
-function saveList ({tmdb_ids, list_name, list_id}) {
-    if(tmdb_ids.length == 0){
-        console.log("Cannot save empty list.")
-        saveStatusToast(list_name, "empty");
+
+function submitSaveList(movieList) {
+    resetFormErrors($form)
+    const saveFormData = new FormData(saveForm);
+    const listName = saveFormData.get(listNameKey);
+
+    const listNameValidation = validateUserInput(listName);
+    if (!listNameValidation.isValid) {
+        ajaxErrorHandler({ form_errors: { [listNameKey]: [listNameValidation.errorMsg] } }, $form)
+        saveStatusToast(listName, "error");
         return
     }
 
-    // if there is a list ID, save will append to url to update a list
-    // else save will create a new list
+    const tmdb_ids = movieList.getIds();
+    if (tmdb_ids.length == 0){
+        console.log("Cannot save empty list.")
+        saveStatusToast(listName, "empty");
+        return
+    }
+    saveFormData.append("tmdb_ids", JSON.stringify(tmdb_ids));
 
-    $.post({
-        url: urlPath.saveList(list_id),
-        data: JSON.stringify({ "list_name": list_name, "tmdb_ids": tmdb_ids }),
-        dataType: "json"
+    $.ajax({
+        url: saveForm.action,
+        method: saveForm.method,
+        data: saveFormData,
+        // processData and contentType needed to properly send formData
+        // jQuery tries to make it a string
+        processData: false,
+        contentType: false,
+        dataType: "json",
     })
         .done(function (response) {
-            console.log(response);
             if (response.status == "success") {
                 $modal.modal('close');
                 const savedListName = response.data.list_name;
                 saveStatusToast(savedListName, "success");
             }
             else {
-                ajaxErrorHandler(response);
-                saveStatusToast(list_name, "error");
+                ajaxErrorHandler(response, $form)
+                saveStatusToast(listName, "error");
             }
             // if there is a nextUrl, redirect to it
             const nextUrl = response.data?.nextUrl ?? null
@@ -50,7 +62,7 @@ function saveList ({tmdb_ids, list_name, list_id}) {
         })
         .fail(function () {
             console.error("Request failure: save list.");
-            saveStatusToast(list_name, "fail");
+            saveStatusToast(listName, "fail");
         })
 }
 
@@ -77,29 +89,6 @@ function saveStatusToast (listName, status) {
     M.toast({html: `<span>${message}&nbsp;<strong class=${classColor}>${escapeHtml(displayName)}</strong></span>`});
 }
 
-function getListName(){
-    return $savedListNameInput.val() ?? "";
-}
-
-function getListId (){
-    // Get the action of $form
-    const formAction = $form.attr("action")
-    // Gets the list id from the action url, or null if none
-    return formAction.split("/")?.[2] ?? null
-}
-
-function saveHandler(movieList){
-    let fields = {
-        "tmdb_ids" : movieList.getIds(),
-        "list_name": getListName() ?? ""
-    }
-    const listId = getListId()
-    if (listId){
-        fields["list_id"] = listId
-    }
-    saveList(fields)
-}
-
 function disabledSave(){
     $disabledBtn.click(function (e){
         e.preventDefault();
@@ -108,9 +97,11 @@ function disabledSave(){
 }
 
 function init(movieList){
+    applyTooltips()
+
     $submitBtn.click(function (e){
         e.preventDefault();
-        saveHandler(movieList);
+        submitSaveList(movieList);
     })
 }
 

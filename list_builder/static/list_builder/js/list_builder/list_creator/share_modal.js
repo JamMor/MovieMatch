@@ -1,45 +1,56 @@
 import { movieList } from "../movie_lists.js";
 import { ajaxErrorHandler } from "/static/js/shared/ajaxErrorHandler.js";
+import {applyTooltips, resetFormErrors} from "/static/js/shared/form_functions.js";
+import { validateSharecode, validateUserInput } from "/static/js/shared/regexValidators.js";
 
-const $nicknameInput = $("#nickname");
-const $sharecodeInput = $("#sharecode");
+const shareForm = document.querySelector("#share-list-form");
+const $form = $(shareForm);
 const $submitBtn = $("#share-btn");
+const sharecodeKey = "share-sharecode";
+const shareNicknameKey = "share-nickname";
 
-function validateSharecode(sharecode) {
-    if (!/^$|^[23456789ABCDEFGHJKLMNPQRSTUVWXYZ]{8}$/.test(sharecode)) {
-        console.log("Invalid Sharecode format.")
-        return false
-    }
-    return true
-}
 
 function submitEliminationList() {
-    const sharecode = $sharecodeInput.val().toUpperCase();
-    const nickname = $nicknameInput.val();
+    resetFormErrors($form)
+    const shareFormData = new FormData(shareForm);
+    const sharecode = shareFormData.get("share-sharecode");
+    const nickname = shareFormData.get("share-nickname");
 
-    if (!validateSharecode(sharecode)) {
-        submitEliminationStatusToast("invalid-sharecode");
+    const sharecodeValidation = validateSharecode(sharecode);
+    const nicknameValidation = validateUserInput(nickname);
+    if (!sharecodeValidation.isValid || !nicknameValidation.isValid) {
+        if (!nicknameValidation.isValid) {
+            submitEliminationStatusToast("invalid-nickname");
+            ajaxErrorHandler({ form_errors: { [shareNicknameKey]: [nicknameValidation.errorMsg] } }, $form)
+        }
+        if (!sharecodeValidation.isValid) {
+            submitEliminationStatusToast("invalid-sharecode");
+            ajaxErrorHandler({ form_errors: { [sharecodeKey]: [sharecodeValidation.errorMsg] } }, $form)
+        }
+        submitEliminationStatusToast("error");
         return
     }
 
 
     const tmdb_ids = movieList.getIds();
-    
-    $.post({
-        url: urlPath.shareSubmit,
-        data: JSON.stringify({
-            "sharecode": sharecode,
-            "nickname": nickname,
-            "tmdb_ids": tmdb_ids
-        }),
-        dataType: "json"
+    shareFormData.append("tmdb_ids", JSON.stringify(tmdb_ids));
+
+    $.ajax({
+        url: shareForm.action,
+        method: shareForm.method,
+        data: shareFormData,
+        // processData and contentType needed to properly send formData
+        // jQuery tries to make it a string
+        processData: false,
+        contentType: false,
+        dataType: "json",
     })
         .done(function (response) {
             if (response.status == "success") {
                 window.location.href = urlPath.eliminationRoom(response.data.sharecode);
             }
             else {
-                ajaxErrorHandler(response);
+                ajaxErrorHandler(response, $form)
                 submitEliminationStatusToast("error");
             }
         })
@@ -52,6 +63,7 @@ function submitEliminationList() {
 function submitEliminationStatusToast(status) {
     const statusMessages = {
         "invalid-sharecode" : `<strong class="orange-text text-darken-3">Invalid sharecode.</strong>`,
+        "invalid-nickname" : `<strong class="orange-text text-darken-3">Invalid nickname.</strong>`,
         "error" : `<strong class="orange-text text-darken-3">Failed</strong> to share list.`,
         "fail" : `<strong class="orange-text text-darken-3">Request failure.</strong>.`,
         "unknown" : `<strong class="orange-text text-darken-3">Unknown error.</strong>.`
@@ -63,6 +75,8 @@ function submitEliminationStatusToast(status) {
 }
 
 const init = () => {
+    applyTooltips()
+
     // POSTs name, movie list, and sharecode(if any)
     $submitBtn.click(function (e) {
         e.preventDefault();

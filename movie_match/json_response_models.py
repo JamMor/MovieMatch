@@ -43,19 +43,6 @@ class FailedFormResponse(FailedJsonClassObject):
                 form_errors = {}
         self.form_errors = form_errors
     
-    def add_form_errors(self, form_error_list:dict[str,list[dict]]):
-        """
-        Gets a Django error dictionary and reformats it to only be a list of error
-        messages for each field (key).
-
-        :param form_error_list: A dictionary of errors as returned from the API.
-        :return: A dictionary of errors in a more readable format.
-        """
-        error_dict = {}
-        for field, error_list in form_error_list.items():
-            error_dict[field] = [error['message'] for error in error_list]
-        self.form_errors.update(error_dict)
-
     def clear_form_errors(self):
         """Clears the form_errors property."""
         self.form_errors = {}
@@ -80,4 +67,14 @@ class FailedFormResponse(FailedJsonClassObject):
         if field in self.form_errors:
             del self.form_errors[field]
 
-    
+    def combine_form_errors(self, form_error_dict: dict[str, list[str]], prefix: str = None):
+        """
+        Combines the form_errors property with another dictionary of errors.
+
+        :param form_error_dict: A dictionary of errors to combine with the form_errors property.
+        :param prefix: A prefix to add to the field names of the form_error_dict dictionary.
+        """
+        for field, errors in form_error_dict.items():
+            if prefix and field != '__all__':
+                field = f'{prefix}-{field}'
+            self.add_to_field_errors(field, *errors)

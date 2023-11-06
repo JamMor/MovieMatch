@@ -13,7 +13,10 @@
 
     {% block list_builder_subheading %}
         <div class="center-align">
-            <div class="btn-large btn-rounded neon-purple neon-unlit">{{ saved_list.display_name }}</div>
+            <button id="open-list-name-btn" data-target="change-list-name-modal" class="modal-trigger btn-large btn-rounded neon-purple neon-glow-hover">
+                <span>{{ saved_list.display_name }}</span>
+                <i class="material-icons right">edit</i>
+            </button>
         </div>
     {% endblock %}
 
@@ -38,7 +41,8 @@
             </nav>
         </div>
 
-        {% include "list_builder/editor_save_modal.html" with list_id=saved_list.id list_name=saved_list.display_name %}
+        {% include "list_builder/editor_list_name_modal.html" %}
+        {% include "list_builder/editor_save_modal.html" with list_id=saved_list.id %}
 
         {{ movie_list|json_script:"imported-movie-data" }}
     {% endblock %}

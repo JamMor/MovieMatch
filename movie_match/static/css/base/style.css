@@ -27,6 +27,7 @@
     [-] -List Creator=
         -ShareModal-
     [-] -List Editor=
+        -List Name Button-
         -Save Bar-
 [+] =List Manager=
     [-] -List Table=
@@ -697,6 +698,15 @@ main {
     padding-bottom: 60px;
 }
 
+/* -----------------------------List Name Button------------------------------ */
+#open-list-name-btn {
+    height: auto;
+    text-transform: unset;
+    display:inline-flex;
+    width: max-content;
+    align-items: center;
+    gap: 20px;
+}
 /* ---------------------------------SaveBar--------------------------------- */
 #editor-savebar {
     position: absolute;

@@ -2,6 +2,7 @@ import json
 import shortuuid
 from django.db import IntegrityError, models, transaction
 from django.conf import settings
+from .validators import UserInputValidator
 
 # Create your models here.
 class Persona(models.Model):
@@ -9,7 +10,13 @@ class Persona(models.Model):
     #FLAG Is is_registered needed? Maybe just test for user_account null
     is_registered = models.BooleanField(default = False)
     user_account = models.OneToOneField(settings.AUTH_USER_MODEL, related_name="persona", on_delete = models.CASCADE, null=True)
-    nickname = models.CharField(max_length=20, blank=True, default="")
+    nickname = models.CharField(
+        max_length=20, 
+        blank=True, 
+        default="",
+        help_text="Optional. 20 characters or fewer. Letters, numbers, basic punctuation: , . ! ? : ' \" $ & + - ( ) characters.",
+        validators=[UserInputValidator()],
+    )
 
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
@@ -82,7 +89,13 @@ class MovieList(models.Model):
         abstract = True
 
 class SavedMovieList(MovieList):
-    list_name = models.CharField(max_length=255, blank=True)
+    list_name = models.CharField(
+        max_length=100, 
+        blank=True, 
+        default="",
+        help_text="100 characters or fewer. Letters, numbers, basic punctuation: , . ! ? : ' \" $ & + - ( ) characters.",
+        validators=[UserInputValidator()],
+    )
 
     @property
     def display_name(self):
