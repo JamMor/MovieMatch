@@ -2,12 +2,7 @@ import json
 import shortuuid
 from django.db import IntegrityError, models, transaction
 from django.conf import settings
-from django.core.validators import RegexValidator
-
-user_input_validator = RegexValidator(
-        regex=r"^[\w,.!:\"' $&+\-()]+\Z",
-        message='Name can only contain letters, numbers, spaces, basic punctuation: ,/./!/:/"/\'/$/&/+/-/() characters.',
-    )
+from .validators import UserInputValidator
 
 # Create your models here.
 class Persona(models.Model):
@@ -19,8 +14,8 @@ class Persona(models.Model):
         max_length=20, 
         blank=True, 
         default="",
-        help_text="Optional. 20 characters or fewer. Letters, numbers, basic punctuation: ,/./!/:/\"/'/$/&/+/-/() characters.",
-        validators=[user_input_validator],
+        help_text="Optional. 20 characters or fewer. Letters, numbers, basic punctuation: , . ! ? : ' \" $ & + - ( ) characters.",
+        validators=[UserInputValidator()],
     )
 
     created_at = models.DateTimeField(auto_now_add=True)
@@ -98,8 +93,8 @@ class SavedMovieList(MovieList):
         max_length=100, 
         blank=True, 
         default="",
-        help_text="100 characters or fewer. Letters, numbers, basic punctuation: ,/./!/:/\"/'/$/&/+/-/() characters.",
-        validators=[user_input_validator],
+        help_text="100 characters or fewer. Letters, numbers, basic punctuation: , . ! ? : ' \" $ & + - ( ) characters.",
+        validators=[UserInputValidator()],
     )
 
     @property

@@ -1,6 +1,9 @@
 from django import forms
 from django.forms import ModelForm, ValidationError
 from .models import SharedMovieList, ShareRoomUser
+from list_builder.validators import UserInputValidator
+
+user_input_validator = UserInputValidator()
 
 
 class SharecodeForm(ModelForm):
@@ -13,8 +16,8 @@ class SharecodeForm(ModelForm):
 
         self.fields['sharecode'].required = False
         self.fields['sharecode'].widget.attrs['class'] = 'validate center-align'
-        # self.fields['sharecode'].widget.attrs['pattern'] = '^$|^[23456789ABCDEFGHJKLMNPQRSTUVWXYZ]{8}$'
-        self.fields['sharecode'].widget.attrs['pattern'] = '^$|^[2-9a-hj-np-zA-HJ-NP-Z]{8}$'
+        self.fields['sharecode'].widget.attrs['pattern'] = '[2-9a-hj-np-zA-HJ-NP-Z]{8}'
+        self.fields['sharecode'].widget.attrs['title'] = 'Leave empty if creating room. Sharecodes are 8 characters.'
         self.fields['sharecode'].widget.attrs['minlength'] = '8'
         self.fields['sharecode'].widget.attrs['data-length'] = '8'
         self.fields['sharecode'].widget.attrs['style'] = 'text-transform:uppercase'
@@ -49,6 +52,8 @@ class ShareRoomUserForm(ModelForm):
 
         self.fields['nickname'].widget.attrs['class'] = 'validate center-align'
         self.fields['nickname'].widget.attrs['data-length'] = '20'
+        self.fields['nickname'].widget.attrs['pattern'] = user_input_validator.htmlPatternString()
+        self.fields['nickname'].widget.attrs['title'] = user_input_validator.htmlTitleString()
 
     def is_valid(self):
         result = super().is_valid()

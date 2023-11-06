@@ -1,6 +1,9 @@
 from django import forms
 from django.forms import ModelForm, ValidationError
 from .models import SavedMovieList
+from .validators import UserInputValidator
+
+user_input_validator = UserInputValidator()
 
 
 class SavedMovieListForm(ModelForm):
@@ -12,6 +15,8 @@ class SavedMovieListForm(ModelForm):
         super(SavedMovieListForm, self).__init__(*args, **kwargs)
 
         self.fields['list_name'].widget.attrs['class'] = 'validate center-align'
+        self.fields['list_name'].widget.attrs['pattern'] = user_input_validator.htmlPatternString()
+        self.fields['list_name'].widget.attrs['title'] = user_input_validator.htmlTitleString()
 
     def is_valid(self):
         result = super().is_valid()

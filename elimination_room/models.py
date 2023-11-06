@@ -2,8 +2,7 @@ import json
 import shortuuid
 from django.db import IntegrityError, models, transaction
 from django.db.models import Q
-
-from list_builder.models import user_input_validator
+from list_builder.validators import UserInputValidator
 
 class SharedMovieList(models.Model):
     sharecode = models.CharField(max_length=8, unique=True)
@@ -67,8 +66,8 @@ class ShareRoomUser(models.Model):
         max_length=20, 
         blank=True, 
         default="",
-        help_text="Optional. 20 characters or fewer. Letters, numbers, basic punctuation: ,/./!/:/\"/'/$/&/+/-/() characters.",
-        validators=[user_input_validator],
+        help_text="Optional. 20 characters or fewer. Letters, numbers, basic punctuation: , . ! ? : ' \" $ & + - ( ) characters.",
+        validators=[UserInputValidator()],
     )
     has_eliminated = models.BooleanField(default=False)
     
