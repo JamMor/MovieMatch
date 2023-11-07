@@ -180,7 +180,7 @@ function getBundleMap(entryPoints) {
  * @param {Object} bundleMap - The bundle map object.
  */
 function bundleMapLogger(bundleMap) {
-    const outputFilename = 'webpack_bundles.txt';
+    const outputFilePath = path.join(__dirname, 'webpack_bundles.txt');
 
     const bundleNames = Object.keys(bundleMap);
     const textEntries = [];
@@ -189,7 +189,7 @@ function bundleMapLogger(bundleMap) {
         textEntries.push(`"${bundle}"\n[ ${bundleMap[bundle].join(', ')} ]`)
     })
     const textContent = textEntries.join('\n\n');
-    fs.writeFileSync(outputFilename, textContent);
+    fs.writeFileSync(outputFilePath, textContent);
 }
 
 /**

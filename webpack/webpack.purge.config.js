@@ -18,12 +18,15 @@ allTemplateDirectories.forEach((dir) => {
 const vendorCSSDir = djangoPaths.vendorStaticDirs.css
 const vendorCSSPaths = getFilePaths(vendorCSSDir, ['*.css'], '**/*.min.css')
 
+const purgedCSSOutputPath = djangoPaths.outputToWebpackDir('purged-css.json')
+
 module.exports = merge(development, {
     entry: {
         'vendor': vendorCSSPaths,
     },
     plugins: [
         new PurgeCSSWriterPlugin({
+            output: purgedCSSOutputPath,
             paths: contentPaths,
             rejected: true,
             rejectedCss: true,

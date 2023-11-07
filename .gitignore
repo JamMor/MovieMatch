@@ -155,10 +155,10 @@ staticfiles/
 node_modules/
 
 # Webpack Logs
-/compilation-stats.json
-/compilation-stats.*.json
+webpack/compilation-stats.json
+webpack/compilation-stats.*.json
 
-/webpack_bundles.txt
-/webpack_bundles.*.txt
+webpack/webpack_bundles.txt
+webpack/webpack_bundles.*.txt
 
-/purged-css.json
+webpack/purged-css.json

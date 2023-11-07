@@ -1,7 +1,17 @@
 // Description: Django paths for webpack
 const path = require('path');
 
-const projectRoot = __dirname
+const webpackConfigSubdirectory = __dirname
+/**
+ * Returns the output path for a given filename in the webpack directory.
+ * @param {string} filename - The name of the file to output.
+ * @returns {string} - The output path for the given filename.
+ */
+function outputToWebpackDir(filename){
+    return path.join(webpackConfigSubdirectory, filename)
+}
+
+const projectRoot = path.dirname(webpackConfigSubdirectory)
 
 const projectBaseDirectory = "movie_match"
 // Django apps to bundle
@@ -45,6 +55,8 @@ const sharedJsDir = path.join(staticPath(projectBaseDirectory), 'js', 'shared')
 const sharedJsUrl = '/static/js/shared'
 
 module.exports = {
+    webpackConfigSubdirectory,
+    outputToWebpackDir,
     projectRoot,
     projectBaseDirectory,
     installed_apps,

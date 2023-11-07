@@ -5,10 +5,10 @@
   "private": true,
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "bundle-dev": "webpack --config webpack.dev.config.js --profile --json=compilation-stats.dev.json",
-    "bundle-prod": "webpack --config webpack.prod.config.js --profile --json=compilation-stats.prod.json",
-    "bundle-purge": "webpack --config webpack.purge.config.js --profile --json=compilation-stats.purge.json",
-    "bundle-deploy": "webpack --config webpack.deploy.config.js --profile --json=compilation-stats.deploy.json"
+    "bundle-dev": "webpack --config ./webpack/webpack.dev.config.js --profile --json=./webpack/compilation-stats.dev.json",
+    "bundle-prod": "webpack --config ./webpack/webpack.prod.config.js --profile --json=./webpack/compilation-stats.prod.json",
+    "bundle-purge": "webpack --config ./webpack/webpack.purge.config.js --profile --json=./webpack/compilation-stats.purge.json",
+    "bundle-deploy": "webpack --config ./webpack/webpack.deploy.config.js --profile --json=./webpack/compilation-stats.deploy.json"
   },
   "repository": {
     "type": "git",
