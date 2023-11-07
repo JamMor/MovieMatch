@@ -18,7 +18,7 @@ class PurgeCSSWriterPlugin {
       return new Promise((res, rej) => {
         fs.writeFile(
           this.output,
-          JSON.stringify(this.purgeCSSPlugin.purgedStats),
+          JSON.stringify(this.purgeCSSPlugin.purgedStats, null, 4),
           (err, data) => (err ? rej(err) : res(data)),
         );
       });
