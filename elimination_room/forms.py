@@ -32,6 +32,10 @@ class SharecodeForm(ModelForm):
             return sharecode
         else:
             raise ValidationError("Sharecode does not exist.")
+        
+    def clean(self):
+        self._validate_unique = False
+        return self.cleaned_data
 
     def is_valid(self):
         result = super().is_valid()

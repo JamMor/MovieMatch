@@ -230,7 +230,7 @@ function setUserTurn(turnUUID = null){
     //Put username in status bar
     const statusText = (turnUUID == user_uuid)
             ? "Waiting on YOUR turn..."
-            : `Waiting on ${escapeHtml(eliminatingUser.nickname)}'s turn...`
+            : `Waiting on ${eliminatingUser.nickname}'s turn...`
 
     $statusBtn.find("span").text(statusText);
 }
