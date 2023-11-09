@@ -36,6 +36,7 @@ ALLOWED_HOSTS = [] if not any(env_hosts) else env_hosts
 # Application definition
 
 INSTALLED_APPS = [
+    'daphne',
     'channels',
     'login_and_reg',
     'list_builder',
