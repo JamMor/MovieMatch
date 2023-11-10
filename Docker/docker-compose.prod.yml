@@ -18,7 +18,7 @@ services:
     environment:
       - POSTGRES_DB=moviematch_docker_dev_db
       - POSTGRES_HOST=postgres_db
-    image: postgres:14.5-alpine
+    image: postgres:16.0-alpine
     volumes:
       - postgres_data:/var/lib/postgresql/data/
 volumes:

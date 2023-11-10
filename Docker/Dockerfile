@@ -1,6 +1,5 @@
 # For more information, please refer to https://aka.ms/vscode-docker-python
-FROM python:3.9-slim-bullseye
-
+FROM python:3.11-slim-bookworm
 EXPOSE 8000
 
 # Keeps Python from generating .pyc files in the container
@@ -9,13 +8,14 @@ ENV PYTHONDONTWRITEBYTECODE=1
 # Turns off buffering for easier container logging
 ENV PYTHONUNBUFFERED=1
 
-# Install temporary dependencies 'gcc' and 'musl-dev' that aren't in alpine
 # Install project pip requirements
 COPY ./requirements_base.txt .
 RUN apt-get update && apt-get -y install \
-    libpq-dev gcc && \
+    libpq5 && \
     python -m pip install --upgrade pip && \
-    python -m pip install --no-cache-dir -r requirements_base.txt
+    python -m pip install --no-cache-dir -r requirements_base.txt && \
+    apt-get purge -y && \
+    rm -rf /var/lib/apt/lists/*
 
 WORKDIR /app
 COPY . /app
