@@ -501,15 +501,29 @@ header nav a.brand-logo {
 /* [-] */
 /* -------------------------AboutModal========================= */
 #about-modal {
-    padding:5%;
+    padding:30px;
     font-size: 1.5rem;
     color: var(--grey_lighten-2);
     text-align: center;
 }
+#about-modal>div {
+    display:flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
 #about-modal img {
-    display: block;
     max-width: 500px;
-    margin: 1em auto;
+    max-height: 30vh;
+}
+#about-modal button {
+    align-self: flex-end;
+    /* Remove default button styling */
+    background-color: transparent;
+    border: none;
+    box-shadow: none;
+    outline: none;
+    cursor: pointer;
 }
 
 /* [+] */
