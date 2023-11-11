@@ -7,7 +7,7 @@ function validateSharecode(sharecode) {
 }
 
 function validateUserInput(userInput) {
-    if (!/^$|^[\w,.!:"' $&()+-]+$/u.test(userInput)) {
+    if (!/^$|^[\w,.!?:"' $&()+-]+$/u.test(userInput)) {
         return { isValid: false, errorMsg: "Name can only contain letters, numbers, spaces, basic punctuation: , . ! ? : ' \" $ & + - ( ) characters."}
     }
     return { isValid: true }

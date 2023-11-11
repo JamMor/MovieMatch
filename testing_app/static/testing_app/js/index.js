@@ -1,5 +1,5 @@
-import {Movie} from "/static/js/constructors.js"
-import {MovieCard} from "/static/js/DOMelements.js"
+import {Movie} from "/static/js/shared/constructors.js"
+import {MovieCard} from "/static/js/shared/DOMelements.js"
 
 function switchIconText() {
     if ($(this).is(":checked")) {

@@ -53,10 +53,21 @@ const SharedMovie = class SharedMovie extends Movie{
  * @extends Movie
  * @param {object} movie - Movie object from the MovieDB info request
  */
-const DetailedMovie = class DetailedMovie extends Movie{
-    constructor({genres=[], imdb_id="", runtime="", vote_average="",
-        "watch/providers":{results:{US:{flatrate:stream=[], rent=[]}}},
-        ...movie}) {
+const DetailedMovie = class DetailedMovie extends Movie {
+    constructor({
+        genres = [],
+        imdb_id = "",
+        runtime = "",
+        vote_average = "",
+        "watch/providers": {
+            results: {
+                US: {
+                    flatrate: stream = [],
+                    rent = []
+                } = {}
+            } = {}
+        } = {},
+        ...movie }) {
         super(movie);
         this.genres = genres;
         this.runtime = runtime;
