@@ -115,36 +115,14 @@ div.pseudo-btn-small i {
     font-size: 1.2rem
 }
 
-.neon-orange {
-    --hue:27;
+.neon-orange2 {
+    --hue:24;
 }
-.neon-purple {
-    --hue:282;
+.neon-magenta2 {
+    --hue:300;
 }
-.neon-cyan {
-    --hue:200;
-}
-
-.neon-glow-hover2, 
-.neon-unlit2, 
-.neon-unlit2:hover {
-    color: var(--grey_lighten-2);
-    background-color: #69696933;
-    box-shadow: 
-        inset 0 0 1em 0 hsl(var(--hue), 79%, 46%),
-        inset 0 0 0.3em 0 hsl(var(--hue), 66%, 30%);
-}
-.neon-glow-hover2:hover, 
-.neon-lit2, 
-.neon-lit2:hover {
-    color: hsl(var(--hue), 66%, 30%);
-    background-color: #ffffff;
-    box-shadow: 
-    inset 0 0 1em 0 hsl(var(--hue), 79%, 46%),
-    inset 0 0 0.3em 0 hsl(var(--hue), 66%, 30%),
-        0 0 2.5em 0 hsl(var(--hue), 100%, 55%),
-        0 0 4em 0 hsl(var(--hue), 79%, 46%),
-        0 0 5em 0 hsl(var(--hue), 66%, 30%);
+.neon-cyan2 {
+    --hue:190;
 }
 
 

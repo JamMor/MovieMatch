@@ -171,22 +171,22 @@ function setStatusBar(status){
     // Map of status bar text, css, and flanking icons
     const statusMap = {
         "start": {
-            "styleClass": "status-start waves-effect waves-light neon-cyan neon-glow-hover btn-large btn-rounded",
+            "styleClass": "status-start waves-effect waves-light neon-cyan neon-glow neon-hover btn-large btn-rounded",
             "icons": "cast",
             "statusText": "Start Matching"
         },
         "waiting": {
-            "styleClass": "status-waiting neon-cyan neon-unlit btn-large btn-rounded",
+            "styleClass": "status-waiting neon-cyan neon-glow neon-unlit btn-large btn-rounded",
             "icons": "cast",
             "statusText": "Waiting for matching to begin..."
         },
         "eliminating": {
-            "styleClass": "status-eliminating neon-cyan neon-lit dimmed btn-small btn-rounded",
+            "styleClass": "status-eliminating neon-cyan neon-glow neon-lit dimmed btn-small btn-rounded",
             "icons": "cast_connected",
             "statusText": "Elimination Activated!"
         },
         "final": {
-            "styleClass": "status-final waves-effect waves-light neon-purple neon-lit btn-large btn-rounded",
+            "styleClass": "status-final waves-effect waves-light neon-magenta neon-glow neon-lit btn-large btn-rounded",
             "icons": "movie",
             "statusText": "Open final movie info"
         }

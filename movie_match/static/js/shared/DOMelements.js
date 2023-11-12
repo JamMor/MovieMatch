@@ -8,17 +8,17 @@ const CardButton = (type) => {
     let color = ''; let customClass = ''; let icon = '';
     switch(type){
         case 'add':
-            color = "neon-cyan neon-glow-hover"
+            color = "neon-cyan neon-glow neon-hover"
             customClass = "add-btn"
             icon = "add"
             break;
         case 'remove':
-            color = "neon-orange neon-glow-hover"
+            color = "neon-orange neon-glow neon-hover"
             customClass = "remove-btn"
             icon = "remove"
             break;
         case 'info':
-            color = "neon-purple neon-glow-hover"
+            color = "neon-magenta neon-glow neon-hover"
             customClass = "activator info-btn"
             icon = "info_outline"
             break;
@@ -152,12 +152,12 @@ const MovieInfoModal = (
 
 const UserChipColors = {
     "self": "neon-cyan",
-    "other": "neon-purple"
+    "other": "neon-magenta"
 }
 
 const UserChip = (prefix, {uuid, nickname, position}, isSelf) => {
     const color = isSelf ? UserChipColors.self : UserChipColors.other
-    return `<div id='${prefix}_${uuid}' class="chip ${color} neon-unlit dimmed" data-position="${position}">
+    return `<div id='${prefix}_${uuid}' class="chip ${color} neon-glow neon-unlit dimmed" data-position="${position}">
             ${escapeHtml(nickname)}
         </div>`
 }
@@ -169,8 +169,8 @@ const ListModalItem = (list_id, list_name, list_movies, selected) => {
 
     return `
     <li>
-        <div id="row_${list_id}" class="neon-purple neon-glow-hover collection-item avatar collapsible-header ${selected ? selectedRowClass : ''}">
-            <i class="material-icons circle neon-cyan neon-unlit dimmed">toc</i>
+        <div id="row_${list_id}" class="neon-magenta neon-glow neon-hover collection-item avatar collapsible-header ${selected ? selectedRowClass : ''}">
+            <i class="material-icons circle neon-cyan neon-glow neon-unlit dimmed">toc</i>
             <span class="new badge purple accent-2 black-text" data-badge-caption="">${list_movies.length}</span>
             <p>${escapeHtml(list_name)}</p>
             <a id="select_${list_id}" href="#!" class="secondary-content select-list">
@@ -191,7 +191,7 @@ const ListModalItem = (list_id, list_name, list_movies, selected) => {
 
 const PageItem = (itemClass, displayValue, pageValue, sortField, sortDirection) => {
     const classMap = {
-        "active": "neon-cyan neon-lit",
+        "active": "neon-cyan neon-glow neon-lit",
         "inactive": "waves-effect waves-light",
         "disabled": "disabled"
     }

@@ -36,7 +36,7 @@ function isTableEmpty(){
 }
 function addEmptyTableRow(){
     const emptyRow = `
-        <tr class="neon-orange neon-unlit">
+        <tr class="neon-orange neon-glow neon-unlit">
             <td class="center-align" colspan="4">
                 <em>No saved lists.</em>
             </td>

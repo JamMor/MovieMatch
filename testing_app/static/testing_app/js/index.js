@@ -12,18 +12,23 @@ function switchIconText() {
 function getHueValues() {
     // get value of neon-cyan css variable
     const neonCyan = $(".neon-cyan").css("--hue");
-    const neonPurple = $(".neon-purple").css("--hue");
+    const neonPurple = $(".neon-magenta").css("--hue");
     const neonOrange = $(".neon-orange").css("--hue");
     return [neonCyan, neonPurple, neonOrange];
 }
 
 function setInitInputValues() {
     const hueValues = getHueValues();
-    
+    $(".neon-cyan2").css("--hue", hueValues[0]);
+    $(".neon-magenta2").css("--hue", hueValues[1]);
+    $(".neon-orange2").css("--hue", hueValues[2]);
+
     $("#cyan-adj").val(hueValues[0]);
     $("#cyan-inp").val(hueValues[0]);
+
     $("#magenta-adj").val(hueValues[1]);
     $("#magenta-inp").val(hueValues[1]);
+
     $("#orange-adj").val(hueValues[2]);
     $("#orange-inp").val(hueValues[2]);
 }
@@ -34,9 +39,9 @@ function setHueValuefromRange() {
     const rangeValue = $(this).val();
 
     const idMap = {
-        "cyan-adj": [".neon-cyan", "#cyan-inp"],
-        "magenta-adj": [".neon-purple", "#magenta-inp"],
-        "orange-adj": [".neon-orange", "#orange-inp"]
+        "cyan-adj": [".neon-cyan2", "#cyan-inp"],
+        "magenta-adj": [".neon-magenta2", "#magenta-inp"],
+        "orange-adj": [".neon-orange2", "#orange-inp"]
     };
 
     if (rangeId in idMap) {
@@ -51,9 +56,9 @@ function setHueValuefromInput() {
     const inputValue = $(this).val();
 
     const idMap = {
-        "cyan-inp": [".neon-cyan", "#cyan-adj"],
-        "magenta-inp": [".neon-purple", "#magenta-adj"],
-        "orange-inp": [".neon-orange", "#orange-adj"]
+        "cyan-inp": [".neon-cyan2", "#cyan-adj"],
+        "magenta-inp": [".neon-magenta2", "#magenta-adj"],
+        "orange-inp": [".neon-orange2", "#orange-adj"]
     };
 
     if (inputId in idMap) {
@@ -130,6 +135,10 @@ function testRequest(url, method, data = null) {
 
 $(document).ready(function () {
     setInitInputValues();
+    
+    $("form").submit(function (e) {
+        e.preventDefault();
+    })
 
     $("#icon-text-switch").click(function () {
         switchIconText.call(this);

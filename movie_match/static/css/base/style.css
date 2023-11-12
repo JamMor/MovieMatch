@@ -1,7 +1,7 @@
 /* 
 =================CSS Subheadings=================
 
-[+] =Materialize colors=
+[+] =Color Variables=
 [+] =Fonts=
 [+] =html (overall)=
 [+] =Cyber Grade (Color Scheme Classes)=
@@ -45,7 +45,7 @@
 */
 
 /* [+] */
-/*====================Materialize colors====================*/
+/*====================Color Variables====================*/
 :root {
     --grey_darken-4:#212121;
     --grey_lighten-2:#e0e0e0;
@@ -66,13 +66,9 @@
     --purple_darken-2:#7b1fa2;
     --purple_darken-1:#8e24aa;
 
-    --hue-blue: 200;
-    --hue-purple: 282;
-    --hue-orange: 27;
-
-    --base-mid:hsl(var(--hue), 79%, 46%);
-    --base-dark:hsl(var(--hue), 66%, 30%);
-    --base-bright:hsl(var(--hue), 100%, 55%);
+    --hue-cyan: 190;
+    --hue-magenta: 300;
+    --hue-orange: 24;
 
     --solid-backglass: #2f2f2f;
 
@@ -210,74 +206,84 @@ i.suffix {
 }
 
 .neon-unlit.collection-item,
-.neon-glow-hover.collection-item {
+.neon-hover.collection-item {
     background-color: unset;
 }
-.neon-glow-hover.collection-item.avatar i.circle {
+.neon-hover.collection-item.avatar i.circle {
     background-color: unset;
     color:unset;
 }
 
 .neon-orange {
-    --hue:27;
+    --hue:var(--hue-orange);
 }
-.neon-purple {
-    --hue:282;
+.neon-magenta {
+    --hue:var(--hue-magenta);
 }
 .neon-cyan {
-    --hue:200;
+    --hue:var(--hue-cyan);
 }
 
-.neon-glow-hover, 
+.neon-glow {
+    --base-bright:hsl(var(--hue), 100%, 55%);
+    --base-mid:hsl(var(--hue), 79%, 46%);
+    --base-dark:hsl(var(--hue), 66%, 30%);
+}
+.neon-glow:focus{
+    background-color: #69696933;
+    outline: var(--grey_lighten-2) solid 2px;
+}
+
+.neon-hover, 
 .neon-unlit, 
 .neon-unlit:hover, 
 #search-input {
     color: var(--grey_lighten-2);
     background-color: #69696933;
     box-shadow: 
-        inset 0 0 1em 0 hsl(var(--hue), 79%, 46%),
-        inset 0 0 0.3em 0 hsl(var(--hue), 66%, 30%),
-        0 0 0.3em 0 hsl(var(--hue), 79%, 46%);
+        inset 0 0 1em 0 var(--base-mid),
+        inset 0 0 0.3em 0 var(--base-dark),
+        0 0 0.3em 0 var(--base-mid);
 }
-.neon-glow-hover:hover, 
+.neon-hover:hover, 
 .neon-lit, 
 .neon-lit:hover, 
 #search-input:focus {
-    color: hsl(var(--hue), 66%, 30%);
+    color: var(--base-dark);
     background-color: #ffffff !important;
     box-shadow: 
-    inset 0 0 1em 0 hsl(var(--hue), 79%, 46%),
-    inset 0 0 0.3em 0 hsl(var(--hue), 66%, 30%),
-        0 0 2.5em 0 hsl(var(--hue), 100%, 55%),
-        0 0 4em 0 hsl(var(--hue), 79%, 46%),
-        0 0 5em 0 hsl(var(--hue), 66%, 30%);
+    inset 0 0 1em 0 var(--base-mid),
+    inset 0 0 0.3em 0 var(--base-dark),
+        0 0 2.5em 0 var(--base-bright),
+        0 0 4em 0 var(--base-mid),
+        0 0 5em 0 var(--base-dark);
 }
 
-.neon-glow-hover.dimmed:hover, 
+.neon-hover.dimmed:hover, 
 .neon-lit.dimmed, 
 .neon-lit.dimmed:hover {
-    color: hsl(var(--hue), 66%, 30%);
+    color: var(--base-dark);
     background-color: #ffffff !important;
     box-shadow: 
-    inset 0 0 1em 0 hsl(var(--hue), 79%, 46%),
-    inset 0 0 0.3em 0 hsl(var(--hue), 66%, 30%),
-        0 0 0.3em 0 hsl(var(--hue), 100%, 55%),
-        0 0 1.2em 0 hsl(var(--hue), 79%, 46%),
-        0 0 1.8em 0 hsl(var(--hue), 66%, 30%);
+    inset 0 0 1em 0 var(--base-mid),
+    inset 0 0 0.3em 0 var(--base-dark),
+        0 0 0.3em 0 var(--base-bright),
+        0 0 1.2em 0 var(--base-mid),
+        0 0 1.8em 0 var(--base-dark);
 }
 
 /* For floating/fixed action buttons */
-.neon-glow-hover i, 
+.neon-hover i, 
 .neon-unlit i, 
 .neon-unlit:hover i, 
 #search-input {
     color: var(--grey_lighten-2);
 }
-.neon-glow-hover:hover i, 
+.neon-hover:hover i, 
 .neon-lit i, 
 .neon-lit:hover i, 
 #search-input:focus i {
-    color: hsl(var(--hue), 66%, 30%);
+    color: var(--base-dark);
 }
 
 /* [+] */

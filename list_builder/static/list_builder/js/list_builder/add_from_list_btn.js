@@ -86,7 +86,7 @@ function updateListModal(data){
     $listContainer.empty();
     if (data.lists.length == 0) {
         const emptyListLine = `
-            <li><div class="neon-orange neon-unlit collection-item center-align">
+            <li><div class="neon-orange neon-glow neon-unlit collection-item center-align">
                 <p><em>No saved lists.</em></p>
             </div></li>
         `
