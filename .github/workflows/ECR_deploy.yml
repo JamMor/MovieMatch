@@ -20,7 +20,7 @@ jobs:
   
     steps:
     - name: Check out code from deploy_to_ecr branch
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4
       with:
         ref: deploy_to_ecr
     
@@ -29,15 +29,17 @@ jobs:
         echo "COMMIT_TIME=$(git show -s --format=%cd --date="format:%Y-%m-%d.%H-%M-%S")" >> $GITHUB_ENV
 
     - name: Configure AWS credentials
-      uses: aws-actions/configure-aws-credentials@v1
+      uses: aws-actions/configure-aws-credentials@v4
       with:
         role-to-assume: ${{ secrets.AWS_ROLE_TO_ASSUME }}
         role-session-name: MovieMatchDeployment
         aws-region: ${{ env.AWS_REGION }}
+        mask-aws-account-id: true
+        retry-max-attempts: 4
 
     - name: Login to Amazon ECR
       id: login-ecr
-      uses: aws-actions/amazon-ecr-login@v1
+      uses: aws-actions/amazon-ecr-login@v2
 
     - name: Build, tag, and push image to Amazon ECR
       id: build-image
@@ -69,7 +71,7 @@ jobs:
 
     - name: Slack Notification
       id: slack
-      uses: slackapi/slack-github-action@v1.18.0
+      uses: slackapi/slack-github-action@v1.24.0
       with:
         # For posting a rich message using Block Kit
         payload: |
