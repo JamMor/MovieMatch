@@ -79,6 +79,18 @@ jobs:
           --max-errors "0" \
           --region ${{ env.AWS_REGION }}
 
+  notify:
+    name: Deploy Notification
+    runs-on: ubuntu-latest
+    if: ${{ always() }}
+    needs: build
+    env:
+      JOB_STATUS: ${{ needs.build.result }}
+
+    steps:
+    - name: Set current date as env variable
+      run: echo "NOW=$(date +'%Y-%m-%dT%H:%M:%S')" >> $GITHUB_ENV
+
     - name: Slack Notification
       id: slack
       uses: slackapi/slack-github-action@v1.24.0
@@ -86,14 +98,35 @@ jobs:
         # For posting a rich message using Block Kit
         payload: |
           {
-            "text": "${{ env.ECR_REPOSITORY }} build and push to AWS SUCCESSFUL",
+            "text": "Deployment ${{ env.JOB_STATUS }}",
             "blocks": [
               {
                 "type": "section",
                 "text": {
                   "type": "mrkdwn",
-                  "text": "${{ env.ECR_REPOSITORY }} build and push to AWS SUCCESSFUL"
+                  "text": "${{ env.JOB_STATUS == 'success' && ':white_check_mark: *Deployment Successful* :white_check_mark:' || ':x: *Deployment Failed* :x:' }}\n\n*Time:* ${{ env.NOW }}"
                 }
+              },
+              {
+                "type": "section",
+                "fields": [
+                  {
+                    "type": "mrkdwn",
+                    "text": "*Repository:*\n${{ github.repository }}"
+                  },
+                  {
+                    "type": "mrkdwn",
+                    "text": "*Ref:*\n${{ github.ref_name }}"
+                  },
+                  {
+                    "type": "mrkdwn",
+                    "text": "*User:*\n${{ github.triggering_actor }}"
+                  },
+                  {
+                    "type": "mrkdwn",
+                    "text": "*Workflow:*\n${{ github.workflow }}"
+                  }
+                ]
               }
             ]
           }
