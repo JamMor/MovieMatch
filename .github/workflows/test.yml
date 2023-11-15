@@ -24,7 +24,7 @@ jobs:
     - name: Check out code from deploy_to_ecr branch
       uses: actions/checkout@v4
       with:
-        ref: deploy_to_ecr
+        ref: testing/github-actions-workflow
     
     - name: Get commit timestamp
       run: |
