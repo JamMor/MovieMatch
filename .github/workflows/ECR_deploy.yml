@@ -86,6 +86,7 @@ jobs:
     needs: build
     env:
       JOB_STATUS: ${{ needs.build.result }}
+      JOB_STATUS_ICON: ${{ needs.build.result == 'success' && ':white_check_mark:' || ':x:' }}
       JOB_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
 
     steps:
@@ -101,13 +102,13 @@ jobs:
         # For posting a rich message using Block Kit
         payload: |
           {
-            "text": "Deployment ${{ env.JOB_STATUS }}",
+            "text": "${{ env.JOB_STATUS_ICON }} ${{github.repository}} Deployment ${{ env.JOB_STATUS }}",
             "blocks": [
               {
                 "type": "section",
                 "text": {
                   "type": "mrkdwn",
-                  "text": "${{ env.JOB_STATUS == 'success' && ':white_check_mark: *Deployment Successful* :white_check_mark:' || ':x: *Deployment Failed* :x:' }}\n\n*Time:* <!date^${{ env.NOW_UNIX }}^{date_num} {time_secs}|${{ env.NOW }}>"
+                  "text": "${{ env.JOB_STATUS_ICON }} ${{github.repository}} Deployment ${{ env.JOB_STATUS }} ${{ env.JOB_STATUS_ICON }}\n\n*Time:* <!date^${{ env.NOW_UNIX }}^{date_num} {time_secs}|${{ env.NOW }}>"
                 }
               },
               {
@@ -172,7 +173,7 @@ jobs:
       id: discord
       uses: "Ilshidur/action-discord@08d9328877d6954120eef2b07abbc79249bb6210"
       with:
-        args: "${{ env.JOB_STATUS == 'success' && ':white_check_mark:' || ':x:' }} ${{github.repository}} Deployment ${{ env.JOB_STATUS }}"
+        args: "**${{ env.JOB_STATUS_ICON }} ${{github.repository}} Deployment ${{ env.JOB_STATUS }}**"
       env:
         DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK_URL }}
         DISCORD_EMBEDS: |
@@ -182,7 +183,7 @@ jobs:
               "author": {
                 "name": "${{ github.triggering_actor }}"
               },
-              "title": "${{ env.JOB_STATUS == 'success' && ':white_check_mark: Deployment Successful' || ':x: Deployment Failed' }}",
+              "title": "${{ env.JOB_STATUS_ICON }} ${{github.repository}} Deployment ${{ env.JOB_STATUS }}",
               "url": "${{ env.JOB_URL }}",
               "description": "\u200B",
               "timestamp": "${{ env.NOW }}",
