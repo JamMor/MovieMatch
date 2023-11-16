@@ -18,7 +18,7 @@ jobs:
     name: TestDeployment
     runs-on: ubuntu-latest
     outputs:
-      step-descriptions: $ {{ fromJSON(steps.*.description) }}
+      step-descriptions: ${{ fromJSON(steps.*.description) }}
       step-outcomes: ${{ fromJSON(steps.*.outcome) }}
   
     steps:
