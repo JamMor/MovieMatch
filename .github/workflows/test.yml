@@ -45,7 +45,7 @@ jobs:
         role-session-name: MovieMatchDeployment
         aws-region: ${{ env.AWS_REGION }}
         mask-aws-account-id: true
-        retry-max-attempts: 4
+        retry-max-attempts: 5
 
     - name: Login to Amazon ECR
       id: login-ecr
