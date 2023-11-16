@@ -19,15 +19,23 @@ class SharedMovieList(models.Model):
         Converts templist movies not already in shared list to SharedMovies 
         that are added to SharedList
         """
-        this_persona = movie_list.created_by
-        #Use transactions here FLAG
-        self.contributors.add(this_persona)
-        for each_movie in movie_list.movies.all():
-            shared_movie, created = SharedMovie.objects.get_or_create(
-                shared_list = self, 
-                movie = each_movie)
-            shared_movie.submitted_by.add(this_persona)
-        self.save()
+        for attempt in range(5):
+            try:
+                with transaction.atomic():
+                    this_persona = movie_list.created_by
+                    self.contributors.add(this_persona)
+                    for each_movie in movie_list.movies.all():
+                        shared_movie, created = SharedMovie.objects.get_or_create(
+                            shared_list = self, 
+                            movie = each_movie)
+                        shared_movie.submitted_by.add(this_persona)
+                    self.save()
+                    break
+            except IntegrityError:
+                print(f'Attempt {attempt}: Error adding temp list to shared list.')
+                continue
+        else:
+            raise IntegrityError
 
     def save(self, *args, **kwargs):
         if not self.sharecode:

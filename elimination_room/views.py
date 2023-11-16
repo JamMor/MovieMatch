@@ -26,7 +26,7 @@ def update_shared_list_channels(sharecode):
     async_to_sync(channel_layer.group_send)(
         group_name, 
         {"type": "update_message"})
-    print("New ShareList information sent.")
+    print("Send update shared list command.")
 
 #Views
 @require_POST

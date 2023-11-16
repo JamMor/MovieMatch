@@ -197,7 +197,7 @@ class UserList {
 
     verifyUserListDOMSync(){
         const $userElements = this.get$userChips();
-        //Confirming DOM and user list are in sync FLAG
+        //Confirming DOM and user list are in sync
         const domUsers = $userElements.map((index, userElement) => {
             const $chip = $(userElement);
             const thisUuid = this.uuidFromUserChipDomId($chip.attr('id'));
