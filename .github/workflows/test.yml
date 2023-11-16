@@ -84,6 +84,7 @@ jobs:
 
   notify:
       name: Send Deploy Notifications
+      runs-on: ubuntu-latest
       if: ${{ always() }}
       needs: build
 
