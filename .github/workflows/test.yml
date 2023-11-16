@@ -17,6 +17,9 @@ jobs:
   build:
     name: TestDeployment
     runs-on: ubuntu-latest
+    outputs:
+      step-descriptions: $ {{ steps.*.description }}
+      step-outcomes: ${{ steps.*.outcome }}
   
     steps:
     - name: Check out code from test branch
@@ -57,7 +60,7 @@ jobs:
         ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
         IMAGE_TAG: ${{ github.sha }}-${{ env.COMMIT_TIME}}
       run: |
-        docker build -f ./Docker/Dockerfile -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG .
+        # docker build -f ./Docker/Dockerfile -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG .
         echo "docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG"
       
     - name: ECHO copy docker-compose files to S3
@@ -79,24 +82,39 @@ jobs:
           --max-errors "0" \
           --region ${{ env.AWS_REGION }}"
 
-    - name: Slack Notification
-      id: slack
-      uses: slackapi/slack-github-action@v1.24.0
-      with:
-        # For posting a rich message using Block Kit
-        payload: |
-          {
-            "text": "TEST: ${{ env.ECR_REPOSITORY }} build and push to AWS SUCCESSFUL",
-            "blocks": [
-              {
-                "type": "section",
-                "text": {
-                  "type": "mrkdwn",
-                  "text": "${{ env.ECR_REPOSITORY }} build and push to AWS SUCCESSFUL"
-                }
-              }
-            ]
-          }
-      env:
-        SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
-        SLACK_WEBHOOK_TYPE: INCOMING_WEBHOOK
+  notify:
+    - name: Send Deploy Notifications
+      if: ${{ always() }}
+      needs: build
+
+      steps:
+        - env:
+            STEP_DESCRIPTIONS: ${{needs.build.outputs.step-descriptions}}
+            STEP_OUTCOMES: ${{needs.build.outputs.step-outcomes}}
+      
+        - name: Echo step info
+          run: |
+            echo "STEP_DESCRIPTIONS=${{ env.STEP_DESCRIPTIONS }}"
+            echo "STEP_OUTCOMES=${{ env.STEP_OUTCOMES }}"
+
+        # - name: Slack Notification
+        #   id: slack
+        #   uses: slackapi/slack-github-action@v1.24.0
+        #   with:
+        #     # For posting a rich message using Block Kit
+        #     payload: |
+        #       {
+        #         "text": "TEST: ${{ env.ECR_REPOSITORY }} build and push to AWS SUCCESSFUL",
+        #         "blocks": [
+        #           {
+        #             "type": "section",
+        #             "text": {
+        #               "type": "mrkdwn",
+        #               "text": "${{ env.ECR_REPOSITORY }} build and push to AWS SUCCESSFUL"
+        #             }
+        #           }
+        #         ]
+        #       }
+        #   env:
+        #     SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+        #     SLACK_WEBHOOK_TYPE: INCOMING_WEBHOOK
