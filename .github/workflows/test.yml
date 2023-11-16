@@ -28,15 +28,15 @@ jobs:
       run: |
         echo "COMMIT_TIME=$(git show -s --format=%cd --date="format:%Y-%m-%d.%H-%M-%S")" >> $GITHUB_ENV
 
-    - name: Setup Node.js
-      uses: actions/setup-node@v4
-      with:
-        node-version: '18'  # Use the version of Node.js that your project requires
+    # - name: Setup Node.js
+    #   uses: actions/setup-node@v4
+    #   with:
+    #     node-version: '18'  # Use the version of Node.js that your project requires
 
-    - name: Install dependencies and run webpack
-      run: |
-        npm ci
-        npm run bundle-deploy
+    # - name: Install dependencies and run webpack
+    #   run: |
+    #     npm ci
+    #     npm run bundle-deploy
 
     - name: Configure AWS credentials
       uses: aws-actions/configure-aws-credentials@v4
