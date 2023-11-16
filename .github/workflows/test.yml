@@ -3,8 +3,6 @@ name: TestDeploy
 on:
   push:
     branches: [ testing/github-actions-workflow ]
-  pull_request:
-    branches: [ testing/github-actions-workflow ]
   workflow_dispatch:
 
 env:
