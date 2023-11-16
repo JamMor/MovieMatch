@@ -83,7 +83,7 @@ jobs:
           --region ${{ env.AWS_REGION }}"
 
   notify:
-    - name: Send Deploy Notifications
+      name: Send Deploy Notifications
       if: ${{ always() }}
       needs: build
 
