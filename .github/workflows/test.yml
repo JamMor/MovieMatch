@@ -19,7 +19,7 @@ jobs:
     runs-on: ubuntu-latest
   
     steps:
-    - name: Check out code from deploy_to_ecr branch
+    - name: Check out code from test branch
       uses: actions/checkout@v4
       with:
         ref: testing/github-actions-workflow
