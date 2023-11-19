@@ -109,8 +109,7 @@ jobs:
                     "type": "section",
                     "text": {
                       "type": "mrkdwn",
-                      "text": "${{ env.JOB_STATUS == 'success' && ':white_check_mark: *Deployment Successful* :white_check_mark:' || ':x: *Deployment Failed* :x:' }} \
-                      \n\n*Time:* ${{ env.NOW }}"
+                      "text": "${{ env.JOB_STATUS == 'success' && ':white_check_mark: *Deployment Successful* :white_check_mark:' || ':x: *Deployment Failed* :x:' }}\n\n*Time:* ${{ env.NOW }}"
                     }
                   },
                   {
