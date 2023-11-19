@@ -17,10 +17,6 @@ jobs:
   build:
     name: TestDeployment
     runs-on: ubuntu-latest
-    outputs:
-      step-descriptions: ${{ fromJSON(steps.*.description) }}
-      step-outcomes: ${{ fromJSON(steps.*.outcome) }}
-  
     steps:
     - name: Check out code from test branch
       uses: actions/checkout@v4
@@ -87,34 +83,59 @@ jobs:
       runs-on: ubuntu-latest
       if: ${{ always() }}
       needs: build
+      env:
+        JOB_STATUS: ${{ needs.build.result }}
 
       steps:
-        - name: Echo step info
-          env:
-            STEP_DESCRIPTIONS: ${{needs.build.outputs.step-descriptions}}
-            STEP_OUTCOMES: ${{needs.build.outputs.step-outcomes}}
-          run: |
-            echo "STEP_DESCRIPTIONS=${{ env.STEP_DESCRIPTIONS }}"
-            echo "STEP_OUTCOMES=${{ env.STEP_OUTCOMES }}"
+        - name: Set Deployment Status
+          id: set_status
+          run: echo "${{ env.JOB_STATUS }}"
 
-        # - name: Slack Notification
-        #   id: slack
-        #   uses: slackapi/slack-github-action@v1.24.0
-        #   with:
-        #     # For posting a rich message using Block Kit
-        #     payload: |
-        #       {
-        #         "text": "TEST: ${{ env.ECR_REPOSITORY }} build and push to AWS SUCCESSFUL",
-        #         "blocks": [
-        #           {
-        #             "type": "section",
-        #             "text": {
-        #               "type": "mrkdwn",
-        #               "text": "${{ env.ECR_REPOSITORY }} build and push to AWS SUCCESSFUL"
-        #             }
-        #           }
-        #         ]
-        #       }
-        #   env:
-        #     SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
-        #     SLACK_WEBHOOK_TYPE: INCOMING_WEBHOOK
+        - name: Set current date as env variable
+          run: echo "NOW=$(date +'%Y-%m-%dT%H:%M:%S')" >> $GITHUB_ENV
+        - name: Echo current date
+          run: echo ${{ env.NOW }}}
+          
+        - name: Slack Notification
+          id: slack
+          uses: slackapi/slack-github-action@v1.24.0
+          with:
+            # For posting a rich message using Block Kit
+            payload: |
+              {
+                "text": "Deployment Status",
+                "blocks": [
+                  {
+                    "type": "section",
+                    "text": {
+                      "type": "mrkdwn",
+                      "text": "${{ env.JOB_STATUS == 'success' && ':white_check_mark: *Deployment Successful* :white_check_mark:' || ':x: *Deployment Failed* :x:' }} \
+                      \n\n*Time:* ${{ env.NOW }}"
+                    }
+                  },
+                  {
+                    "type": "section",
+                    "fields": [
+                      {
+                        "type": "mrkdwn",
+                        "text": "*Repository:*\n${{ github.repository }}"
+                      },
+                      {
+                        "type": "mrkdwn",
+                        "text": "*Ref:*\n${{ github.ref_name }}"
+                      },
+                      {
+                        "type": "mrkdwn",
+                        "text": "*User:*\n${{ github.triggering_actor }}"
+                      },
+                      {
+                        "type": "mrkdwn",
+                        "text": "*Workflow:*\n${{ github.workflow }}"
+                      }
+                    ]
+                  }
+                ]
+              }
+          env:
+            SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+            SLACK_WEBHOOK_TYPE: INCOMING_WEBHOOK
