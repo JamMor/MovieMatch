@@ -77,66 +77,58 @@ jobs:
           --max-concurrency "50" \
           --max-errors "0" \
           --region ${{ env.AWS_REGION }}"
-    - name: Force Failure
-      run: exit 1
 
   notify:
-      name: Send Deploy Notifications
-      runs-on: ubuntu-latest
-      if: ${{ always() }}
-      needs: build
-      env:
-        JOB_STATUS: ${{ needs.build.result }}
+    name: Send Deploy Notifications
+    runs-on: ubuntu-latest
+    if: ${{ always() }}
+    needs: build
+    env:
+      JOB_STATUS: ${{ needs.build.result }}
 
-      steps:
-        - name: Set Deployment Status
-          id: set_status
-          run: echo "${{ env.JOB_STATUS }}"
-
-        - name: Set current date as env variable
-          run: echo "NOW=$(date +'%Y-%m-%dT%H:%M:%S')" >> $GITHUB_ENV
-        - name: Echo current date
-          run: echo ${{ env.NOW }}}
-          
-        - name: Slack Notification
-          id: slack
-          uses: slackapi/slack-github-action@v1.24.0
-          with:
-            # For posting a rich message using Block Kit
-            payload: |
+    steps:
+    - name: Set current date as env variable
+      run: echo "NOW=$(date +'%Y-%m-%dT%H:%M:%S')" >> $GITHUB_ENV
+      
+    - name: Slack Notification
+      id: slack
+      uses: slackapi/slack-github-action@v1.24.0
+      with:
+        # For posting a rich message using Block Kit
+        payload: |
+          {
+            "text": "Deployment Status",
+            "blocks": [
               {
-                "text": "Deployment Status",
-                "blocks": [
+                "type": "section",
+                "text": {
+                  "type": "mrkdwn",
+                  "text": "${{ env.JOB_STATUS == 'success' && ':white_check_mark: *Deployment Successful* :white_check_mark:' || ':x: *Deployment Failed* :x:' }}\n\n*Time:* ${{ env.NOW }}"
+                }
+              },
+              {
+                "type": "section",
+                "fields": [
                   {
-                    "type": "section",
-                    "text": {
-                      "type": "mrkdwn",
-                      "text": "${{ env.JOB_STATUS == 'success' && ':white_check_mark: *Deployment Successful* :white_check_mark:' || ':x: *Deployment Failed* :x:' }}\n\n*Time:* ${{ env.NOW }}"
-                    }
+                    "type": "mrkdwn",
+                    "text": "*Repository:*\n${{ github.repository }}"
                   },
                   {
-                    "type": "section",
-                    "fields": [
-                      {
-                        "type": "mrkdwn",
-                        "text": "*Repository:*\n${{ github.repository }}"
-                      },
-                      {
-                        "type": "mrkdwn",
-                        "text": "*Ref:*\n${{ github.ref_name }}"
-                      },
-                      {
-                        "type": "mrkdwn",
-                        "text": "*User:*\n${{ github.triggering_actor }}"
-                      },
-                      {
-                        "type": "mrkdwn",
-                        "text": "*Workflow:*\n${{ github.workflow }}"
-                      }
-                    ]
+                    "type": "mrkdwn",
+                    "text": "*Ref:*\n${{ github.ref_name }}"
+                  },
+                  {
+                    "type": "mrkdwn",
+                    "text": "*User:*\n${{ github.triggering_actor }}"
+                  },
+                  {
+                    "type": "mrkdwn",
+                    "text": "*Workflow:*\n${{ github.workflow }}"
                   }
                 ]
               }
-          env:
-            SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
-            SLACK_WEBHOOK_TYPE: INCOMING_WEBHOOK
+            ]
+          }
+      env:
+        SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+        SLACK_WEBHOOK_TYPE: INCOMING_WEBHOOK
