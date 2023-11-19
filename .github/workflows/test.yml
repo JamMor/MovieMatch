@@ -77,6 +77,8 @@ jobs:
           --max-concurrency "50" \
           --max-errors "0" \
           --region ${{ env.AWS_REGION }}"
+    - name: Force Failure
+      run: exit 1
 
   notify:
       name: Send Deploy Notifications
