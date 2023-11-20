@@ -175,11 +175,11 @@ jobs:
       env:
         DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK_URL }}
         DISCORD_EMBEDS: |
-          "embeds": [
+          [
             {
               "color": ${{ env.JOB_STATUS == 'success' && 65280 || 16711680 }},
               "author": {
-                "name": "${{ github.triggering_actor }}",
+                "name": "${{ github.triggering_actor }}"
               },
               "title": "${{ env.JOB_STATUS == 'success' && ':white_check_mark: Deployment Successful' || ':x: Deployment Failed' }}",
               "url": "${{ env.JOB_URL }}",
