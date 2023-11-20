@@ -175,7 +175,7 @@ jobs:
       env:
         DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK_URL }}
         DISCORD_EMBEDS: |
-          [
+          "embeds": [
             {
               "color": ${{ env.JOB_STATUS == 'success' && 65280 || 16711680 }},
               "author": {
