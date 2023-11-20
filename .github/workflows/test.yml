@@ -106,7 +106,7 @@ jobs:
                 "type": "section",
                 "text": {
                   "type": "mrkdwn",
-                  "text": "${{ env.JOB_STATUS == 'success' && ':white_check_mark: *Deployment Successful* :white_check_mark:' || ':x: *Deployment Failed* :x:' }}\n\n*Time:* <date^${{ env.NOW_UNIX }}^{date_num} {time_secs}|${{ env.NOW }}>"
+                  "text": "${{ env.JOB_STATUS == 'success' && ':white_check_mark: *Deployment Successful* :white_check_mark:' || ':x: *Deployment Failed* :x:' }}\n\n*Time:* <!date^${{ env.NOW_UNIX }}^{date_num} {time_secs}|${{ env.NOW }}>"
                 }
               },
               {
@@ -149,7 +149,7 @@ jobs:
                     "text": ":computer: Go to Workflow Logs",
                     "emoji": true
                   },
-                  "url": "${{ env.JOB_URL }}",
+                  "url": "${{ env.JOB_URL }}"
                 }
               },
               {
@@ -157,7 +157,7 @@ jobs:
                 "elements": [
                   {
                     "type": "mrkdwn",
-                    "text": "<date^${{ env.NOW_UNIX }}^{date_long_pretty} {time_secs}|${{ env.NOW }}>"
+                    "text": "<!date^${{ env.NOW_UNIX }}^{date_long_pretty} {time_secs}|${{ env.NOW }}>"
                   }
                 ]
               }
