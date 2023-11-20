@@ -1,6 +1,9 @@
 from functools import wraps
+
 from django.http import JsonResponse
+
 from .json_response_models import FailedJsonClassObject
+
 
 def login_required_json(view_func = None, error_msg = 'Must be logged in.'):
     def decorator(view_func):

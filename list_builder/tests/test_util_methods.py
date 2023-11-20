@@ -1,11 +1,10 @@
-from datetime import datetime
-from django import test
-from django.db import IntegrityError
-from django.test import Client, TestCase, RequestFactory
-from django.contrib.auth.models import User, AnonymousUser
-from ..persona_assigner import get_or_set_persona
-from ..models import Persona, TempMovieList, Movie
+from django.contrib.auth.models import AnonymousUser, User
+from django.test import Client, RequestFactory, TestCase
+
+from ..models import Movie, Persona
 from ..moviedb_api_caller import add_movies_to_db_from_tmdb_ids
+from ..persona_assigner import get_or_set_persona
+
 
 class PersonaAssignerTest(TestCase):
     def setUp(self):

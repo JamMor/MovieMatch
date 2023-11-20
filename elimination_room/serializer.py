@@ -1,9 +1,8 @@
-import json
-from django.core.serializers.json import DjangoJSONEncoder
-from list_builder.models import Persona, Movie
-from elimination_room.models import SharedMovieList, SharedMovie, ShareRoomUser
 from django.db.models import Prefetch
 from django.forms.models import model_to_dict
+
+from elimination_room.models import SharedMovie, SharedMovieList, ShareRoomUser
+
 
 def SharedListEncoder(sharecode):
     """

@@ -1,6 +1,8 @@
 from django.core.management.base import BaseCommand, CommandError
 from django.db import transaction
-from elimination_room.models import ShareRoomUser, SharedMovieList
+
+from elimination_room.models import SharedMovieList, ShareRoomUser
+
 
 class Command(BaseCommand):
     help = 'Resets all ShareRoomUsers and sets Rooms to Inactive'

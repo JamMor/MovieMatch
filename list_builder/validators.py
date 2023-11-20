@@ -1,6 +1,8 @@
 import re
+
 from django.core.validators import RegexValidator
 from django.utils.safestring import SafeString
+
 
 class UserInputValidator(RegexValidator):
     """

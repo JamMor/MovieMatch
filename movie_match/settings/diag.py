@@ -1,6 +1,8 @@
 import math
 import os
+
 from django.conf import settings
+
 
 def debug_pretty_print(debug_heading="", debug_lines=[]):
     # 6 for minimum of 3 flanking '*' and 2 for ': '

@@ -10,11 +10,12 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.0/ref/settings/
 """
 
-from pathlib import Path
-from django.core.exceptions import ImproperlyConfigured
 import os
+from pathlib import Path
 
-from dotenv import load_dotenv, dotenv_values
+from django.core.exceptions import ImproperlyConfigured
+from dotenv import dotenv_values, load_dotenv
+
 load_dotenv()
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.

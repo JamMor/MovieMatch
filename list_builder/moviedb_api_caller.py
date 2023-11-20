@@ -1,5 +1,7 @@
-from list_builder.models import Movie
 import requests
+
+from .models import Movie
+
 
 def add_movies_to_db_from_tmdb_ids(tmdb_id_list):
     """

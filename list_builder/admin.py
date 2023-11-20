@@ -1,7 +1,7 @@
 from django.contrib import admin
 
-from .models import Persona, Movie, SavedMovieList, TempMovieList
-# Register your models here.
+from .models import Movie, Persona, SavedMovieList, TempMovieList
+
 
 class SavedMovieListAdmin(admin.ModelAdmin):
     readonly_fields = ['display_name']

@@ -1,8 +1,8 @@
-import json
 import shortuuid
 from django.db import IntegrityError, models, transaction
-from django.db.models import Q
+
 from list_builder.validators import UserInputValidator
+
 
 class SharedMovieList(models.Model):
     sharecode = models.CharField(max_length=8, unique=True)
@@ -37,6 +37,9 @@ class SharedMovieList(models.Model):
         else:
             raise IntegrityError
 
+    def __str__(self):
+        return f'{self.id} - {self.sharecode}'
+    
     def save(self, *args, **kwargs):
         if not self.sharecode:
             print("No sharecode. Creating one.")
@@ -56,9 +59,6 @@ class SharedMovieList(models.Model):
         else:
             print("Sharecode exists. Not renewing.")
             super(SharedMovieList, self).save(*args, **kwargs)
-    
-    def __str__(self):
-        return f'{self.id} - {self.sharecode}'
 
 class SharedMovie(models.Model):
     submitted_by = models.ManyToManyField('list_builder.Persona', related_name="submitted_movies")

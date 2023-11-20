@@ -1,7 +1,9 @@
 from django import forms
 from django.forms import ModelForm, ValidationError
-from .models import SharedMovieList, ShareRoomUser
+
 from list_builder.validators import UserInputValidator
+
+from .models import SharedMovieList, ShareRoomUser
 
 user_input_validator = UserInputValidator()
 

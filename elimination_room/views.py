@@ -1,19 +1,23 @@
-from random import randint
-from django.db import IntegrityError
-from django.shortcuts import redirect, render
-from django.views.decorators.http import require_GET, require_POST
-from django.http import JsonResponse
-from django.urls import reverse
-from list_builder.models import Persona, Movie, TempMovieList
-from elimination_room.models import SharedMovieList, SharedMovie, ShareRoomUser
-import json
-from channels.layers import get_channel_layer
 from asgiref.sync import async_to_sync
-from list_builder.persona_assigner import get_or_set_persona
-from list_builder.moviedb_api_caller import add_movies_to_db_from_tmdb_ids
-from movie_match.json_response_models import SuccessJsonClassObject, FailedJsonClassObject, FailedFormResponse
-from .forms import SharecodeForm, ShareRoomUserForm, MovieTmdbIdsForm
+from channels.layers import get_channel_layer
+from django.db import IntegrityError
+from django.http import JsonResponse
+from django.shortcuts import redirect, render
+from django.urls import reverse
+from django.views.decorators.http import require_GET, require_POST
+
 from list_builder.forms import SavedMovieListForm
+from list_builder.models import TempMovieList
+from list_builder.moviedb_api_caller import add_movies_to_db_from_tmdb_ids
+from list_builder.persona_assigner import get_or_set_persona
+from movie_match.json_response_models import (
+    FailedFormResponse,
+    SuccessJsonClassObject,
+)
+
+from .forms import MovieTmdbIdsForm, SharecodeForm, ShareRoomUserForm
+from .models import SharedMovieList, ShareRoomUser
+
 
 # When Shared List is updated, sends updated list to appropriate channel
 def update_shared_list_channels(sharecode):

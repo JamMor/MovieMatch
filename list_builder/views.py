@@ -1,26 +1,27 @@
-from random import randint
-from django.db import IntegrityError
-from django.shortcuts import redirect, render
-from django.http import HttpResponseNotAllowed, JsonResponse
-from django.urls import reverse
 from django.contrib.auth.decorators import login_required
-from django.views.decorators.http import require_GET, require_POST, require_http_methods
-from movie_match.custom_decorators import login_required_json
-from django.db.models import Count
-from django.db.models import Prefetch
-from django.core import serializers
+from django.db.models import Count, Prefetch
+from django.http import JsonResponse
+from django.shortcuts import render
 from django.urls import reverse
+from django.views.decorators.http import (
+    require_GET,
+    require_POST,
+    require_http_methods,
+)
 
-from list_builder.models import Persona, SavedMovieList, Movie
-# from app_login_and_reg.models import User
-import json
-from channels.layers import get_channel_layer
-from asgiref.sync import async_to_sync
-from .persona_assigner import get_or_set_persona
-from .moviedb_api_caller import add_movies_to_db_from_tmdb_ids
-from movie_match.json_response_models import SuccessJsonClassObject, FailedJsonClassObject, FailedFormResponse
 from elimination_room.forms import SharecodeForm, ShareRoomUserForm
-from .forms import SavedMovieListForm, HiddenListNameForm, MovieTmdbIdsForm
+from movie_match.custom_decorators import login_required_json
+from movie_match.json_response_models import (
+    FailedFormResponse,
+    FailedJsonClassObject,
+    SuccessJsonClassObject,
+)
+
+from .forms import HiddenListNameForm, MovieTmdbIdsForm, SavedMovieListForm
+from .models import Movie, SavedMovieList
+from .moviedb_api_caller import add_movies_to_db_from_tmdb_ids
+from .persona_assigner import get_or_set_persona
+
 
 # Displays main page
 @require_GET

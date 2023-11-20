@@ -1,7 +1,7 @@
 from django.contrib import admin
 
-from .models import SharedMovieList, SharedMovie, ShareRoomUser
-# Register your models here.
+from .models import SharedMovie, SharedMovieList, ShareRoomUser
+
 
 class SharedMovieInline(admin.TabularInline):
     model = SharedMovie

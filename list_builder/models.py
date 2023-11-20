@@ -1,8 +1,9 @@
-import json
 import shortuuid
-from django.db import IntegrityError, models, transaction
 from django.conf import settings
+from django.db import IntegrityError, models, transaction
+
 from .validators import UserInputValidator
+
 
 # Create your models here.
 class Persona(models.Model):

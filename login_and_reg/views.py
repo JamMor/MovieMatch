@@ -1,17 +1,24 @@
-from sys import prefix
-from django.http import JsonResponse, HttpResponseNotAllowed 
-from django.shortcuts import redirect, render, HttpResponse
-from django.contrib.auth.models import User
-from django.contrib.auth import authenticate, login, logout, update_session_auth_hash
-from django.contrib.auth.forms import UserCreationForm, AuthenticationForm, PasswordChangeForm
+from django.contrib.auth import login, logout, update_session_auth_hash
 from django.contrib.auth.decorators import login_required
-from django.views.decorators.http import require_GET, require_POST, require_http_methods
-from movie_match.custom_decorators import login_required_json
-from django.contrib.auth.password_validation import validate_password
-from .forms import RegistrationForm, PersonaForm
-from list_builder.models import Persona
+from django.contrib.auth.forms import AuthenticationForm, PasswordChangeForm
+from django.http import JsonResponse
+from django.shortcuts import redirect, render
+from django.views.decorators.http import (
+    require_GET, 
+    require_http_methods,
+    require_POST,
+)
+
 from list_builder.persona_assigner import get_or_set_persona
-from movie_match.json_response_models import SuccessJsonClassObject, FailedJsonClassObject, FailedFormResponse
+from movie_match.custom_decorators import login_required_json
+from movie_match.json_response_models import (
+    FailedFormResponse,
+    FailedJsonClassObject,
+    SuccessJsonClassObject,
+)
+
+from .forms import PersonaForm, RegistrationForm
+
 
 @require_http_methods(['GET', 'POST'])
 def register_view(request):

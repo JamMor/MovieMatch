@@ -1,6 +1,9 @@
-from elimination_room.models import ShareRoomUser, SharedMovieList
 from random import shuffle
+
 from django.db.models import Max
+
+from elimination_room.models import ShareRoomUser
+
 
 def assign_generic_nickname(share_list):
     """

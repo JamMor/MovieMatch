@@ -1,4 +1,8 @@
-from movie_match.json_response_models import SuccessJsonClassObject, FailedJsonClassObject
+from movie_match.json_response_models import (
+    FailedJsonClassObject,
+    SuccessJsonClassObject,
+)
+
 
 #This is a base class for an elimination room socket command type
 class CommandType():

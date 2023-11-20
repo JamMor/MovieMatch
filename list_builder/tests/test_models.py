@@ -1,8 +1,10 @@
 from datetime import datetime
-from django import test
+
 from django.db import IntegrityError
 from django.test import TestCase
-from ..models import Persona, TempMovieList, Movie
+
+from ..models import Movie, Persona, TempMovieList
+
 
 class PersonaTest(TestCase):
     @classmethod
