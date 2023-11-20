@@ -78,6 +78,9 @@ jobs:
           --max-errors "0" \
           --region ${{ env.AWS_REGION }}"
 
+    - name: Forced Failure
+      run: exit 1
+
   notify:
     name: Send Deploy Notifications
     runs-on: ubuntu-latest
@@ -172,7 +175,7 @@ jobs:
       id: discord
       uses: "Ilshidur/action-discord@08d9328877d6954120eef2b07abbc79249bb6210"
       with:
-        args: "${{ env.JOB_STATUS_ICON }} ${{github.repository}} Deployment ${{ env.JOB_STATUS }}"
+        args: "**${{ env.JOB_STATUS_ICON }} ${{github.repository}} Deployment ${{ env.JOB_STATUS }}**"
       env:
         DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK_URL }}
         DISCORD_EMBEDS: |
