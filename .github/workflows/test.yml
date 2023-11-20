@@ -166,3 +166,46 @@ jobs:
       env:
         SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
         SLACK_WEBHOOK_TYPE: INCOMING_WEBHOOK
+
+    - name: Discord Notification
+      id: discord
+      uses: "Ilshidur/action-discord@08d9328877d6954120eef2b07abbc79249bb6210"
+      with:
+        args: |
+          {
+            "content": "${{ env.JOB_STATUS == 'success' ? ':white_check_mark:' : ':x:' }} ${{github.repository}} Deployment ${{ env.JOB_STATUS }}",
+            "embeds": [
+              {
+                "color": ${{ env.JOB_STATUS == 'success' && 65280 || 16711680 }},
+                "author": {
+                  "name": "${{ github.triggering_actor }}",
+                },
+                "title": "${{ env.JOB_STATUS == 'success' ? ':white_check_mark: Deployment Successful' : ':x: Deployment Failed' }}",
+                "url": "${{ env.JOB_URL }}",
+                "description": "\u200B",
+                "timestamp": "${{ env.NOW }}",
+                "fields": [
+                  {
+                    "name": "Repository",
+                    "value": "${{ github.repository }}"
+                  },
+                  {
+                    "name": "Ref",
+                    "value": "${{ github.ref_name }}"
+                  },
+                  {
+                    "name": "Workflow",
+                    "value": "${{ github.workflow }}",
+                    "inline": true
+                  },
+                  {
+                    "name": "User",
+                    "value": "${{ github.triggering_actor }}",
+                    "inline": true
+                  }
+                ]
+              }
+            ]
+          }
+      env:
+        DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK_URL }}
