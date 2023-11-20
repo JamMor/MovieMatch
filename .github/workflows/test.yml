@@ -173,14 +173,14 @@ jobs:
       with:
         args: |
           {
-            "content": "${{ env.JOB_STATUS == 'success' ? ':white_check_mark:' : ':x:' }} ${{github.repository}} Deployment ${{ env.JOB_STATUS }}",
+            "content": "${{ env.JOB_STATUS == 'success' && ':white_check_mark:' || ':x:' }} ${{github.repository}} Deployment ${{ env.JOB_STATUS }}",
             "embeds": [
               {
                 "color": ${{ env.JOB_STATUS == 'success' && 65280 || 16711680 }},
                 "author": {
                   "name": "${{ github.triggering_actor }}",
                 },
-                "title": "${{ env.JOB_STATUS == 'success' ? ':white_check_mark: Deployment Successful' : ':x: Deployment Failed' }}",
+                "title": "${{ env.JOB_STATUS == 'success' && ':white_check_mark: Deployment Successful' || ':x: Deployment Failed' }}",
                 "url": "${{ env.JOB_URL }}",
                 "description": "\u200B",
                 "timestamp": "${{ env.NOW }}",
