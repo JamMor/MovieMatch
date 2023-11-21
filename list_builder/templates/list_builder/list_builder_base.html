@@ -46,6 +46,10 @@
             <div id="movie_list"></div>
         </div>
     </main>
+{% endblock %}
+
+{% block modal_block %}
+    {{ block.super }}
     {% include "list_builder/_add_from.html" %}
 {% endblock %}
 

@@ -26,7 +26,10 @@
                     class="btn-large btn-rounded neon-cyan neon-glow neon-hover">Delete Account</button>
         </div>
     </main>
-    <!-- Modal Structure -->
+{% endblock %}
+
+{% block modal_block %}
+    {{ block.super }}
     {% include "login_and_reg/_account_delete_modal.html" %}
     {% include "login_and_reg/_change_nickname_modal.html" %}
     {% include "login_and_reg/_change_password_modal.html" %}

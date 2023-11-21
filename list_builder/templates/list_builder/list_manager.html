@@ -66,6 +66,10 @@
             </table>
         </div>
     </main>
+{% endblock %}
+
+{% block modal_block %}
+    {{ block.super }}
     {% include "list_builder/_list_manager_delete_modal.html" %}
 {% endblock %}
 

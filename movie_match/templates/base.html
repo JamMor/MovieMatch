@@ -104,11 +104,13 @@
             <li><a class="modal-trigger" href="#about-modal"><i class="material-icons">help_outline</i>About</a></li>
         </ul>
     {% endblock %}
-
-    {% include "_about_modal.html" %}
-
+    
     {% block content_block %}{% endblock %}
-
+    
+    {% block modal_block %}
+        {% include "_about_modal.html" %}
+    {% endblock %}
+    
     {% include "_resource_paths.html" %}
     {% include "_url_paths.html" %}
     {% bundle_tag 'js/base/index.js' %}

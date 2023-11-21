@@ -32,6 +32,11 @@
             <span id="sharecode">{{ sharecode }}</span><i class="material-icons">content_copy</i>
         </button>
     </footer>
+{% endblock %}
+
+{% block modal_block %}
+    {{ block.super }}
+    {% include "save_modal.html" %}
     <div id="final_modal" class="modal cyber-grade">
         <div class="modal-content pink-text text-darken-2"></div>
         <div class="navbar-fixed">
@@ -60,7 +65,6 @@
             </nav>
         </div>
     </div>
-    {% include "save_modal.html" %}
 {% endblock %}
 
 {% block script_block %}

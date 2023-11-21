@@ -30,6 +30,10 @@
             </li>
         </ul>
     </div>
+{% endblock %}
+
+{% block modal_block %}
+    {{ block.super }}
     {% include "list_builder/_share_modal.html" %}
     {% include "save_modal.html" %}
 {% endblock %}

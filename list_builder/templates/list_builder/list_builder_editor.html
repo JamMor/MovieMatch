@@ -42,11 +42,15 @@
             </div>
         </nav>
     </div>
-    {% include "list_builder/editor_list_name_modal.html" %}
-    {% include "list_builder/editor_save_modal.html" with list_id=saved_list.id %}
-    {{ movie_list|json_script:"imported-movie-data" }}
 {% endblock %}
 
+{% block modal_block %}
+    {{ block.super }}
+    {% include "list_builder/editor_list_name_modal.html" %}
+    {% include "list_builder/editor_save_modal.html" with list_id=saved_list.id %}
+{% endblock %}
+    
 {% block script_block %}
+    {{ movie_list|json_script:"imported-movie-data" }}
     {% bundle_tag 'list_builder/js/list_builder/list_editor/index.js' block.super %}
 {% endblock %}
