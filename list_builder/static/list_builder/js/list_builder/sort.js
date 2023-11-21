@@ -1,4 +1,4 @@
-import {sortOrder, getLists} from './add_from_list_btn.js'
+import { sortOrder, getLists } from './add_from_list_btn.js'
 
 const $sortContainer = $('#sort-container');
 const $sortOptionBtns = $sortContainer.find('a');
@@ -7,26 +7,26 @@ const domIdFromField = (field) => `sort_${field}`;
 const $changeOrderBtn = $('#change-order');
 
 const defaultSortDirection = {
-    "updated-at" : "desc",
-    "name" : "asc",
-    "count" : "desc",
-    "created-at" : "desc",
+    "updated-at": "desc",
+    "name": "asc",
+    "count": "desc",
+    "created-at": "desc",
 }
 
-function setActiveSortBtn(field){
+function setActiveSortBtn(field) {
     $sortOptionBtns.removeClass('neon-lit');
     $(`#${domIdFromField(field)}`).addClass('neon-lit');
 }
 
-function setSortField(field){
+function setSortField(field) {
     sortOrder.field = field;
     sortOrder.direction = defaultSortDirection[field];
 
     setActiveSortBtn(field);
 }
 
-function setReverseDirection(){
-    if (sortOrder.direction == "asc"){
+function setReverseDirection() {
+    if (sortOrder.direction == "asc") {
         sortOrder.direction = "desc";
     }
     else {
@@ -42,19 +42,19 @@ const init = () => {
         coverTrigger: false,
     });
 
-    $sortContainer.on('click', 'a', function(e){
+    $sortContainer.on('click', 'a', function (e) {
         e.preventDefault();
         const field = fieldFromDomId($(this).attr('id'));
         setSortField(field);
         getLists(1);
     });
 
-    $changeOrderBtn.click(function(e){
+    $changeOrderBtn.click(function (e) {
         e.preventDefault();
         setReverseDirection();
         getLists(1);
     });
-    
+
 }
 
 export { init }

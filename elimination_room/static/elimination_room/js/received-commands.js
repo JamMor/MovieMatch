@@ -14,28 +14,28 @@ const $finalModal = $("#final_modal");
 
 // Eliminate Movie
 function commandEliminate(commandData) {
-    const {shared_movie_id, eliminating_uuid, next_eliminating_uuid = null} = commandData
+    const { shared_movie_id, eliminating_uuid, next_eliminating_uuid = null } = commandData
 
     const eliminated_movie = movieList.eliminateMovieBySharedId(shared_movie_id);
 
     let toastClass = "purple-text text-accent-2"
     let nickname = userList.getUserByUuidFlat(eliminating_uuid)['nickname']
-    if(eliminating_uuid == user_uuid){
+    if (eliminating_uuid == user_uuid) {
         toastClass = "cyan-text text-accent-2"
         nickname = "YOU"
     }
     const toastHtml = `<span><strong class="${toastClass}">${escapeHtml(nickname)} </strong>&nbsp;eliminated&nbsp;<strong class="orange-text text-darken-3"> ${eliminated_movie.title}</strong></span>`
-    M.toast({html: toastHtml})
-    
-    if (commandData.hasOwnProperty("updated_positions")){
+    M.toast({ html: toastHtml })
+
+    if (commandData.hasOwnProperty("updated_positions")) {
         userList.syncLists(commandData.updated_positions);
     }
 
-    if(next_eliminating_uuid != null){
+    if (next_eliminating_uuid != null) {
         setUserTurn(next_eliminating_uuid);
     }
 
-    if(commandData.hasOwnProperty('final_shared_movie_id')) {
+    if (commandData.hasOwnProperty('final_shared_movie_id')) {
         commandFinalized(commandData.final_shared_movie_id);
     }
 }
@@ -44,7 +44,7 @@ function commandEliminate(commandData) {
 function commandFinalized(finalSharedId = null) {
     let finalMovie;
     // If ID given, find the movie via ID
-    if (finalSharedId !== null){
+    if (finalSharedId !== null) {
         finalMovie = movieList.getMovieBySharedId(finalSharedId);
     }
     // If no ID, find the movie that is not eliminated
@@ -52,16 +52,16 @@ function commandFinalized(finalSharedId = null) {
         finalMovie = movieList.getFinalMovie();
     }
     console.log(`${finalMovie.title} is the final choice!`)
-    
+
     getMoreMovieInfo(finalMovie.tmdb_id)
         .done(returnInfo => {
             console.log(returnInfo)
             const finalMovieInfo = new DetailedMovie(returnInfo ?? finalMovie)
             openMoreInfoModal(finalMovieInfo, finalModalId)
         })
-        .fail(function(){
+        .fail(function () {
             console.error("Request failure: get more movie info");
-            M.toast({html: `<span><strong class="orange-text text-darken-3">Request failure.</strong></span>`})
+            M.toast({ html: `<span><strong class="orange-text text-darken-3">Request failure.</strong></span>` })
         })
 
     setUserTurn(null);
@@ -72,59 +72,59 @@ function commandFinalized(finalSharedId = null) {
 
 // Connect User
 function commandConnected(commandData) {
-    const {uuid:connected_uuid, nickname, position} = commandData
+    const { uuid: connected_uuid, nickname, position } = commandData
     console.log("Connected User: " + connected_uuid);
-    const added = userList.addUserToListFlat({"uuid": connected_uuid, "position": position, "nickname": nickname});
-    if(added && connected_uuid != user_uuid){
+    const added = userList.addUserToListFlat({ "uuid": connected_uuid, "position": position, "nickname": nickname });
+    if (added && connected_uuid != user_uuid) {
         const toastHtml = `<span><strong class="purple-text text-accent-2">${escapeHtml(nickname)} </strong>&nbsp;has connected.</span>`
-        M.toast({html: toastHtml})
+        M.toast({ html: toastHtml })
     }
 }
 
 // Disconnect User
 function commandDisconnected(commandData) {
-    if (commandData.hasOwnProperty("updated_positions")){
+    if (commandData.hasOwnProperty("updated_positions")) {
         userList.syncLists(commandData.updated_positions);
     }
-    if (commandData.hasOwnProperty("next_eliminating_uuid")){
+    if (commandData.hasOwnProperty("next_eliminating_uuid")) {
         setUserTurn(commandData.next_eliminating_uuid)
     }
 
     const disconnected_uuid = commandData.disconnected_uuid;
     console.log('Disconnected UUID: ' + disconnected_uuid)
     const removedUser = userList.removeUserFromListByUuid(disconnected_uuid);
-    if(removedUser != null && disconnected_uuid != user_uuid){
+    if (removedUser != null && disconnected_uuid != user_uuid) {
         const toastHtml = `<span><strong class="purple-text text-accent-2">${escapeHtml(removedUser.nickname)} </strong>&nbsp;has disconnected.</span>`
-        M.toast({html: toastHtml})
+        M.toast({ html: toastHtml })
     }
 }
 
 //Initialize/Update Share Room
 function commandSyncRoom(commandData) {
     const {
-        movie_list:received_movie_list, 
-        active_user_dict:received_user_list,
+        movie_list: received_movie_list,
+        active_user_dict: received_user_list,
         is_active,
         eliminating_uuid = null
     } = commandData.share_list
 
     movieList.syncLists(received_movie_list);
-    
+
     userList.syncLists(received_user_list);
 
     elimination_active = is_active;
 
-    if(movieList.isFinalSelected()){
+    if (movieList.isFinalSelected()) {
         commandFinalized();
     }
-    else if(elimination_active){
+    else if (elimination_active) {
         setStatusBar("eliminating")
     }
-    else{
+    else {
         setStatusBar("start")
     }
-    
-    if(eliminating_uuid != null){
+
+    if (eliminating_uuid != null) {
         setUserTurn(eliminating_uuid);
     }
 }
@@ -141,15 +141,15 @@ function commandRefreshMovieList(commandData) {
 
 // Start Elimination
 function commandStartElimination(commandData) {
-    const {eliminating_uuid, updated_positions} = commandData;    
-    
+    const { eliminating_uuid, updated_positions } = commandData;
+
     userList.syncLists(updated_positions);
 
     elimination_active = true;
 
     setStatusBar("eliminating");
     setUserTurn(eliminating_uuid);
-    
+
 }
 
 // Failed Command
@@ -157,8 +157,7 @@ function commandFailed(commandData) {
     console.log("Command failed.")
     console.log(responseData)
     if (responseData.hasOwnProperty('errors')) {
-        responseData.errors.forEach(error =>
-            {console.log(error)}
+        responseData.errors.forEach(error => { console.log(error) }
         )
     }
     return
@@ -167,7 +166,7 @@ function commandFailed(commandData) {
 // Private Functions
 
 //Sets status bar
-function setStatusBar(status){
+function setStatusBar(status) {
     // Map of status bar text, css, and flanking icons
     const statusMap = {
         "start": {
@@ -196,7 +195,7 @@ function setStatusBar(status){
         status = "start"
     }
 
-    const {styleClass, icons, statusText} = statusMap[status];
+    const { styleClass, icons, statusText } = statusMap[status];
 
     // Edit DOM
     $statusBtn.removeClass().addClass(styleClass);
@@ -205,12 +204,12 @@ function setStatusBar(status){
 }
 
 //Set active user turn
-function setUserTurn(turnUUID = null){    
+function setUserTurn(turnUUID = null) {
     //Remove any active classes
     userList.deactivateUsers();
 
     // If no next user, return with no active class set
-    if(turnUUID == null){
+    if (turnUUID == null) {
         return
     }
 
@@ -221,21 +220,21 @@ function setUserTurn(turnUUID = null){
 
     //Toast new user turn
     const eliminatingUser = userList.getUserByUuidFlat(turnUUID);
-    const toastName = (turnUUID != user_uuid) 
-        ? `<strong class="purple-text text-accent-2">${escapeHtml(eliminatingUser.nickname)}</strong>'s` 
+    const toastName = (turnUUID != user_uuid)
+        ? `<strong class="purple-text text-accent-2">${escapeHtml(eliminatingUser.nickname)}</strong>'s`
         : '<strong class="cyan-text text-accent-2">YOUR</strong>'
     const toastHtml = `<span>${toastName}&nbsp;turn.</span>`
-    M.toast({html: toastHtml})
+    M.toast({ html: toastHtml })
 
     //Put username in status bar
     const statusText = (turnUUID == user_uuid)
-            ? "Waiting on YOUR turn..."
-            : `Waiting on ${eliminatingUser.nickname}'s turn...`
+        ? "Waiting on YOUR turn..."
+        : `Waiting on ${eliminatingUser.nickname}'s turn...`
 
     $statusBtn.find("span").text(statusText);
 }
 
-function getMoreMovieInfo(movieId){
+function getMoreMovieInfo(movieId) {
     //Ajax for more movie detail w/ watch provider data
     return $.get({
         url: resourcePath.moreMovieInfoUrl(movieId),
@@ -245,10 +244,10 @@ function getMoreMovieInfo(movieId){
 
 //Sets a movie-info modal content, initializes, and opens
 //Movie Info object from getMoreMovieInfo, and the ID name of the modal element
-function openMoreInfoModal(movieInfo, targetModalId){
+function openMoreInfoModal(movieInfo, targetModalId) {
     $(`#${targetModalId} div.modal-content`)
         .html(MovieInfoModal(movieInfo))
-    
+
     $(`#${targetModalId}`).modal({
         inDuration: 1500,
         dismissible: false,
@@ -259,12 +258,12 @@ function openMoreInfoModal(movieInfo, targetModalId){
     $(`#${targetModalId}`).modal('open');
 }
 
-export { 
-    commandEliminate, 
-    commandConnected, 
-    commandDisconnected, 
-    commandSyncRoom, 
-    commandRefreshMovieList, 
-    commandStartElimination, 
+export {
+    commandEliminate,
+    commandConnected,
+    commandDisconnected,
+    commandSyncRoom,
+    commandRefreshMovieList,
+    commandStartElimination,
     commandFinalized
 };

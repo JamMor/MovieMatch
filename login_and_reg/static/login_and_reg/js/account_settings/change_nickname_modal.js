@@ -1,4 +1,4 @@
-import {applyTooltips, resetFormErrors} from "/static/js/shared/form_functions.js";
+import { applyTooltips, resetFormErrors } from "/static/js/shared/form_functions.js";
 import { ajaxErrorHandler } from "/static/js/shared/ajaxErrorHandler.js";
 import { escapeHtml } from "/static/js/shared/htmlEscaping.js";
 import { validateUserInput } from "/static/js/shared/regexValidators.js";
@@ -14,7 +14,7 @@ const $form = $(changeForm);
 const $submitBtn = $("#change-nickname-confirm");
 const nicknameKey = "nickname";
 
-function openChangeNicknameModal(){
+function openChangeNicknameModal() {
     $modal.modal();
     $modal.modal('open');
 }
@@ -75,31 +75,31 @@ function sendChangeNicknameRequest() {
 function changeNicknameStatusToast(status, nickname = "") {
     const escapedNickname = escapeHtml(nickname);
     const statusMessages = {
-        "success" : `Changed nickname to <strong class="cyan-text text-accent-2">${escapedNickname}</strong>!`,
-        "blank" : `Removed nickname.`,
-        "error" : `<strong class="orange-text text-darken-3">Failed</strong> to change nickname.`,
-        "fail" : `<strong class="orange-text text-darken-3">Request failure.</strong>.`,
-        "unknown" : `<strong class="orange-text text-darken-3">Unknown error.</strong>.`
+        "success": `Changed nickname to <strong class="cyan-text text-accent-2">${escapedNickname}</strong>!`,
+        "blank": `Removed nickname.`,
+        "error": `<strong class="orange-text text-darken-3">Failed</strong> to change nickname.`,
+        "fail": `<strong class="orange-text text-darken-3">Request failure.</strong>.`,
+        "unknown": `<strong class="orange-text text-darken-3">Unknown error.</strong>.`
     }
-    
+
     const message = statusMessages[status] || statusMessages["unknown"]
-    
-    M.toast({html: `<span>${message}</span>`})
+
+    M.toast({ html: `<span>${message}</span>` })
 }
 
 const init = () => {
     applyTooltips()
 
     //Initializes then calls change nickname modal
-    $modalOpenBtn.on("click", function(){
+    $modalOpenBtn.on("click", function () {
         openChangeNicknameModal();
     })
 
     //Sends change nickname request to server.
-    $submitBtn.on("click", function(e){
+    $submitBtn.on("click", function (e) {
         e.preventDefault();
         sendChangeNicknameRequest();
     })
 }
 
-export {init}
+export { init }

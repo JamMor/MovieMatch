@@ -1,4 +1,4 @@
-import {applyTooltips, resetFormErrors} from "/static/js/shared/form_functions.js";
+import { applyTooltips, resetFormErrors } from "/static/js/shared/form_functions.js";
 import { ajaxErrorHandler } from "/static/js/shared/ajaxErrorHandler.js";
 
 const changePasswordForm = document.querySelector("#change-password-form");
@@ -7,7 +7,7 @@ const $modalOpenBtn = $("#change-password-btn");
 const $form = $(changePasswordForm);
 const $submitBtn = $("#change-password-confirm");
 
-function openChangePasswordModal(){
+function openChangePasswordModal() {
     $modal.modal();
     $modal.modal('open');
 }
@@ -49,31 +49,31 @@ function sendChangePasswordRequest() {
 
 function changePasswordStatusToast(status) {
     const statusMessages = {
-        "success" : `<strong class="cyan-text text-accent-2">Successfully</strong> changed password!`,
-        "error" : `<strong class="orange-text text-darken-3">Failed</strong> to change password.`,
-        "fail" : `<strong class="orange-text text-darken-3">Request failure.</strong>.`,
-        "unknown" : `<strong class="orange-text text-darken-3">Unknown error.</strong>.`
+        "success": `<strong class="cyan-text text-accent-2">Successfully</strong> changed password!`,
+        "error": `<strong class="orange-text text-darken-3">Failed</strong> to change password.`,
+        "fail": `<strong class="orange-text text-darken-3">Request failure.</strong>.`,
+        "unknown": `<strong class="orange-text text-darken-3">Unknown error.</strong>.`
     }
-    
+
     const message = statusMessages[status] || statusMessages["unknown"]
-    
-    M.toast({html: `<span>${message}</span>`})
+
+    M.toast({ html: `<span>${message}</span>` })
 }
 
 const init = () => {
     applyTooltips()
 
     //Initializes then calls change password modal
-    $modalOpenBtn.on("click", function(){
+    $modalOpenBtn.on("click", function () {
         openChangePasswordModal();
     })
 
     //Sends change password request to server.
-    $submitBtn.on("click", function(e){
+    $submitBtn.on("click", function (e) {
         e.preventDefault();
         sendChangePasswordRequest();
     })
 
 }
 
-export {init}
+export { init }

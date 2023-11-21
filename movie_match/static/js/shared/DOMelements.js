@@ -6,7 +6,7 @@ import { escapeHtml } from "/static/js/shared/htmlEscaping.js";
 //Takes type of button and returns html as string for a card button
 const CardButton = (type) => {
     let color = ''; let customClass = ''; let icon = '';
-    switch(type){
+    switch (type) {
         case 'add':
             color = "neon-cyan neon-glow neon-hover"
             customClass = "add-btn"
@@ -85,22 +85,22 @@ const MovieCard = (
 
 //Returns HTML string for watch providers display in MovieInfo
 const ProviderList = (providers) => {
-    if(providers.length == 0){
+    if (providers.length == 0) {
         return `<li class="center-align provider-empty"><em>Not available at this time.</em></li>`
     }
-    return providers.map(prv => 
+    return providers.map(prv =>
         `<li class="tooltipped" data-position="bottom" data-tooltip="${escapeHtml(prv.provider_name)}">
             <img src="${resourcePath.imagePrefix}w45${encodeURI(prv.logo_path)}" alt="${escapeHtml(prv.provider_name)}">
         </li>`
-        ).join('');
+    ).join('');
 }
 
 //Takes object from the movieDB movie query and returns the html as a string for 
 //the 'More Info' modal
-const MovieInfoModal = ( 
-        {tmdb_id, title, release_date, overview, fullPosterURL,
-        genres, formattedRuntime, roundedScore, stream, rent}
-    ) => {
+const MovieInfoModal = (
+    { tmdb_id, title, release_date, overview, fullPosterURL,
+        genres, formattedRuntime, roundedScore, stream, rent }
+) => {
 
     //Escape html chars
     const escapedTitle = escapeHtml(title);
@@ -111,7 +111,7 @@ const MovieInfoModal = (
     const escapedFullPosterURL = encodeURI(fullPosterURL);
     const escapedRoundedScore = escapeHtml(roundedScore);
 
-    return    `
+    return `
         <div class="row">
             <div class="col s12 m6">
                 <img class="poster" src='${escapedFullPosterURL}' alt='Poster for ${escapedTitle}' onerror="this.src='${resourcePath.placeholderPath}'">
@@ -155,7 +155,7 @@ const UserChipColors = {
     "other": "neon-magenta"
 }
 
-const UserChip = (prefix, {uuid, nickname, position}, isSelf) => {
+const UserChip = (prefix, { uuid, nickname, position }, isSelf) => {
     const color = isSelf ? UserChipColors.self : UserChipColors.other
     return `<div id='${prefix}_${uuid}' class="chip ${color} neon-glow neon-unlit dimmed" data-position="${position}">
             ${escapeHtml(nickname)}
@@ -197,7 +197,7 @@ const PageItem = (itemClass, displayValue, pageValue, sortField, sortDirection) 
     }
     const linkClass = classMap[itemClass];
     let href = "#!";
-    if (itemClass != "disabled"){
+    if (itemClass != "disabled") {
         href = urlPath.getListsOverview(pageValue, sortField, sortDirection);
     }
     return `
@@ -212,19 +212,19 @@ const PaginatorPages = (currentPage, sortField, sortDirection, totalItemCount, i
     const maxPagesShown = 5;
 
     const pageOffset = Math.floor(maxPagesShown / 2);
-    
-    
+
+
     let pageStart;
     let pageEnd;
-    if (totalPages <= maxPagesShown){
+    if (totalPages <= maxPagesShown) {
         pageStart = 1;
         pageEnd = totalPages;
     }
-    else if (currentPage <= maxPagesShown - pageOffset){
+    else if (currentPage <= maxPagesShown - pageOffset) {
         pageStart = 1;
         pageEnd = maxPagesShown;
     }
-    else if (currentPage >= totalPages - pageOffset){
+    else if (currentPage >= totalPages - pageOffset) {
         pageStart = totalPages - maxPagesShown + 1;
         pageEnd = totalPages;
     }
@@ -232,9 +232,9 @@ const PaginatorPages = (currentPage, sortField, sortDirection, totalItemCount, i
         pageStart = currentPage - pageOffset;
         pageEnd = currentPage + pageOffset;
     }
-    
+
     let pagesHtml = '';
-    for (let i = pageStart; i <= pageEnd; i++){
+    for (let i = pageStart; i <= pageEnd; i++) {
         let pageClass = i == currentPage ? "active" : "inactive";
         pagesHtml += PageItem(pageClass, i, i, sortField, sortDirection);
     }
@@ -242,7 +242,7 @@ const PaginatorPages = (currentPage, sortField, sortDirection, totalItemCount, i
     const previousClass = currentPage == 1 ? "disabled" : "inactive";
     const previousIndicator = "<i class='material-icons'>chevron_left</i>"
     const previousBtn = PageItem(previousClass, previousIndicator, currentPage - 1, sortField, sortDirection);
-    
+
     const nextClass = currentPage == totalPages ? "disabled" : "inactive";
     const nextIndicator = "<i class='material-icons'>chevron_right</i>"
     const nextBtn = PageItem(nextClass, nextIndicator, currentPage + 1, sortField, sortDirection);

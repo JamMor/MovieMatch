@@ -4,7 +4,7 @@ import * as About from "./about.js"
 import * as MaterializeComponents from "./materialize-components.js"
 
 //Entry point for base site
-$(document).ready(function() {
+$(document).ready(function () {
     csrfSetToken.init();
     LoginComponent.init();
     About.init();

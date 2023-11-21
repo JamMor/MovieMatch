@@ -22,7 +22,7 @@ function csrfSafeMethod(method) {
 
 const init = () => {
     $.ajaxSetup({
-        beforeSend: function(xhr, settings) {
+        beforeSend: function (xhr, settings) {
             if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
                 xhr.setRequestHeader("X-CSRFToken", getCookie('csrftoken'));
             }
@@ -30,4 +30,4 @@ const init = () => {
     });
 }
 
-export {init}
+export { init }

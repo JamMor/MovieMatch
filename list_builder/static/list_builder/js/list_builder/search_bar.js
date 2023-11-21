@@ -12,11 +12,11 @@ const $listActionBtn = $("#list-actions-btn");
 const searchDelayTime = 1000;
 const minSearchQueryLength = 2;
 
-function activateSearch(){
+function activateSearch() {
     $searchResultsDiv.fadeIn(100);
     $movieListDiv.fadeTo(500, 0.1)
 }
-function deactivateSearch(){
+function deactivateSearch() {
     $searchResultsDiv.fadeOut(100);
     $movieListDiv.fadeTo(500, 1);
 }
@@ -30,13 +30,13 @@ function delay(fn, ms) {
     }
 }
 
-function existingMovieCheck(list1, list2){
+function existingMovieCheck(list1, list2) {
     const idList1 = list1.getIds();
     const idList2 = list2.getIds();
     return idList1.filter(x => idList2.includes(x));
 }
 
-function updateSearchResultsDOM(data){
+function updateSearchResultsDOM(data) {
     console.log(data);
     //If no search results
     if (data.results.length == 0) {
@@ -50,13 +50,13 @@ function updateSearchResultsDOM(data){
             .html('<h6 class="center-align grey-text text-lighten-2">No results</h6>')
         return
     }
-    
-    
+
+
     $searchResultsDiv
         .animate({ height: "400px" }, 200)
         .promise().done(function () {
             searchResults.clearList();
-            const renamedResults = data.results.map(({ id, ...rest }) => ({tmdb_id: id, ...rest}));
+            const renamedResults = data.results.map(({ id, ...rest }) => ({ tmdb_id: id, ...rest }));
             searchResults.bulkAddMoviesToList(...renamedResults);
 
             $(this)
@@ -69,7 +69,7 @@ function updateSearchResultsDOM(data){
                     const alreadyAddedIds = existingMovieCheck(movieList, searchResults);
                     searchResults.disableAddBtns(...alreadyAddedIds);
                 });
-    })
+        })
 }
 
 function searchMovies(searchQuery) {
@@ -91,15 +91,15 @@ function searchMovies(searchQuery) {
     }
 }
 
-function clearSearchResults(){
+function clearSearchResults() {
     $searchInput.val('');
     searchResults.clearList();
-    $searchResultsDiv.animate({height: "0px"}, 150);
+    $searchResultsDiv.animate({ height: "0px" }, 150);
 }
 
 // Attach handlers to DOM elements
 const init = () => {
-    $searchForm.submit(function(e){
+    $searchForm.submit(function (e) {
         e.preventDefault();
     })
 
@@ -107,21 +107,21 @@ const init = () => {
     $searchInput.focus(activateSearch)
 
     //Deactivate open containers when clicking outside of them
-    $(document).click(function(event){
+    $(document).click(function (event) {
         let clickedTarget = $(event.target);
         // Deactivate search if user clicks outside of search container
-        if (!clickedTarget.closest($searchContainer).length){
+        if (!clickedTarget.closest($searchContainer).length) {
             deactivateSearch();
         }
         // Deactivate list action button if user clicks outside of it
-        if (!clickedTarget.closest($listActionBtn).length){
+        if (!clickedTarget.closest($listActionBtn).length) {
             $listActionBtn.floatingActionButton("close");
         }
     })
 
-    $listActionBtn.click(function(){
+    $listActionBtn.click(function () {
         //if element has active class
-        if ($(this).hasClass("active")){
+        if ($(this).hasClass("active")) {
             $movieListDiv.fadeTo(500, 1);
         }
         else {
@@ -136,9 +136,9 @@ const init = () => {
         searchMovies(searchQuery);
     }, searchDelayTime));
 
-    
+
     // Clear search results
-    $clearSearch.click(function() {
+    $clearSearch.click(function () {
         clearSearchResults();
     });
 

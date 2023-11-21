@@ -1,6 +1,6 @@
 import { movieList } from "../movie_lists.js";
 import { ajaxErrorHandler } from "/static/js/shared/ajaxErrorHandler.js";
-import {applyTooltips, resetFormErrors} from "/static/js/shared/form_functions.js";
+import { applyTooltips, resetFormErrors } from "/static/js/shared/form_functions.js";
 import { validateSharecode, validateUserInput } from "/static/js/shared/regexValidators.js";
 
 const shareForm = document.querySelector("#share-list-form");
@@ -62,16 +62,16 @@ function submitEliminationList() {
 
 function submitEliminationStatusToast(status) {
     const statusMessages = {
-        "invalid-sharecode" : `<strong class="orange-text text-darken-3">Invalid sharecode.</strong>`,
-        "invalid-nickname" : `<strong class="orange-text text-darken-3">Invalid nickname.</strong>`,
-        "error" : `<strong class="orange-text text-darken-3">Failed</strong> to share list.`,
-        "fail" : `<strong class="orange-text text-darken-3">Request failure.</strong>.`,
-        "unknown" : `<strong class="orange-text text-darken-3">Unknown error.</strong>.`
+        "invalid-sharecode": `<strong class="orange-text text-darken-3">Invalid sharecode.</strong>`,
+        "invalid-nickname": `<strong class="orange-text text-darken-3">Invalid nickname.</strong>`,
+        "error": `<strong class="orange-text text-darken-3">Failed</strong> to share list.`,
+        "fail": `<strong class="orange-text text-darken-3">Request failure.</strong>.`,
+        "unknown": `<strong class="orange-text text-darken-3">Unknown error.</strong>.`
     }
-    
+
     const message = statusMessages[status] || statusMessages["unknown"]
-    
-    M.toast({html: `<span>${message}</span>`})
+
+    M.toast({ html: `<span>${message}</span>` })
 }
 
 const init = () => {

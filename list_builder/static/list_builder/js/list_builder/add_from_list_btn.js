@@ -20,8 +20,8 @@ const getRowDomIdFromListId = (listId) => `row_${listId}`;
 
 let selectedLists = [];
 let sortOrder = {
-    "field" : "updated-at",
-    "direction" : "desc",
+    "field": "updated-at",
+    "direction": "desc",
 }
 
 function addToList(listId) {
@@ -58,11 +58,11 @@ function addToListStatusToast(status, listName = "") {
     M.toast({ html: `<span>${message}</span>` })
 }
 
-function selectList(listId){
+function selectList(listId) {
     const $listBtn = $(`#${getBtnDomIdFromListId(listId)}`);
     const $listRow = $(`#${getRowDomIdFromListId(listId)}`);
-    
-    if (selectedLists.includes(listId)){
+
+    if (selectedLists.includes(listId)) {
         return false;
     }
     else {
@@ -73,7 +73,7 @@ function selectList(listId){
     }
 }
 
-function addToListHandler(e){
+function addToListHandler(e) {
     e.stopPropagation();
     const listDomId = $(this).attr("id")
     const listId = getListIdFromBtnDomId(listDomId);
@@ -81,7 +81,7 @@ function addToListHandler(e){
     addToList(listId);
 }
 
-function updateListModal(data){
+function updateListModal(data) {
     // Replace list items with data
     $listContainer.empty();
     if (data.lists.length == 0) {
@@ -106,14 +106,14 @@ function updateListModal(data){
     $listPages.append(PaginatorPages(data.page_number, field, direction, data.total_count, data.items_per_page));
 }
 
-function getLists(pageNumber){
+function getLists(pageNumber) {
     const { field, direction } = sortOrder;
     $.get({
         url: urlPath.getListsOverview(pageNumber, field, direction),
         dataType: "json"
     })
-        .done(function(response) {
-            if (response.status == "success"){
+        .done(function (response) {
+            if (response.status == "success") {
                 updateListModal(response.data);
             }
             else {
@@ -121,7 +121,7 @@ function getLists(pageNumber){
                 getListsStatusToast("error");
             }
         })
-        .fail(function() {
+        .fail(function () {
             console.error("Request failure: get lists overview.");
             getListsStatusToast("fail");
         });
@@ -163,13 +163,13 @@ const init = () => {
     })
 
     // Handler for pagination links
-    $savedListModal.on("click", `a.${pageLinkClass}`, function(e){
+    $savedListModal.on("click", `a.${pageLinkClass}`, function (e) {
         e.preventDefault();
-        if ($(this).parent().hasClass("neon-lit")){
+        if ($(this).parent().hasClass("neon-lit")) {
             return;
         }
         const targetUrl = $(this).attr("href")
-        if (targetUrl == "#!"){
+        if (targetUrl == "#!") {
             return;
         }
         const queryString = new URLSearchParams(targetUrl.split("?")[1])

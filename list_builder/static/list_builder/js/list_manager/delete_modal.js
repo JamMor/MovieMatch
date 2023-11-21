@@ -10,14 +10,14 @@ const listIdFromHeaderRowDOMId = (headerRowDOMId) => headerRowDOMId.split("_")[1
 const $listNameForModal = $("#list-name-delete");
 
 let thisList = {};
-function displayDeleteModal(listName){
+function displayDeleteModal(listName) {
     $listNameForModal
         .text(listName)
     $modal.modal();
     $modal.modal('open');
 }
 
-function handleDeleteRequest(){
+function handleDeleteRequest() {
     //Get list name and id from DOM
     const $thisRow = $(this).parents("tr")
     const thisRowId = $thisRow.attr("id");
@@ -31,10 +31,10 @@ function handleDeleteRequest(){
 }
 
 
-function isTableEmpty(){
+function isTableEmpty() {
     return $tableBody.children().length == 0;
 }
-function addEmptyTableRow(){
+function addEmptyTableRow() {
     const emptyRow = `
         <tr class="neon-orange neon-glow neon-unlit">
             <td class="center-align" colspan="4">
@@ -82,37 +82,37 @@ function sendDeletionRequest() {
 }
 
 //Sends appropriate notification for list delete
-function deleteStatusToast(listName, status){
+function deleteStatusToast(listName, status) {
     let toast = {}
-    toast.name = (listName.length > 10) ? `${listName.slice(0,9)}...` : listName;
+    toast.name = (listName.length > 10) ? `${listName.slice(0, 9)}...` : listName;
 
-    if(status == "success"){
+    if (status == "success") {
         toast.class = "cyan-text text-accent-2"
         toast.text = "Deleted"
     }
-    else if(status == "error"){
+    else if (status == "error") {
         toast.class = "orange-text text-darken-3"
         toast.text = "Could not delete"
     }
-    else if(status == "fail-send"){
+    else if (status == "fail-send") {
         toast.class = "orange-text text-darken-3"
         toast.text = "Request failed to delete"
     }
 
-    M.toast({html: `<span>${toast.text}&nbsp;<strong class=${toast.class}>${escapeHtml(toast.name)}</strong></span>`})
+    M.toast({ html: `<span>${toast.text}&nbsp;<strong class=${toast.class}>${escapeHtml(toast.name)}</strong></span>` })
 }
 
 const init = () => {
     //Gets list id, and generates then calls delete modal
-    $modalOpenBtns.on("click", function(){
+    $modalOpenBtns.on("click", function () {
         handleDeleteRequest.call(this);
     })
-    
+
     //Sends delete request to server. List ID as URL parameter
-    $submitBtn.on("click", function(e){
+    $submitBtn.on("click", function (e) {
         e.preventDefault();
-        sendDeletionRequest();    
+        sendDeletionRequest();
     })
 }
 
-export {init}
+export { init }

@@ -1,5 +1,5 @@
-import {applyTooltips} from "/static/js/shared/form_functions.js"
+import { applyTooltips } from "/static/js/shared/form_functions.js"
 
-$(document).ready(function() {
+$(document).ready(function () {
     applyTooltips();
 })

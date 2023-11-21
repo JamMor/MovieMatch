@@ -1,5 +1,5 @@
 import { ajaxErrorHandler } from "/static/js/shared/ajaxErrorHandler.js";
-import {applyTooltips, resetFormErrors} from "/static/js/shared/form_functions.js";
+import { applyTooltips, resetFormErrors } from "/static/js/shared/form_functions.js";
 import { escapeHtml } from "/static/js/shared/htmlEscaping.js";
 import { validateUserInput } from "/static/js/shared/regexValidators.js";
 // Save List
@@ -27,7 +27,7 @@ function submitSaveList(movieList) {
     }
 
     const tmdb_ids = movieList.getIds();
-    if (tmdb_ids.length == 0){
+    if (tmdb_ids.length == 0) {
         console.log("Cannot save empty list.")
         saveStatusToast(listName, "empty");
         return
@@ -71,35 +71,35 @@ function submitSaveList(movieList) {
  * @param {string} listName - Name of list succesfully saved, or name given for failed save.
  * @param {string} status - success/error/empty/fail. Status of save list operation.
  */
-function saveStatusToast (listName, status) {
+function saveStatusToast(listName, status) {
     const statusMessages = {
-        "success" : "Saved list to",
-        "error" : "Could not save",
-        "empty" : "Cannot save empty list",
-        "fail" : "Request failure",
-        "unknown" : "Unknown error"
+        "success": "Saved list to",
+        "error": "Could not save",
+        "empty": "Cannot save empty list",
+        "fail": "Request failure",
+        "unknown": "Unknown error"
     }
-    
+
     const message = statusMessages[status] || statusMessages["unknown"]
-    
+
     // Truncate list name if too long.
-    const displayName = (listName.length > 10) ? `${listName.slice(0,9)}...` : listName;
+    const displayName = (listName.length > 10) ? `${listName.slice(0, 9)}...` : listName;
     const classColor = (status == "success") ? "cyan-text text-accent-2" : "orange-text text-darken-3"
-    
-    M.toast({html: `<span>${message}&nbsp;<strong class=${classColor}>${escapeHtml(displayName)}</strong></span>`});
+
+    M.toast({ html: `<span>${message}&nbsp;<strong class=${classColor}>${escapeHtml(displayName)}</strong></span>` });
 }
 
-function disabledSave(){
-    $disabledBtn.click(function (e){
+function disabledSave() {
+    $disabledBtn.click(function (e) {
         e.preventDefault();
-        M.toast({html: `<span><strong  class="orange-text text-darken-3">Must be logged in to save list.</strong></span>`});
+        M.toast({ html: `<span><strong  class="orange-text text-darken-3">Must be logged in to save list.</strong></span>` });
     })
 }
 
-function init(movieList){
+function init(movieList) {
     applyTooltips()
 
-    $submitBtn.click(function (e){
+    $submitBtn.click(function (e) {
         e.preventDefault();
         submitSaveList(movieList);
     })
