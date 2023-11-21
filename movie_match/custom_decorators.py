@@ -5,7 +5,7 @@ from django.http import JsonResponse
 from .json_response_models import FailedJsonClassObject
 
 
-def login_required_json(view_func = None, error_msg = 'Must be logged in.'):
+def login_required_json(view_func=None, error_msg='Must be logged in.'):
     def decorator(view_func):
         @wraps(view_func)
         def _wrapped_view(request, *args, **kwargs):
@@ -19,9 +19,9 @@ def login_required_json(view_func = None, error_msg = 'Must be logged in.'):
                     errors=[error_msg]
                 )
                 return JsonResponse(failedResponse.to_dict())
-        
+
         return _wrapped_view
-    
+
     if view_func is None:
         return decorator
     else:

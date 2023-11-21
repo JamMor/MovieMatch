@@ -33,7 +33,6 @@ class HiddenListNameForm(SavedMovieListForm):
         widgets = {'list_name': forms.HiddenInput()}
 
 
-
 class MovieTmdbIdsForm(forms.Form):
     tmdb_ids = forms.JSONField(
         error_messages={'required': 'Cannot save an empty list.'},

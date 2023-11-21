@@ -23,7 +23,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent.parent
 
 
 # Quick-start development settings - unsuitable for production
-#See https://docs.djangoproject.com/en/4.0/howto/deployment/checklist/
+# See https://docs.djangoproject.com/en/4.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = str(os.getenv('SECRET_KEY'))
@@ -89,18 +89,18 @@ WSGI_APPLICATION = 'movie_match.wsgi.application'
 env_db = str(os.getenv('DATABASE_ENGINE'))
 if env_db == 'sqlite3':
     env_db_config = {
-            'ENGINE': 'django.db.backends.sqlite3',
-            'NAME': BASE_DIR / 'db.sqlite3',
-        }
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': BASE_DIR / 'db.sqlite3',
+    }
 elif env_db == 'postgresql':
     env_db_config = {
-            'ENGINE': f'django.db.backends.postgresql',
-            'NAME': str(os.getenv('POSTGRES_DB')),
-            'USER': str(os.getenv('POSTGRES_USER')),
-            'PASSWORD': str(os.getenv('POSTGRES_PASSWORD')),
-            'HOST': str(os.getenv('POSTGRES_HOST', 'localhost')),
-            'PORT': str(os.getenv('POSTGRES_PORT', '5432')),
-        }
+        'ENGINE': f'django.db.backends.postgresql',
+        'NAME': str(os.getenv('POSTGRES_DB')),
+        'USER': str(os.getenv('POSTGRES_USER')),
+        'PASSWORD': str(os.getenv('POSTGRES_PASSWORD')),
+        'HOST': str(os.getenv('POSTGRES_HOST', 'localhost')),
+        'PORT': str(os.getenv('POSTGRES_PORT', '5432')),
+    }
 else:
     raise ImproperlyConfigured("Database not properly specified.")
 DATABASES = {
@@ -165,12 +165,12 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 STATICFILES_DIRS = [
-    BASE_DIR / "movie_match/static", 
-    BASE_DIR / "dist", 
+    BASE_DIR / "movie_match/static",
+    BASE_DIR / "dist",
 ]
 
 env_static = str(os.getenv('CONTAINER_STATIC_DIRECTORY', 'staticfiles/'))
-STATIC_ROOT =  BASE_DIR / env_static
+STATIC_ROOT = BASE_DIR / env_static
 
 
 # Default primary key field type

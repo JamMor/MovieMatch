@@ -34,7 +34,7 @@ class SharecodeForm(ModelForm):
             return sharecode
         else:
             raise ValidationError("Sharecode does not exist.")
-        
+
     def clean(self):
         self._validate_unique = False
         return self.cleaned_data
@@ -67,7 +67,7 @@ class ShareRoomUserForm(ModelForm):
             attrs = self.fields['nickname'].widget.attrs
             attrs.update({'class': attrs.get('class', '') + ' invalid'})
         return result
-    
+
 
 class MovieTmdbIdsForm(forms.Form):
     tmdb_ids = forms.JSONField(
