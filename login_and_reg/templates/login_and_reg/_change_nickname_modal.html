@@ -1,17 +1,22 @@
 <div id="change-nickname-modal" class="modal cyber-grade">
     <div class="modal-content pink-text text-darken-2">
-        <h5>What would you like to change your nickname to be
-            {% if nickname %}
-                , <span class="displayed-nickname cyan-text text-accent-2">{{nickname}}</span>
-            {% endif %}
-            ?</h5>
+        <h5>
+            What would you like to change your nickname to be
+            {% if nickname %}, <span class="displayed-nickname cyan-text text-accent-2">{{ nickname }}</span>{% endif %}
+            ?
+        </h5>
         <form id="change-nickname-form" action="{% url 'login_and_reg:change_nickname' %}" method="POST">
             {% csrf_token %}
             {% include "form_template.html" with form=change_nickname_form %}
         </form>
     </div>
     <div class="modal-footer">
-        <button type="submit" form="change-nickname-form" id="change-nickname-confirm" class="neon-cyan neon-glow neon-hover waves-effect waves-light btn-large btn-rounded"><i class="material-icons left">edit</i>Change</button>
-        <button type="button" class="modal-close orange-text text-darken-3 waves-effect waves-dark btn-flat"><i class="material-icons left orange-text text-darken-3">close</i>Cancel</button>
+        <button type="submit" form="change-nickname-form" id="change-nickname-confirm"
+                class="neon-cyan neon-glow neon-hover waves-effect waves-light btn-large btn-rounded">
+            <i class="material-icons left">edit</i>Change
+        </button>
+        <button type="button" class="modal-close orange-text text-darken-3 waves-effect waves-dark btn-flat">
+            <i class="material-icons left orange-text text-darken-3">close</i>Cancel
+        </button>
     </div>
 </div>

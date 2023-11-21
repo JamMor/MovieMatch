@@ -1,52 +1,52 @@
-    {% extends "list_builder/list_builder_base.html" %}
-    {% load static %}
-    {% load bundled_url %}
+{% extends "list_builder/list_builder_base.html" %}
 
-    {% block page_subtitle %} - Edit {{ saved_list.display_name }}{% endblock %}
-    {% block meta_description_block %}
-    <meta 
-        name="description" 
-        content="Edit your MovieMatch movie list: Easily edit, add, or remove movies 
-        to keep your collection up-to-date and personalized to your preferences."
-    >
-    {% endblock %}
+{% load static %}
+{% load bundled_url %}
 
-    {% block list_builder_subheading %}
-        <div class="center-align">
-            <button id="open-list-name-btn" data-target="change-list-name-modal" class="modal-trigger btn-large btn-rounded neon-magenta neon-glow neon-hover">
-                <span>{{ saved_list.display_name }}</span>
-                <i class="material-icons right">edit</i>
-            </button>
-        </div>
-    {% endblock %}
+{% block page_subtitle %} - Edit {{ saved_list.display_name }}{% endblock %}
 
-    {% block content_block %}
-        {{ block.super }}
-        <div id="editor-savebar" class="navbar-fixed">
-            <nav class="cyan accent-2">
-                <div class="nav-wrapper">
-                    <ul>
-                        <li class="waves-effect waves-light">
-                            <a id="open-save-btn" class="modal-trigger indigo-text text-darken-4" href="#save-modal">
-                                <i class="material-icons left indigo-text text-darken-4">save</i>Save
-                            </a>
-                        </li>
-                        <li class="waves-effect waves-light orange darken-3">
-                            <a href="{% url 'list_builder:list_manager' %}">
-                                <i class="material-icons left">close</i>Cancel
-                            </a>
-                        </li>
-                    </ul>
-                </div>
-            </nav>
-        </div>
+{% block meta_description_block %}
+    <meta name="description"
+          content="Edit your MovieMatch movie list: Easily edit, add, or remove 
+          movies to keep your collection up-to-date and personalized to your 
+          preferences." />
+{% endblock %}
 
-        {% include "list_builder/editor_list_name_modal.html" %}
-        {% include "list_builder/editor_save_modal.html" with list_id=saved_list.id %}
+{% block list_builder_subheading %}
+    <div class="center-align">
+        <button id="open-list-name-btn" data-target="change-list-name-modal"
+                class="modal-trigger btn-large btn-rounded neon-magenta neon-glow neon-hover">
+            <span>{{ saved_list.display_name }}</span>
+            <i class="material-icons right">edit</i>
+        </button>
+    </div>
+{% endblock %}
 
-        {{ movie_list|json_script:"imported-movie-data" }}
-    {% endblock %}
+{% block content_block %}
+    {{ block.super }}
+    <div id="editor-savebar" class="navbar-fixed">
+        <nav class="cyan accent-2">
+            <div class="nav-wrapper">
+                <ul>
+                    <li class="waves-effect waves-light">
+                        <a id="open-save-btn" class="modal-trigger indigo-text text-darken-4" href="#save-modal">
+                            <i class="material-icons left indigo-text text-darken-4">save</i>Save
+                        </a>
+                    </li>
+                    <li class="waves-effect waves-light orange darken-3">
+                        <a href="{% url 'list_builder:list_manager' %}">
+                            <i class="material-icons left">close</i>Cancel
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </nav>
+    </div>
+    {% include "list_builder/editor_list_name_modal.html" %}
+    {% include "list_builder/editor_save_modal.html" with list_id=saved_list.id %}
+    {{ movie_list|json_script:"imported-movie-data" }}
+{% endblock %}
 
-    {% block script_block %}
-        {% bundle_tag 'list_builder/js/list_builder/list_editor/index.js' block.super %}
-    {% endblock %}
+{% block script_block %}
+    {% bundle_tag 'list_builder/js/list_builder/list_editor/index.js' block.super %}
+{% endblock %}

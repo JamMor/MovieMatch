@@ -1,53 +1,53 @@
 <!-- //This contains a list of internal urls that are used in the javascript files. -->
 <script type="text/javascript">
     var urlPath = {
-        "defaultRedirect" : "{% url 'list_builder:default_redirect' %}",
+        "defaultRedirect": "{% url 'list_builder:default_redirect' %}",
         //list_builder
-        "listCreator" : "{% url 'list_builder:list_builder' %}",
-        "listManager" : "{% url 'list_builder:list_manager' %}",
-        "saveList" : (list_id = "") => {
+        "listCreator": "{% url 'list_builder:list_builder' %}",
+        "listManager": "{% url 'list_builder:list_manager' %}",
+        "saveList": (list_id = "") => {
             const baseSaveUrl = "/save"
             if (list_id == "") {
                 return baseSaveUrl
             }
             return `${baseSaveUrl}/${list_id}`
         },
-        "listEditor" : (list_id) => {
+        "listEditor": (list_id) => {
             const baseEditUrl = "/edit"
             return `${baseEditUrl}/${list_id}`
         },
-        "deleteList" : (list_id) => {
+        "deleteList": (list_id) => {
             const baseDeleteListUrl = "/delete"
             return `${baseDeleteListUrl}/${list_id}`
         },
-        "getList" : (list_id) => {
+        "getList": (list_id) => {
             const baseGetListUrl = "/get"
             return `${baseGetListUrl}/${list_id}`
         },
-        "getListsOverview" : (pageNumber=1, field="updated-at", order="desc") => {
+        "getListsOverview": (pageNumber = 1, field = "updated-at", order = "desc") => {
             const baseGetListsOverviewUrl = "/get-overview"
             return `${baseGetListsOverviewUrl}/?page=${pageNumber}&sort=${field}:${order}`
         },
         //elimination_room
-        "shareSubmit" : "{% url 'elimination_room:share_submit' %}",
-        "eliminationRoom" : (sharecode) => {
+        "shareSubmit": "{% url 'elimination_room:share_submit' %}",
+        "eliminationRoom": (sharecode) => {
             const baseEliminationUrl = "/match"
             return `${baseEliminationUrl}/${sharecode}`
         },
-        "webSocketURL" : (shareCode = "") => {
+        "webSocketURL": (shareCode = "") => {
             const webSocketProtocol = "{% if IN_DEBUG %}ws://{% else %}wss://{% endif %}"
             const baseURL = window.location.host
             const socketRootURL = "ws/match"
-    
+
             return `${webSocketProtocol}${baseURL}/${socketRootURL}/${shareCode}/`
         },
         //login_and_reg
-        "register" : "{% url 'login_and_reg:register' %}",
-        "login" : "{% url 'login_and_reg:login' %}",
-        "logout" : "{% url 'login_and_reg:logout' %}",
-        "accountSettings" : "{% url 'login_and_reg:settings' %}",
-        "changeNickname" : "{% url 'login_and_reg:change_nickname' %}",
-        "changePassword" : "{% url 'login_and_reg:change_password' %}",
-        "deleteAccount" : "{% url 'login_and_reg:delete_account' %}",
+        "register": "{% url 'login_and_reg:register' %}",
+        "login": "{% url 'login_and_reg:login' %}",
+        "logout": "{% url 'login_and_reg:logout' %}",
+        "accountSettings": "{% url 'login_and_reg:settings' %}",
+        "changeNickname": "{% url 'login_and_reg:change_nickname' %}",
+        "changePassword": "{% url 'login_and_reg:change_password' %}",
+        "deleteAccount": "{% url 'login_and_reg:delete_account' %}",
     };
 </script>

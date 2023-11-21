@@ -1,35 +1,37 @@
 {% extends "base.html" %}
+
 {% load static %}
 {% load bundled_url %}
 
 {% block page_subtitle %} - Update Your Account Settings{% endblock %}
+
 {% block meta_description_block %}
-<meta 
-    name="description" 
-    content="Customize your MovieMatch profile: Change your password, default nickname, 
-    email, or securely delete your account with ease."
->
+    <meta name="description"
+          content="Customize your MovieMatch profile: Change your password, 
+          default nickname, email, or securely delete your account with ease." />
 {% endblock %}
 
 {% block content_block %}
     <main class="container">
-        <div id="account-options" class ="cyber-grade white-text">
+        <div id="account-options" class="cyber-grade white-text">
             <h3>Account Options</h3>
-            <button type="button" id="change-nickname-btn" class="btn-large btn-rounded neon-cyan neon-glow neon-hover">Change Nickname</button>
+            <button type="button" id="change-nickname-btn"
+                    class="btn-large btn-rounded neon-cyan neon-glow neon-hover">Change Nickname</button>
             <button type="button" class="btn-large btn-rounded neon-cyan neon-glow neon-hover">Change Email</button>
-            <button type="button" id="change-password-btn" class="btn-large btn-rounded neon-cyan neon-glow neon-hover">Change Password</button>
+            <button type="button" id="change-password-btn"
+                    class="btn-large btn-rounded neon-cyan neon-glow neon-hover">Change Password</button>
             <button type="button" class="btn-large btn-rounded neon-cyan neon-glow neon-hover">Reset Password</button>
-            <hr>
-            <button type="button" id="account-delete-btn" class="btn-large btn-rounded neon-cyan neon-glow neon-hover">Delete Account</button>
+            <hr />
+            <button type="button" id="account-delete-btn"
+                    class="btn-large btn-rounded neon-cyan neon-glow neon-hover">Delete Account</button>
         </div>
     </main>
-
     <!-- Modal Structure -->
-    {% include "login_and_reg/_account_delete_modal.html"%}
-    {% include "login_and_reg/_change_nickname_modal.html"%}
-    {% include "login_and_reg/_change_password_modal.html"%}
-
+    {% include "login_and_reg/_account_delete_modal.html" %}
+    {% include "login_and_reg/_change_nickname_modal.html" %}
+    {% include "login_and_reg/_change_password_modal.html" %}
 {% endblock %}
+
 {% block script_block %}
     {% bundle_tag 'login_and_reg/js/account_settings/index.js' block.super %}
 {% endblock %}

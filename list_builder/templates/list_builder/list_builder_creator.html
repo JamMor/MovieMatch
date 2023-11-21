@@ -1,35 +1,39 @@
-    {% extends "list_builder/list_builder_base.html" %}
-    {% load static %}
-    {% load bundled_url %}
+{% extends "list_builder/list_builder_base.html" %}
 
-    {% block meta_description_block %}
-    <meta 
-        name="description" 
-        content="Discover MovieMatch: End movie night indecision with MovieMatch's 
-        turn based elimination. All you have to do is choose the one you DON'T want. 
-        Join friends to create and share custom movie lists, and narrow them down 
-        together to find the perfect pick—or at least one good enough for tonight."
-    >
-    {% endblock %}
+{% load static %}
+{% load bundled_url %}
 
-    {% block content_block %}
-        {{ block.super }}
-        <div id="list-save-share-btn" class="fixed-action-btn toolbar">
-            <a class="btn-floating btn-large cyan accent-2">
-                <i class="large material-icons indigo-text text-darken-4">arrow_back</i>
-            </a>
-            <ul>
-                <li class="waves-effect waves-light"><a class="modal-trigger" href="#share_modal"><i class="material-icons indigo-text text-darken-4">share</i></a></li>
-                <li class="waves-effect waves-light"><a id="open-save-btn" class="{% if user.is_authenticated %}modal-trigger{% else %}disabled-btn{% endif %}" href="#save-modal"><i class="material-icons indigo-text text-darken-4">save</i></a></li>
-                <li class="waves-effect waves-light"><a href="#!"><i class="material-icons indigo-text text-darken-4">arrow_forward</i></a></li>
-            </ul>
-        </div>
+{% block meta_description_block %}
+    <meta name="description"
+          content="Discover MovieMatch: End movie night indecision with MovieMatch's 
+          turn based elimination. All you have to do is choose the one you DON'T want. 
+          Join friends to create and share custom movie lists, and narrow them down 
+          together to find the perfect pick—or at least one good enough for tonight." />
+{% endblock %}
 
-        {% include "list_builder/_share_modal.html"%}
-        {% include "save_modal.html"%}
+{% block content_block %}
+    {{ block.super }}
+    <div id="list-save-share-btn" class="fixed-action-btn toolbar">
+        <a class="btn-floating btn-large cyan accent-2">
+            <i class="large material-icons indigo-text text-darken-4">arrow_back</i>
+        </a>
+        <ul>
+            <li class="waves-effect waves-light">
+                <a class="modal-trigger" href="#share_modal"><i class="material-icons indigo-text text-darken-4">share</i></a>
+            </li>
+            <li class="waves-effect waves-light">
+                <a id="open-save-btn" class="{% if user.is_authenticated %}modal-trigger{% else %}disabled-btn{% endif %}"
+                    href="#save-modal"><i class="material-icons indigo-text text-darken-4">save</i></a>
+            </li>
+            <li class="waves-effect waves-light">
+                <a href="#!"><i class="material-icons indigo-text text-darken-4">arrow_forward</i></a>
+            </li>
+        </ul>
+    </div>
+    {% include "list_builder/_share_modal.html" %}
+    {% include "save_modal.html" %}
+{% endblock %}
 
-    {% endblock %}
-
-    {% block script_block %}
-        {% bundle_tag 'list_builder/js/list_builder/list_creator/index.js' block.super %}
-    {% endblock %}
+{% block script_block %}
+    {% bundle_tag 'list_builder/js/list_builder/list_creator/index.js' block.super %}
+{% endblock %}
