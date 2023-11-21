@@ -1,5 +1,6 @@
 from django import forms
 from django.forms import ModelForm, ValidationError
+
 from .models import SavedMovieList
 from .validators import UserInputValidator
 
@@ -30,7 +31,6 @@ class SavedMovieListForm(ModelForm):
 class HiddenListNameForm(SavedMovieListForm):
     class Meta(SavedMovieListForm.Meta):
         widgets = {'list_name': forms.HiddenInput()}
-
 
 
 class MovieTmdbIdsForm(forms.Form):

@@ -1,23 +1,27 @@
-# chat/consumers.py
 import json
-from random import randint
-from django.utils import timezone
+
 from asgiref.sync import async_to_sync
 from channels.generic.websocket import JsonWebsocketConsumer
 from django.core.serializers.json import DjangoJSONEncoder
 
-from list_builder.models import Persona
-from elimination_room.models import ShareRoomUser, SharedMovieList
+from .command_requests import (
+    request_connect,
+    request_disconnect,
+    request_eliminate,
+    request_elimination_start,
+    request_initialize,
+    request_refresh_list,
+)
+from .json_socket_response_models import (
+    FailedCommandResponse,
+    SuccessfulCommandResponse,
+)
 from .serializer import SharedListEncoder
-from .json_socket_response_models import SuccessfulCommandResponse, FailedCommandResponse
-from .command_requests import request_connect, request_disconnect, request_eliminate, request_initialize, request_elimination_start, request_refresh_list
 
-from django.db.models import Max
-from .queue_management import end_of_queue_position, select_next_eliminating_user
 
 class MatchConsumer(JsonWebsocketConsumer):
     def connect(self):
-        
+
         self.sharecode = self.scope['url_route']['kwargs']['sharecode']
         self.match_group_name = 'match_%s' % self.sharecode
         self.persona_uuid = self.scope["session"]["uuid"]
@@ -37,7 +41,6 @@ class MatchConsumer(JsonWebsocketConsumer):
             print("Failed to connect.")
         else:
             print("Invalid status from request_connect")
-            
 
     def disconnect(self, close_code):
 
@@ -58,10 +61,11 @@ class MatchConsumer(JsonWebsocketConsumer):
     # Receive message from WebSocket Client
     def receive_json(self, content):
         command = content['command']
-        #ELIMINATE
+        # ELIMINATE
         if command == 'eliminate':
 
-            json_response_obj = request_eliminate(self.sharecode, self.persona_uuid, content['shared_movie_id'])
+            json_response_obj = request_eliminate(
+                self.sharecode, self.persona_uuid, content['shared_movie_id'])
 
             if json_response_obj.status == "success":
                 self.forward_command_response_to_group(json_response_obj.to_dict())
@@ -69,19 +73,19 @@ class MatchConsumer(JsonWebsocketConsumer):
                 self.send_json(json_response_obj.to_dict())
             else:
                 print("Invalid status from request_eliminate")
-                
-        #INITIALIZE
+
+        # INITIALIZE
         elif command == 'initialize':
-            
+
             json_response_obj = request_initialize(self.sharecode)
 
             self.send_json(json_response_obj.to_dict())
-        
-        #START ELIMINATING
+
+        # START ELIMINATING
         elif command == 'elimination_start':
-            
+
             json_response_obj = request_elimination_start(self.sharecode)
-            
+
             if json_response_obj.status == "success":
                 self.forward_command_response_to_group(json_response_obj.to_dict())
             elif json_response_obj.status == "failure":
@@ -89,39 +93,42 @@ class MatchConsumer(JsonWebsocketConsumer):
             else:
                 print("Invalid status from request_elimination_start")
 
-        #REFRESH LIST
+        # REFRESH LIST
         elif command == 'refresh':
-            
+
             json_response_obj = request_refresh_list(self.sharecode)
-            
+
             if json_response_obj.status == "success":
                 self.forward_command_response_to_group(json_response_obj.to_dict())
             elif json_response_obj.status == "failure":
                 self.send_json(json_response_obj.to_dict())
             else:
                 print("Invalid status from request_refresh_list")
-        
-        #FAILED COMMAND
+
+        # FAILED COMMAND
         else:
             print(f'Command failure: {command}.')
-            
-            json_response_obj = FailedCommandResponse(command=command, errors=[f'Command failure: {command}.'])
+
+            json_response_obj = FailedCommandResponse(
+                command=command, errors=[f'Command failure: {command}.'])
             self.send_json(json_response_obj.to_dict())
 
     # Receive message from ChannelLayer
     def update_message(self, event):
-        command="updated"
+        command = "updated"
 
         try:
             model_dict = SharedListEncoder(self.sharecode)
-            json_response_object = SuccessfulCommandResponse(command=command, data={"share_list": model_dict})
+            json_response_object = SuccessfulCommandResponse(
+                command=command, data={"share_list": model_dict})
         except:
-            json_response_object = FailedCommandResponse(command=command, errors=["Error updating list."])
-        
+            json_response_object = FailedCommandResponse(
+                command=command, errors=["Error updating list."])
+
         self.send_json(json_response_object.to_dict())
-        
 
     # Receive json encoded message from ChannelLayer and forward to client
+
     def send_command_response_to_client(self, event):
         json_response = event.get("json_response")
 
@@ -140,7 +147,7 @@ class MatchConsumer(JsonWebsocketConsumer):
         )
 
 
-    #Custom JSON coders (for dates)
+    # Custom JSON coders (for dates)
     @classmethod
     def decode_json(cls, text_data):
         return json.loads(text_data)

@@ -1,9 +1,8 @@
-import json
-from django.core.serializers.json import DjangoJSONEncoder
-from list_builder.models import Persona, Movie
-from elimination_room.models import SharedMovieList, SharedMovie, ShareRoomUser
 from django.db.models import Prefetch
 from django.forms.models import model_to_dict
+
+from elimination_room.models import SharedMovie, SharedMovieList, ShareRoomUser
+
 
 def SharedListEncoder(sharecode):
     """
@@ -11,38 +10,46 @@ def SharedListEncoder(sharecode):
     shared list with associated users and shared movies.
     Return is not already serialized.
     """
-    room_users_prefetch = Prefetch('room_users', queryset=ShareRoomUser.objects.filter(is_active = True).select_related('persona'))
-    shared_movies_prefetch = Prefetch('shared_movies', queryset=SharedMovie.objects.select_related('movie'))
+    room_users_prefetch = Prefetch('room_users', queryset=ShareRoomUser.objects.filter(
+        is_active=True).select_related('persona'))
+    shared_movies_prefetch = Prefetch(
+        'shared_movies', queryset=SharedMovie.objects.select_related('movie'))
     submitted_by_prefetch = Prefetch('shared_movies__submitted_by')
-    
+
     shared_list = SharedMovieList.objects.prefetch_related(
         room_users_prefetch,
         shared_movies_prefetch,
         submitted_by_prefetch
     ).get(sharecode=sharecode)
-    
+
     active_user_dict = {
-        room_user.persona.uuid : { 
-            'position' : room_user.position,
-            'nickname' : room_user.nickname,
-            }
+        room_user.persona.uuid: {
+            'position': room_user.position,
+            'nickname': room_user.nickname,
+        }
         for room_user in shared_list.room_users.all()}
-    
+
     movie_list = []
     for shared_movie in shared_list.shared_movies.all():
         movie_info = model_to_dict(shared_movie.movie,
-                fields=['tmdb_id', 'title', 'overview', 'poster_path', 'release_date']
-        )
+                                   fields=[
+                                       'tmdb_id',
+                                       'title',
+                                       'overview',
+                                       'poster_path',
+                                       'release_date'
+                                   ])
         movie_info['shared_movie_id'] = shared_movie.id
         movie_info['is_eliminated'] = shared_movie.is_eliminated
-        movie_info['submitted_by'] = list(persona.uuid for persona in shared_movie.submitted_by.all())
+        movie_info['submitted_by'] = list(
+            persona.uuid for persona in shared_movie.submitted_by.all())
         movie_list.append(movie_info)
-        
+
     json_dict = {
-        'active_user_dict' : active_user_dict,
-        'movie_list' : movie_list,
-        'is_active' : shared_list.is_active
-        }
+        'active_user_dict': active_user_dict,
+        'movie_list': movie_list,
+        'is_active': shared_list.is_active
+    }
 
     if (shared_list.is_active) & (shared_list.turn > 0):
         # selects the user whose position equals the shared_list.turn

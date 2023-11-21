@@ -34,9 +34,9 @@ function changeListName() {
 const init = () => {
     applyTooltips();
 
-    $submitBtn.on("click", function(e){
+    $submitBtn.on("click", function (e) {
         e.preventDefault();
-        changeListName();  
+        changeListName();
     })
 }
 

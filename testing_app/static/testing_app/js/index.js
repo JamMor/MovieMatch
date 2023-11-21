@@ -1,5 +1,5 @@
-import {Movie} from "/static/js/shared/constructors.js"
-import {MovieCard} from "/static/js/shared/DOMelements.js"
+import { Movie } from "/static/js/shared/constructors.js"
+import { MovieCard } from "/static/js/shared/DOMelements.js"
 
 function switchIconText() {
     if ($(this).is(":checked")) {
@@ -83,20 +83,20 @@ function cardInit() {
         "tmdb_id": "679"
     });
     const gridIter = 2;
-    $("#card-btns div.bi-col").each(function(index){
-        let n=0;
+    $("#card-btns div.bi-col").each(function (index) {
+        let n = 0;
         let customClass = index == 0 ? "" : "custom-style";
         let idSuffix = index == 0 ? "1" : "2";
-        for(let i=0; i<gridIter; i++){
+        for (let i = 0; i < gridIter; i++) {
             $(this).append(MovieCard(
-                `test_${idSuffix}`, 
+                `test_${idSuffix}`,
                 `${movie1.tmdb_id}_${n}`,
                 movie1,
                 ["remove", "info"],
                 customClass
             ))
             $(this).append(MovieCard(
-                `test_${idSuffix}`, 
+                `test_${idSuffix}`,
                 `${movie1.tmdb_id}_${n}`,
                 movie2,
                 ["add", "info"],
@@ -105,37 +105,37 @@ function cardInit() {
             n++;
         }
     })
-    
+
     let cardCustomBtns = $("#card-btns div.movie-list div.custom-style btn");
-    cardCustomBtns.each(function(index){
+    cardCustomBtns.each(function (index) {
         $(this).addClass("dimmed");
     })
 }
 
 const saveData = JSON.stringify({
-    "list_name":"", 
+    "list_name": "",
     "tmdb_ids": [679, 348, 8077, 8078]
 })
 const deleteListId = 99
 function testRequest(url, method, data = null) {
     $.ajax({
         url: url,
-        method:method,
+        method: method,
         data: data
     })
-    .done(function(response) {
-        console.log(response);
-        M.toast({html: response.status})
-    })
-    .fail(function() {
-        console.error( "Failed to send test request.");
-        M.toast({html: "Failed to send test request."})
-    })
+        .done(function (response) {
+            console.log(response);
+            M.toast({ html: response.status })
+        })
+        .fail(function () {
+            console.error("Failed to send test request.");
+            M.toast({ html: "Failed to send test request." })
+        })
 }
 
 $(document).ready(function () {
     setInitInputValues();
-    
+
     $("form").submit(function (e) {
         e.preventDefault();
     })
@@ -156,18 +156,18 @@ $(document).ready(function () {
 
     cardInit();
 
-    $("#test-requests").on("click", "button", function(){
+    $("#test-requests").on("click", "button", function () {
         console.log("click")
         const domID = $(this).attr("id");
         const idData = domID.split("_");
         const idView = idData[1];
         const method = idData[2];
         let url;
-        if (idView == "save"){
+        if (idView == "save") {
             url = urlPath.saveList();
             testRequest(url, method, saveData);
         }
-        if (idView == "delete"){
+        if (idView == "delete") {
             url = urlPath.deleteList(deleteListId);
             testRequest(url, method);
         }

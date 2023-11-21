@@ -1,43 +1,55 @@
-    {% extends "base.html" %}
-    {% load static %}
+{% extends "base.html" %}
 
-    {% block content_block %}
-        <main>
-            <div class="container">
-                <div id="search-container">
-                    <nav id="search-bar">
-                        <div class="nav-wrapper">
-                            <form id="search-form">
-                                <div id="search-field" class="input-field">
-                                    <input class="neon-cyan neon-glow" type="search" id="search-input" placeholder="Movie Search" required>
-                                    <label class="label-icon" for="search-input"><i class="material-icons">theaters</i></label>
-                                    <i id="search-close" class="material-icons">close</i>
-                                </div>
-                                <div id="list-actions-btn" class="fixed-action-btn">
-                                    <a class="btn-floating btn-large neon-magenta neon-glow neon-hover">
-                                        <i class="large material-icons">more_vert</i>
-                                    </a>
-                                    <ul>
-                                        <li><a id="clear-movie-list" class="btn-floating neon-orange neon-glow neon-hover"><i class="material-icons">close</i></a></li>
-                                        <li><a id="add-from-list" class="btn-floating neon-cyan neon-glow neon-hover modal-trigger" href="#saved-lists-modal"><i class="material-icons">playlist_add</i></a></li>
-                                    </ul>
-                                </div>
-                            </form>
-                        </div>
-                    </nav>
-                    <div id="search-results" class="carousel carousel-slider"></div>
-                </div>
-                {% block list_builder_subheading %}
-                {% endblock %}
-                <div id="movie_list"></div>
+{% load static %}
+
+{% block content_block %}
+    <main>
+        <div class="container">
+            <div id="search-container">
+                <nav id="search-bar">
+                    <div class="nav-wrapper">
+                        <form id="search-form">
+                            <div id="search-field" class="input-field">
+                                <input class="neon-cyan neon-glow" type="search" id="search-input" placeholder="Movie Search"
+                                    required />
+                                <label class="label-icon" for="search-input">
+                                    <i class="material-icons">theaters</i>
+                                </label>
+                                <i id="search-close" class="material-icons">close</i>
+                            </div>
+                            <div id="list-actions-btn" class="fixed-action-btn">
+                                <a class="btn-floating btn-large neon-magenta neon-glow neon-hover">
+                                    <i class="large material-icons">more_vert</i>
+                                </a>
+                                <ul>
+                                    <li>
+                                        <a id="clear-movie-list" class="btn-floating neon-orange neon-glow neon-hover">
+                                            <i class="material-icons">close</i>
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a id="add-from-list" class="btn-floating neon-cyan neon-glow neon-hover modal-trigger"
+                                            href="#saved-lists-modal">
+                                            <i class="material-icons">playlist_add</i>
+                                        </a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </form>
+                    </div>
+                </nav>
+                <div id="search-results" class="carousel carousel-slider"></div>
             </div>
-        </main>
 
-        {% include "list_builder/_add_from.html"%}
+            {% block list_builder_subheading %}{% endblock %}
 
-    {% endblock %}
+            <div id="movie_list"></div>
+        </div>
+    </main>
+    {% include "list_builder/_add_from.html" %}
+{% endblock %}
 
-    {% block script_block %}
-        {{ block.super }}
-        <script type="module" src="{% static 'list_builder/js/list_builder/index.js'%}"></script>
-    {% endblock %}
+{% block script_block %}
+    {{ block.super }}
+    <script type="module" src="{% static 'list_builder/js/list_builder/index.js'%}"></script>
+{% endblock %}

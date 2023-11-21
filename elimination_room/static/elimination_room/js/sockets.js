@@ -6,15 +6,15 @@ const maxRetryInterval = 10;
 
 let retryAttempts = 0;
 //Exponentially increasing time to retry connection
-const retryTime = () => (1.65**retryAttempts)*initialRetryTime;
+const retryTime = () => (1.65 ** retryAttempts) * initialRetryTime;
 // let matchSocket = null;
 
-function createMatchSocket(){
+function createMatchSocket() {
     const matchSocket = new WebSocket(
         urlPath.webSocketURL(shareCode)
     );
 
-    matchSocket.onopen = function(e) {
+    matchSocket.onopen = function (e) {
         console.log("Match socket opened");
 
         //Set retry attempts to defaults;
@@ -22,60 +22,58 @@ function createMatchSocket(){
 
         //Request to initialize current share and user list.
         matchSocket.send(JSON.stringify({
-            'command' : 'initialize'
+            'command': 'initialize'
         }))
     };
 
     //Receive messages
-    matchSocket.onmessage = function(e) {
+    matchSocket.onmessage = function (e) {
         console.log(e);
         const responseData = JSON.parse(e.data);
         const receivedCommand = responseData.command;
 
         // Failed command
-        if(responseData.status != 'success'){
+        if (responseData.status != 'success') {
             console.log("Command failed.")
             console.log(responseData)
             if (responseData.hasOwnProperty('errors')) {
-                responseData.errors.forEach(error =>
-                    {console.log(error)}
+                responseData.errors.forEach(error => { console.log(error) }
                 )
             }
             return
         }
         //Successful command
         let commandData;
-        if (responseData.hasOwnProperty('data')){
+        if (responseData.hasOwnProperty('data')) {
             commandData = responseData.data
         }
-        else{
+        else {
             console.log("Error: No data in response.")
             return
         }
 
         //Eliminate movie
-        if(receivedCommand == "eliminated"){
+        if (receivedCommand == "eliminated") {
             Received.commandEliminate(commandData);
         }
-        
         //User connected
-        else if(receivedCommand == "connected"){
+        else if (receivedCommand == "connected") {
             Received.commandConnected(commandData);
         }
         //User disconnected
-        else if(receivedCommand == "disconnected"){
+        else if (receivedCommand == "disconnected") {
             Received.commandDisconnected(commandData);
         }
         //Initialize/Update list of movies
-        else if(receivedCommand == "initialized" || receivedCommand == "updated"){
+        else if (receivedCommand == "initialized" || receivedCommand == "updated") {
             Received.commandSyncRoom(commandData);
         }
         //Refresh list of movies
-        else if(receivedCommand == "refreshed"){
+        else if (receivedCommand == "refreshed") {
             Received.commandRefreshMovieList(commandData);
         }
         //Start Elimination
-        else if(receivedCommand == "elimination_started"){
+        else if (receivedCommand == "elimination_started") {
             Received.commandStartElimination(commandData);
         }
         // //Final movie left
@@ -88,7 +86,7 @@ function createMatchSocket(){
         }
     };
 
-    matchSocket.onclose = function(e) {
+    matchSocket.onclose = function (e) {
         console.error('Match socket closed unexpectedly');
         console.log(e);
         console.error('Retrying matchSocket');
@@ -100,4 +98,4 @@ function createMatchSocket(){
     return matchSocket;
 }
 
-export {createMatchSocket}
+export { createMatchSocket }

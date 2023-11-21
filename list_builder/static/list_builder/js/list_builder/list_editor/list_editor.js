@@ -7,4 +7,4 @@ const init = () => {
     movieList.bulkAddMoviesToList(...importedList);
 }
 
-export {init}
+export { init }

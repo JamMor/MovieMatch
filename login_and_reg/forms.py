@@ -1,10 +1,7 @@
-from django.db import models
-from django import forms
-from django.contrib.auth.models import User
 from django.contrib.auth.forms import UserCreationForm
-from django.contrib.auth import password_validation
-from django.forms.utils import ErrorList
-from django.forms import ModelForm, ValidationError
+from django.contrib.auth.models import User
+from django.forms import ModelForm
+
 from list_builder.models import Persona
 
 
@@ -19,14 +16,14 @@ class RegistrationForm(UserCreationForm):
         self.fields['username'].widget.attrs['class'] = 'validate'
         self.fields['password1'].widget.attrs['class'] = 'validate'
         self.fields['password2'].widget.attrs['class'] = 'validate'
-        
+
     def is_valid(self):
-         result = super().is_valid()
-         # loop on *all* fields if key '__all__' found else only on errors:
-         for x in (self.fields if '__all__' in self.errors else self.errors):
-             attrs = self.fields[x].widget.attrs
-             attrs.update({'class': attrs.get('class', '') + ' invalid'})
-         return result
+        result = super().is_valid()
+        # loop on *all* fields if key '__all__' found else only on errors:
+        for x in (self.fields if '__all__' in self.errors else self.errors):
+            attrs = self.fields[x].widget.attrs
+            attrs.update({'class': attrs.get('class', '') + ' invalid'})
+        return result
 
 
 class PersonaForm(ModelForm):

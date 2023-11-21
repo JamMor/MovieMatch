@@ -1,15 +1,16 @@
 {% extends "base.html" %}
+
 {% load static %}
 {% load bundled_url %}
 
-{% block page_subtitle %} - Room {{sharecode}}{% endblock %}
+{% block page_subtitle %}- Room {{ sharecode }}{% endblock %}
+
 {% block meta_description_block %}
-<meta 
-    name="description" 
-    content="End movie night indecision with MovieMatch's turn based elimination. 
-    All you have to do is choose the one you don't want. Just one. Join friends to 
-    eliminate choices together and find the perfect pick—or at least one good enough for tonight."
->
+    <meta name="description" 
+          content="End movie night indecision with MovieMatch's turn based elimination. 
+          All you have to do is choose the one you don't want. Just one. Join 
+          friends to eliminate choices together and find the perfect pick—or at 
+          least one good enough for tonight." />
 {% endblock %}
 
 {% block content_block %}
@@ -22,40 +23,51 @@
                     <i class="material-icons right">cast</i>
                 </button>
             </div>
-            <!-- <div class="divider"></div> -->
             <div id="user_list" class="slider-x"></div>
             <div id="movie_list"></div>
         </div>
     </main>
     <footer class="sharecode cyan accent-2">
         <button id="copy-sharecode" class=" cyan accent-2 btn waves-effect">
-            <span id="sharecode">{{sharecode}}</span><i class="material-icons">content_copy</i>
+            <span id="sharecode">{{ sharecode }}</span><i class="material-icons">content_copy</i>
         </button>
     </footer>
     <div id="final_modal" class="modal cyber-grade">
         <div class="modal-content pink-text text-darken-2"></div>
         <div class="navbar-fixed">
             <nav class="cyan accent-2">
-              <div class="nav-wrapper">
-                <ul>
-                    <li class="waves-effect waves-light"><a id="refresh-btn" href="#!"><i class="material-icons indigo-text text-darken-4">refresh</i></a></li>
-                    <li><a id="open-save-btn" class="{% if user.is_authenticated %}modal-trigger{% else %}disabled-btn{% endif %}" href="#save-modal"><i class="material-icons indigo-text text-darken-4">save</i></a></li>
-                    <li class="modal-close waves-effect waves-light"><a href="#!"><i class="material-icons indigo-text text-darken-4">close</i></a></li>
-                </ul>
-              </div>
+                <div class="nav-wrapper">
+                    <ul>
+                        <li class="waves-effect waves-light">
+                            <a id="refresh-btn" href="#!">
+                                <i class="material-icons indigo-text text-darken-4">refresh</i>
+                            </a>
+                        </li>
+                        <li>
+                            <a id="open-save-btn"
+                                class="{% if user.is_authenticated %}modal-trigger{% else %}disabled-btn{% endif %}"
+                                href="#save-modal">
+                                <i class="material-icons indigo-text text-darken-4">save</i>
+                            </a>
+                        </li>
+                        <li class="modal-close waves-effect waves-light">
+                            <a href="#!">
+                                <i class="material-icons indigo-text text-darken-4">close</i>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
             </nav>
-          </div>
+        </div>
     </div>
-
-    {% include "save_modal.html"%}
-
+    {% include "save_modal.html" %}
 {% endblock %}
 
 {% block script_block %}
-    <script type='text/javascript' > 
+    <script type='text/javascript'>
         var user_uuid = "{{uuid}}"
         var elimination_active = false;
         var current_eliminating_uuid = null;
     </script>
     {% bundle_tag 'elimination_room/js/index.js' block.super %}
-{% endblock %}\
+{% endblock %}

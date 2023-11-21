@@ -1,6 +1,8 @@
 from django.core.management.base import BaseCommand, CommandError
 from django.db import transaction
-from elimination_room.models import ShareRoomUser, SharedMovieList
+
+from elimination_room.models import SharedMovieList, ShareRoomUser
+
 
 class Command(BaseCommand):
     help = 'Resets all ShareRoomUsers and sets Rooms to Inactive'
@@ -21,6 +23,8 @@ class Command(BaseCommand):
                 self.reset_share_room_users()
                 self.reset_shared_movie_lists()
         except Exception as e:
-            raise CommandError(f'Error resetting ShareRoomUsers and SharedMovieLists: {str(e)}')
+            raise CommandError(
+                f'Error resetting ShareRoomUsers and SharedMovieLists: {str(e)}')
 
-        self.stdout.write(self.style.SUCCESS('User and rooms reset successfully'))
+        self.stdout.write(self.style.SUCCESS(
+            'User and rooms reset successfully'))

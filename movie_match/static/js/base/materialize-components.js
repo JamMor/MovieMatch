@@ -10,4 +10,4 @@ const init = () => {
     $('.collapsible').collapsible();
 }
 
-export {init}
+export { init }

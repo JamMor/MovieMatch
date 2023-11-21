@@ -12,7 +12,6 @@
     margin: 5px;
 }
 
-
 /* Glow Button Effects */
 #hue-adj {
     display: flex;
@@ -22,30 +21,30 @@
 }
 
 #hue-adj form {
-    flex:1;
+    flex: 1;
     margin: 10px;
-    border:none;
+    border: none;
 }
 
-#hue-adj input[type=text]{
-    color:hsl(var(--hue), 100%, 55%);
+#hue-adj input[type="text"] {
+    color: hsl(var(--hue), 100%, 55%);
     text-align: center;
 }
 
-#hue-adj input[type=range]{
-    color:lightgray;
-    border:none;
+#hue-adj input[type="range"] {
+    color: lightgray;
+    border: none;
 }
 
-#hue-adj input[type=range]::-webkit-slider-thumb {
+#hue-adj input[type="range"]::-webkit-slider-thumb {
     background: hsl(var(--hue), 100%, 55%);
 }
 
-#hue-adj input[type=range]::-moz-range-thumb {
+#hue-adj input[type="range"]::-moz-range-thumb {
     background: hsl(var(--hue), 100%, 55%);
 }
 
-#hue-adj input[type=range]::-ms-thumb {
+#hue-adj input[type="range"]::-ms-thumb {
     background: hsl(var(--hue), 100%, 55%);
 }
 
@@ -62,7 +61,7 @@ option {
 }
 
 #glow-btns {
-    display:flex;
+    display: flex;
     flex-direction: row;
     justify-content: center;
     align-items: start;
@@ -72,7 +71,7 @@ option {
 div.bi-col {
     /* each column takes up half of the parent flexbox */
     flex: 1;
-    display:flex;
+    display: flex;
     flex-direction: column;
 }
 
@@ -83,7 +82,7 @@ div.pseudo-btn-large {
     font-size: 15px;
     padding: 0 28px;
     text-align: center;
-    letter-spacing: .5px;
+    letter-spacing: 0.5px;
     outline: 0;
     border: none;
     display: inline-block;
@@ -92,16 +91,16 @@ div.pseudo-btn-large {
 }
 
 div.pseudo-btn-small {
-    margin:15px;
+    margin: 15px;
     height: 32.4px;
     line-height: 32.4px;
     font-size: 13px;
     outline: 0;
     text-decoration: none;
     text-align: center;
-    letter-spacing: .5px;
-    -webkit-transition: background-color .2s ease-out;
-    transition: background-color .2s ease-out;
+    letter-spacing: 0.5px;
+    -webkit-transition: background-color 0.2s ease-out;
+    transition: background-color 0.2s ease-out;
     cursor: pointer;
     border: none;
     display: inline-block;
@@ -112,41 +111,40 @@ div.pseudo-btn-small {
 }
 
 div.pseudo-btn-small i {
-    font-size: 1.2rem
+    font-size: 1.2rem;
 }
 
 .neon-orange2 {
-    --hue:24;
+    --hue: 24;
 }
 .neon-magenta2 {
-    --hue:300;
+    --hue: 300;
 }
 .neon-cyan2 {
-    --hue:190;
+    --hue: 190;
 }
-
 
 /* card CSS */
 div.movie-list {
-    display:grid;
-    width:100%;
+    display: grid;
+    width: 100%;
     grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-    gap:15px;
+    gap: 15px;
 }
 
-@media(max-width:1050px) {
+@media (max-width: 1050px) {
     div.movie-list {
         grid-template-columns: repeat(auto-fill, minmax(170px, 1fr));
     }
 }
 
-@media(max-width:767px) {
+@media (max-width: 767px) {
     div.movie-list {
         grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
     }
 }
 
-@media(max-width:380px) {
+@media (max-width: 380px) {
     div.movie-list {
         grid-template-columns: repeat(auto-fill, minmax(136px, 1fr));
         gap: 10px;
@@ -155,10 +153,9 @@ div.movie-list {
 
 div.custom-style btn {
     background-color: #202020;
-    
 }
 div.custom-style btn.add-btn {
-    --hue:190;
+    --hue: 190;
     color: hsl(var(--hue), 79%, 86%);
     border: 2px solid hsl(var(--hue), 79%, 86%);
     /* box-shadow: 
@@ -167,7 +164,7 @@ div.custom-style btn.add-btn {
         0 0 5px 0 hsl(var(--hue), 79%, 46%); */
 }
 div.custom-style btn.remove-btn {
-    --hue:27;
+    --hue: 27;
     color: hsl(var(--hue), 79%, 86%);
     border: 2px solid hsl(var(--hue), 79%, 86%);
     /* box-shadow: 
@@ -176,7 +173,7 @@ div.custom-style btn.remove-btn {
         0 0 5px 0 hsl(var(--hue), 79%, 46%); */
 }
 div.custom-style btn.activator {
-    --hue:290;
+    --hue: 290;
     color: hsl(var(--hue), 79%, 86%);
     border: 2px solid hsl(var(--hue), 79%, 86%);
     /* box-shadow: 
@@ -187,5 +184,5 @@ div.custom-style btn.activator {
 
 #test-requests div {
     display: grid;
-    gap:10px;
+    gap: 10px;
 }

@@ -1,5 +1,6 @@
 from .models import Persona
 
+
 def get_or_set_persona(request):
     """
     Returns the Persona instance for logged user or uuid currently in session.
@@ -12,17 +13,17 @@ def get_or_set_persona(request):
         except Exception as err:
             print(err)
             print("No Persona for user. Assigning one.")
-            logged_persona = Persona.objects.create(user_account = request.user)
+            logged_persona = Persona.objects.create(user_account=request.user)
         request.session['uuid'] = logged_persona.uuid
         return logged_persona
 
     elif not request.user.is_authenticated:
         session_uuid = request.session.get("uuid")
-        #Checks to see if uuid key exists and is set in session
+        # Checks to see if uuid key exists and is set in session
         if session_uuid:
             print(f'UUID in session. Getting persona: {session_uuid}')
             try:
-                return Persona.objects.get(uuid = session_uuid, user_account = None)
+                return Persona.objects.get(uuid=session_uuid, user_account=None)
             except Persona.DoesNotExist:
                 print("Can't find Persona stored in session.")
 

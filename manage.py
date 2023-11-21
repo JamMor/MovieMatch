@@ -5,12 +5,13 @@ import sys
 
 
 def main():
-    #Load .env variables
+    # Load .env variables
     from dotenv import load_dotenv
     load_dotenv()
 
     """Run administrative tasks."""
-    os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'movie_match.settings.base')
+    os.environ.setdefault('DJANGO_SETTINGS_MODULE',
+                          'movie_match.settings.base')
     try:
         from django.core.management import execute_from_command_line
     except ImportError as exc:

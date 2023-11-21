@@ -6,6 +6,7 @@ from django.utils.safestring import mark_safe
 
 register = template.Library()
 
+
 @register.simple_tag
 def bundle_tag(asset_url, block_content=""):
     def css_tag(url):

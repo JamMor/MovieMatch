@@ -1,19 +1,23 @@
-from random import randint
-from django.db import IntegrityError
-from django.shortcuts import redirect, render
-from django.views.decorators.http import require_GET, require_POST
-from django.http import JsonResponse
-from django.urls import reverse
-from list_builder.models import Persona, Movie, TempMovieList
-from elimination_room.models import SharedMovieList, SharedMovie, ShareRoomUser
-import json
-from channels.layers import get_channel_layer
 from asgiref.sync import async_to_sync
-from list_builder.persona_assigner import get_or_set_persona
-from list_builder.moviedb_api_caller import add_movies_to_db_from_tmdb_ids
-from movie_match.json_response_models import SuccessJsonClassObject, FailedJsonClassObject, FailedFormResponse
-from .forms import SharecodeForm, ShareRoomUserForm, MovieTmdbIdsForm
+from channels.layers import get_channel_layer
+from django.db import IntegrityError
+from django.http import JsonResponse
+from django.shortcuts import redirect, render
+from django.urls import reverse
+from django.views.decorators.http import require_GET, require_POST
+
 from list_builder.forms import SavedMovieListForm
+from list_builder.models import TempMovieList
+from list_builder.moviedb_api_caller import add_movies_to_db_from_tmdb_ids
+from list_builder.persona_assigner import get_or_set_persona
+from movie_match.json_response_models import (
+    FailedFormResponse,
+    SuccessJsonClassObject,
+)
+
+from .forms import MovieTmdbIdsForm, SharecodeForm, ShareRoomUserForm
+from .models import SharedMovieList, ShareRoomUser
+
 
 # When Shared List is updated, sends updated list to appropriate channel
 def update_shared_list_channels(sharecode):
@@ -24,15 +28,16 @@ def update_shared_list_channels(sharecode):
 
     group_name = 'match_%s' % sharecode
     async_to_sync(channel_layer.group_send)(
-        group_name, 
+        group_name,
         {"type": "update_message"})
     print("Send update shared list command.")
 
-#Views
+
+# Views
 @require_POST
 def new_match(request):
     this_persona = get_or_set_persona(request)
-    
+
     shareroomuser_form = ShareRoomUserForm(request.POST, prefix="share")
     sharecode_form = SharecodeForm(request.POST, prefix="share")
     movie_tmdb_ids_form = MovieTmdbIdsForm(request.POST)
@@ -56,17 +61,17 @@ def new_match(request):
         return JsonResponse(failed_form.to_dict())
 
     sharecode = sharecode_form.cleaned_data['sharecode']
-    #Gets SharedList if sharecode, or creates new one
+    # Gets SharedList if sharecode, or creates new one
     if sharecode:
         try:
-            shared_list = SharedMovieList.objects.get(sharecode = sharecode)
+            shared_list = SharedMovieList.objects.get(sharecode=sharecode)
         except SharedMovieList.DoesNotExist as err:
             print(err)
             sharecode_form.add_error('sharecode', 'Sharecode not found.')
             return JsonResponse(FailedFormResponse(form_errors=sharecode_form.errors).to_dict())
     else:
         try:
-            shared_list = SharedMovieList.objects.create(created_by = this_persona)
+            shared_list = SharedMovieList.objects.create(created_by=this_persona)
         except IntegrityError as err:
             print(err)
             sharecode_form.add_error(None, 'Server error: Could not create Elimination Room.')
@@ -77,33 +82,36 @@ def new_match(request):
         # Create temp_list from tmdb_ids
         all_in_db, ids_in_db, failed_ids = add_movies_to_db_from_tmdb_ids(tmdb_ids)
         print("All in DB!" if all_in_db else f'Failed: {list(failed_ids)}')
-        temp_list = TempMovieList.objects.create_from_tmdb_ids(tmdb_ids=ids_in_db, creator=this_persona)
-        
+        temp_list = TempMovieList.objects.create_from_tmdb_ids(
+            tmdb_ids=ids_in_db, creator=this_persona)
+
         # Add TempList movies to SharedList
         shared_list.add_list_to_shared_list(temp_list)
     except Exception as err:
         print(err)
         movie_tmdb_ids_form.add_error(None, 'Server error: Could not add your list to Elimination Room.')
         return JsonResponse(FailedFormResponse(form_errors=movie_tmdb_ids_form.errors).to_dict())
-    
-    #Push updates to channel users.
+
+    # Push updates to channel users.
     update_shared_list_channels(shared_list.sharecode)
 
     nickname = shareroomuser_form.cleaned_data['nickname']
-    #Create or Update ShareRoomUser for this user with nickname
+
+    # Create or Update ShareRoomUser for this user with nickname
     ShareRoomUser.objects.update_or_create(
-        persona = this_persona, 
-        list = shared_list,
-        defaults = {"nickname": nickname}
-        )
+        persona=this_persona,
+        list=shared_list,
+        defaults={"nickname": nickname}
+    )
 
     return JsonResponse(SuccessJsonClassObject(data={"sharecode": shared_list.sharecode}).to_dict())
+
 
 @require_GET
 def join_match(request, sharecode):
     this_persona = get_or_set_persona(request)
-    #Tests to see if sharecode is exists
-    if SharedMovieList.objects.filter(sharecode = sharecode).exists():
+    # Tests to see if sharecode is exists
+    if SharedMovieList.objects.filter(sharecode=sharecode).exists():
         context = {
             'sharecode': sharecode,
             'uuid': this_persona.uuid,

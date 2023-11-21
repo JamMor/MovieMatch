@@ -41,14 +41,14 @@ function loginHandler() {
 
 function loginStatusToast(status) {
     const statusMessages = {
-        "error" : `<strong class="orange-text text-darken-3">Failed</strong> to login.`,
-        "fail" : `<strong class="orange-text text-darken-3">Request failure.</strong>.`,
-        "unknown" : `<strong class="orange-text text-darken-3">Unknown error.</strong>.`
+        "error": `<strong class="orange-text text-darken-3">Failed</strong> to login.`,
+        "fail": `<strong class="orange-text text-darken-3">Request failure.</strong>.`,
+        "unknown": `<strong class="orange-text text-darken-3">Unknown error.</strong>.`
     }
-    
+
     const message = statusMessages[status] || statusMessages["unknown"]
-    
-    M.toast({html: `<span>${message}</span>`})
+
+    M.toast({ html: `<span>${message}</span>` })
 }
 
 const init = () => {
@@ -57,11 +57,11 @@ const init = () => {
         event.preventDefault()
         loginHandler.call(this)
     })
-    
+
     //Allows user to tab through dropdown form fields without dropdown closing
-    $navLoginForm.on('keydown', function(event) {
+    $navLoginForm.on('keydown', function (event) {
         event.stopPropagation();
     });
 }
 
-export {init}
+export { init }

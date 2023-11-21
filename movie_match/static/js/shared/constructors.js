@@ -10,8 +10,8 @@
  * @class Movie
  * @param {object} movie - Movie object from the MovieDB search query
  */
-const Movie = class Movie{
-    constructor({tmdb_id, title, release_date, overview, poster_path}){
+const Movie = class Movie {
+    constructor({ tmdb_id, title, release_date, overview, poster_path }) {
         this.tmdb_id = tmdb_id;
         this.title = title;
         this.release_date = release_date;
@@ -23,7 +23,7 @@ const Movie = class Movie{
         return this.release_date?.slice(0, 4) ?? ""
     }
 
-    get fullPosterURL(){
+    get fullPosterURL() {
         const image_prefix = resourcePath.imagePrefix;
         const placeholder_link = resourcePath.placeholderPath;
         return (this.poster_path == null)
@@ -39,8 +39,8 @@ const Movie = class Movie{
  * @extends Movie
  * @param {object} movie - SharedMovie object from database.
  */
-const SharedMovie = class SharedMovie extends Movie{
-    constructor({shared_movie_id, is_eliminated, ...movie}) {
+const SharedMovie = class SharedMovie extends Movie {
+    constructor({ shared_movie_id, is_eliminated, ...movie }) {
         super(movie);
         this.shared_movie_id = shared_movie_id;
         this.is_eliminated = is_eliminated;
@@ -77,17 +77,17 @@ const DetailedMovie = class DetailedMovie extends Movie {
     }
 
     // round vote average string to at most two decimal places
-    get roundedScore(){
+    get roundedScore() {
         let score = parseFloat(this.vote_average)
         return score.toFixed(2);
     }
 
-    get formattedRuntime(){
-        let runtime_hours = Math.floor(this.runtime/60);
+    get formattedRuntime() {
+        let runtime_hours = Math.floor(this.runtime / 60);
         runtime_hours = runtime_hours > 0 ? `${runtime_hours} hr, ` : ''
-        let runtime_minutes = `${this.runtime%60} min`
+        let runtime_minutes = `${this.runtime % 60} min`
         return `${runtime_hours}${runtime_minutes}`
     }
 }
 
-export { Movie, SharedMovie, DetailedMovie}
+export { Movie, SharedMovie, DetailedMovie }

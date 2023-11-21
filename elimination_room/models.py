@@ -1,19 +1,21 @@
-import json
 import shortuuid
 from django.db import IntegrityError, models, transaction
-from django.db.models import Q
+
 from list_builder.validators import UserInputValidator
+
 
 class SharedMovieList(models.Model):
     sharecode = models.CharField(max_length=8, unique=True)
-    created_by = models.ForeignKey('list_builder.Persona', related_name="created_shared_lists", on_delete = models.CASCADE, null=True)
-    contributors = models.ManyToManyField('list_builder.Persona', related_name="shared_lists")
+    created_by = models.ForeignKey(
+        'list_builder.Persona', related_name="created_shared_lists", on_delete=models.CASCADE, null=True)
+    contributors = models.ManyToManyField(
+        'list_builder.Persona', related_name="shared_lists")
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
-    
+
     is_active = models.BooleanField(default=False)
     turn = models.IntegerField(default=0)
-    
+
     def add_list_to_shared_list(self, movie_list):
         """
         Converts templist movies not already in shared list to SharedMovies 
@@ -26,8 +28,8 @@ class SharedMovieList(models.Model):
                     self.contributors.add(this_persona)
                     for each_movie in movie_list.movies.all():
                         shared_movie, created = SharedMovie.objects.get_or_create(
-                            shared_list = self, 
-                            movie = each_movie)
+                            shared_list=self,
+                            movie=each_movie)
                         shared_movie.submitted_by.add(this_persona)
                     self.save()
                     break
@@ -37,10 +39,14 @@ class SharedMovieList(models.Model):
         else:
             raise IntegrityError
 
+    def __str__(self):
+        return f'{self.id} - {self.sharecode}'
+
     def save(self, *args, **kwargs):
         if not self.sharecode:
             print("No sharecode. Creating one.")
-            su = shortuuid.ShortUUID(alphabet='23456789ABCDEFGHJKLMNPQRSTUVWXYZ')
+            su = shortuuid.ShortUUID(
+                alphabet='23456789ABCDEFGHJKLMNPQRSTUVWXYZ')
 
             for attempt in range(10):
                 self.sharecode = su.uuid()[:8]
@@ -56,35 +62,40 @@ class SharedMovieList(models.Model):
         else:
             print("Sharecode exists. Not renewing.")
             super(SharedMovieList, self).save(*args, **kwargs)
-    
-    def __str__(self):
-        return f'{self.id} - {self.sharecode}'
+
 
 class SharedMovie(models.Model):
-    submitted_by = models.ManyToManyField('list_builder.Persona', related_name="submitted_movies")
-    shared_list = models.ForeignKey(SharedMovieList, related_name="shared_movies", on_delete = models.CASCADE, null=True)
-    movie = models.ForeignKey('list_builder.Movie', related_name="shared_movies", on_delete = models.CASCADE, null=True)
+    submitted_by = models.ManyToManyField(
+        'list_builder.Persona', related_name="submitted_movies")
+    shared_list = models.ForeignKey(
+        SharedMovieList, related_name="shared_movies", on_delete=models.CASCADE, null=True)
+    movie = models.ForeignKey(
+        'list_builder.Movie', related_name="shared_movies", on_delete=models.CASCADE, null=True)
     is_eliminated = models.BooleanField(default=False)
 
+
 class ShareRoomUser(models.Model):
-    persona = models.ForeignKey('list_builder.Persona', related_name="in_room", on_delete = models.CASCADE)
-    list = models.ForeignKey(SharedMovieList, related_name="room_users", on_delete = models.CASCADE)
+    persona = models.ForeignKey(
+        'list_builder.Persona', related_name="in_room", on_delete=models.CASCADE)
+    list = models.ForeignKey(
+        SharedMovieList, related_name="room_users", on_delete=models.CASCADE)
     is_active = models.BooleanField(default=False)
     nickname = models.CharField(
-        max_length=20, 
-        blank=True, 
+        max_length=20,
+        blank=True,
         default="",
         help_text="Optional. 20 characters or fewer. Letters, numbers, basic punctuation: , . ! ? : ' \" $ & + - ( ) characters.",
         validators=[UserInputValidator()],
     )
     has_eliminated = models.BooleanField(default=False)
-    
+
     position = models.IntegerField(default=0)
-    
+
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
     class Meta:
         constraints = [
-            models.UniqueConstraint(fields=['persona', 'list'], name='one_user_per_room')
+            models.UniqueConstraint(
+                fields=['persona', 'list'], name='one_user_per_room')
         ]

@@ -10,13 +10,13 @@ const refreshBtnId = "refresh-btn"
 const $finalModal = $("#final_modal");
 const $statusBar = $("#status_bar");
 
-function sendEliminate(matchSocket){
+function sendEliminate(matchSocket) {
     //Validate
-    if(!elimination_active){
+    if (!elimination_active) {
         console.log("Host has not started elimination.")
         return
     }
-    if(user_uuid != current_eliminating_uuid){
+    if (user_uuid != current_eliminating_uuid) {
         console.log("Not this users turn.")
         return
     }
@@ -28,44 +28,44 @@ function sendEliminate(matchSocket){
     const movie = movieList.getMovieByTmdbId(tmdbId);
 
     matchSocket.send(JSON.stringify({
-        'command' : 'eliminate',
-        'shared_movie_id' : movie.shared_movie_id
+        'command': 'eliminate',
+        'shared_movie_id': movie.shared_movie_id
     }))
 }
 
-function sendStartElimination(matchSocket){
+function sendStartElimination(matchSocket) {
     //Validate
-    if(movieList.getNumberOfMovies() < 2){
+    if (movieList.getNumberOfMovies() < 2) {
         console.log("Must have at least 2 movies to begin elimination.")
         return
     }
-    
+
     matchSocket.send(JSON.stringify({
-        'command' : 'elimination_start'
+        'command': 'elimination_start'
     }))
 }
 
-function sendRefresh(matchSocket){
+function sendRefresh(matchSocket) {
     matchSocket.send(JSON.stringify({
-        'command' : 'refresh'
+        'command': 'refresh'
     }))
 }
 
 const init = (matchSocket) => {
     //Send which movie to eliminate on click
-    $movieListDiv.on('click', `.${removeBtnClass}` , function() {
+    $movieListDiv.on('click', `.${removeBtnClass}`, function () {
         sendEliminate.call(this, matchSocket)
     });
 
     //Send start eliminating command
-    $statusBar.on('click', `.${startEliminationClass}` , function() {
+    $statusBar.on('click', `.${startEliminationClass}`, function () {
         sendStartElimination(matchSocket)
     });
 
     //Send Refresh Share List command
-    $finalModal.on('click', `#${refreshBtnId}` , function() {
+    $finalModal.on('click', `#${refreshBtnId}`, function () {
         sendRefresh(matchSocket)
     });
 }
 
-export {init}
+export { init }

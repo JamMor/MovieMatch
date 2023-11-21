@@ -49,28 +49,28 @@ function sendDeleteAccountRequest() {
 
 function deleteAccountStatusToast(status, extraMessage = "") {
     const statusMessages = {
-        "success" : `Account <strong className="cyan-text text-accent-2">successfully</strong> deleted!`,
-        "error" : `<strong class="orange-text text-darken-3">Failed</strong> to delete account. ${escapeHtml(extraMessage)}`,
-        "fail" : `<strong class="orange-text text-darken-3">Request failure.</strong>.`,
-        "unknown" : `<strong class="orange-text text-darken-3">Unknown error.</strong>.`
+        "success": `Account <strong className="cyan-text text-accent-2">successfully</strong> deleted!`,
+        "error": `<strong class="orange-text text-darken-3">Failed</strong> to delete account. ${escapeHtml(extraMessage)}`,
+        "fail": `<strong class="orange-text text-darken-3">Request failure.</strong>.`,
+        "unknown": `<strong class="orange-text text-darken-3">Unknown error.</strong>.`
     }
-    
+
     const message = statusMessages[status] || statusMessages["unknown"]
-    
-    M.toast({html: `<span>${message}</span>`})
+
+    M.toast({ html: `<span>${message}</span>` })
 }
 
 const init = () => {
     //Initializes then calls account deletion modal
-    $modalOpenBtn.on("click", function(){
+    $modalOpenBtn.on("click", function () {
         openDeleteAccountModal();
     })
 
     //Sends delete request to server.
-    $submitBtn.on("click", function(e){
+    $submitBtn.on("click", function (e) {
         e.preventDefault();
         sendDeleteAccountRequest();
     })
 }
 
-export {init}
+export { init }

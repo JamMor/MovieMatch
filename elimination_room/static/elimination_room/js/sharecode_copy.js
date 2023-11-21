@@ -5,11 +5,11 @@ const $copySharecode = $("#copy-sharecode");
 function copyToClipboard() {
     const shareCode = document.getElementById(sharecodeId).textContent;
     navigator.clipboard.writeText(shareCode);
-    M.toast({html: `Sharecode, <strong class="cyan-text text-accent-2">${shareCode}</strong>, copied to clipboard!`});
+    M.toast({ html: `Sharecode, <strong class="cyan-text text-accent-2">${shareCode}</strong>, copied to clipboard!` });
 }
 
 const init = () => {
     $copySharecode.on("click", copyToClipboard);
 }
 
-export {init};
+export { init };
