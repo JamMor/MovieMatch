@@ -2,116 +2,118 @@ from random import shuffle
 
 from django.db.models import Max
 
-from elimination_room.models import ShareRoomUser
+from .models import EliminationSessionUser
 
 
-def assign_generic_nickname(share_list):
+def assign_anonymous_nickname(elimination_session):
     """
-    Assigns generic nickname based on user count
+    Assigns anonymous nickname based on user count
 
-    :param share_list: The shared list the user is joining
-    :type share_list: SharedMovieList
-    :return: "User {room_user_count}"
+    :param elimination_session: The elimination session the user is joining
+    :type elimination_session: EliminationSession
+    :return: "User {session_user_count}"
     :rtype: str
     """
-    room_user_count = ShareRoomUser.objects.filter(list=share_list).count()
+    session_user_count = EliminationSessionUser.objects.filter(
+        elimination_session=elimination_session).count()
 
-    return f"User {room_user_count}"
+    return f"User {session_user_count}"
 
 
-def end_of_queue_position(share_list):
+def end_of_queue_position(elimination_session):
     """
     Returns maximum queue position + 1 for the current round
 
-    :param share_list: The shared list to get the end of queue position for
-    :type share_list: SharedMovieList
+    :param elimination_session: The elimination session to get the end of queue position for
+    :type elimination_session: EliminationSession
     :return: Last queue position + 1
     :rtype: int
     """
-    position_dict = ShareRoomUser.objects.filter(
-        list=share_list).aggregate(last_position=Max('position'))
+    position_dict = EliminationSessionUser.objects.filter(
+        elimination_session=elimination_session).aggregate(last_position=Max('position'))
     return position_dict['last_position'] + 1
 
 
-def assign_round_order(share_list):
+def assign_round_order(elimination_session):
     """
-    Assigns the next round order for a share room and returns the first user in the queue 
-    and a dictionary of active user's with updated positions
+    Assigns the next round order for an elimination session and returns 
+    the first user in the queue and a dictionary of active user's with 
+    updated positions.
 
-    :param share_list: The shared list to get the next user in the queue for
-    :type share_list: SharedMovieList
+    :param elimination_session: The elimination session to get the next user in the queue for
+    :type elimination_session: EliminationSession
     :return: First eliminating user and active user dictionary
-    :rtype: ShareRoomUser, dict
+    :rtype: EliminationSessionUser, dict
     """
-    # Active Room Users Queryset
-    active_share_users_qs = ShareRoomUser.objects.filter(
-        list=share_list, is_active=True).select_related('persona')
+    # Active Session Users Queryset
+    active_session_users_qs = EliminationSessionUser.objects.filter(
+        elimination_session=elimination_session, is_active=True).select_related('persona')
 
     # If initial round, randomize the position of all active users
-    if not share_list.is_active:
-        all_active_users = list(active_share_users_qs.all())
+    if not elimination_session.is_active:
+        all_active_users = list(active_session_users_qs.all())
         shuffle(all_active_users)
-        share_list.is_active = True
+        elimination_session.is_active = True
 
     # If later round, first assign newly joined active users. Then assign remaining
     # active users in order of position
     else:
         # Start the list with newly joined users and then add the remaining users from the previous round
-        all_active_users = list(active_share_users_qs.order_by(
+        all_active_users = list(active_session_users_qs.order_by(
             'position', 'updated_at').all())
 
     # Assign new position to each user, and build dictionary of user uuids and positions
-    user_positional_dict = {}
+    updated_positions = {}
     n = 1
     for user in all_active_users:
         user.has_eliminated = False
         user.position = n
-        user_positional_dict.update(
+        updated_positions.update(
             {user.persona.uuid: {"position": n, "nickname": user.nickname}})
         n += 1
 
     # Update active users positions
-    ShareRoomUser.objects.bulk_update(
+    EliminationSessionUser.objects.bulk_update(
         all_active_users, ['has_eliminated', 'position'])
 
     # Reset inactive users positions
-    ShareRoomUser.objects.filter(list=share_list, is_active=False).update(
+    EliminationSessionUser.objects.filter(elimination_session=elimination_session, is_active=False).update(
         has_eliminated=False, position=0)
 
     # Update Turn
-    share_list.turn = 1
-    share_list.save()
+    elimination_session.turn = 1
+    elimination_session.save()
 
-    return all_active_users[0], user_positional_dict
+    return all_active_users[0], updated_positions
 
 
-def select_next_eliminating_user(share_list):
+def select_next_eliminating_user(elimination_session):
     """
     Returns the next user in the queue (whose position is >= the current turn).
     If the end of the queue is reached, it calls the assign_round_order function to
     assign the next round order, and also returns a dictionary of user positions.
 
-    :param share_list: The shared list to get the next user in the queue for
-    :type share_list: SharedMovieList
+    :param elimination_session: The elimination session to get the next user in the queue for
+    :type elimination_session: EliminationSession
     :return: Tuple of next eliminating user and dictionary of user positions if updated
-    :rtype: ShareRoomUser, dict[str, int] | None
+    :rtype: EliminationSessionUser, dict[str, int] | None
     """
 
-    user_positional_dict = None
+    updated_positions = None
 
     # Gets the next user in this round if any
-    next_share_user = ShareRoomUser.objects.filter(
-        list=share_list,
+    next_eliminating_user = EliminationSessionUser.objects.filter(
+        elimination_session=elimination_session,
         is_active=True,
-        position__gt=share_list.turn
+        position__gt=elimination_session.turn
     ).order_by('position').first()
 
     # If no more users in this round, assign next round order
-    if next_share_user == None:
-        next_share_user, user_positional_dict = assign_round_order(share_list)
+    if next_eliminating_user == None:
+        next_eliminating_user, updated_positions = assign_round_order(elimination_session)
     else:
         # Update current turn
-        share_list.turn = next_share_user.position
-        share_list.save()
+        elimination_session.turn = next_eliminating_user.position
+        elimination_session.save()
 
-    return next_share_user, user_positional_dict
+    return next_eliminating_user, updated_positions

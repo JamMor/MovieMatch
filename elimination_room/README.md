@@ -78,7 +78,7 @@ The current command functions available are:
 
 Additional functions (though not received commands from the client) contain the logic for user joining and leaving the room.
 - #### **```request_connect```**
-    Takes the sharecode and persona uuid as input, and creates or updates a **ShareRoomUser**, sets to active, adds nickname, and assigns queue position. When successful, returns a **SuccessfulCommandResponse** containing the 
+    Takes the sharecode and persona uuid as input, and creates or updates a **EliminationSessionUser**, sets to active, adds nickname, and assigns queue position. When successful, returns a **SuccessfulCommandResponse** containing the 
     - ```uuid```,
     - ```nickname```,
     - ```user_round```,
@@ -91,7 +91,7 @@ Additional functions (though not received commands from the client) contain the 
     - ```user_round```
 
 ### ```serializer.py```
-This file contains a serializer for a SharedMovieList (aka Share Room). It will return 
+This file contains a serializer for a EliminationSession (aka Share Room). It will return 
 - a json serializable dictionary of the active room users (```active_user_dict```) and the the shared movies (```movie_list```), 
 - the room round (```round```) and turn (```turn```). 
 The dictionaries are built of model instances, which means the ```DjangoJSONEncoder``` must be used to properly parse and encode the datetime objects present.

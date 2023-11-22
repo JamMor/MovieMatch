@@ -129,7 +129,7 @@ class UserList {
             this.users[uuid] = { "position": position, "nickname": nickname };
             const chipHtml = this.getChipHtml({ uuid, nickname, position });
             this.addUserToOrderedDOM(chipHtml, position);
-            console.log(`${nickname} has joined the room. UUID: ${uuid}`)
+            console.log(`${nickname} has joined. UUID: ${uuid}`)
             return true;
         }
     }

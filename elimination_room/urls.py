@@ -4,6 +4,6 @@ from . import views
 
 app_name = "elimination_room"
 urlpatterns = [
-    path('', views.new_match, name="share_submit"),
-    path('<str:sharecode>', views.join_match, name="match_room")
+    path('', views.submit_to_elimination_session, name="elimination_session_submit"),
+    path('<str:sharecode>', views.join_elimination_session, name="join_elimination_session"),
 ]

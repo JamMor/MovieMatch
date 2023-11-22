@@ -16,7 +16,7 @@ from .json_socket_response_models import (
     FailedCommandResponse,
     SuccessfulCommandResponse,
 )
-from .serializer import SharedListEncoder
+from .serializer import elimination_session_encoder
 
 
 class MatchConsumer(JsonWebsocketConsumer):
@@ -118,12 +118,12 @@ class MatchConsumer(JsonWebsocketConsumer):
         command = "updated"
 
         try:
-            model_dict = SharedListEncoder(self.sharecode)
+            session_dict = elimination_session_encoder(self.sharecode)
             json_response_object = SuccessfulCommandResponse(
-                command=command, data={"share_list": model_dict})
+                command=command, data={"elimination_session": session_dict})
         except:
             json_response_object = FailedCommandResponse(
-                command=command, errors=["Error updating list."])
+                command=command, errors=["Error updating session."])
 
         self.send_json(json_response_object.to_dict())
 

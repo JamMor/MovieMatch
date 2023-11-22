@@ -34,7 +34,7 @@ const Movie = class Movie {
 
 
 /**
- * Constructs a SharedMovie object for movie_list in matchroom
+ * Constructs a SharedMovie object for a shared movie_list
  * @class SharedMovie
  * @extends Movie
  * @param {object} movie - SharedMovie object from database.

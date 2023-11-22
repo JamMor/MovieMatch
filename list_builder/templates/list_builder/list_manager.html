@@ -32,13 +32,13 @@
                             <td class="list-count-td">
                                 <span class="new badge cyan accent-2" data-badge-caption="">{{ list.movies.count }}</span>
                             </td>
-                            <td>{{ list.created_at|date:"m/d/y f A" }}</td>
+                            <td>{{ list.created_at|date:"m/d/y g:i A" }}</td>
                             <td class="list-actions-td">
                                 <div>
-                                    <a class="edit-list-btn" href="{% url 'list_builder:edit_list' list_id=list.id %}">
+                                    <a class="neon-magenta neon-glow neon-hover-text" href="{% url 'list_builder:edit_list' list_id=list.id %}">
                                        <i class="material-icons">edit</i>
                                     </a>
-                                    <a class="delete-list-btn" href="#delete-modal"><i class="material-icons">delete</i></a>
+                                    <a class="neon-orange neon-glow neon-hover-text delete-list-btn" href="#delete-modal"><i class="material-icons">delete</i></a>
                                 </div>
                             </td>
                         </tr>

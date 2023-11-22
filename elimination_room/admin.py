@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from .models import SharedMovie, SharedMovieList, ShareRoomUser
+from .models import EliminationSession, EliminationSessionUser, SharedMovie
 
 
 class SharedMovieInline(admin.TabularInline):
@@ -11,7 +11,7 @@ class SharedMovieInline(admin.TabularInline):
     extra = 0
 
 
-class SharedMovieListAdmin(admin.ModelAdmin):
+class EliminationSessionAdmin(admin.ModelAdmin):
     list_display = [
         'id',
         'sharecode',
@@ -27,14 +27,14 @@ class SharedMovieListAdmin(admin.ModelAdmin):
         return obj.shared_movies.count()
 
 
-class ShareRoomUserAdmin(admin.ModelAdmin):
-    list_display = ['nickname', 'persona', 'list']
+class EliminationSessionUserAdmin(admin.ModelAdmin):
+    list_display = ['nickname', 'persona', 'elimination_session']
 
 
 class SharedMovieAdmin(admin.ModelAdmin):
-    list_display = ['shared_list', 'movie']
+    list_display = ['elimination_session', 'movie']
 
 
-admin.site.register(SharedMovieList, SharedMovieListAdmin)
+admin.site.register(EliminationSession, EliminationSessionAdmin)
 admin.site.register(SharedMovie, SharedMovieAdmin)
-admin.site.register(ShareRoomUser, ShareRoomUserAdmin)
+admin.site.register(EliminationSessionUser, EliminationSessionUserAdmin)
