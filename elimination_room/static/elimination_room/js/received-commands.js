@@ -99,14 +99,14 @@ function commandDisconnected(commandData) {
     }
 }
 
-//Initialize/Update Share Room
+//Initialize/Update Elimination Session
 function commandSyncRoom(commandData) {
     const {
         movie_list: received_movie_list,
         active_user_dict: received_user_list,
         is_active,
         eliminating_uuid = null
-    } = commandData.share_list
+    } = commandData.elimination_session
 
     movieList.syncLists(received_movie_list);
 

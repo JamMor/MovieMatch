@@ -41,7 +41,7 @@ class FailedJsonClassObject(JsonClassObject):
 
 
 
-# This is a child class for a failed json response to an elimination room socket command
+# This is a child class for a failed ajax form json response with keyed errors.
 class FailedFormResponse(FailedJsonClassObject):
     def __init__(self, message: str = None, errors: list[str] = None, form_errors: dict[str, str] = None):
         super().__init__(message, errors)

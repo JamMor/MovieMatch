@@ -9,7 +9,7 @@ from django.views.decorators.http import (
     require_http_methods,
 )
 
-from elimination_room.forms import SharecodeForm, ShareRoomUserForm
+from elimination_room.forms import EliminationSessionUserForm, SharecodeForm
 from movie_match.custom_decorators import login_required_json
 from movie_match.json_response_models import (
     FailedFormResponse,
@@ -28,7 +28,7 @@ from .persona_assigner import get_or_set_persona
 def index(request):
     this_persona = get_or_set_persona(request)
     context = {
-        'shareroomuser_form': ShareRoomUserForm(prefix="share"),
+        'elimination_user_form': EliminationSessionUserForm(prefix="share"),
         'sharecode_form': SharecodeForm(prefix="share"),
         'savedmovielist_form': SavedMovieListForm(prefix="save"),
     }

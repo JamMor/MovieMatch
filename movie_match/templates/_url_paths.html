@@ -29,7 +29,7 @@
             return `${baseGetListsOverviewUrl}/?page=${pageNumber}&sort=${field}:${order}`
         },
         //elimination_room
-        "shareSubmit": "{% url 'elimination_room:share_submit' %}",
+        "eliminationSessionSubmit": "{% url 'elimination_room:elimination_session_submit' %}",
         "eliminationRoom": (sharecode) => {
             const baseEliminationUrl = "/match"
             return `${baseEliminationUrl}/${sharecode}`

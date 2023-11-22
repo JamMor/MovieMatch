@@ -3,14 +3,14 @@ from django.forms import ModelForm, ValidationError
 
 from list_builder.validators import UserInputValidator
 
-from .models import SharedMovieList, ShareRoomUser
+from .models import EliminationSession, EliminationSessionUser
 
 user_input_validator = UserInputValidator()
 
 
 class SharecodeForm(ModelForm):
     class Meta:
-        model = SharedMovieList
+        model = EliminationSession
         fields = ['sharecode']
 
     def __init__(self, *args, **kwargs):
@@ -30,7 +30,7 @@ class SharecodeForm(ModelForm):
             return sharecode
 
         sharecode = sharecode.upper()
-        if SharedMovieList.objects.filter(sharecode=sharecode).exists():
+        if EliminationSession.objects.filter(sharecode=sharecode).exists():
             return sharecode
         else:
             raise ValidationError("Sharecode does not exist.")
@@ -48,13 +48,13 @@ class SharecodeForm(ModelForm):
         return result
 
 
-class ShareRoomUserForm(ModelForm):
+class EliminationSessionUserForm(ModelForm):
     class Meta:
-        model = ShareRoomUser
+        model = EliminationSessionUser
         fields = ['nickname']
 
     def __init__(self, *args, **kwargs):
-        super(ShareRoomUserForm, self).__init__(*args, **kwargs)
+        super(EliminationSessionUserForm, self).__init__(*args, **kwargs)
 
         self.fields['nickname'].widget.attrs['class'] = 'validate center-align'
         self.fields['nickname'].widget.attrs['data-length'] = '20'

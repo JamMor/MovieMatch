@@ -4,22 +4,22 @@ from django.db import IntegrityError, models, transaction
 from list_builder.validators import UserInputValidator
 
 
-class SharedMovieList(models.Model):
+class EliminationSession(models.Model):
     sharecode = models.CharField(max_length=8, unique=True)
     created_by = models.ForeignKey(
-        'list_builder.Persona', related_name="created_shared_lists", on_delete=models.CASCADE, null=True)
+        'list_builder.Persona', related_name="created_elimination_sessions", on_delete=models.CASCADE, null=True)
     contributors = models.ManyToManyField(
-        'list_builder.Persona', related_name="shared_lists")
+        'list_builder.Persona', related_name="elimination_sessions")
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
     is_active = models.BooleanField(default=False)
     turn = models.IntegerField(default=0)
 
-    def add_list_to_shared_list(self, movie_list):
+    def add_movie_list(self, movie_list):
         """
-        Converts templist movies not already in shared list to SharedMovies 
-        that are added to SharedList
+        For every movie in the movie_list that is not already in the elimination 
+        session, creates a new SharedMovie and adds it to the session.
         """
         for attempt in range(5):
             try:
@@ -28,13 +28,13 @@ class SharedMovieList(models.Model):
                     self.contributors.add(this_persona)
                     for each_movie in movie_list.movies.all():
                         shared_movie, created = SharedMovie.objects.get_or_create(
-                            shared_list=self,
+                            elimination_session=self,
                             movie=each_movie)
                         shared_movie.submitted_by.add(this_persona)
                     self.save()
                     break
             except IntegrityError:
-                print(f'Attempt {attempt}: Error adding temp list to shared list.')
+                print(f'Attempt {attempt}: Error adding temp list to elimination session.')
                 continue
         else:
             raise IntegrityError
@@ -52,33 +52,33 @@ class SharedMovieList(models.Model):
                 self.sharecode = su.uuid()[:8]
                 try:
                     with transaction.atomic():
-                        super(SharedMovieList, self).save(*args, **kwargs)
+                        super(EliminationSession, self).save(*args, **kwargs)
                         break
                 except IntegrityError:
-                    print(f'Attempt {attempt}: A shared list with this sharecode already exists.')
+                    print(f'Attempt {attempt}: An elimination session with this sharecode already exists.')
                     continue
             else:
                 raise IntegrityError
         else:
             print("Sharecode exists. Not renewing.")
-            super(SharedMovieList, self).save(*args, **kwargs)
+            super(EliminationSession, self).save(*args, **kwargs)
 
 
 class SharedMovie(models.Model):
     submitted_by = models.ManyToManyField(
         'list_builder.Persona', related_name="submitted_movies")
-    shared_list = models.ForeignKey(
-        SharedMovieList, related_name="shared_movies", on_delete=models.CASCADE, null=True)
+    elimination_session = models.ForeignKey(
+        EliminationSession, related_name="shared_movies", on_delete=models.CASCADE, null=True)
     movie = models.ForeignKey(
         'list_builder.Movie', related_name="shared_movies", on_delete=models.CASCADE, null=True)
     is_eliminated = models.BooleanField(default=False)
 
 
-class ShareRoomUser(models.Model):
+class EliminationSessionUser(models.Model):
     persona = models.ForeignKey(
-        'list_builder.Persona', related_name="in_room", on_delete=models.CASCADE)
-    list = models.ForeignKey(
-        SharedMovieList, related_name="room_users", on_delete=models.CASCADE)
+        'list_builder.Persona', related_name="in_session", on_delete=models.CASCADE)
+    elimination_session = models.ForeignKey(
+        EliminationSession, related_name="session_users", on_delete=models.CASCADE)
     is_active = models.BooleanField(default=False)
     nickname = models.CharField(
         max_length=20,
@@ -97,5 +97,5 @@ class ShareRoomUser(models.Model):
     class Meta:
         constraints = [
             models.UniqueConstraint(
-                fields=['persona', 'list'], name='one_user_per_room')
+                fields=['persona', 'elimination_session'], name='one_user_per_session')
         ]

@@ -7,7 +7,7 @@ import { movieList } from "./movie_lists.js";
 import { disabledSave, saveInit } from "/static/js/shared/save_list.js";
 import * as UserSlider from "/static/js/shared/slider.js"
 
-//Elimination Room Entry Point
+//Elimination Session Entry Point
 $(document).ready(function () {
     const matchSocket = createMatchSocket();
     MaterializeComponents.init();

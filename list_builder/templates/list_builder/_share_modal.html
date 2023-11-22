@@ -1,9 +1,9 @@
 <div id="share_modal" class="modal cyber-grade">
     <div class="modal-content pink-text text-darken-2">
         <h4>Ready to share?</h4>
-        <form id="share-list-form" action="{% url 'elimination_room:share_submit' %}" method="POST">
+        <form id="share-list-form" action="{% url 'elimination_room:elimination_session_submit' %}" method="POST">
             {% csrf_token %}
-            {% include "form_template.html" with form=shareroomuser_form %}
+            {% include "form_template.html" with form=elimination_user_form %}
             <p class="flow-text">Enter sharecode if you have one.</p>
             {% include "form_template.html" with form=sharecode_form %}
         </form>
