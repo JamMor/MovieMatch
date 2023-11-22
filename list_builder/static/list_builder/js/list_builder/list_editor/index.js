@@ -1,8 +1,8 @@
-import * as ListEditor from "./list_editor.js";
+import * as LoadList from "./load-list-data.js";
 import * as ChangeListName from "./change-list-name.js";
 
 //List Editor Entry Point
 $(document).ready(function () {
-    ListEditor.init();
+    LoadList.init();
     ChangeListName.init();
 });

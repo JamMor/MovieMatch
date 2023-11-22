@@ -7,7 +7,7 @@ const movieCardClass = "movie-card";
 const $movieListDiv = movieList.$listDomContainer;
 const $searchResultsDiv = searchResults.$listDomContainer;
 
-// Attach handlers to DOM elements
+// This handles interaction between the searchList and movieList
 const init = () => {
     //Handler to add movie to list and dom
     $searchResultsDiv.on("click", `.${addBtnClass}`, function () {

@@ -46,8 +46,8 @@
 
 {% block modal_block %}
     {{ block.super }}
-    {% include "list_builder/editor_list_name_modal.html" %}
-    {% include "list_builder/editor_save_modal.html" with list_id=saved_list.id %}
+    {% include "list_builder/_editor_list_name_modal.html" %}
+    {% include "list_builder/_editor_save_modal.html" with list_id=saved_list.id %}
 {% endblock %}
     
 {% block script_block %}
