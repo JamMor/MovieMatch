@@ -794,34 +794,19 @@ main {
     justify-content: space-around;
 }
 
-.edit-list-btn {
-    color: var(--purple_accent-2);
+.neon-hover-text i {
+    color: var(--base-bright);
 }
 
-.edit-list-btn:hover {
+.neon-hover-text:hover i {
     color: var(--grey_lighten-2);
     text-shadow:
-        0 0 5px var(--purple_accent-2),
-        0 0 10px var(--purple_accent-2),
-        0 0 15px var(--purple_darken-2),
-        0 0 20px var(--purple_darken-2),
-        0 0 30px var(--deep-purple_darken-4),
-        0 0 35px var(--deep-purple_darken-4);
-}
-
-.delete-list-btn i {
-    color: var(--orange_darken-3);
-}
-
-.delete-list-btn:hover i {
-    color: var(--grey_lighten-2);
-    text-shadow:
-        0 0 5px var(--orange_darken-3),
-        0 0 10px var(--orange_darken-3),
-        0 0 15px var(--orange_darken-4),
-        0 0 20px var(--orange_darken-4),
-        0 0 30px var(--deep-orange_darken-4),
-        0 0 35px var(--deep-orange_darken-4);
+        0 0 5px var(--base-bright),
+        0 0 10px var(--base-bright),
+        0 0 15px var(--base-mid),
+        0 0 20px var(--base-mid),
+        0 0 30px var(--base-dark),
+        0 0 35px var(--base-dark);
 }
 
 /* [-] */
