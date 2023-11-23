@@ -227,7 +227,7 @@ def request_elimination_start(sharecode):
     which can be differentiated by checking the 'status' attribute.
     The to_dict() method can be called on either to get a json serializable 
     dictionary. Successful response returns the "eliminating_uuid" of the first 
-    selecting user and a dictionary of active users with positions.
+    selecting user and a list of active users with positions.
     """
 
     command = "elimination_started"

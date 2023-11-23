@@ -162,7 +162,7 @@ class UserList {
 
     syncLists(newList) {
         const currentUuids = new Set(this.getUuids())
-        const newUuids = new Set(Object.keys(newList))
+        const newUuids = new Set(newList.map(item => item.uuid))
 
         //Get the removed users
         const removedUuids = new Set([...currentUuids].filter(oldUuid => !newUuids.has(oldUuid)))
@@ -173,10 +173,9 @@ class UserList {
         removedUuids.forEach(uuid => this.removeUserFromListByUuid(uuid))
 
         //Update persisting users with new positions and nicknames
-        // FLAG: Fix newList format when server changed
         let needReorder = false;
         this.getUuids().forEach(uuid => {
-            const userObj = this.convertNestedToFlat({ [uuid]: newList[uuid] })
+            const userObj = newList.find(user => user.uuid == uuid)
             const { position } = this.updateUser(userObj)
             if (position == true) {
                 needReorder = true;
@@ -187,7 +186,7 @@ class UserList {
         }
 
         //Add users to DOM and user_list
-        addedUuids.forEach(uuid => this.addUserToListNested({ [uuid]: newList[uuid] }))
+        addedUuids.forEach(uuid => this.addUserToListFlat(newList.find(user => user.uuid == uuid)))
     }
 
     clearList() {

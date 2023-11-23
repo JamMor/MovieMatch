@@ -22,12 +22,14 @@ def elimination_session_encoder(sharecode):
         submitted_by_prefetch
     ).get(sharecode=sharecode)
 
-    active_user_dict = {
-        session_user.persona.uuid: {
+    active_user_dict = [
+        {
+            'uuid': session_user.persona.uuid,
             'position': session_user.position,
             'nickname': session_user.nickname,
         }
-        for session_user in elimination_session.session_users.all()}
+        for session_user in elimination_session.session_users.all()
+    ]
 
     movie_list = []
     for shared_movie in elimination_session.shared_movies.all():

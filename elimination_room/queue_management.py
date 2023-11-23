@@ -42,8 +42,8 @@ def assign_round_order(elimination_session):
 
     :param elimination_session: The elimination session to get the next user in the queue for
     :type elimination_session: EliminationSession
-    :return: First eliminating user and active user dictionary
-    :rtype: EliminationSessionUser, dict
+    :return: First eliminating user and active user list
+    :rtype: EliminationSessionUser, list[dict[str, int, str]]
     """
     # Active Session Users Queryset
     active_session_users_qs = EliminationSessionUser.objects.filter(
@@ -63,13 +63,13 @@ def assign_round_order(elimination_session):
             'position', 'updated_at').all())
 
     # Assign new position to each user, and build dictionary of user uuids and positions
-    updated_positions = {}
+    updated_positions = []
     n = 1
     for user in all_active_users:
         user.has_eliminated = False
         user.position = n
-        updated_positions.update(
-            {user.persona.uuid: {"position": n, "nickname": user.nickname}})
+        updated_positions.append(
+            {"uuid": user.persona.uuid, "position": n, "nickname": user.nickname})
         n += 1
 
     # Update active users positions
@@ -95,7 +95,7 @@ def select_next_eliminating_user(elimination_session):
 
     :param elimination_session: The elimination session to get the next user in the queue for
     :type elimination_session: EliminationSession
-    :return: Tuple of next eliminating user and dictionary of user positions if updated
+    :return: Tuple of next eliminating user and list of user info if updated
     :rtype: EliminationSessionUser, dict[str, int] | None
     """
 
