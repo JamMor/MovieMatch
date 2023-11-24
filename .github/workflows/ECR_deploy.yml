@@ -20,7 +20,7 @@ jobs:
   
     steps:
     - name: Check out code from deploy_to_ecr branch
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4
       with:
         ref: deploy_to_ecr
     
@@ -28,16 +28,28 @@ jobs:
       run: |
         echo "COMMIT_TIME=$(git show -s --format=%cd --date="format:%Y-%m-%d.%H-%M-%S")" >> $GITHUB_ENV
 
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '18'  # Use the version of Node.js that your project requires
+
+    - name: Install dependencies and run webpack
+      run: |
+        npm ci
+        npm run bundle-deploy
+
     - name: Configure AWS credentials
-      uses: aws-actions/configure-aws-credentials@v1
+      uses: aws-actions/configure-aws-credentials@v4
       with:
         role-to-assume: ${{ secrets.AWS_ROLE_TO_ASSUME }}
         role-session-name: MovieMatchDeployment
         aws-region: ${{ env.AWS_REGION }}
+        mask-aws-account-id: true
+        retry-max-attempts: 4
 
     - name: Login to Amazon ECR
       id: login-ecr
-      uses: aws-actions/amazon-ecr-login@v1
+      uses: aws-actions/amazon-ecr-login@v2
 
     - name: Build, tag, and push image to Amazon ECR
       id: build-image
@@ -67,24 +79,133 @@ jobs:
           --max-errors "0" \
           --region ${{ env.AWS_REGION }}
 
+  notify:
+    name: Job Success Notifications
+    runs-on: ubuntu-latest
+    if: ${{ always() }}
+    needs: build
+    env:
+      JOB_STATUS: ${{ needs.build.result }}
+      JOB_STATUS_ICON: ${{ needs.build.result == 'success' && ':white_check_mark:' || ':x:' }}
+      JOB_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+
+    steps:
+    - name: Set current date as env variable
+      run: |
+        echo "NOW=$(date +'%Y-%m-%dT%H:%M:%S')" >> $GITHUB_ENV
+        echo "NOW_UNIX=$(date +%s)" >> $GITHUB_ENV
+
     - name: Slack Notification
       id: slack
-      uses: slackapi/slack-github-action@v1.18.0
+      uses: slackapi/slack-github-action@v1.24.0
       with:
         # For posting a rich message using Block Kit
         payload: |
           {
-            "text": "${{ env.ECR_REPOSITORY }} build and push to AWS SUCCESSFUL",
+            "text": "${{ env.JOB_STATUS_ICON }} ${{github.repository}} Deployment ${{ env.JOB_STATUS }}",
             "blocks": [
               {
                 "type": "section",
                 "text": {
                   "type": "mrkdwn",
-                  "text": "${{ env.ECR_REPOSITORY }} build and push to AWS SUCCESSFUL"
+                  "text": "${{ env.JOB_STATUS_ICON }} ${{github.repository}} Deployment ${{ env.JOB_STATUS }} ${{ env.JOB_STATUS_ICON }}\n\n*Time:* <!date^${{ env.NOW_UNIX }}^{date_num} {time_secs}|${{ env.NOW }}>"
                 }
+              },
+              {
+                "type": "divider"
+              },
+              {
+                "type": "section",
+                "fields": [
+                  {
+                    "type": "mrkdwn",
+                    "text": "*Repository:*\n${{ github.repository }}"
+                  },
+                  {
+                    "type": "mrkdwn",
+                    "text": "*Ref:*\n${{ github.ref_name }}"
+                  },
+                  {
+                    "type": "mrkdwn",
+                    "text": "*User:*\n${{ github.triggering_actor }}"
+                  },
+                  {
+                    "type": "mrkdwn",
+                    "text": "*Workflow:*\n${{ github.workflow }}"
+                  }
+                ]
+              },
+              {
+                "type": "divider"
+              },
+              {
+                "type": "section",
+                "text": {
+                  "type": "mrkdwn",
+                  "text": "View Github Actions workflow logs on GitHub."
+                },
+                "accessory": {
+                  "type": "button",
+                  "text": {
+                    "type": "plain_text",
+                    "text": ":computer: Go to Workflow Logs",
+                    "emoji": true
+                  },
+                  "url": "${{ env.JOB_URL }}"
+                }
+              },
+              {
+                "type": "context",
+                "elements": [
+                  {
+                    "type": "mrkdwn",
+                    "text": "<!date^${{ env.NOW_UNIX }}^{date_long_pretty} {time_secs}|${{ env.NOW }}>"
+                  }
+                ]
               }
             ]
           }
       env:
         SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
         SLACK_WEBHOOK_TYPE: INCOMING_WEBHOOK
+
+    - name: Discord Notification
+      id: discord
+      uses: "Ilshidur/action-discord@08d9328877d6954120eef2b07abbc79249bb6210"
+      with:
+        args: "**${{ env.JOB_STATUS_ICON }} ${{github.repository}} Deployment ${{ env.JOB_STATUS }}**"
+      env:
+        DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK_URL }}
+        DISCORD_EMBEDS: |
+          [
+            {
+              "color": ${{ env.JOB_STATUS == 'success' && 65280 || 16711680 }},
+              "author": {
+                "name": "${{ github.triggering_actor }}"
+              },
+              "title": "${{ env.JOB_STATUS_ICON }} ${{github.repository}} Deployment ${{ env.JOB_STATUS }}",
+              "url": "${{ env.JOB_URL }}",
+              "description": "\u200B",
+              "timestamp": "${{ env.NOW }}",
+              "fields": [
+                {
+                  "name": "Repository",
+                  "value": "${{ github.repository }}"
+                },
+                {
+                  "name": "Ref",
+                  "value": "${{ github.ref_name }}"
+                },
+                {
+                  "name": "Workflow",
+                  "value": "${{ github.workflow }}",
+                  "inline": true
+                },
+                {
+                  "name": "User",
+                  "value": "${{ github.triggering_actor }}",
+                  "inline": true
+                }
+              ]
+            }
+          ]

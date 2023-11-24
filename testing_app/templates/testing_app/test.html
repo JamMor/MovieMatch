@@ -1,0 +1,389 @@
+{% extends "base.html" %}
+
+{% load static %}
+
+{% block content_block %}
+    <link href="https://fonts.googleapis.com/css2?family=Black+Ops+One&family=Fira+Code:wght@600&family=Michroma&family=Press+Start+2P&family=Roboto+Mono&family=Rubik&display=swap"
+            rel="stylesheet" />
+    <main class="container">
+        <h1 class="grey-text text-lighten-2">
+            Debug Mode:
+            {% if IN_DEBUG %}
+                <span class="cyan-text text-accent-2">True</span>
+            {% else %}
+                <span class="orange-text text-darken-4">False</span>
+            {% endif %}
+        </h1>
+        <div class="switch">
+            <label>
+                Text
+                <input id="icon-text-switch" type="checkbox" />
+                <span class="lever"></span>
+                No Text
+            </label>
+        </div>
+        <section id="icons">
+            <div>
+                <h6 class="grey-text text-lighten-2">
+                    <i class="left material-icons">tv</i><span>tv</span>
+                </h6>
+            </div>
+            <div>
+                <h6 class="grey-text text-lighten-2">
+                    <i class="left material-icons">live_tv</i><span>live_tv</span>
+                </h6>
+            </div>
+            <div>
+                <h6 class="grey-text text-lighten-2">
+                    <i class="left material-icons">movie</i><span>movie</span>
+                </h6>
+            </div>
+            <div>
+                <h6 class="grey-text text-lighten-2">
+                    <i class="left material-icons">theaters</i><span>theaters</span>
+                </h6>
+            </div>
+            <div>
+                <h6 class="grey-text text-lighten-2">
+                    <i class="left material-icons">dvr</i><span>dvr</span>
+                </h6>
+            </div>
+            <div>
+                <h6 class="grey-text text-lighten-2">
+                    <i class="left material-icons">apps</i><span>apps</span>
+                </h6>
+            </div>
+            <div>
+                <h6 class="grey-text text-lighten-2">
+                    <i class="left material-icons">dashboard</i><span>dashboard</span>
+                </h6>
+            </div>
+            <div>
+                <h6 class="grey-text text-lighten-2">
+                    <i class="left material-icons">view_module</i><span>view_module</span>
+                </h6>
+            </div>
+            <div>
+                <h6 class="grey-text text-lighten-2">
+                    <i class="left material-icons">view_compact</i><span>view_compact</span>
+                </h6>
+            </div>
+            <div>
+                <h6 class="grey-text text-lighten-2">
+                    <i class="left material-icons">video_library</i><span>video_library</span>
+                </h6>
+            </div>
+            <div>
+                <h6 class="grey-text text-lighten-2">
+                    <i class="left material-icons">view_headline</i><span>view_headline</span>
+                </h6>
+            </div>
+            <div>
+                <h6 class="grey-text text-lighten-2">
+                    <i class="left material-icons">view_list</i><span>view_list</span>
+                </h6>
+            </div>
+            <div>
+                <h6 class="grey-text text-lighten-2">
+                    <i class="left material-icons">screen_share</i><span>screen_share</span>
+                </h6>
+            </div>
+            <div>
+                <h6 class="grey-text text-lighten-2">
+                    <i class="left material-icons">storage</i><span>storage</span>
+                </h6>
+            </div>
+            <div>
+                <h6 class="grey-text text-lighten-2">
+                    <i class="left material-icons">subscriptions</i><span>subscriptions</span>
+                </h6>
+            </div>
+            <div>
+                <h6 class="grey-text text-lighten-2">
+                    <i class="left material-icons">add_to_queue</i><span>add_to_queue</span>
+                </h6>
+            </div>
+            <div>
+                <h6 class="grey-text text-lighten-2">
+                    <i class="left material-icons">queue</i><span>queue</span>
+                </h6>
+            </div>
+            <div>
+                <h6 class="grey-text text-lighten-2">
+                    <i class="left material-icons">toc</i><span>toc</span>
+                </h6>
+            </div>
+            <div>
+                <h6 class="grey-text text-lighten-2">
+                    <i class="left material-icons">playlist_add</i><span>playlist_add</span>
+                </h6>
+            </div>
+            <div>
+                <h6 class="grey-text text-lighten-2">
+                    <i class="left material-icons">playlist_add_check</i><span>playlist_add_check</span>
+                </h6>
+            </div>
+            <div>
+                <h6 class="grey-text text-lighten-2">
+                    <i class="left material-icons">playlist_play</i><span>playlist_play</span>
+                </h6>
+            </div>
+            <div>
+                <h6 class="grey-text text-lighten-2">
+                    <i class="left material-icons">account_box</i><span>account_box</span>
+                </h6>
+            </div>
+            <div>
+                <h6 class="grey-text text-lighten-2">
+                    <i class="left material-icons">account_circle</i><span>account_circle</span>
+                </h6>
+            </div>
+            <div>
+                <h6 class="grey-text text-lighten-2">
+                    <i class="left material-icons">contacts</i><span>contacts</span>
+                </h6>
+            </div>
+            <div>
+                <h6 class="grey-text text-lighten-2">
+                    <i class="left material-icons">person</i><span>person</span>
+                </h6>
+            </div>
+            <div>
+                <h6 class="grey-text text-lighten-2">
+                    <i class="left material-icons">person_outline</i><span>person_outline</span>
+                </h6>
+            </div>
+            <div>
+                <h6 class="grey-text text-lighten-2">
+                    <i class="left material-icons">arrow_upward</i><span>arrow_upward</span>
+                </h6>
+            </div>
+            <div>
+                <h6 class="grey-text text-lighten-2">
+                    <i class="left material-icons">arrow_drop_up</i><span>arrow_drop_up</span>
+                </h6>
+            </div>
+            <div>
+                <h6 class="grey-text text-lighten-2">
+                    <i class="left material-icons">keyboard_arrow_up</i><span>keyboard_arrow_up</span>
+                </h6>
+            </div>
+            <div>
+                <h6 class="grey-text text-lighten-2">
+                    <i class="left material-icons">arrow_downward</i><span>arrow_downward</span>
+                </h6>
+            </div>
+            <div>
+                <h6 class="grey-text text-lighten-2">
+                    <i class="left material-icons">arrow_drop_down</i><span>arrow_drop_down</span>
+                </h6>
+            </div>
+            <div>
+                <h6 class="grey-text text-lighten-2">
+                    <i class="left material-icons">keyboard_arrow_down</i><span>keyboard_arrow_down</span>
+                </h6>
+            </div>
+            <div>
+                <h6 class="grey-text text-lighten-2">
+                    <i class="left material-icons">swap_vert</i><span>swap_vert</span>
+                </h6>
+            </div>
+            <div>
+                <h6 class="grey-text text-lighten-2">
+                    <i class="left material-icons">swap_vert_circle</i><span>swap_vert_circle</span>
+                </h6>
+            </div>
+            <div>
+                <h6 class="grey-text text-lighten-2">
+                    <i class="left material-icons">format_line_spacing</i><span>format_line_spacing</span>
+                </h6>
+            </div>
+            <div>
+                <h6 class="grey-text text-lighten-2">
+                    <i class="left material-icons">filter_list</i><span>filter_list</span>
+                </h6>
+            </div>
+            <div>
+                <h6 class="grey-text text-lighten-2">
+                    <i class="left material-icons">sort</i><span>sort</span>
+                </h6>
+            </div>
+            <div>
+                <h6 class="grey-text text-lighten-2">
+                    <i class="left material-icons">help_outline</i><span>help_outline</span>
+                </h6>
+            </div>
+            <div>
+                <h6 class="grey-text text-lighten-2">
+                    <i class="left material-icons">help</i><span>help</span>
+                </h6>
+            </div>
+            <div>
+                <h6 class="grey-text text-lighten-2">
+                    <i class="left material-icons">delete</i><span>delete</span>
+                </h6>
+            </div>
+            <div>
+                <h6 class="grey-text text-lighten-2">
+                    <i class="left material-icons">delete_forever</i><span>delete_forever</span>
+                </h6>
+            </div>
+            <div>
+                <h6 class="grey-text text-lighten-2">
+                    <i class="left material-icons">share</i><span>share</span>
+                </h6>
+            </div>
+            <div>
+                <h6 class="grey-text text-lighten-2">
+                    <i class="left material-icons">present_to_all</i><span>present_to_all</span>
+                </h6>
+            </div>
+            <div>
+                <h6 class="grey-text text-lighten-2">
+                    <i class="left material-icons">publish</i><span>publish</span>
+                </h6>
+            </div>
+            <div>
+                <h6 class="grey-text text-lighten-2">
+                    <i class="left material-icons">logout</i><span>logout</span>
+                </h6>
+            </div>
+        </section>
+        <section id="fonts" class="white-text">
+            <h4 style="font-family: Audiowide">Test TESTERONI testanoches.</h4>
+            <h4 style="font-family: 'Black Ops One'">Test TESTERONI testanoches.</h4>
+            <h4 style="font-family: 'Fira Code'">Test TESTERONI testanoches.</h4>
+            <h4 style="font-family: 'Michroma'">Test TESTERONI testanoches.</h4>
+            <h4 style="font-family: 'Montserrat'">Test TESTERONI testanoches.</h4>
+            <h4 style="font-family: 'Orbitron'">Test TESTERONI testanoches.</h4>
+            <h4 style="font-family: 'Press Start 2P'">Test TESTERONI testanoches.</h4>
+            <h4 style="font-family: 'Roboto Mono'">Test TESTERONI testanoches.</h4>
+            <h4 style="font-family: 'Rubik'">Test TESTERONI testanoches.</h4>
+        </section>
+        <section id="hue-adj">
+            <form action="#">
+                <p class="range-field">
+                    <input id="cyan-inp" class="neon-cyan2" type="text" />
+                    <input class="neon-cyan2" type="range" id="cyan-adj" list="hue-chart" min="0" max="360" />
+                    <datalist id="hue-chart">
+                        <option value="0" label="R"></option>
+                        <option value="60" label="Y"></option>
+                        <option value="120" label="G"></option>
+                        <option value="180" label="C"></option>
+                        <option value="240" label="B"></option>
+                        <option value="300" label="M"></option>
+                        <option value="360" label="R"></option>
+                    </datalist>
+                </p>
+            </form>
+            <form action="#">
+                <p class="range-field">
+                    <input id="magenta-inp" class="neon-magenta2" type="text" />
+                    <input class="neon-magenta2" type="range" id="magenta-adj" list="hue-chart2" min="0" max="360" />
+                    <datalist id="hue-chart2">
+                        <option value="0" label="R"></option>
+                        <option value="60" label="Y"></option>
+                        <option value="120" label="G"></option>
+                        <option value="180" label="C"></option>
+                        <option value="240" label="B"></option>
+                        <option value="300" label="M"></option>
+                        <option value="360" label="R"></option>
+                    </datalist>
+                </p>
+            </form>
+            <form action="#">
+                <p class="range-field">
+                    <input id="orange-inp" class="neon-orange2" type="text" />
+                    <input class="neon-orange2" type="range" id="orange-adj" list="hue-chart3" min="0" max="360" />
+                    <datalist id="hue-chart3">
+                        <option value="0" label="R"></option>
+                        <option value="60" label="Y"></option>
+                        <option value="120" label="G"></option>
+                        <option value="180" label="C"></option>
+                        <option value="240" label="B"></option>
+                        <option value="300" label="M"></option>
+                        <option value="360" label="R"></option>
+                    </datalist>
+                </p>
+            </form>
+        </section>
+        <section id="glow-btns">
+            <div class="bi-col">
+                <div class="center-align neon-cyan neon-glow neon-unlit pseudo-btn-large btn-rounded">Test strip</div>
+                <div class="center-align neon-cyan neon-glow neon-lit pseudo-btn-large btn-rounded">Test strip</div>
+                <div class="center-align neon-magenta neon-glow neon-unlit pseudo-btn-large btn-rounded">Test strip</div>
+                <div class="center-align neon-magenta neon-glow neon-lit pseudo-btn-large btn-rounded">Test strip</div>
+                <div class="center-align neon-orange neon-glow neon-unlit pseudo-btn-large btn-rounded">Test strip</div>
+                <div class="center-align neon-orange neon-glow neon-lit pseudo-btn-large btn-rounded">Test strip</div>
+                <div class="center-align neon-cyan neon-glow neon-hover pseudo-btn-large btn-rounded">Test strip</div>
+                <div class="center-align neon-magenta neon-glow neon-hover pseudo-btn-large btn-rounded">Test strip</div>
+                <div class="center-align neon-orange neon-glow neon-hover pseudo-btn-large btn-rounded">Test strip</div>
+                <div class="center-align neon-cyan neon-glow neon-unlit pseudo-btn-small btn-rounded">Test strip</div>
+                <div class="center-align neon-cyan neon-glow neon-lit pseudo-btn-small btn-rounded">Test strip</div>
+                <div class="center-align neon-magenta neon-glow neon-unlit pseudo-btn-small btn-rounded">Test strip</div>
+                <div class="center-align neon-magenta neon-glow neon-lit pseudo-btn-small btn-rounded">Test strip</div>
+                <div class="center-align neon-orange neon-glow neon-unlit pseudo-btn-small btn-rounded">Test strip</div>
+                <div class="center-align neon-orange neon-glow neon-lit pseudo-btn-small btn-rounded">Test strip</div>
+                <div class="center-align neon-cyan neon-glow neon-hover pseudo-btn-small btn-rounded">Test strip</div>
+                <div class="center-align neon-magenta neon-glow neon-hover pseudo-btn-small btn-rounded">Test strip</div>
+                <div class="center-align neon-orange neon-glow neon-hover pseudo-btn-small btn-rounded">Test strip</div>
+            </div>
+            <div class="bi-col">
+                <div class="center-align neon-cyan2 neon-glow neon-unlit pseudo-btn-large btn-rounded">Test strip</div>
+                <div class="center-align neon-cyan2 neon-glow neon-lit pseudo-btn-large btn-rounded">Test strip</div>
+                <div class="center-align neon-magenta2 neon-glow neon-unlit pseudo-btn-large btn-rounded">Test strip</div>
+                <div class="center-align neon-magenta2 neon-glow neon-lit pseudo-btn-large btn-rounded">Test strip</div>
+                <div class="center-align neon-orange2 neon-glow neon-unlit pseudo-btn-large btn-rounded">Test strip</div>
+                <div class="center-align neon-orange2 neon-glow neon-lit pseudo-btn-large btn-rounded">Test strip</div>
+                <div class="center-align neon-cyan2 neon-glow neon-hover pseudo-btn-large btn-rounded">Test strip</div>
+                <div class="center-align neon-magenta2 neon-glow neon-hover pseudo-btn-large btn-rounded">Test strip</div>
+                <div class="center-align neon-orange2 neon-glow neon-hover pseudo-btn-large btn-rounded">Test strip</div>
+                <div class="center-align neon-cyan2 neon-glow neon-unlit pseudo-btn-small btn-rounded">Test strip</div>
+                <div class="center-align neon-cyan2 neon-glow neon-lit pseudo-btn-small btn-rounded">Test strip</div>
+                <div class="center-align neon-magenta2 neon-glow neon-unlit pseudo-btn-small btn-rounded">Test strip</div>
+                <div class="center-align neon-magenta2 neon-glow neon-lit pseudo-btn-small btn-rounded">Test strip</div>
+                <div class="center-align neon-orange2 neon-glow neon-unlit pseudo-btn-small btn-rounded">Test strip</div>
+                <div class="center-align neon-orange2 neon-glow neon-lit pseudo-btn-small btn-rounded">Test strip</div>
+                <div class="center-align neon-cyan2 neon-glow neon-hover pseudo-btn-small btn-rounded">Test strip</div>
+                <div class="center-align neon-magenta2 neon-glow neon-hover pseudo-btn-small btn-rounded">Test strip</div>
+                <div class="center-align neon-orange2 neon-glow neon-hover pseudo-btn-small btn-rounded">Test strip</div>
+            </div>
+        </section>
+        <section id="card-btns">
+            <div class="movie-list bi-col"></div>
+            <div class="movie-list bi-col"></div>
+        </section>
+        <section id="test-requests">
+            <h4 class="grey-text text-lighten-2">
+                User is
+                {% if not user.is_authenticated %}<span class="orange-text text-darken-4">NOT</span>{% endif %}
+                logged in.
+            </h4>
+            <div>
+                <button id="request_save_get" class="btn-rounded btn-large neon-cyan neon-glow neon-hover">
+                    Save - Get
+                </button>
+                <button id="request_save_post" class="btn-rounded btn-large neon-cyan neon-glow neon-hover">
+                    Save - Post
+                </button>
+                <button id="request_delete_get" class="btn-rounded btn-large neon-cyan neon-glow neon-hover">
+                    Delete - Get
+                </button>
+                <button id="request_delete_post" class="btn-rounded btn-large neon-cyan neon-glow neon-hover">
+                    Delete - Post
+                </button>
+                <button id="request_delete_delete" class="btn-rounded btn-large neon-cyan neon-glow neon-hover">
+                    Delete - Delete
+                </button>
+            </div>
+        </section>
+    </main>
+{% endblock %}
+
+{% block script_block %}
+    {{ block.super }}
+    <script type="module" src="{% static 'testing_app/js/index.js' %}"></script>
+    <link rel="stylesheet"
+          type="text/css"
+          href="{% static 'testing_app/css/testing.css' %}" />
+{% endblock %}

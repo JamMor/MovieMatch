@@ -11,8 +11,14 @@ SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 SESSION_COOKIE_SECURE = True
 CSRF_COOKIE_SECURE = True
 
-env_cookie_domains = os.environ.get("CSRF_COOKIE_DOMAIN", None)
-CSRF_COOKIE_DOMAIN = env_cookie_domains
+STORAGES = {
+    "default": {
+        "BACKEND": "django.core.files.storage.FileSystemStorage",
+    },
+    "staticfiles": {
+        "BACKEND": "movie_match.storages.ManifestStaticFilesStorageNotStrict",
+    },
+}
 
 # environ_status(f'{__name__} Environ')
 # settings_status(f'Settings: {__name__}')

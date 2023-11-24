@@ -1,63 +1,78 @@
-    {% extends "base.html" %}
-    {% load static %}
+{% extends "base.html" %}
 
-    {% block content_block %}
-        <main>
-            <div class="container">
-                <table id="list-table" class="white-text">
-                    <thead>
-                        <tr>
-                            <th id="list-name-th">List Name</th>
-                            <th id="list-count-th"></th>
-                            <th id="created-date-th">Created On</th>
-                            <th id="actions-th"></th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {% for list in saved_lists %}
-                        <tr id="list_{{list.id}}" class="row-collapse-trigger">
+{% load static %}
+{% load bundled_url %}
+
+{% block page_subtitle %}- Manage Saved Lists{% endblock %}
+
+{% block meta_description_block %}
+    <meta name="description"
+          content="Effortlessly manage your MovieMatch movie lists: Delete, edit, 
+          and get quick overviews. Carefully curate your collections with ease." />
+{% endblock %}
+
+{% block content_block %}
+    <main>
+        <div class="container">
+            <table id="list-table" class="white-text">
+                <thead>
+                    <tr>
+                        <th id="list-name-th">List Name</th>
+                        <th id="list-count-th"></th>
+                        <th id="created-date-th">Created On</th>
+                        <th id="actions-th"></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for list in saved_lists %}
+                        <tr id="list_{{ list.id }}" class="row-collapse-trigger">
                             <td class="list-name-td">
-                                <span class="truncate">{{list.list_name}}</span>
+                                <span class="truncate">{{ list.display_name }}</span>
                             </td>
                             <td class="list-count-td">
-                                <span class="new badge cyan accent-2" data-badge-caption="">{{list.movies.count}}</span>
+                                <span class="new badge cyan accent-2" data-badge-caption="">{{ list.movies.count }}</span>
                             </td>
-                            <td>{{list.created_at|date:"m/d/y f A"}}</td>
+                            <td>{{ list.created_at|date:"m/d/y g:i A" }}</td>
                             <td class="list-actions-td">
                                 <div>
-                                    <a class="edit-list-btn" href="{% url 'list_builder:edit_list' list_id=list.id %}"><i class="material-icons">edit</i></a>
-                                    <a class="delete-list-btn" href="#delete-modal"><i class="material-icons">delete</i></a>
+                                    <a class="neon-magenta neon-glow neon-hover-text" href="{% url 'list_builder:edit_list' list_id=list.id %}">
+                                       <i class="material-icons">edit</i>
+                                    </a>
+                                    <a class="neon-orange neon-glow neon-hover-text delete-list-btn" href="#delete-modal"><i class="material-icons">delete</i></a>
                                 </div>
                             </td>
                         </tr>
-                        <tr id="list_{{list.id}}_content">
+                        <tr id="list_{{ list.id }}_content">
                             <td class="collabsible-row" colspan="4">
                                 <div class="slider-x content-collapsed">
                                     {% for movie in list.movies.all %}
-                                    <div id="list_{{list.id}}_{{movie.tmdb_id}}" class="card grey darken-4">
-                                        <div class="card-image">
-                                            <img loading="lazy" src="https://image.tmdb.org/t/p/w342{{movie.poster_path}}">
+                                        <div id="list_{{ list.id }}_{{ movie.tmdb_id }}" class="card grey darken-4">
+                                            <div class="card-image">
+                                                <img loading="lazy" src="https://image.tmdb.org/t/p/w342{{ movie.poster_path }}" alt="Poster for {{ movie.title }}" />
+                                            </div>
                                         </div>
-                                    </div>
                                     {% endfor %}
                                 </div>
                             </td>
                         </tr>
-                        {% endfor %}
-                    </tbody>
-                </table>
-            </div>
-        </main>
+                    {% empty %}
+                        <tr class="neon-orange neon-glow neon-unlit">
+                            <td class="center-align" colspan="4">
+                                <em>No saved lists.</em>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </main>
+{% endblock %}
 
-        {% include "list_builder/_list_manager_delete_modal.html"%}
+{% block modal_block %}
+    {{ block.super }}
+    {% include "list_builder/_list_manager_delete_modal.html" %}
+{% endblock %}
 
-    {% endblock %}
-
-    {% block script_block %}
-        {{ block.super }}
-        <script type='text/javascript' >
-        </script>
-        <script src="{% static 'list_builder/js/slider.js'%}"></script>
-        <script src="{% static 'list_builder/js/table-collapse.js'%}"></script>
-        <script src="{% static 'list_builder/js/delete_modal.js'%}"></script>
-    {% endblock %}
+{% block script_block %}
+    {% bundle_tag 'list_builder/js/list_manager/index.js' block.super %}
+{% endblock %}

@@ -1,53 +1,77 @@
 {% extends "base.html" %}
-{% load static %}
 
-{% block page_subtitle %} - Room {{sharecode}}{% endblock %}
+{% load static %}
+{% load bundled_url %}
+
+{% block page_subtitle %}- Room {{ sharecode }}{% endblock %}
+
+{% block meta_description_block %}
+    <meta name="description" 
+          content="End movie night indecision with MovieMatch's turn based elimination. 
+          All you have to do is choose the one you don't want. Just one. Join 
+          friends to eliminate choices together and find the perfect pick—or at 
+          least one good enough for tonight." />
+{% endblock %}
 
 {% block content_block %}
     <main>
         <div class="container">
-            <h4>Match Room ID = <span id="share-code">{{sharecode}}</span></h4>
             <div id="status_bar" class="center-align">
-                <a id="status-btn" class=" status-waiting neon-blue inactive btn-large btn-rounded">
+                <button id="status-btn" class=" status-waiting neon-cyan neon-glow neon-unlit btn-large btn-rounded">
                     <i class="material-icons left">cast</i>
                     <span>Waiting for matching to begin...</span>
                     <i class="material-icons right">cast</i>
-                </a>
+                </button>
             </div>
-            <!-- <div class="divider"></div> -->
-            <div id="user_list"></div>
+            <div id="user_list" class="slider-x"></div>
             <div id="movie_list"></div>
         </div>
     </main>
+    <footer class="sharecode cyan accent-2">
+        <button id="copy-sharecode" class=" cyan accent-2 btn waves-effect">
+            <span id="sharecode">{{ sharecode }}</span><i class="material-icons">content_copy</i>
+        </button>
+    </footer>
+{% endblock %}
+
+{% block modal_block %}
+    {{ block.super }}
+    {% include "_save_modal.html" %}
     <div id="final_modal" class="modal cyber-grade">
         <div class="modal-content pink-text text-darken-2"></div>
         <div class="navbar-fixed">
             <nav class="cyan accent-2">
-              <div class="nav-wrapper">
-                <ul>
-                    <li class="waves-effect waves-light"><a id="refresh-btn" href="#!"><i class="material-icons indigo-text text-darken-4">refresh</i></a></li>
-                    <li><a class="modal-trigger" href="#save-modal"><i class="material-icons indigo-text text-darken-4">save</i></a></li>
-                    <li class="modal-close waves-effect waves-light"><a href="#!"><i class="material-icons indigo-text text-darken-4">close</i></a></li>
-                </ul>
-              </div>
+                <div class="nav-wrapper">
+                    <ul>
+                        <li class="waves-effect waves-light">
+                            <a id="refresh-btn" href="#!">
+                                <i class="material-icons indigo-text text-darken-4">refresh</i>
+                            </a>
+                        </li>
+                        <li>
+                            <a id="open-save-btn"
+                                class="{% if user.is_authenticated %}modal-trigger{% else %}disabled-btn{% endif %}"
+                                href="#save-modal">
+                                <i class="material-icons indigo-text text-darken-4">save</i>
+                            </a>
+                        </li>
+                        <li class="modal-close waves-effect waves-light">
+                            <a href="#!">
+                                <i class="material-icons indigo-text text-darken-4">close</i>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
             </nav>
-          </div>
+        </div>
     </div>
-
-    {% include "save_modal.html"%}
-
 {% endblock %}
 
 {% block script_block %}
-    {{ block.super }}
-    <script type='text/javascript' > 
+    <script type='text/javascript'>
         var user_uuid = "{{uuid}}"
-        var user_list = {};
-        var movie_list = [];
-        var has_started_elimination = false;
+        var elimination_active = false;
+        var current_eliminating_uuid = null;
     </script>
-    <script src="{% static 'elimination_room/js/match_builder.js'%}"></script>
-    <script src="{% static 'elimination_room/js/user_builder.js'%}"></script>
-    <script src="{% static 'elimination_room/js/sockets.js'%}"></script>
-    <script src="{% static 'js/save_modal.js'%}"></script>
-{% endblock %}\
+    {% bundle_tag 'elimination_room/js/index.js' block.super %}
+{% endblock %}

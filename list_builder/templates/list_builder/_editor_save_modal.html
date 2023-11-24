@@ -1,0 +1,18 @@
+<div id="save-modal" class="modal cyber-grade">
+    <div class="modal-content pink-text text-darken-2">
+        <form id="save-form" action="{% url 'list_builder:save_list' list_id=list_id %}" method="POST">
+            <h5 class="flow-text center-align">Do you want to save these changes?</h5>
+            {% csrf_token %}
+            {% include "form_template.html" with form=hidden_list_name_form %}
+        </form>
+    </div>
+    <div class="modal-footer">
+        <button type="submit" id="save-list-confirm" form="save-form"
+                class="neon-cyan neon-glow neon-hover waves-effect waves-light btn-large btn-rounded">
+            <i class="material-icons left">save</i>Save
+        </button>
+        <button type="button" class="modal-close orange-text text-darken-3 waves-effect waves-dark btn-flat">
+            <i class="material-icons left orange-text text-darken-3">close</i>Cancel
+        </button>
+    </div>
+</div>

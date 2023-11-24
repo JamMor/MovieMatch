@@ -2,26 +2,30 @@
 
 {% if form.non_field_errors %}
     {% for error in form.non_field_errors %}
-    <span class="error center">{{error}}</span>
+        <span class="error center">{{ error }}</span>
     {% endfor %}
 {% endif %}
 
 {% for field in form %}
-<div class="input-field">
-    {{ field }}
-    {{ field.label_tag }}
+    {% if not field.is_hidden %}
+        <div class="input-field">
+            {{ field }}
+            {{ field.label_tag }}
 
-    {% if field.help_text %}
-        <i class="tooltipped material-icons suffix" data-position="left">info_outline</i>
-        {% with help_id=field.auto_id|prefix:"help_" %}
-            {{ field.help_text|json_script:help_id }}
-        {% endwith %}
-    {% endif %}
+            {% if field.help_text %}
+                <i class="tooltipped material-icons suffix" data-position="left">info_outline</i>
+                {% with help_id=field.auto_id|prefix:"help_" %}
+                    {{ field.help_text|json_script:help_id }}
+                {% endwith %}
+            {% endif %}
 
-    {% if field.errors %}
-        {% for error in field.errors %}
-        <span class="helper-text" data-error="{{error}}"></span>
-        {% endfor %}
+            {% if field.errors %}
+                {% for error in field.errors %}
+                    <span class="helper-text" data-error="{{ error }}"></span>
+                {% endfor %}
+            {% endif %}
+        </div>
+    {% else %}
+        {{ field }}
     {% endif %}
-</div>
 {% endfor %}

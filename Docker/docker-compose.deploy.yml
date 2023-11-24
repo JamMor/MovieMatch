@@ -21,7 +21,7 @@ services:
         target: /app/${CONTAINER_STATIC_DIRECTORY}
   
   redis:
-    image: redis:5-alpine
+    image: redis:7-alpine
     ports:
         - 6379:6379
     restart: always
@@ -29,7 +29,7 @@ services:
   postgres_db:
     env_file:
       - ./app.env
-    image: postgres:14.5-alpine
+    image: postgres:16-alpine
     restart: always
     volumes:
       - postgres_data:/var/lib/postgresql/data/

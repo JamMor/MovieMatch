@@ -1,135 +1,120 @@
+{% load static %}
+{% load bundled_url %}
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <!-- GoogleFonts Preconnect -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <!-- Favicon -->
-    {% load static %}
-    <link rel="apple-touch-icon" sizes="180x180" href="{% static 'favicon/apple-touch-icon.png' %}">
-    <link rel="icon" type="image/png" sizes="32x32" href="{% static 'favicon/favicon-32x32.png' %}">
-    <link rel="icon" type="image/png" sizes="16x16" href="{% static 'favicon/favicon-16x16.png' %}">
-    <link rel="manifest" href="{% static 'favicon/site.webmanifest' %}">
-    <link rel="mask-icon" href="{% static 'favicon/safari-pinned-tab.svg" color="#ff00f7' %}">
-    <meta name="msapplication-TileColor" content="#da532c">
-    <meta name="theme-color" content="#090909">
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="author" content="James Morgan" />
     <title>MovieMatch{% block page_subtitle %}{% endblock %}</title>
-    <!-- Scripts -->
-    <script src="https://ajax.aspnetcdn.com/ajax/jQuery/jquery-3.6.0.js"></script>
-    <script src="{% static 'js/materialize.min.js'%}"></script>
+    <!-- GoogleFonts Preconnect -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <!-- Jquery Preconnect -->
+    <script rel="preconnect" href="https://code.jquery.com" crossorigin="anonymous"></script>
+    <!-- Favicon -->
+    <link rel="apple-touch-icon" sizes="180x180" href="{% static 'favicon/apple-touch-icon.png' %}" />
+    <link rel="icon" type="image/png" sizes="32x32" href="{% static 'favicon/favicon-32x32.png' %}" />
+    <link rel="icon" type="image/png" sizes="16x16" href="{% static 'favicon/favicon-16x16.png' %}" />
+    <link rel="manifest" href="{% static 'favicon/site.webmanifest' %}" />
+    <link rel="mask-icon" href="{% static 'favicon/safari-pinned-tab.svg' %}" color="#ff00f7" />
+    <meta name="msapplication-TileColor" content="#da532c" />
+    <meta name="theme-color" content="#090909" />
+    <!-- Meta Tags -->
+    {% block meta_description_block %}{% endblock %}
+    <!-- External Scripts -->
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"
+            integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" 
+            crossorigin="anonymous">
+    </script>
+    <script src="{% static 'js/vendor/materialize.min.js'%}"></script>
     <!-- CSS Stylesheets -->
-    <!-- <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700;800;900&display=swap" rel="stylesheet"> -->
-    <link href="https://fonts.googleapis.com/css2?family=Audiowide&family=Black+Ops+One&family=Fira+Code:wght@600&family=Michroma&family=Montserrat&family=Orbitron:wght@400;500;600;700;800;900&family=Press+Start+2P&family=Roboto+Mono&family=Rubik&display=swap" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-    <link rel="stylesheet" type="text/css" href="{% static 'css/materialize.min.css' %}">
-    <link rel="stylesheet" type="text/css" href="{% static 'css/style.css' %}">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <link href="https://fonts.googleapis.com/css2?family=Audiowide&family=Montserrat&family=Orbitron:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" />
+    <link rel="stylesheet" type="text/css" href="{% static 'css/vendor/materialize.min.css' %}" />
+    {% bundle_tag 'css/base/style.css' %}
 </head>
-
 <body>
     {% csrf_token %}
     {% block header_block %}
-    <header>
-        <nav id="nav-bar">
-            <div class="nav-wrapper">
-                <a href="{% url 'list_builder:default_redirect' %}" class="brand-logo logo1">
-                    Movie Match{% block header_subtitle %}{% endblock %}
-                </a>
-                <a href="#" data-target="side-menu" class="sidenav-trigger"><i class="material-icons">menu</i></a>
-                <ul class="right hide-on-med-and-down">
-                    <li><a href="{% url 'list_builder:list_builder' %}">List Builder</a></li>
-                    <li><a href="#">Recent Lists</a></li>
-                    {% if user.is_authenticated %}
-                    <li><a href="{% url 'list_builder:list_manager' %}">List Manager</a></li>
-                    <li class="user-name"><a class="user-name" href="#"><i class="material-icons left">account_circle</i>{{user.username}}<i class="material-icons right">arrow_drop_down</i></a></li>
-                    <li><a href="{% url 'login_and_reg:logout' %}">Logout</a></li>
-                    {% else %}
-                    <li><a class="dropdown-trigger" href="#!" data-target="login-form">Login<i class="material-icons right">arrow_drop_down</i></a></li>
-                    <div id="login-form" class="dropdown-content">
-                        <form class="cyber-grade login-form" action="{% url 'login_and_reg:login' %}" method="post">
-                            {% csrf_token %}
-                            <div class="input-field">
-                                <input id="nav-username" name="username" class="validate center-align" type="text" required>
-                                <label for="nav-username">Username</label>
-                            </div>
-                            <div class="input-field">
-                                <input id="nav-password" name="password" class="validate center-align" type="password" required>
-                                <label for="nav-password">Password</label>
-                            </div>
-                            <button class="neon-blue-hover btn-small btn-rounded" type="submit">Login</button>
-                            <a class="registration-link" href="{% url 'login_and_reg:register' %}">Register</a>
-                        </form>
-                    </div>
-                    {% endif %}
-                </ul>
-            </div>
-        </nav>
-    </header>
-    
-    <ul class="sidenav cyber-grade hide-on-large-only" id="side-menu">
-        {% if user.is_authenticated %}
-        <li><a class="user-name" href="#"><i class="material-icons">account_circle</i>{{user.username}}</a></li>
-        <li><a href="{% url 'login_and_reg:logout' %}">Logout</a></li>
-        {% else %}
-        <li>
-            <ul id="login-form-sidenav" class="collapsible">
+        <header>
+            <nav id="nav-bar">
+                <div class="nav-wrapper">
+                    <a href="{% url 'list_builder:default_redirect' %}" class="brand-logo logo1">
+                        Movie Match{% block header_subtitle %}{% endblock %}
+                    </a>
+                    <a href="#" data-target="side-menu" class="sidenav-trigger"><i class="material-icons">menu</i></a>
+                    <ul class="right hide-on-med-and-down">
+                        <li><a href="{% url 'list_builder:list_builder' %}"><i class="material-icons left">view_module</i>New List</a></li>
+                        {% if user.is_authenticated %}
+                            <li><a href="{% url 'list_builder:list_manager' %}"><i class="material-icons left">view_list</i>Manage Lists</a></li>
+                            <li>
+                                <a class="user-name dropdown-trigger" href="#" data-target="logged-in-options">
+                                    <i class="material-icons left">account_circle</i>{{ user.username }}<i class="material-icons right">arrow_drop_down</i>
+                                </a>
+                                <div id="logged-in-options" class="dropdown-content">
+                                    <div class="cyber-grade light-highight">
+                                        <ul>
+                                            <li><a href="{% url 'login_and_reg:settings' %}"><i class="material-icons">settings</i>Settings</a></li>
+                                            <li><a href="{% url 'login_and_reg:logout' %}"><i class="material-icons">logout</i>Logout</a></li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </li>
+                        {% else %}
+                            <li>
+                                <a class="dropdown-trigger" href="#!" data-target="login-form">Login
+                                    <i class="material-icons right">arrow_drop_down</i>
+                                </a>
+                                <div id="login-form" class="dropdown-content">
+                                    {% include "_login_form.html" with pre_id="nav" %}
+                                </div>
+                            </li>
+                        {% endif %}
+                        <li><a class="modal-trigger" href="#about-modal"><i class="material-icons">help_outline</i></a></li>
+                    </ul>
+                </div>
+            </nav>
+        </header>
+        <ul class="sidenav cyber-grade hide-on-large-only light-highight" id="side-menu">
+            {% if user.is_authenticated %}
+                <li><a class="user-name" href="#"><i class="material-icons">account_circle</i>{{ user.username }}</a></li>
+            {% else %}
                 <li>
-                    <div class="collapsible-header">Login<i class="material-icons right">arrow_drop_down</i></div>
-                    <div class="collapsible-body">
-                        <form class="cyber-grade login-form" action="{% url 'login_and_reg:login' %}" method="post">
-                            {% csrf_token %}
-                            <div class="input-field">
-                                <input id="side-username" name="username" class="validate center-align" type="text" required>
-                                <label for="side-username">Username</label>
+                    <ul id="login-form-sidenav" class="collapsible">
+                        <li>
+                            <div class="collapsible-header">
+                                Login<i class="material-icons right">arrow_drop_down</i>
                             </div>
-                            <div class="input-field">
-                                <input id="side-password" name="password" class="validate center-align" type="password" required>
-                                <label for="side-password">Password</label>
+                            <div class="collapsible-body">
+                                {% include "_login_form.html" with pre_id="side" %}
                             </div>
-                            <button class="neon-blue-hover btn-small btn-rounded" type="submit">Login</button>
-                            <a class="registration-link" href="{% url 'login_and_reg:register' %}">Register</a>
-                        </form>
-                    </div>
+                        </li>
+                    </ul>
                 </li>
-            </ul>
-        </li>
-        {% endif %}
-        <div class="divider"></div>
-        <li><a href="{% url 'list_builder:list_builder' %}">List Builder</a></li>
-        {% if user.is_authenticated %}
-        <li><a href="{% url 'list_builder:list_manager' %}">List Manager</a></li>
-        {% endif %}
-        <li><a href="#">Recent Lists</a></li>
-    </ul>
+            {% endif %}
+            <li><a href="{% url 'list_builder:list_builder' %}"><i class="material-icons">view_module</i>New List</a></li>
+            {% if user.is_authenticated %}
+                <li><a href="{% url 'list_builder:list_manager' %}"><i class="material-icons">view_list</i>Manage Lists</a></li>
+                <li><div class="divider"></div></li>
+                <li><a href="{% url 'login_and_reg:settings' %}"><i class="material-icons">settings</i>Settings</a></li>
+                <li><a href="{% url 'login_and_reg:logout' %}"><i class="material-icons">logout</i>Logout</a></li>
+            {% endif %}
+            <li><a class="modal-trigger" href="#about-modal"><i class="material-icons">help_outline</i>About</a></li>
+        </ul>
     {% endblock %}
+    
     {% block content_block %}{% endblock %}
-    {% block script_block %}
-    <script type="text/javascript">
-        var DJ_STATIC_FILES = {
-        "placeholder_path": "{% static 'images/movie_placeholder.png' %}"
-        };
-        var urlPath = {
-            "listCreator" : "{% url 'list_builder:list_builder' %}",
-            "listManager" : "{% url 'list_builder:list_manager' %}",
-            "saveURL" : (list_id = "") => {
-                let saveURL = "{% url 'list_builder:save_list' %}" 
-                if (list_id) {saveURL += `/${list_id}`}
-            }
-        }
-        var csrftoken;
-        var MovieCard;
-        var MovieInfoModal;
-        if(typeof construct === 'undefined' || construct === null ){ console.log("Initiating constructors."); var construct = {} }
-        var listOperation = {}
-    </script>
-    <script src="{% static 'js/base.js'%}"></script>
-    <script src="{% static 'js/constructors.js'%}"></script>
-    <script src="{% static 'js/listOperation.js'%}"></script>
+    
+    {% block modal_block %}
+        {% include "_about_modal.html" %}
     {% endblock %}
-</body>
+    
+    {% include "_resource_paths.html" %}
+    {% include "_url_paths.html" %}
+    {% bundle_tag 'js/base/index.js' %}
 
+    {% block script_block %}{% endblock %}
+</body>
 </html>

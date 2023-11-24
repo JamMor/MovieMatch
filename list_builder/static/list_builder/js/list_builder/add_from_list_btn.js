@@ -1,0 +1,181 @@
+import { ListModalItem, PaginatorPages } from "/static/js/shared/DOMelements.js";
+import { movieList } from "./movie_lists.js";
+import { ajaxErrorHandler } from "/static/js/shared/ajaxErrorHandler.js";
+import { escapeHtml } from "/static/js/shared/htmlEscaping.js";
+
+const $savedListModal = $("#saved-lists-modal");
+const $addFromListBtn = $("#add-from-list");
+const $listContainer = $("#list-container");
+const $listPages = $("#list-pages");
+const selectedRowClass = "selected";
+const selectListBtnClass = "select-list";
+const selectedListIcon = "playlist_add_check";
+const unselectedListIcon = "playlist_add";
+const pageLinkClass = "list-page"
+
+const getListIdFromBtnDomId = (domId) => domId.split("_")[1];
+const getBtnDomIdFromListId = (listId) => `select_${listId}`;
+const getRowDomIdFromListId = (listId) => `row_${listId}`;
+
+
+let selectedLists = [];
+let sortOrder = {
+    "field": "updated-at",
+    "direction": "desc",
+}
+
+function addToList(listId) {
+    $.get({
+        url: urlPath.getList(listId),
+        dataType: "json"
+    })
+        .done(function (response) {
+            if (response.status == "success") {
+                movieList.bulkAddMoviesToList(...response.data.movies);
+                addToListStatusToast("success", response.data.list_name);
+            }
+            else {
+                ajaxErrorHandler(response);
+                addToListStatusToast("error");
+            }
+        })
+        .fail(function () {
+            console.error("Request failure: get list data");
+            addToListStatusToast("fail");
+        });
+}
+
+function addToListStatusToast(status, listName = "") {
+    const statusMessages = {
+        "success": `Added <strong class="cyan-text text-accent-2">${escapeHtml(listName)}</strong> to list.`,
+        "error": `<strong class="orange-text text-darken-3">Failed</strong> to add to list.`,
+        "fail": `<strong class="orange-text text-darken-3">Request failure.</strong>.`,
+        "unknown": `<strong class="orange-text text-darken-3">Unknown error.</strong>.`
+    }
+
+    const message = statusMessages[status] || statusMessages["unknown"]
+
+    M.toast({ html: `<span>${message}</span>` })
+}
+
+function selectList(listId) {
+    const $listBtn = $(`#${getBtnDomIdFromListId(listId)}`);
+    const $listRow = $(`#${getRowDomIdFromListId(listId)}`);
+
+    if (selectedLists.includes(listId)) {
+        return false;
+    }
+    else {
+        selectedLists.push(listId);
+        $listRow.addClass(selectedRowClass);
+        $listBtn.children("i").text(selectedListIcon);
+        return true;
+    }
+}
+
+function addToListHandler(e) {
+    e.stopPropagation();
+    const listDomId = $(this).attr("id")
+    const listId = getListIdFromBtnDomId(listDomId);
+    selectList(listId);
+    addToList(listId);
+}
+
+function updateListModal(data) {
+    // Replace list items with data
+    $listContainer.empty();
+    if (data.lists.length == 0) {
+        const emptyListLine = `
+            <li><div class="neon-orange neon-glow neon-unlit collection-item center-align">
+                <p><em>No saved lists.</em></p>
+            </div></li>
+        `
+        $listContainer.append(emptyListLine);
+    }
+    data.lists.forEach(list => {
+        const { list_id, list_name, movies } = list;
+        const selected = selectedLists.includes(list_id);
+        $listContainer.append(ListModalItem(list_id, list_name, movies, selected));
+    })
+
+    $listContainer.find(`a.${selectListBtnClass}`).click(addToListHandler);
+
+    // Update pagination
+    const { field, direction } = sortOrder;
+    $listPages.empty();
+    $listPages.append(PaginatorPages(data.page_number, field, direction, data.total_count, data.items_per_page));
+}
+
+function getLists(pageNumber) {
+    const { field, direction } = sortOrder;
+    $.get({
+        url: urlPath.getListsOverview(pageNumber, field, direction),
+        dataType: "json"
+    })
+        .done(function (response) {
+            if (response.status == "success") {
+                updateListModal(response.data);
+            }
+            else {
+                ajaxErrorHandler(response);
+                getListsStatusToast("error");
+            }
+        })
+        .fail(function () {
+            console.error("Request failure: get lists overview.");
+            getListsStatusToast("fail");
+        });
+}
+
+function getListsStatusToast(status) {
+    const statusMessages = {
+        "error": `<strong class="orange-text text-darken-3">Failed</strong> to retrieve lists.`,
+        "fail": `<strong class="orange-text text-darken-3">Request failure.</strong>.`,
+        "unknown": `<strong class="orange-text text-darken-3">Unknown error.</strong>.`
+    }
+
+    const message = statusMessages[status] || statusMessages["unknown"]
+
+    M.toast({ html: `<span>${message}</span>` })
+}
+
+const init = () => {
+    $('.collapsible').collapsible();
+
+    $addFromListBtn.tooltip({
+        position: "left",
+        html: `<span>Add from saved list...</span>`
+    });
+
+    // // Handler clashing with materialize. Propagation not being stopped 
+    // // before materialize triggers collapsible.
+    // $listContainer.on("click", `a.${selectListBtnClass}`, function(e){
+    //     e.stopPropagation();
+    //     const listDomId = $(this).attr("id")
+    //     const listId = getListIdFromBtnDomId(listDomId);
+    //     selectList(listId);
+    //     addToList(listId);
+    // })
+
+    $addFromListBtn.click(function () {
+        selectedLists = [];
+        getLists();
+    })
+
+    // Handler for pagination links
+    $savedListModal.on("click", `a.${pageLinkClass}`, function (e) {
+        e.preventDefault();
+        if ($(this).parent().hasClass("neon-lit")) {
+            return;
+        }
+        const targetUrl = $(this).attr("href")
+        if (targetUrl == "#!") {
+            return;
+        }
+        const queryString = new URLSearchParams(targetUrl.split("?")[1])
+        const pageNumber = queryString.get("page");
+        getLists(pageNumber);
+    })
+}
+
+export { init, sortOrder, getLists }
