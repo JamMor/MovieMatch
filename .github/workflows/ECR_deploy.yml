@@ -31,7 +31,7 @@ jobs:
     - name: Setup Node.js
       uses: actions/setup-node@v4
       with:
-        node-version: '18'  # Use the version of Node.js that your project requires
+        node-version: '20'  # Use the version of Node.js that your project requires
 
     - name: Install dependencies and run webpack
       run: |
@@ -70,7 +70,7 @@ jobs:
         IMAGE_TAG: ${{ github.sha }}-${{ env.COMMIT_TIME}}
       run: |
         aws ssm send-command \
-          --document-name "Update_Project" \
+          --document-name "ProjectServer-UpdateContainer" \
           --document-version "\$LATEST" \
           --targets '[{"Key":"InstanceIds","Values":["${{ secrets.AWS_PROJECTWEBSERVER_EC2_INSTANCE_ID }}"]}]' \
           --parameters '{ "ecrRegistry":["${{ env.ECR_REGISTRY }}"], "repoName":["${{ env.ECR_REPOSITORY }}"], "imageTag":["${{ env.IMAGE_TAG }}"]}' \
@@ -97,7 +97,7 @@ jobs:
 
     - name: Slack Notification
       id: slack
-      uses: slackapi/slack-github-action@v1.24.0
+      uses: slackapi/slack-github-action@v1.26.0
       with:
         # For posting a rich message using Block Kit
         payload: |

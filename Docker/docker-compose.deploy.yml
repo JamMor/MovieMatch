@@ -4,7 +4,7 @@ name: moviematch-app
 services:
   
   django_app:
-    image: ${REGISTRY}moviematch:${IMAGE_TAG}
+    image: ${IMAGE_NAME}
     env_file:
       - ./app.env
     environment:
