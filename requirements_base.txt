@@ -1,4 +1,4 @@
-Django==4.2.13
+Django==4.2.17
 bcrypt==4.0.1
 shortuuid==1.0.11
 channels==4.1.0
