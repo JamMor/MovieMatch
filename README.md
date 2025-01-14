@@ -40,6 +40,8 @@ SQLite should only be used for testing and requires no further configuration. If
 - ```POSTGRES_HOST``` The database host (container name if using Docker).
 - ```POSTGRES_PORT``` The port that the databse is accessible on.
 
+> **Note:** Use single quotes for `.env` file values where necessary to prevent Docker from interpreting them. For example, set `SECRET_KEY` as `'your_secret_key'` instead of `your_secret_key` to avoid variable substitution for keys containing `$`.
+
 ---
 
 ### 2. **Docker**

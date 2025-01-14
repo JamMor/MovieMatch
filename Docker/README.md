@@ -60,3 +60,5 @@ docker-compose -f docker-compose.deploy.yml up -d
 - `.env.deploy`: This **.env** file contains the same variables for the deployment environment, with the additional variables:
     - `IMAGE_TAG`: This is the tag to use for the django app image. It is intended to be the git commit hash of the commit being used.
     - `REGISTRY`: This is the AWS ECR registry url which is incorporated into the image name.
+
+> **Note:** Use single quotes for `.env` file values where necessary to prevent Docker from interpreting them. For example, set `SECRET_KEY` as `'your_secret_key'` instead of `your_secret_key` to avoid variable substitution for keys containing `$`.
