@@ -13,7 +13,7 @@ COPY ./requirements_base.txt .
 RUN apt-get update && apt-get -y install \
     libpq5 && \
     python -m pip install --upgrade pip && \
-    python -m pip install --no-cache-dir -r requirements_base.txt && \
+    python -m pip install --no-cache-dir -r requirements.txt && \
     apt-get purge -y && \
     rm -rf /var/lib/apt/lists/*
 
