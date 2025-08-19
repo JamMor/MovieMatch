@@ -9,7 +9,7 @@ ENV PYTHONDONTWRITEBYTECODE=1
 ENV PYTHONUNBUFFERED=1
 
 # Install project pip requirements
-COPY ./requirements_base.txt .
+COPY ./requirements.txt .
 RUN apt-get update && apt-get -y install \
     libpq5 && \
     python -m pip install --upgrade pip && \
