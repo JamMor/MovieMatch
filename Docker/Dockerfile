@@ -1,5 +1,5 @@
 # For more information, please refer to https://aka.ms/vscode-docker-python
-FROM python:3.11-slim-bookworm
+FROM astral/uv:python3.12-bookworm-slim
 EXPOSE 8000
 
 # Keeps Python from generating .pyc files in the container
@@ -8,17 +8,20 @@ ENV PYTHONDONTWRITEBYTECODE=1
 # Turns off buffering for easier container logging
 ENV PYTHONUNBUFFERED=1
 
-# Install project pip requirements
-COPY ./requirements_base.txt .
-RUN apt-get update && apt-get -y install \
-    libpq5 && \
-    python -m pip install --upgrade pip && \
-    python -m pip install --no-cache-dir -r requirements_base.txt && \
-    apt-get purge -y && \
+# Install system dependencies
+RUN apt-get update && apt-get -y install libpq5 build-essential && \
     rm -rf /var/lib/apt/lists/*
 
+# Copy project and lock files, and install dependencies
 WORKDIR /app
+COPY ./pyproject.toml ./uv.lock ./
+RUN uv sync --locked
+
+# Copy the application code to the container
 COPY . /app
+
+# Ensure the virtualenv is used:
+ENV PATH="/app/.venv/bin:$PATH"
 
 # Creates a non-root user with an explicit UID and adds permission to access the /app folder
 # For more info, please refer to https://aka.ms/vscode-docker-python-configure-containers
