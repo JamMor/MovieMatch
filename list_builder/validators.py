@@ -15,7 +15,7 @@ class UserInputValidator(RegexValidator):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         additional_chars = "".join([re.escape(char) for char in self.allowed_chars])
-        regex_string = f'^[\\w{additional_chars}]+\Z'
+        regex_string = rf'^[\w{additional_chars}]+\Z'
         self.regex = re.compile(regex_string)
 
         listed_chars = " ".join(self.allowed_chars)

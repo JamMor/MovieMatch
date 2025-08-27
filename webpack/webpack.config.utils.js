@@ -24,9 +24,11 @@ function getFilePaths(srcDir, filePattern, ignoreStr = undefined) {
     const filePaths = glob.sync(
         `${srcDir}/**/${filePatternStr}`,
         {
+            windowsPathsNoEscape: true,
             posix: true,
             dotRelative: true,
             ignore: ignoreStr,
+            absolute: false,
         }
     );
     return filePaths
@@ -201,6 +203,10 @@ function bundleMapLogger(bundleMap) {
  */
 function getDjangoEntrypointBundles (srcDirs, filePattern, ignoreStr = undefined) {    
     // Get the bundled entrypoints from each source directory
+    console.log(`Getting entrypoint bundles from ${srcDirs.length} source directories...`);
+    console.log(`File pattern: ${filePattern}`);
+    console.log(`Ignoring: ${ignoreStr}`);
+    console.log(`Source directories: ${srcDirs.join(', ')}`);
     const bundleMap = {};
     srcDirs.forEach(dir => {
         const filePaths = getFilePaths(dir, filePattern, ignoreStr);
