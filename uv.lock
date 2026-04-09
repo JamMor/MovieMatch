@@ -445,7 +445,7 @@ requires-dist = [
     { name = "daphne", specifier = "==4.2.1" },
     { name = "django", specifier = "==4.2.30" },
     { name = "gunicorn", specifier = "==22.0.0" },
-    { name = "psycopg", specifier = "==3.1.12" },
+    { name = "psycopg", specifier = "==3.3.3" },
     { name = "python-dotenv", specifier = "==1.2.2" },
     { name = "requests", specifier = "==2.33.1" },
     { name = "shortuuid", specifier = "==1.0.11" },
@@ -492,15 +492,15 @@ wheels = [
 
 [[package]]
 name = "psycopg"
-version = "3.1.12"
+version = "3.3.3"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
-    { name = "typing-extensions" },
+    { name = "typing-extensions", marker = "python_full_version < '3.13'" },
     { name = "tzdata", marker = "sys_platform == 'win32'" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/42/30/73ebc6d40269fa4fdc090c374d1dd30df822e885a742719b0fe952c9d86c/psycopg-3.1.12.tar.gz", hash = "sha256:cec7ad2bc6a8510e56c45746c631cf9394148bdc8a9a11fd8cf8554ce129ae78", size = 142352, upload-time = "2023-09-27T00:36:12.589Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/d3/b6/379d0a960f8f435ec78720462fd94c4863e7a31237cf81bf76d0af5883bf/psycopg-3.3.3.tar.gz", hash = "sha256:5e9a47458b3c1583326513b2556a2a9473a1001a56c9efe9e587245b43148dd9", size = 165624, upload-time = "2026-02-18T16:52:16.546Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/d0/9e/99d99c60c1aa6d2107403d3766d8538c13627c62b240f00ce13ac8962d4e/psycopg-3.1.12-py3-none-any.whl", hash = "sha256:8ec5230d6a7eb654b4fb3cf2d3eda8871d68f24807b934790504467f1deee9f8", size = 171536, upload-time = "2023-09-27T00:31:57.291Z" },
+    { url = "https://files.pythonhosted.org/packages/c8/5b/181e2e3becb7672b502f0ed7f16ed7352aca7c109cfb94cf3878a9186db9/psycopg-3.3.3-py3-none-any.whl", hash = "sha256:f96525a72bcfade6584ab17e89de415ff360748c766f0106959144dcbb38c698", size = 212768, upload-time = "2026-02-18T16:46:27.365Z" },
 ]
 
 [[package]]
