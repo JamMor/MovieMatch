@@ -439,18 +439,18 @@ dependencies = [
 sdist = { url = "https://files.pythonhosted.org/packages/11/b5/f1a53dc68da6429d6e0345bb848161e2381a2e9f02700148911e8582c2b3/django-4.2.30.tar.gz", hash = "sha256:4ebc7a434e3819db6cf4b399fb5b3f536310a30e8486f08b66886840be84b37c", size = 10468707, upload-time = "2026-04-07T14:05:45.57Z" }
 wheels = [
     { url = "https://files.pythonhosted.org/packages/39/b7/a7c96f239cf91313a6589233fed55111c7063b26683b226802732c455dbc/django-4.2.30-py3-none-any.whl", hash = "sha256:4d07aaf1c62f9984842b67c2874ebbf7056a17be253860299b93ae1881faad65", size = 7997231, upload-time = "2026-04-07T14:05:38.241Z" },
-    { name = "bcrypt", specifier = "==5.0.0" },
+]
 
 [[package]]
 name = "gunicorn"
-version = "22.0.0"
+version = "25.3.0"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "packaging" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/1e/88/e2f93c5738a4c1f56a458fc7a5b1676fc31dcdbb182bef6b40a141c17d66/gunicorn-22.0.0.tar.gz", hash = "sha256:4a0b436239ff76fb33f11c07a16482c521a7e09c1ce3cc293c2330afe01bec63", size = 3639760, upload-time = "2024-04-16T22:58:19.218Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/c4/f4/e78fa054248fab913e2eab0332c6c2cb07421fca1ce56d8fe43b6aef57a4/gunicorn-25.3.0.tar.gz", hash = "sha256:f74e1b2f9f76f6cd1ca01198968bd2dd65830edc24b6e8e4d78de8320e2fe889", size = 634883, upload-time = "2026-03-27T00:00:26.092Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/29/97/6d610ae77b5633d24b69c2ff1ac3044e0e565ecbd1ec188f02c45073054c/gunicorn-22.0.0-py3-none-any.whl", hash = "sha256:350679f91b24062c86e386e198a15438d53a7a8207235a78ba1b53df4c4378d9", size = 84443, upload-time = "2024-04-16T22:58:15.233Z" },
+    { url = "https://files.pythonhosted.org/packages/43/c8/8aaf447698c4d59aa853fd318eed300b5c9e44459f242ab8ead6c9c09792/gunicorn-25.3.0-py3-none-any.whl", hash = "sha256:cacea387dab08cd6776501621c295a904fe8e3b7aae9a1a3cbb26f4e7ed54660", size = 208403, upload-time = "2026-03-27T00:00:27.386Z" },
 ]
 
 [[package]]
@@ -510,7 +510,7 @@ requires-dist = [
     { name = "channels-redis", specifier = "==4.3.0" },
     { name = "daphne", specifier = "==4.2.1" },
     { name = "django", specifier = "==4.2.30" },
-    { name = "gunicorn", specifier = "==22.0.0" },
+    { name = "gunicorn", specifier = "==25.3.0" },
     { name = "psycopg", specifier = "==3.3.3" },
     { name = "python-dotenv", specifier = "==1.2.2" },
     { name = "requests", specifier = "==2.33.1" },
@@ -572,11 +572,11 @@ wheels = [
 
 [[package]]
 name = "packaging"
-version = "24.0"
+version = "26.0"
 source = { registry = "https://pypi.org/simple" }
-sdist = { url = "https://files.pythonhosted.org/packages/ee/b5/b43a27ac7472e1818c4bafd44430e69605baefe1f34440593e0332ec8b4d/packaging-24.0.tar.gz", hash = "sha256:eb82c5e3e56209074766e6885bb04b8c38a0c015d0a30036ebe7ece34c9989e9", size = 147882, upload-time = "2024-03-10T09:39:28.33Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/65/ee/299d360cdc32edc7d2cf530f3accf79c4fca01e96ffc950d8a52213bd8e4/packaging-26.0.tar.gz", hash = "sha256:00243ae351a257117b6a241061796684b084ed1c516a08c48a3f7e147a9d80b4", size = 143416, upload-time = "2026-01-21T20:50:39.064Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/49/df/1fceb2f8900f8639e278b056416d49134fb8d84c5942ffaa01ad34782422/packaging-24.0-py3-none-any.whl", hash = "sha256:2ddfb553fdf02fb784c234c7ba6ccc288296ceabec964ad2eae3777778130bc5", size = 53488, upload-time = "2024-03-10T09:39:25.947Z" },
+    { url = "https://files.pythonhosted.org/packages/b7/b9/c538f279a4e237a006a2c98387d081e9eb060d203d8ed34467cc0f0b9b53/packaging-26.0-py3-none-any.whl", hash = "sha256:b36f1fef9334a5588b4166f8bcd26a14e521f2b55e6b9de3aaa80d3ff7a37529", size = 74366, upload-time = "2026-01-21T20:50:37.788Z" },
 ]
 
 [[package]]

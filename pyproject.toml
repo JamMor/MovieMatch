@@ -10,7 +10,7 @@ dependencies = [
     "channels-redis==4.3.0",
     "daphne==4.2.1",
     "django==4.2.30",
-    "gunicorn==22.0.0",
+    "gunicorn==25.3.0",
     "psycopg==3.3.3",
     "python-dotenv==1.2.2",
     "requests==2.33.1",
