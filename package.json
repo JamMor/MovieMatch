@@ -22,7 +22,7 @@
   "homepage": "https://github.com/JamMor/MovieMatch#readme",
   "devDependencies": {
     "css-loader": "^6.11.0",
-    "css-minimizer-webpack-plugin": "^5.0.1",
+    "css-minimizer-webpack-plugin": "^8.0.0",
     "glob": "^11.0.3",
     "mini-css-extract-plugin": "^2.7.6",
     "purgecss-webpack-plugin": "^7.0.2",
