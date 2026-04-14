@@ -1,59 +1,61 @@
 moviematch v0.1.0
-├── bcrypt v4.2.1
-├── channels v4.2.2
-│   ├── asgiref v3.8.1
-│   └── django v4.2.17
-│       ├── asgiref v3.8.1
-│       ├── sqlparse v0.5.0
-│       └── tzdata v2024.1
-├── channels-redis v4.2.0
-│   ├── asgiref v3.8.1
-│   ├── channels v4.2.2 (*)
-│   ├── msgpack v1.0.8
-│   └── redis v5.0.4
-│       └── async-timeout v4.0.3
-├── daphne v4.1.2
-│   ├── asgiref v3.8.1
-│   ├── autobahn v23.6.2
-│   │   ├── cryptography v44.0.0
-│   │   │   └── cffi v1.16.0
-│   │   │       └── pycparser v2.22
+├── bcrypt v5.0.0
+├── channels v4.3.2
+│   ├── asgiref v3.11.1
+│   └── django v4.2.30
+│       ├── asgiref v3.11.1
+│       ├── sqlparse v0.5.5
+│       └── tzdata v2026.1
+├── channels-redis v4.3.0
+│   ├── asgiref v3.11.1
+│   ├── channels v4.3.2 (*)
+│   ├── msgpack v1.1.2
+│   └── redis v7.4.0
+│       └── async-timeout v5.0.1
+├── daphne v4.2.1
+│   ├── asgiref v3.11.1
+│   ├── autobahn v25.12.2
+│   │   ├── cbor2 v5.9.0
+│   │   ├── cffi v2.0.0
+│   │   │   └── pycparser v3.0
+│   │   ├── cryptography v46.0.7
+│   │   │   └── cffi v2.0.0 (*)
 │   │   ├── hyperlink v21.0.0
-│   │   │   └── idna v3.7
-│   │   ├── setuptools v75.6.0
-│   │   └── txaio v23.1.1
-│   └── twisted[tls] v24.11.0
-│       ├── attrs v23.2.0
-│       ├── automat v24.8.1
+│   │   │   └── idna v3.11
+│   │   ├── msgpack v1.1.2
+│   │   ├── py-ubjson v0.16.1
+│   │   ├── txaio v25.12.2
+│   │   └── ujson v5.12.0
+│   └── twisted[tls] v25.5.0
+│       ├── attrs v26.1.0
+│       ├── automat v25.4.16
 │       ├── constantly v23.10.4
 │       ├── hyperlink v21.0.0 (*)
-│       ├── incremental v24.7.2
-│       │   └── setuptools v75.6.0
-│       ├── typing-extensions v4.11.0
-│       ├── zope-interface v6.4
-│       │   └── setuptools v75.6.0
-│       ├── idna v3.7 (extra: tls)
-│       ├── pyopenssl v25.0.0 (extra: tls)
-│       │   ├── cryptography v44.0.0 (*)
-│       │   └── typing-extensions v4.11.0
-│       └── service-identity v24.1.0 (extra: tls)
-│           ├── attrs v23.2.0
-│           ├── cryptography v44.0.0 (*)
-│           ├── pyasn1 v0.6.0
-│           └── pyasn1-modules v0.4.0
-│               └── pyasn1 v0.6.0
-├── django v4.2.17 (*)
-├── gunicorn v22.0.0
-│   └── packaging v24.0
-├── psycopg v3.1.12
-│   ├── typing-extensions v4.11.0
-│   └── tzdata v2024.1
-├── python-dotenv v1.0.0
-├── requests v2.32.3
-│   ├── certifi v2024.2.2
-│   ├── charset-normalizer v3.3.2
-│   ├── idna v3.7
-│   └── urllib3 v2.3.0
-├── setuptools v75.6.0
+│       ├── incremental v24.11.0
+│       │   └── packaging v26.0
+│       ├── typing-extensions v4.15.0
+│       ├── zope-interface v8.2
+│       ├── idna v3.11 (extra: tls)
+│       ├── pyopenssl v26.0.0 (extra: tls)
+│       │   ├── cryptography v46.0.7 (*)
+│       │   └── typing-extensions v4.15.0
+│       └── service-identity v24.2.0 (extra: tls)
+│           ├── attrs v26.1.0
+│           ├── cryptography v46.0.7 (*)
+│           ├── pyasn1 v0.6.3
+│           └── pyasn1-modules v0.4.2
+│               └── pyasn1 v0.6.3
+├── django v4.2.30 (*)
+├── gunicorn v25.3.0
+│   └── packaging v26.0
+├── psycopg v3.3.3
+│   ├── typing-extensions v4.15.0
+│   └── tzdata v2026.1
+├── python-dotenv v1.2.2
+├── requests v2.33.1
+│   ├── certifi v2026.2.25
+│   ├── charset-normalizer v3.4.7
+│   ├── idna v3.11
+│   └── urllib3 v2.6.3
 └── shortuuid v1.0.11
 (*) Package tree already displayed
